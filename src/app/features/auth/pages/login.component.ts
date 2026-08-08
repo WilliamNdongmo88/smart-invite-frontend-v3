@@ -136,7 +136,8 @@ import { ToastService } from '../../../core/services/toast.service';
     /* ── LEFT ── */
     .left-panel {
       position: relative;
-      flex: 7;
+      width: 480px;
+      flex-shrink: 0;
       overflow: hidden;
       border-radius: 16px;
       margin: 12px 6px 12px 12px;
@@ -220,7 +221,7 @@ import { ToastService } from '../../../core/services/toast.service';
 
     /* ── RIGHT ── */
     .right-panel {
-      flex: 3;
+      flex: 1;
       background: #1a1a1a;
       border-radius: 16px;
       margin: 12px 12px 12px 6px;
