@@ -1,3 +1,150 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
+import { publicGuard } from './core/guards/public.guard';
+import { roleGuard } from './core/guards/role.guard';
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.component';
+import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  // ── Pages publiques (sans auth) ──────────────────────────────────
+  {
+    path: '',
+    component: PublicLayoutComponent,
+    children: [
+      {
+        path: 'login',
+        canActivate: [publicGuard],
+        loadComponent: () =>
+          import('./features/auth/pages/login.component').then((m) => m.LoginComponent),
+      },
+      {
+        path: 'register',
+        canActivate: [publicGuard],
+        loadComponent: () =>
+          import('./features/auth/pages/register.component').then((m) => m.RegisterComponent),
+      },
+      {
+        path: 'verify-email',
+        loadComponent: () =>
+          import('./features/auth/pages/verify-email.component').then((m) => m.VerifyEmailComponent),
+      },
+      {
+        path: 'forgot-password',
+        loadComponent: () =>
+          import('./features/auth/pages/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+      },
+      {
+        path: 'reset-password',
+        loadComponent: () =>
+          import('./features/auth/pages/reset-password.component').then((m) => m.ResetPasswordComponent),
+      },
+      {
+        path: 'invitations/:token/rsvp',
+        loadComponent: () =>
+          import('./features/invitations/pages/rsvp-public.component').then((m) => m.RsvpPublicComponent),
+      },
+      {
+        path: 'join/:token',
+        loadComponent: () =>
+          import('./features/links/pages/join.component').then((m) => m.JoinComponent),
+      },
+    ],
+  },
+
+  // ── App principale USER / ADMIN ───────────────────────────────────
+  {
+    path: '',
+    component: MainLayoutComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./features/dashboard/pages/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'events',
+        loadComponent: () =>
+          import('./features/events/pages/events-list.component').then((m) => m.EventsListComponent),
+      },
+      {
+        path: 'events/new',
+        loadComponent: () =>
+          import('./features/events/pages/event-create.component').then((m) => m.EventCreateComponent),
+      },
+      {
+        path: 'events/:id',
+        loadComponent: () =>
+          import('./features/events/pages/event-detail.component').then((m) => m.EventDetailComponent),
+      },
+      {
+        path: 'events/:id/edit',
+        loadComponent: () =>
+          import('./features/events/pages/event-edit.component').then((m) => m.EventEditComponent),
+      },
+      {
+        path: 'events/:id/card',
+        loadComponent: () =>
+          import('./features/events/pages/event-card.component').then((m) => m.EventCardComponent),
+      },
+      {
+        path: 'events/:id/guests',
+        loadComponent: () =>
+          import('./features/guests/pages/guests.component').then((m) => m.GuestsComponent),
+      },
+      {
+        path: 'events/:id/invitations',
+        loadComponent: () =>
+          import('./features/invitations/pages/invitations.component').then((m) => m.InvitationsComponent),
+      },
+      {
+        path: 'events/:id/links',
+        loadComponent: () =>
+          import('./features/links/pages/links.component').then((m) => m.LinksComponent),
+      },
+      {
+        path: 'payments',
+        loadComponent: () =>
+          import('./features/payments/pages/payments.component').then((m) => m.PaymentsComponent),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
+      },
+      // Admin
+      {
+        path: 'admin/users',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/admin/pages/admin-users.component').then((m) => m.AdminUsersComponent),
+      },
+      {
+        path: 'admin/payments',
+        canActivate: [roleGuard('ADMIN')],
+        loadComponent: () =>
+          import('./features/admin/pages/admin-payments.component').then((m) => m.AdminPaymentsComponent),
+      },
+    ],
+  },
+
+  // ── Agent check-in ────────────────────────────────────────────────
+  {
+    path: 'checkin',
+    component: AgentLayoutComponent,
+    canActivate: [authGuard, roleGuard('AGENT')],
+    children: [
+      {
+        path: 'scan',
+        loadComponent: () =>
+          import('./features/checkin/pages/scan.component').then((m) => m.ScanComponent),
+      },
+      { path: '', redirectTo: 'scan', pathMatch: 'full' },
+    ],
+  },
+
+  // ── Fallback ──────────────────────────────────────────────────────
+  { path: '**', redirectTo: 'dashboard' },
+];

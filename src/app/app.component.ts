@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { LoaderComponent } from './shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [RouterOutlet, ToastComponent, LoaderComponent],
+  template: `
+    <router-outlet />
+    <app-toast />
+    <app-loader />
+  `,
 })
-export class AppComponent {
-  title = 'smart-invite-v3';
-}
+export class AppComponent {}
