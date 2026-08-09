@@ -16,7 +16,7 @@ export const routes: Routes = [
         path: 'login',
         canActivate: [publicGuard],
         loadComponent: () =>
-          import('./features/auth/pages/login.component').then((m) => m.LoginComponent),
+          import('./features/auth/pages/login/login.component').then((m) => m.LoginComponent),
       },
       {
         path: 'register',

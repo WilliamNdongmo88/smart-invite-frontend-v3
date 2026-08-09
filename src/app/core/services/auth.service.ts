@@ -6,6 +6,8 @@ import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 import {
   ForgotPasswordRequest,
+  GoogleLoginRequest,
+  GoogleLoginResponse,
   LoginRequest,
   LoginResponse,
   LogoutRequest,
@@ -55,6 +57,16 @@ export class AuthService {
     return this.http
       .post<ApiResponse<void>>(`${this.base}/logout`, { refreshToken } as LogoutRequest)
       .pipe(tap(() => this.clearTokens()));
+  }
+
+  googleLogin(idToken: string): Observable<ApiResponse<GoogleLoginResponse>> {
+    return this.http.post<ApiResponse<GoogleLoginResponse>>(`${this.base}/google`, { idToken } as GoogleLoginRequest).pipe(
+      tap((res) => {
+        if (res.data && !res.data.needsRegistration && res.data.accessToken && res.data.refreshToken) {
+          this.setTokens(res.data.accessToken, res.data.refreshToken);
+        }
+      })
+    );
   }
 
   forgotPassword(req: ForgotPasswordRequest): Observable<ApiResponse<void>> {

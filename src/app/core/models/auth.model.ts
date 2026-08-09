@@ -45,3 +45,17 @@ export interface ResetPasswordRequest {
   token: string;
   newPassword: string;
 }
+
+export interface GoogleLoginRequest {
+  idToken: string;
+}
+
+export interface GoogleLoginResponse {
+  needsRegistration: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresIn?: number;
+  email?: string;
+  name?: string;
+  avatarUrl?: string;
+}
