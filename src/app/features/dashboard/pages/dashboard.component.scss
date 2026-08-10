@@ -94,9 +94,10 @@
   padding: 1.25rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   transition: border-color 0.2s;
-  min-width: 0; /* empêche le débordement flex */
+  min-width: 0;
   overflow: hidden;
 
   &:hover { border-color: #3a3a3a; }
