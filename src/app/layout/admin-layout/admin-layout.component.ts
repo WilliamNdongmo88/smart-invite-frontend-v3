@@ -9,7 +9,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TopbarComponent],
   template: `
     <div class="admin-layout">
-      <app-topbar [showMenuBtn]="true" [userName]="'Admin'" (menuClick)="toggleSidebar()" />
+      <app-topbar [showMenuBtn]="true" [userName]="userName()" (menuClick)="toggleSidebar()" />
 
       <div class="admin-body">
         <!-- Sidebar -->
@@ -114,6 +114,7 @@ export class AdminLayoutComponent {
   sidebarCollapsed = signal(false);
   mobileOpen = signal(false);
   readonly year = new Date().getFullYear();
+  readonly userName = signal(this.auth.getName() ?? 'Admin');
 
   toggleSidebar(): void {
     if (window.innerWidth <= 768) {

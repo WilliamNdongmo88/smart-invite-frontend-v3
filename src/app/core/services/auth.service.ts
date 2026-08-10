@@ -95,6 +95,17 @@ export class AuthService {
     return !!this.getAccessToken();
   }
 
+  getName(): string | null {
+    const token = this.getAccessToken();
+    if (!token) return null;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.name ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   getRole(): string | null {
     const token = this.getAccessToken();
     if (!token) return null;

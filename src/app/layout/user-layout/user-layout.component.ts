@@ -129,6 +129,6 @@ import { TopbarComponent } from '../topbar/topbar.component';
 })
 export class UserLayoutComponent {
   private readonly auth = inject(AuthService);
-  readonly userName = this.auth.getRole() ?? '';
+  readonly userName = this.auth.getName() ?? '';
   readonly year = new Date().getFullYear();
 }

@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 import { publicGuard } from './core/guards/public.guard';
 import { roleGuard } from './core/guards/role.guard';
-import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { AdminLayoutComponent } from './layout/admin-layout/admin-layout.component';
+import { UserLayoutComponent } from './layout/user-layout/user-layout.component';
 import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.component';
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
@@ -52,10 +53,35 @@ export const routes: Routes = [
     ],
   },
 
-  // ── App principale USER / ADMIN ───────────────────────────────────
+  // ── Admin (Topbar + Sidebar + Content + Footer) ───────────────────
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [authGuard, roleGuard('ADMIN')],
+    children: [
+      { path: '', redirectTo: 'users', pathMatch: 'full' },
+      {
+        path: 'users',
+        loadComponent: () =>
+          import('./features/admin/pages/admin-users.component').then((m) => m.AdminUsersComponent),
+      },
+      {
+        path: 'payments',
+        loadComponent: () =>
+          import('./features/admin/pages/admin-payments.component').then((m) => m.AdminPaymentsComponent),
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
+      },
+    ],
+  },
+
+  // ── User (Topbar + Content + Footer, sans sidebar) ────────────────
   {
     path: '',
-    component: MainLayoutComponent,
+    component: UserLayoutComponent,
     canActivate: [authGuard],
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -113,19 +139,6 @@ export const routes: Routes = [
         path: 'profile',
         loadComponent: () =>
           import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
-      },
-      // Admin
-      {
-        path: 'admin/users',
-        canActivate: [roleGuard('ADMIN')],
-        loadComponent: () =>
-          import('./features/admin/pages/admin-users.component').then((m) => m.AdminUsersComponent),
-      },
-      {
-        path: 'admin/payments',
-        canActivate: [roleGuard('ADMIN')],
-        loadComponent: () =>
-          import('./features/admin/pages/admin-payments.component').then((m) => m.AdminPaymentsComponent),
       },
     ],
   },
