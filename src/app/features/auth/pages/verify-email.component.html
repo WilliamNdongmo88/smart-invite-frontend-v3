@@ -1,0 +1,110 @@
+<div class="split-screen">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-tag">SMART INVITE</div>
+
+    <svg class="waves-svg" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#c9a84c" stop-opacity="0.9"/>
+          <stop offset="50%"  stop-color="#8B6914" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#3d2e00" stop-opacity="0.5"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#f0c040" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.2"/>
+        </linearGradient>
+        <linearGradient id="g3" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1a1a1a" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#2a2000" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+      <rect width="600" height="700" fill="url(#g3)"/>
+      <path class="wave w1" d="M-50,200 C100,100 200,350 400,250 S600,100 700,200" fill="none" stroke="url(#g1)" stroke-width="80" stroke-linecap="round" opacity="0.5"/>
+      <path class="wave w2" d="M-50,350 C150,200 300,500 500,350 S650,200 750,300" fill="none" stroke="url(#g2)" stroke-width="60" stroke-linecap="round" opacity="0.4"/>
+      <path class="wave w3" d="M-50,500 C100,350 250,600 450,480 S620,320 700,420" fill="none" stroke="url(#g1)" stroke-width="90" stroke-linecap="round" opacity="0.3"/>
+      <path class="wave w4" d="M-50,150 C200,50  350,400 550,280 S700,150 800,250" fill="none" stroke="url(#g2)" stroke-width="40" stroke-linecap="round" opacity="0.6"/>
+      <path class="wave w5" d="M-50,600 C150,450 300,700 500,580 S680,400 750,500" fill="none" stroke="url(#g1)" stroke-width="50" stroke-linecap="round" opacity="0.35"/>
+    </svg>
+
+    <div class="left-bottom">
+      <h2 class="left-headline">
+        Vérifiez<br/>votre<br/>identité
+      </h2>
+      <p class="left-sub">
+        Un code à 6 chiffres a été envoyé<br/>
+        à votre adresse email.
+      </p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="right-inner">
+
+      <div class="right-logo">
+        <span class="logo-icon">✦</span>
+        <span>Smart<span class="gold">Invite</span></span>
+      </div>
+
+      <div class="envelope-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="1.5">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+      </div>
+
+      <h1 class="right-title">Vérification email</h1>
+      <p class="right-sub">
+        Code envoyé à<br/>
+        <span class="email-highlight">{{ maskedEmail }}</span>
+      </p>
+
+      <!-- OTP inputs -->
+      <div class="otp-row" (paste)="onPaste($event)">
+        @for (digit of digits(); track $index) {
+          <input
+            #otpInput
+            type="text"
+            inputmode="numeric"
+            maxlength="1"
+            class="otp-box"
+            [class.filled]="digit !== ''"
+            [class.loading]="loading()"
+            [value]="digit"
+            [disabled]="loading()"
+            (input)="onInput($index, $event)"
+            (keydown)="onKeydown($index, $event)"
+          />
+        }
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-submit" [disabled]="loading() || digits().join('').length < 6" (click)="submit()">
+        @if (loading()) { <span class="spinner"></span> }
+        Vérifier le code
+      </button>
+
+      <!-- Resend -->
+      <div class="resend-row">
+        <span class="resend-label">Vous n'avez pas reçu le code ?</span>
+        @if (countdown() > 0) {
+          <span class="countdown">Renvoyer dans {{ countdown() }}s</span>
+        } @else {
+          <button class="resend-btn" [disabled]="resendLoading()" (click)="resend()">
+            @if (resendLoading()) { <span class="spinner-sm"></span> }
+            Renvoyer le code
+          </button>
+        }
+      </div>
+
+      <p class="bottom-link">
+        <a routerLink="/login">← Retour à la connexion</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>

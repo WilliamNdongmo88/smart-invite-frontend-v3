@@ -71,6 +71,10 @@ export class AuthService {
     );
   }
 
+  resendOtp(email: string): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(`${this.base}/resend-otp?email=${encodeURIComponent(email)}`, {});
+  }
+
   forgotPassword(req: ForgotPasswordRequest): Observable<ApiResponse<void>> {
     return this.http.post<ApiResponse<void>>(`${this.base}/forgot-password`, req);
   }
