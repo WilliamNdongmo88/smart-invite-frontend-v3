@@ -52,22 +52,27 @@ import { TopbarComponent } from '../topbar/topbar.component';
     </div>
   `,
   styles: [`
+    *, *::before, *::after { box-sizing: border-box; }
+
     .user-layout {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      min-height: 100dvh;
       background: #111;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     /* ── Content ── */
     .user-content {
       flex: 1;
-      padding: 1.5rem;
-      max-width: 1100px;
       width: 100%;
+      max-width: 1200px;
       margin: 0 auto;
+      padding: 1.5rem;
       box-sizing: border-box;
-      padding-bottom: 5rem; /* espace pour bottom nav mobile */
+      overflow-x: hidden;
     }
 
     /* ── Footer ── */
@@ -79,51 +84,66 @@ import { TopbarComponent } from '../topbar/topbar.component';
       border-top: 1px solid #2a2a2a;
     }
 
-    /* ── Bottom nav (mobile) ── */
-    .bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background: #1a1a1a;
-      border-top: 1px solid #2a2a2a;
-      z-index: 200;
-    }
-
+    /* ── Bottom nav ── */
     .bottom-nav {
       display: flex;
       justify-content: space-around;
       align-items: center;
+      position: fixed;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      height: 60px;
+      background: #1a1a1a;
+      border-top: 1px solid #2a2a2a;
+      z-index: 200;
+      border-radius: 10px;
+      /* safe area pour iPhone avec encoche */
+      padding-bottom: env(safe-area-inset-bottom, 0);
     }
 
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 0.2rem;
       color: #666;
       text-decoration: none;
       font-size: 0.65rem;
       font-weight: 500;
-      padding: 0.5rem 0.75rem;
+      padding: 0.4rem 0.5rem;
       border-radius: 8px;
       transition: color 0.2s;
       flex: 1;
-      justify-content: center;
+      min-width: 0;
     }
+    .nav-item span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .nav-item:hover { color: #aaa; }
     .nav-item.active { color: #c9a84c; }
 
-    /* Desktop : cacher bottom nav, ajouter nav horizontale dans topbar */
+    /* Desktop : cacher bottom nav */
     @media (min-width: 769px) {
-      .bottom-nav { display: none !important; }
-      .user-content { padding-bottom: 1.5rem; }
+      .bottom-nav { display: none; }
+      .user-content { padding: 2rem 1.5rem; }
+      .user-footer { display: block; }
     }
 
+    /* Mobile : padding-bottom pour laisser place à la bottom nav */
     @media (max-width: 768px) {
-      .user-content { padding: 1rem; }
+      .user-content {
+        padding: 1rem 1rem calc(60px + 1rem + env(safe-area-inset-bottom, 0px));
+      }
+      .user-footer { display: none; }
+    }
+
+    @media (max-width: 480px) {
+      .user-content { padding: 0.75rem 0.75rem calc(60px + 0.75rem + env(safe-area-inset-bottom, 0px)); }
+    }
+
+    @media (max-width: 360px) {
+      .user-content { padding: 0.5rem 0.5rem calc(60px + 0.5rem + env(safe-area-inset-bottom, 0px)); }
+      .nav-item { font-size: 0.6rem; }
     }
   `],
 })

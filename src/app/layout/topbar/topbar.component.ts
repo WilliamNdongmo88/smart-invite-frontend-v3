@@ -33,11 +33,13 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
           </svg>
           <span class="logout-label">Déconnexion</span>
         </button>
-        <app-avatar [name]="userName()" [size]="30" />
+        <app-avatar [name]="userName()" [size]="25" />
       </div>
     </header>
   `,
   styles: [`
+    *, *::before, *::after { box-sizing: border-box; }
+
     .topbar {
       height: 56px;
       background: #1a1a1a;
@@ -50,28 +52,52 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
       position: sticky;
       top: 0;
       z-index: 100;
+      width: 100%;
+      overflow: hidden;
     }
-    .topbar-left { display: flex; align-items: center; gap: 0.75rem; }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: 0;
+      flex-shrink: 1;
+    }
     .menu-btn {
       background: none; border: none; color: #aaa; cursor: pointer;
       display: flex; align-items: center; padding: 0.25rem;
-      border-radius: 6px;
+      border-radius: 6px; flex-shrink: 0;
     }
     .menu-btn:hover { color: #fff; background: #2a2a2a; }
-    .brand { display: flex; align-items: center; gap: 0.35rem; text-decoration: none; font-weight: 700; font-size: 1rem; color: #fff; }
-    .brand-icon { color: #c9a84c; }
+    .brand {
+      display: flex; align-items: center; gap: 0.35rem;
+      text-decoration: none; font-weight: 700; font-size: 1rem;
+      color: #fff; min-width: 0; flex-shrink: 1;
+    }
+    .brand-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .brand-icon { color: #c9a84c; flex-shrink: 0; }
     .gold { color: #c9a84c; }
-    .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+    .topbar-right {
+      display: flex; align-items: center; gap: 0.75rem;
+      flex-shrink: 0;
+    }
     .logout-btn {
       display: flex; align-items: center; gap: 0.4rem;
       background: none; border: 1px solid #333; border-radius: 6px;
       color: #888; cursor: pointer; font-size: 0.8rem; padding: 0.35rem 0.75rem;
-      transition: border-color 0.2s, color 0.2s;
+      transition: border-color 0.2s, color 0.2s; white-space: nowrap;
     }
     .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+
     @media (max-width: 480px) {
+      .topbar { padding: 0 0.75rem; }
       .logout-label { display: none; }
       .logout-btn { padding: 0.35rem; }
+      .topbar-right { gap: 0.5rem; }
+    }
+
+    @media (max-width: 360px) {
+      .topbar { padding: 0 0.5rem; }
+      .brand-name { font-size: 0.9rem; }
     }
   `],
 })
