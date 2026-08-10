@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
   userName = this.auth.getName() ?? 'vous';
   loading = signal(true);
   events = signal<Event[]>([]);
+  eventStatsMap = signal<Record<number, EventStats>>({});
   stats = signal<DashboardStats>({
     activeEvents: 0,
     totalGuests: 0,
@@ -69,6 +70,10 @@ export class DashboardComponent implements OnInit {
         .filter((e) => e.eventDate && new Date(e.eventDate) >= new Date())
         .sort((a, b) => new Date(a.eventDate!).getTime() - new Date(b.eventDate!).getTime());
 
+      const statsMap: Record<number, EventStats> = {};
+      validStats.forEach((st) => { if (st?.id) statsMap[st.id] = st; });
+      this.eventStatsMap.set(statsMap);
+
       this.stats.set({
         activeEvents,
         totalGuests,
@@ -83,6 +88,12 @@ export class DashboardComponent implements OnInit {
 
   formatDate(date: string): string {
     return new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  responseRate(eventId: number): number {
+    const st = this.eventStatsMap()[eventId];
+    if (!st || st.totalGuests === 0) return 0;
+    return Math.round(((st.confirmed + st.declined) / st.totalGuests) * 100);
   }
 
   statusClass(status: string): string {

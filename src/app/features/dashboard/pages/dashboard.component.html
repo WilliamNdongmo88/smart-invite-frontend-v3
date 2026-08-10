@@ -101,17 +101,24 @@
         <div class="events-list">
           @for (event of events(); track event.id) {
             <a [routerLink]="['/events', event.id]" class="event-row">
-              <div class="event-row-left">
-                <span class="event-type-dot"></span>
-                <div>
-                  <p class="event-name">{{ event.title }}</p>
-                  <p class="event-meta">
-                    {{ typeLabels[event.type] }}
-                    @if (event.eventDate) { · {{ formatDate(event.eventDate) }} }
-                  </p>
+              <div class="event-row-top">
+                <div class="event-row-left">
+                  <div>
+                    <p class="event-name">{{ event.title }}</p>
+                    <p class="event-meta">
+                      {{ typeLabels[event.type] }}
+                      @if (event.eventDate) { · {{ formatDate(event.eventDate) }} }
+                    </p>
+                  </div>
                 </div>
+                <span class="badge {{ statusClass(event.status) }}">{{ statusLabels[event.status] }}</span>
               </div>
-              <span class="badge {{ statusClass(event.status) }}">{{ statusLabels[event.status] }}</span>
+              <div class="event-progress">
+                <div class="event-progress-bar">
+                  <div class="event-progress-fill" [style.width.%]="responseRate(event.id)"></div>
+                </div>
+                <span class="event-progress-label">{{ responseRate(event.id) }}% de réponses</span>
+              </div>
             </a>
           }
         </div>
