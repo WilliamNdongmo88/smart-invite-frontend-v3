@@ -7,6 +7,7 @@ export const publicGuard: CanActivateFn = () => {
   const router = inject(Router);
   if (!auth.isLoggedIn()) return true;
   const role = auth.getRole();
+  console.log("### role: ", role);
   if (role === 'AGENT') return router.createUrlTree(['/checkin/scan']);
   if (role === 'ADMIN') return router.createUrlTree(['/admin/users']);
   return router.createUrlTree(['/dashboard']);

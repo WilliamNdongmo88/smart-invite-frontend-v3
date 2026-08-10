@@ -39,6 +39,7 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.base}/login`, req).pipe(
       tap((res) => {
         if (res.data) {
+          console.log("### data: ", res.data);
           this.setTokens(res.data.accessToken, res.data.refreshToken);
         }
       })
@@ -63,6 +64,7 @@ export class AuthService {
     return this.http.post<ApiResponse<GoogleLoginResponse>>(`${this.base}/google`, { idToken } as GoogleLoginRequest).pipe(
       tap((res) => {
         if (res.data && !res.data.needsRegistration && res.data.accessToken && res.data.refreshToken) {
+          console.log("### data: ", res.data);
           this.setTokens(res.data.accessToken, res.data.refreshToken);
         }
       })
@@ -98,10 +100,7 @@ export class AuthService {
     if (!token) return null;
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      // Spring Security stocke le rôle dans "authorities" ou "role"
-      const authorities: string[] = payload.authorities ?? payload.roles ?? [];
-      const roleEntry = authorities.find((a: string) => a.startsWith('ROLE_'));
-      return roleEntry ? roleEntry.replace('ROLE_', '') : null;
+      return payload.role ?? null;
     } catch {
       return null;
     }
