@@ -23,22 +23,22 @@ export const routes: Routes = [
         path: 'register',
         canActivate: [publicGuard],
         loadComponent: () =>
-          import('./features/auth/pages/register.component').then((m) => m.RegisterComponent),
+          import('./features/auth/pages/register/register.component').then((m) => m.RegisterComponent),
       },
       {
         path: 'verify-email',
         loadComponent: () =>
-          import('./features/auth/pages/verify-email.component').then((m) => m.VerifyEmailComponent),
+          import('./features/auth/pages/verify-email/verify-email.component').then((m) => m.VerifyEmailComponent),
       },
       {
         path: 'forgot-password',
         loadComponent: () =>
-          import('./features/auth/pages/forgot-password.component').then((m) => m.ForgotPasswordComponent),
+          import('./features/auth/pages/forgot-password/forgot-password.component').then((m) => m.ForgotPasswordComponent),
       },
       {
         path: 'reset-password',
         loadComponent: () =>
-          import('./features/auth/pages/reset-password.component').then((m) => m.ResetPasswordComponent),
+          import('./features/auth/pages/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent),
       },
       {
         path: 'invitations/:token/rsvp',

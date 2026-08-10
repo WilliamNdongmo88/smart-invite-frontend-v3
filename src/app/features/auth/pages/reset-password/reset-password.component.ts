@@ -8,8 +8,8 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null {
   const pw = ctrl.get('newPassword')?.value;

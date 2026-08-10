@@ -1,8 +1,8 @@
 import { Component, inject, signal, OnInit, OnDestroy, PLATFORM_ID, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../core/services/toast.service';
 
 @Component({
   selector: 'app-verify-email',
