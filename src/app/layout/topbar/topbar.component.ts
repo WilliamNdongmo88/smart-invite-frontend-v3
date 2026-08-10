@@ -33,7 +33,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
           </svg>
           <span class="logout-label">Déconnexion</span>
         </button>
-        <app-avatar [name]="userName()" [size]="34" />
+        <app-avatar [name]="userName()" [size]="30" />
       </div>
     </header>
   `,
