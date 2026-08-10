@@ -1,0 +1,158 @@
+<div class="events-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Mes événements</h1>
+      <p class="page-sub">{{ counts().ALL }} événement{{ counts().ALL > 1 ? 's' : '' }} au total</p>
+    </div>
+    <a routerLink="/events/new" class="btn-gold">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nouvel événement
+    </a>
+  </div>
+
+  <!-- Toolbar : tabs + search -->
+  <div class="toolbar">
+    <div class="tabs">
+      @for (tab of tabs; track tab.key) {
+        <button class="tab" [class.active]="activeTab() === tab.key" (click)="setTab(tab.key)">
+          {{ tab.label }}
+          @if (counts()[tab.key] > 0) {
+            <span class="tab-count">{{ counts()[tab.key] }}</span>
+          }
+        </button>
+      }
+    </div>
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Rechercher..." [value]="search()" (input)="onSearch($any($event.target).value)" class="search-input" />
+    </div>
+  </div>
+
+  <!-- Content -->
+  @if (loading()) {
+    <div class="skeleton-grid">
+      @for (i of [1,2,3,4,5,6]; track i) { <div class="skeleton-card"></div> }
+    </div>
+  } @else if (filtered().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+      </div>
+      @if (search() || activeTab() !== 'ALL') {
+        <p>Aucun événement ne correspond à votre recherche</p>
+        <button class="btn-outline-sm" (click)="setTab('ALL'); onSearch('')">Réinitialiser les filtres</button>
+      } @else {
+        <p>Vous n'avez pas encore d'événement</p>
+        <a routerLink="/events/new" class="btn-gold btn-sm">Créer mon premier événement</a>
+      }
+    </div>
+  } @else {
+    <div class="events-grid">
+      @for (event of filtered(); track event.id) {
+        <div class="event-card" [class.is-deleting]="deleting() === event.id">
+
+          <!-- Card header -->
+          <div class="card-header">
+            <span class="badge {{ statusClass(event.status) }}">{{ statusLabels[event.status] }}</span>
+            <span class="event-type">{{ typeLabels[event.type] }}</span>
+          </div>
+
+          <!-- Card body -->
+          <div class="card-body">
+            <h3 class="event-title">{{ event.title }}</h3>
+
+            <div class="event-details">
+              @if (event.eventDate) {
+                <div class="detail-row">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  <span>{{ formatDate(event.eventDate) }}</span>
+                </div>
+              }
+              @if (location(event)) {
+                <div class="detail-row">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  <span>{{ location(event) }}</span>
+                </div>
+              }
+              <div class="detail-row">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+                <span>{{ event.maxGuests }} invités max</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card actions -->
+          <div class="card-actions">
+            <a [routerLink]="['/events', event.id]" class="action-btn action-view" title="Voir">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              Voir
+            </a>
+            <a [routerLink]="['/events', event.id, 'edit']" class="action-btn action-edit" title="Éditer">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+              Éditer
+            </a>
+            <button class="action-btn action-delete" (click)="askDelete(event.id)" title="Supprimer">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6"/><path d="M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal confirmation suppression -->
+  @if (confirmDeleteId()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6"/><path d="M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </div>
+        <h3 class="modal-title">Supprimer l'événement ?</h3>
+        <p class="modal-text">Cette action est irréversible. Toutes les données associées (invités, invitations, liens) seront supprimées.</p>
+        <div class="modal-actions">
+          <button class="btn-cancel" (click)="cancelDelete()">Annuler</button>
+          <button class="btn-danger" (click)="confirmDelete()">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
