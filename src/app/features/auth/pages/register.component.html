@@ -1,0 +1,152 @@
+<div class="split-screen">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="left-tag">SMART INVITE</div>
+
+    <svg class="waves-svg" viewBox="0 0 600 700" preserveAspectRatio="xMidYMid slice"
+         xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stop-color="#c9a84c" stop-opacity="0.9"/>
+          <stop offset="50%"  stop-color="#8B6914" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#3d2e00" stop-opacity="0.5"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stop-color="#f0c040" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.2"/>
+        </linearGradient>
+        <linearGradient id="g3" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%"   stop-color="#1a1a1a" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#2a2000" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="600" height="700" fill="url(#g3)"/>
+      <path class="wave w1" d="M-50,200 C100,100 200,350 400,250 S600,100 700,200" fill="none" stroke="url(#g1)" stroke-width="80" stroke-linecap="round" opacity="0.5"/>
+      <path class="wave w2" d="M-50,350 C150,200 300,500 500,350 S650,200 750,300" fill="none" stroke="url(#g2)" stroke-width="60" stroke-linecap="round" opacity="0.4"/>
+      <path class="wave w3" d="M-50,500 C100,350 250,600 450,480 S620,320 700,420" fill="none" stroke="url(#g1)" stroke-width="90" stroke-linecap="round" opacity="0.3"/>
+      <path class="wave w4" d="M-50,150 C200,50  350,400 550,280 S700,150 800,250" fill="none" stroke="url(#g2)" stroke-width="40" stroke-linecap="round" opacity="0.6"/>
+      <path class="wave w5" d="M-50,600 C150,450 300,700 500,580 S680,400 750,500" fill="none" stroke="url(#g1)" stroke-width="50" stroke-linecap="round" opacity="0.35"/>
+    </svg>
+
+    <div class="left-bottom">
+      <h2 class="left-headline">
+        Créez des<br/>invitations<br/>mémorables
+      </h2>
+      <p class="left-sub">
+        Gérez vos événements, envoyez vos invitations<br/>
+        et suivez vos invités en temps réel.
+      </p>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="right-inner">
+
+      <div class="right-logo">
+        <span class="logo-icon">✦</span>
+        <span>Smart<span class="gold">Invite</span></span>
+      </div>
+
+      <h1 class="right-title">Créer un compte</h1>
+      <p class="right-sub">
+        @if (fromGoogle()) {
+          Complétez votre profil pour finaliser l'inscription
+        } @else {
+          Rejoignez SmartInvite et gérez vos événements
+        }
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Nom -->
+        <div class="field">
+          <label for="name">Nom complet</label>
+          <input id="name" type="text" formControlName="name"
+                 placeholder="Jean Dupont"
+                 [class.invalid]="isInvalid('name')"
+                 autocomplete="name"/>
+          @if (isInvalid('name')) {
+            <span class="field-error">Nom requis (min. 2 caractères)</span>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" formControlName="email"
+                 placeholder="vous@exemple.com"
+                 [class.invalid]="isInvalid('email')"
+                 autocomplete="email"/>
+          @if (isInvalid('email')) {
+            <span class="field-error">E-mail invalide</span>
+          }
+        </div>
+
+        <!-- Téléphone -->
+        <div class="field">
+          <label for="phone">Téléphone <span class="optional">(optionnel)</span></label>
+          <input id="phone" type="tel" formControlName="phone"
+                 placeholder="+33 6 00 00 00 00"
+                 autocomplete="tel"/>
+        </div>
+
+        <!-- Mot de passe -->
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <div class="input-wrap">
+            <input id="password" [type]="showPw() ? 'text' : 'password'"
+                   formControlName="password" placeholder="Min. 8 caractères"
+                   [class.invalid]="isInvalid('password')"
+                   autocomplete="new-password"/>
+            <button type="button" class="eye-btn" (click)="showPw.set(!showPw())">
+              @if (showPw()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              }
+            </button>
+          </div>
+          @if (isInvalid('password')) {
+            <span class="field-error">Minimum 8 caractères</span>
+          }
+        </div>
+
+        <!-- Confirmer mot de passe -->
+        <div class="field">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <div class="input-wrap">
+            <input id="confirmPassword" [type]="showConfirm() ? 'text' : 'password'"
+                   formControlName="confirmPassword" placeholder="••••••••"
+                   [class.invalid]="isInvalid('confirmPassword') || passwordMismatch"
+                   autocomplete="new-password"/>
+            <button type="button" class="eye-btn" (click)="showConfirm.set(!showConfirm())">
+              @if (showConfirm()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+              } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              }
+            </button>
+          </div>
+          @if (passwordMismatch) {
+            <span class="field-error">Les mots de passe ne correspondent pas</span>
+          }
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading()">
+          @if (loading()) { <span class="spinner"></span> }
+          Créer mon compte
+        </button>
+
+      </form>
+
+      <p class="bottom-link">
+        Déjà un compte ? <a routerLink="/login">Se connecter</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
