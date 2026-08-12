@@ -96,8 +96,13 @@
           </div>
 
           <div class="field">
-            <label class="label">Budget estimé</label>
-            <input formControlName="budget" type="text" class="input" placeholder="Ex : 5 000 000 FCFA" />
+            <label class="label">Montant à payer</label>
+            <div class="budget-display">
+              💳 {{ computedBudget || '—' }}
+              @if (step2.value.maxGuests && step2.value.maxGuests > 0) {
+                <span class="budget-detail">({{ step2.value.maxGuests }} invités × 52 XAF)</span>
+              }
+            </div>
           </div>
 
           <div class="field full">

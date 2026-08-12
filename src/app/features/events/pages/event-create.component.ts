@@ -48,9 +48,13 @@ export class EventCreateComponent {
     title:          ['', [Validators.required, Validators.minLength(3)]],
     concernedNames: [''],
     maxGuests:      [50, [Validators.required, Validators.min(1)]],
-    budget:         [''],
     description:    [''],
   });
+
+  get computedBudget(): string {
+    const n = Number(this.step2.value.maxGuests) || 0;
+    return n > 0 ? `${(n * 52).toLocaleString('fr-FR')} XAF` : '';
+  }
 
   // ── Step 3 ──
   step3 = this.fb.group({
@@ -123,16 +127,15 @@ export class EventCreateComponent {
       description:    v2.description    || undefined,
       concernedNames: v2.concernedNames || undefined,
       maxGuests:      v2.maxGuests,
-      budget:         v2.budget         || undefined,
-      eventDate:      v3.eventDate      || undefined,
+      budget:         this.computedBudget || undefined,
+      eventDate:      this.isMariage ? (v3.civilDateTime || undefined) : (v3.eventDate || undefined),
       showWeddingReligiousLocation: this.isMariage ? v3.showWeddingReligiousLocation : false,
       importMyModelCard: mode === 'UPLOAD',
     };
 
-    console.log('Submitting event with base data:', base, 'and card mode:', mode);
+    console.log('Submitting event with data:', base, 'Card mode:', mode, 'Upload file:', this.uploadFile());
 
     if (this.isMariage) {
-      base.eventDate = v3.civilDateTime || undefined;
       base.religiousLocation = v3.religiousLocation || undefined;
       base.religiousDateTime = v3.religiousDateTime || undefined;
       base.civilLocation     = v3.civilLocation     || undefined;
@@ -169,10 +172,10 @@ export class EventCreateComponent {
           hasInvitationModelCard: false,
         },
       };
-      // this.svc.createWithCard(payload).subscribe({
-      //   next: (res) => this.done(res.data!.event.id),
-      //   error: () => this.fail(),
-      // });
+      this.svc.createWithCard(payload).subscribe({
+        next: (res) => this.done(res.data!.event.id),
+        error: () => this.fail(),
+      });
       return;
     }
 
