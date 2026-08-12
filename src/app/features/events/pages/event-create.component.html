@@ -320,7 +320,14 @@
         </div>
       </div>
 
-      <!-- Colonne droite : prévisualisation -->
+      <!-- Colonne droite : prévisualisation PDF importé -->
+      @if (cardMode() === 'UPLOAD' && uploadObjectUrl()) {
+        <div class="preview-col">
+          <iframe [src]="uploadObjectUrl()" class="pdf-iframe" title="Prévisualisation PDF"></iframe>
+        </div>
+      }
+
+      <!-- Colonne droite : prévisualisation CUSTOM -->
       @if (cardMode() === 'CUSTOM') {
         <div class="preview-col">
           <div class="preview-wrapper">

@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { switchMap } from 'rxjs/operators';
 import { EventService } from '../../../core/services/event.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -22,11 +23,14 @@ export class EventCreateComponent {
   private readonly toast  = inject(ToastService);
   private readonly router = inject(Router);
 
+  private readonly sanitizer = inject(DomSanitizer);
+
   step    = signal(1);
   loading = signal(false);
   cardMode = signal<CardMode>('NONE');
   uploadFile = signal<File | null>(null);
   uploadPreview = signal<string | null>(null);
+  uploadObjectUrl = signal<SafeResourceUrl | null>(null);
 
   readonly TOTAL_STEPS = 4;
 
@@ -101,8 +105,10 @@ export class EventCreateComponent {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
     if (file.type !== 'application/pdf') { this.toast.error('Seuls les fichiers PDF sont acceptés'); return; }
+    if (this.uploadObjectUrl()) URL.revokeObjectURL(this.uploadObjectUrl() as string);
     this.uploadFile.set(file);
     this.uploadPreview.set(file.name);
+    this.uploadObjectUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(file)));
   }
 
   next(): void {
