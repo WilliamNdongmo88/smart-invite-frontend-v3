@@ -82,12 +82,14 @@ export interface EventWithCard {
   card: InvitationCard;
 }
 
-export interface CreateEventWithCardRequest extends CreateEventRequest {
-  card: InvitationCard;
+export interface CreateEventWithCardRequest {
+  event: CreateEventRequest;
+  invitationNote: InvitationCard;
 }
 
-export interface UpdateEventWithCardRequest extends UpdateEventRequest {
-  card: InvitationCard;
+export interface UpdateEventWithCardRequest {
+  event: UpdateEventRequest;
+  invitationNote: InvitationCard;
 }
 
 export interface ThankYouTemplate {
