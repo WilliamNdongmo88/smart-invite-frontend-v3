@@ -79,7 +79,8 @@ export interface InvitationCard {
 
 export interface EventWithCard {
   event: Event;
-  card: InvitationCard;
+  card?: InvitationCard;        // GET /api/events/{id}/card
+  invitationNote?: InvitationCard; // POST/PUT /api/events/with-card
 }
 
 export interface CreateEventWithCardRequest {

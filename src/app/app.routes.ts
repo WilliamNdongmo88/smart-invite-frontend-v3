@@ -108,7 +108,7 @@ export const routes: Routes = [
       {
         path: 'events/:id/edit',
         loadComponent: () =>
-          import('./features/events/pages/event-edit.component').then((m) => m.EventEditComponent),
+          import('./features/events/pages/event-edit/event-edit.component').then((m) => m.EventEditComponent),
       },
       {
         path: 'events/:id/card',
