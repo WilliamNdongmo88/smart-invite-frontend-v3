@@ -1,0 +1,236 @@
+<div class="detail-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <a routerLink="/events" class="back-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      Mes événements
+    </a>
+    @if (event()) {
+      <div class="header-row">
+        <div class="header-left">
+          <div class="event-type-badge">{{ typeLabel() }}</div>
+          <h1 class="page-title">{{ event()!.title }}</h1>
+          @if (event()!.concernedNames) {
+            <p class="concerned-names">{{ event()!.concernedNames }}</p>
+          }
+        </div>
+        <div class="header-actions">
+          <a [routerLink]="['/events', event()!.id, 'guests']" class="btn-action btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            Invités
+          </a>
+          <a [routerLink]="['/events', event()!.id, 'card']" class="btn-action btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            Carte
+          </a>
+          <a [routerLink]="['/events', event()!.id, 'invitations']" class="btn-action btn-gold">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Inviter
+          </a>
+          <a [routerLink]="['/events', event()!.id, 'edit']" class="btn-action btn-outline">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Éditer
+          </a>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loader-wrap">
+      <div class="spinner-lg"></div>
+    </div>
+  } @else if (event()) {
+
+    <!-- Stat cards -->
+    <!-- <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-body">
+          <p class="stat-label">Total invités</p>
+          <p class="stat-value">{{ stats()?.totalGuests ?? 0 }}</p>
+          <p class="stat-sub">sur {{ event()!.maxGuests }} places</p>
+        </div>
+        <div class="stat-icon">👥</div>
+      </div>
+      <div class="stat-card stat-green">
+        <div class="stat-body">
+          <p class="stat-label">Confirmés</p>
+          <p class="stat-value">{{ stats()?.confirmed ?? 0 }}</p>
+          <p class="stat-sub">Réponses positives</p>
+        </div>
+        <div class="stat-icon">✅</div>
+      </div>
+      <div class="stat-card stat-gold">
+        <div class="stat-body">
+          <p class="stat-label">En attente</p>
+          <p class="stat-value">{{ stats()?.pending ?? 0 }}</p>
+          <p class="stat-sub">Sans réponse</p>
+        </div>
+        <div class="stat-icon">⏳</div>
+      </div>
+      <div class="stat-card stat-red">
+        <div class="stat-body">
+          <p class="stat-label">Refusés</p>
+          <p class="stat-value">{{ stats()?.declined ?? 0 }}</p>
+          <p class="stat-sub">Réponses négatives</p>
+        </div>
+        <div class="stat-icon">❌</div>
+      </div>
+    </div> -->
+
+    <!-- Taux de réponse -->
+    @if (stats() && stats()!.totalGuests > 0) {
+      <div class="response-bar-card">
+        <div class="rb-header">
+          <span class="rb-label">Taux de réponse</span>
+          <span class="rb-pct">{{ responseRate() }}%</span>
+        </div>
+        <div class="rb-track">
+          <div class="rb-fill" [style.width.%]="responseRate()"></div>
+        </div>
+      </div>
+    }
+
+    <!-- Main content -->
+    <div class="content-grid">
+
+      <!-- Infos événement -->
+      <div class="info-card">
+        <h2 class="card-title">Informations</h2>
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-icon">🏷️</span>
+            <div>
+              <p class="info-key">Type</p>
+              <p class="info-val">{{ typeLabel() }}</p>
+            </div>
+          </div>
+          <div class="info-row">
+            <span class="info-icon">📊</span>
+            <div>
+              <p class="info-key">Statut</p>
+              <span class="status-badge" [class]="'status-' + event()!.status.toLowerCase()">{{ statusLabel() }}</span>
+            </div>
+          </div>
+          @if (event()!.eventDate) {
+            <div class="info-row">
+              <span class="info-icon">📅</span>
+              <div>
+                <p class="info-key">Date principale</p>
+                <p class="info-val">{{ formatDate(event()!.eventDate) }}</p>
+              </div>
+            </div>
+          }
+          @if (event()!.budget) {
+            <div class="info-row">
+              <span class="info-icon">💳</span>
+              <div>
+                <p class="info-key">Budget</p>
+                <p class="info-val">{{ event()!.budget }}</p>
+              </div>
+            </div>
+          }
+          @if (event()!.description) {
+            <div class="info-row">
+              <span class="info-icon">📝</span>
+              <div>
+                <p class="info-key">Description</p>
+                <p class="info-val">{{ event()!.description }}</p>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Cérémonies mariage -->
+        @if (isMariage()) {
+          <h3 class="section-sub">Programme</h3>
+          <div class="ceremony-list">
+            @if (event()!.civilLocation || event()!.civilDateTime) {
+              <div class="ceremony-row">
+                <span class="cer-icon">🏛️</span>
+                <div>
+                  <p class="cer-title">Cérémonie civile</p>
+                  <p class="cer-detail">{{ event()!.civilLocation }}</p>
+                  <p class="cer-date">{{ formatDate(event()!.civilDateTime) }}</p>
+                </div>
+              </div>
+            }
+            @if (event()!.showWeddingReligiousLocation && (event()!.religiousLocation || event()!.religiousDateTime)) {
+              <div class="ceremony-row">
+                <span class="cer-icon">⛪</span>
+                <div>
+                  <p class="cer-title">Cérémonie religieuse</p>
+                  <p class="cer-detail">{{ event()!.religiousLocation }}</p>
+                  <p class="cer-date">{{ formatDate(event()!.religiousDateTime) }}</p>
+                </div>
+              </div>
+            }
+            @if (event()!.banquetLocation || event()!.banquetDateTime) {
+              <div class="ceremony-row">
+                <span class="cer-icon">🥂</span>
+                <div>
+                  <p class="cer-title">Réception / Banquet</p>
+                  <p class="cer-detail">{{ event()!.banquetLocation }}</p>
+                  <p class="cer-date">{{ formatDate(event()!.banquetDateTime) }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Invités récents -->
+      <div class="guests-card">
+        <div class="guests-header">
+          <h2 class="card-title">Invités récents</h2>
+          <a [routerLink]="['/events', event()!.id, 'guests']" class="see-all">Voir tous →</a>
+        </div>
+
+        @if (guests().length === 0) {
+          <div class="empty-guests">
+            <span>👤</span>
+            <p>Aucun invité pour l'instant</p>
+            <a [routerLink]="['/events', event()!.id, 'guests']" class="btn-add-guest">+ Ajouter des invités</a>
+          </div>
+        } @else {
+          <div class="guest-list">
+            @for (g of guests(); track g.id) {
+              <div class="guest-row">
+                <div class="guest-avatar">{{ g.fullName.charAt(0).toUpperCase() }}</div>
+                <div class="guest-info">
+                  <p class="guest-name">{{ g.fullName }}</p>
+                  <p class="guest-contact">{{ g.email || g.phoneNumber || '—' }}</p>
+                </div>
+                <span class="rsvp-badge" [class]="'rsvp-' + g.rsvpStatus.toLowerCase()">
+                  {{ rsvpLabel(g.rsvpStatus) }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+
+    <!-- Quick links -->
+    <div class="quick-links">
+      <a [routerLink]="['/events', event()!.id, 'links']" class="quick-link">
+        <span class="ql-icon">🔗</span>
+        <span class="ql-label">Liens d'invitation</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a [routerLink]="['/events', event()!.id, 'invitations']" class="quick-link">
+        <span class="ql-icon">✉️</span>
+        <span class="ql-label">Gérer les invitations</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a [routerLink]="['/events', event()!.id, 'card']" class="quick-link">
+        <span class="ql-icon">🎴</span>
+        <span class="ql-label">Carte d'invitation</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+
+  }
+</div>

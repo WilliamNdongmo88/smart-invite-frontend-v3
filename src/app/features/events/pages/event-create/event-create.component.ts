@@ -3,9 +3,9 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { switchMap } from 'rxjs/operators';
-import { EventService } from '../../../core/services/event.service';
-import { ToastService } from '../../../core/services/toast.service';
-import { EventType } from '../../../core/models/enums.model';
+import { EventService } from '../../../../core/services/event.service';
+import { ToastService } from '../../../../core/services/toast.service';
+import { EventType } from '../../../../core/models/enums.model';
 
 type CardMode = 'NONE' | 'CUSTOM' | 'UPLOAD';
 interface TypeOption { key: EventType; label: string; icon: string; }

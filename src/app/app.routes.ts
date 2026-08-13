@@ -93,17 +93,17 @@ export const routes: Routes = [
       {
         path: 'events',
         loadComponent: () =>
-          import('./features/events/pages/events-list.component').then((m) => m.EventsListComponent),
+          import('./features/events/pages/events-list/events-list.component').then((m) => m.EventsListComponent),
       },
       {
         path: 'events/new',
         loadComponent: () =>
-          import('./features/events/pages/event-create.component').then((m) => m.EventCreateComponent),
+          import('./features/events/pages/event-create/event-create.component').then((m) => m.EventCreateComponent),
       },
       {
         path: 'events/:id',
         loadComponent: () =>
-          import('./features/events/pages/event-detail.component').then((m) => m.EventDetailComponent),
+          import('./features/events/pages/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
       },
       {
         path: 'events/:id/edit',
