@@ -1,0 +1,274 @@
+<div class="guests-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      @if (event()) {
+        <a [routerLink]="['/events', eventId]" class="back-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          {{ event()!.title }}
+        </a>
+      }
+      <h1 class="page-title">Invités</h1>
+      <p class="page-sub">{{ totalElements() }} invité(s) au total</p>
+    </div>
+    <button class="btn-gold" (click)="openAdd()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Ajouter un invité
+    </button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="tabs">
+      @for (tab of tabs; track tab.key) {
+        <button class="tab" [class.active]="activeTab() === tab.key" (click)="setTab(tab.key)">
+          {{ tab.label }}
+        </button>
+      }
+    </div>
+    <div class="toolbar-right">
+      @if (selectedCount() > 0) {
+        <button class="btn-danger-sm" (click)="askBulkDelete()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+          Supprimer ({{ selectedCount() }})
+        </button>
+      }
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" type="text" placeholder="Rechercher un invité..."
+          [value]="searchTerm()" (input)="onSearch($any($event.target).value)" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  @if (loading()) {
+    <div class="skeleton-wrap">
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  } @else if (guests().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <p class="empty-title">Aucun invité trouvé</p>
+      <p class="empty-sub">
+        @if (searchTerm() || activeTab() !== 'ALL') {
+          Aucun résultat pour ces filtres.
+        } @else {
+          Commencez par ajouter vos premiers invités.
+        }
+      </p>
+      @if (!searchTerm() && activeTab() === 'ALL') {
+        <button class="btn-gold btn-sm" (click)="openAdd()">+ Ajouter un invité</button>
+      }
+    </div>
+  } @else {
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="th-check">
+              <input type="checkbox" class="checkbox" [checked]="allSelected()" (change)="toggleAll()" />
+            </th>
+            <th>Invité</th>
+            <th>Contact</th>
+            <th>Notification</th>
+            <th>Table</th>
+            <th>Statut RSVP</th>
+            <th>Ajouté le</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (g of guests(); track g.id) {
+            <tr [class.row-selected]="isSelected(g.id)">
+              <td class="td-check">
+                <input type="checkbox" class="checkbox" [checked]="isSelected(g.id)" (change)="toggleOne(g.id)" />
+              </td>
+              <td>
+                <div class="guest-cell">
+                  <div class="avatar">{{ initials(g.fullName) }}</div>
+                  <span class="guest-name">{{ g.fullName }}</span>
+                </div>
+              </td>
+              <td>
+                <div class="contact-cell">
+                  @if (g.email) { <span class="contact-line">{{ g.email }}</span> }
+                  @if (g.phoneNumber) { <span class="contact-line muted">{{ g.phoneNumber }}</span> }
+                  @if (!g.email && !g.phoneNumber) { <span class="muted">—</span> }
+                </div>
+              </td>
+              <td>
+                @if (g.notificationMode) {
+                  <span class="notif-badge">{{ notifLabels[g.notificationMode] }}</span>
+                } @else {
+                  <span class="muted">—</span>
+                }
+              </td>
+              <td>
+                @if (g.tableNumber) {
+                  <span class="table-num">Table {{ g.tableNumber }}</span>
+                } @else {
+                  <span class="muted">—</span>
+                }
+              </td>
+              <td>
+                <span class="rsvp-badge" [class]="rsvpClass(g.rsvpStatus)">
+                  {{ rsvpLabels[g.rsvpStatus] }}
+                </span>
+              </td>
+              <td><span class="muted">{{ formatDate(g.createdAt) }}</span></td>
+              <td>
+                <div class="actions-cell">
+                  <button class="act-btn act-remind" title="Envoyer un rappel"
+                    [disabled]="reminderLoading() === g.id"
+                    (click)="askReminder(g.id)">
+                    @if (reminderLoading() === g.id) {
+                      <span class="spinner-xs"></span>
+                    } @else {
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+                    }
+                  </button>
+                  <button class="act-btn act-edit" title="Modifier" (click)="openEdit(g)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button class="act-btn act-delete" title="Supprimer" (click)="askDelete(g.id)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <span class="pag-info">
+          Page {{ page() + 1 }} sur {{ totalPages() }} — {{ totalElements() }} invité(s)
+        </span>
+        <div class="pag-btns">
+          <button class="pag-btn" [disabled]="page() === 0" (click)="prevPage()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+            Précédent
+          </button>
+          <button class="pag-btn" [disabled]="page() >= totalPages() - 1" (click)="nextPage()">
+            Suivant
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+</div>
+
+<!-- ══ MODAL : Ajout / Édition ══ -->
+@if (showForm()) {
+  <div class="modal-overlay" (click)="closeForm()">
+    <div class="modal modal-form" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">{{ editingGuest() ? 'Modifier l\'invité' : 'Ajouter un invité' }}</h2>
+        <button class="modal-close" (click)="closeForm()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="saveGuest()" class="form-body">
+        <div class="field">
+          <label class="label">Nom complet <span class="req">*</span></label>
+          <input formControlName="fullName" type="text" class="input" [class.error]="isInvalid('fullName')"
+            placeholder="Jean Dupont" />
+          @if (isInvalid('fullName')) { <p class="field-error">Requis, minimum 2 caractères</p> }
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label class="label">Email</label>
+            <input formControlName="email" type="email" class="input" placeholder="jean@exemple.com" />
+          </div>
+          <div class="field">
+            <label class="label">Téléphone</label>
+            <input formControlName="phoneNumber" type="tel" class="input" placeholder="+237 6XX XXX XXX" />
+          </div>
+        </div>
+        <div class="fields-row">
+          <div class="field">
+            <label class="label">Mode de notification</label>
+            <select formControlName="notificationMode" class="input">
+              @for (opt of notifOptions; track opt.key) {
+                <option [value]="opt.key">{{ opt.label }}</option>
+              }
+            </select>
+          </div>
+          <div class="field">
+            <label class="label">Numéro de table</label>
+            <input formControlName="tableNumber" type="number" class="input" placeholder="Ex : 5" min="1" />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-cancel" (click)="closeForm()">Annuler</button>
+          <button type="submit" class="btn-gold" [disabled]="saving()">
+            @if (saving()) { <span class="spinner-sm"></span> Enregistrement... }
+            @else { {{ editingGuest() ? 'Enregistrer' : 'Ajouter' }} }
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<!-- ══ MODAL : Suppression ══ -->
+@if (confirmDeleteId()) {
+  <div class="modal-overlay" (click)="cancelDelete()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-icon modal-icon-danger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+      </div>
+      <h2 class="modal-title">Supprimer l'invité ?</h2>
+      <p class="modal-text">Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Annuler</button>
+        <button class="btn-danger" (click)="confirmDelete()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ══ MODAL : Suppression en masse ══ -->
+@if (confirmBulkDelete()) {
+  <div class="modal-overlay" (click)="cancelBulkDelete()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-icon modal-icon-danger">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
+      </div>
+      <h2 class="modal-title">Supprimer {{ selectedCount() }} invité(s) ?</h2>
+      <p class="modal-text">Cette action est irréversible.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelBulkDelete()">Annuler</button>
+        <button class="btn-danger" (click)="confirmBulkDeleteAction()">Supprimer</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ══ MODAL : Rappel ══ -->
+@if (confirmReminderId()) {
+  <div class="modal-overlay" (click)="cancelReminder()">
+    <div class="modal modal-confirm" (click)="$event.stopPropagation()">
+      <div class="modal-icon modal-icon-gold">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
+      </div>
+      <h2 class="modal-title">Envoyer un rappel ?</h2>
+      <p class="modal-text">Un rappel sera envoyé à cet invité selon son mode de notification.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelReminder()">Annuler</button>
+        <button class="btn-gold" (click)="confirmReminder()">Envoyer</button>
+      </div>
+    </div>
+  </div>
+}
