@@ -14,6 +14,14 @@ export class CheckinService {
     return this.http.post<ApiResponse<AgentResponse>>(`${this.base}/agents`, req);
   }
 
+  getAgents(): Observable<ApiResponse<AgentResponse[]>> {
+    return this.http.get<ApiResponse<AgentResponse[]>>(`${this.base}/agents`);
+  }
+
+  deleteAgent(agentId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.base}/agents/${agentId}`);
+  }
+
   scan(token: string): Observable<ApiResponse<ScanResponse>> {
     return this.http.post<ApiResponse<ScanResponse>>(`${this.base}/scan/${token}`, {});
   }

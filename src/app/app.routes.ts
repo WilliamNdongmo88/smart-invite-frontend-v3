@@ -140,6 +140,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
       },
+      {
+        path: 'agents',
+        loadComponent: () =>
+          import('./features/checkin/pages/agents/agents.component').then((m) => m.AgentsComponent),
+      },
     ],
   },
 
