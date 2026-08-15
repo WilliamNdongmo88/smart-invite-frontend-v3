@@ -200,7 +200,9 @@
                 <div class="guest-avatar">{{ g.fullName.charAt(0).toUpperCase() }}</div>
                 <div class="guest-info">
                   <p class="guest-name">{{ g.fullName }}</p>
-                  <p class="guest-contact">{{ g.email || g.phoneNumber || '—' }}</p>
+                  <span class="guest-contact">
+                    {{ (g.notificationMode === 'EMAIL' ? g.email : g.phoneNumber) || '—' }}
+                  </span>
                 </div>
                 <span class="rsvp-badge" [class]="'rsvp-' + g.rsvpStatus.toLowerCase()">
                   {{ rsvpLabel(g.rsvpStatus) }}

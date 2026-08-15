@@ -192,7 +192,9 @@
               <div class="avatar avatar-sm">{{ initials(g.fullName) }}</div>
               <div class="bulk-guest-info">
                 <span class="guest-name">{{ g.fullName }}</span>
-                <span class="muted">{{ g.email || g.phoneNumber || '—' }}</span>
+                <span class="muted">
+                {{ (g.notificationMode === 'EMAIL' ? g.email : g.phoneNumber) || '—' }}
+              </span>
               </div>
               <span class="notif-mode">{{ g.notificationMode ?? 'EMAIL' }}</span>
             </label>

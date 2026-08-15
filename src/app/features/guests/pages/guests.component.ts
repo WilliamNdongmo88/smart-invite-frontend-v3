@@ -199,7 +199,11 @@ export class GuestsComponent implements OnInit {
         this.showForm.set(false);
         this.load();
       },
-      error: () => { this.toast.error('Erreur lors de la sauvegarde'); this.saving.set(false); },
+      error: (err) => {
+        const msg = err?.error?.message || (editing ? 'Erreur lors de la modification' : 'Erreur lors de l\'ajout');
+        this.toast.error(msg);
+        this.saving.set(false);
+      },
     });
   }
 
