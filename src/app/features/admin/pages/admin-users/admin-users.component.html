@@ -1,0 +1,139 @@
+<div class="au-page">
+
+  <!-- Header -->
+  <div class="au-header">
+    <div>
+      <h1 class="au-title">Utilisateurs</h1>
+      <p class="au-sub">Gestion des organisateurs inscrits</p>
+    </div>
+    <button class="btn-refresh" (click)="load()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Actualiser
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="au-stats">
+    <div class="stat-card">
+      <span class="stat-label">Total</span>
+      <span class="stat-value">{{ stats().total }}</span>
+    </div>
+    <div class="stat-card active">
+      <span class="stat-label">Actifs</span>
+      <span class="stat-value">{{ stats().active }}</span>
+    </div>
+    <div class="stat-card blocked">
+      <span class="stat-label">Bloqués</span>
+      <span class="stat-value">{{ stats().blocked }}</span>
+    </div>
+    <div class="stat-card inactive">
+      <span class="stat-label">Inactifs</span>
+      <span class="stat-value">{{ stats().inactive }}</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="au-search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      class="au-search"
+      type="text"
+      placeholder="Rechercher par nom ou email…"
+      [value]="search()"
+      (input)="updateSearch($any($event.target).value)" />
+  </div>
+
+  <!-- Table -->
+  <div class="au-card">
+    @if (loading()) {
+      <div class="au-loading">Chargement…</div>
+    } @else if (filtered().length === 0) {
+      <div class="au-empty">Aucun utilisateur trouvé.</div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Email</th>
+              <th>Téléphone</th>
+              <th>Événements</th>
+              <th>Statut</th>
+              <th>Inscrit le</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of filtered(); track o.id) {
+              <tr>
+                <td class="name-cell">{{ o.name }}</td>
+                <td class="email-cell">{{ o.email }}</td>
+                <td>{{ o.phone || '—' }}</td>
+                <td class="events-cell">
+                  @if (o.events.length === 0) {
+                    <span class="no-events">Aucun</span>
+                  } @else {
+                    <div class="events-list">
+                      @for (ev of o.events; track ev.id) {
+                        <span class="event-tag" [class]="'pay-' + (ev.paymentStatus ?? 'none')">
+                          {{ ev.title }}
+                        </span>
+                      }
+                    </div>
+                  }
+                </td>
+                <td>
+                  <span class="badge" [class]="statusClass(o)">{{ statusLabel(o) }}</span>
+                </td>
+                <td class="date-cell">{{ formatDate(o.createdAt) }}</td>
+                <td class="actions-cell">
+                  @if (processing() === o.id) {
+                    <span class="processing">…</span>
+                  } @else {
+                    @if (!o.isActive && !o.isBlocked) {
+                      <button class="btn-action activate" (click)="openConfirm(o, 'activate')">Activer</button>
+                    }
+                    @if (!o.isBlocked) {
+                      <button class="btn-action block" (click)="openConfirm(o, 'block')">Bloquer</button>
+                    } @else {
+                      <button class="btn-action unblock" (click)="openConfirm(o, 'unblock')">Débloquer</button>
+                    }
+                    <button class="btn-action delete" (click)="openConfirm(o, 'delete')">Supprimer</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- Confirm Modal -->
+@if (confirmUser()) {
+  <div class="modal-backdrop" (click)="closeConfirm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">{{ actionLabel(confirmAction()!) }} l'utilisateur</h3>
+      <p class="modal-sub">
+        Confirmer l'action <strong>{{ actionLabel(confirmAction()!) }}</strong> pour
+        <strong>{{ confirmUser()!.name }}</strong> ?
+        @if (confirmAction() === 'delete') {
+          <br><span class="modal-warn">⚠️ Cette action est irréversible.</span>
+        }
+      </p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeConfirm()">Annuler</button>
+        <button class="btn-confirm" [class.danger]="confirmAction() === 'delete'" (click)="confirm()">
+          Confirmer
+        </button>
+      </div>
+    </div>
+  </div>
+}

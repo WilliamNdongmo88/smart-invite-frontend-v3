@@ -63,12 +63,12 @@ export const routes: Routes = [
       {
         path: 'users',
         loadComponent: () =>
-          import('./features/admin/pages/admin-users.component').then((m) => m.AdminUsersComponent),
+          import('./features/admin/pages/admin-users/admin-users.component').then((m) => m.AdminUsersComponent),
       },
       {
         path: 'payments',
         loadComponent: () =>
-          import('./features/admin/pages/admin-payments.component').then((m) => m.AdminPaymentsComponent),
+          import('./features/admin/pages/admin-payments/admin-payments.component').then((m) => m.AdminPaymentsComponent),
       },
       {
         path: 'profile',

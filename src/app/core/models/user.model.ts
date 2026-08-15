@@ -35,6 +35,15 @@ export interface ChangePasswordRequest {
   newPassword: string;
 }
 
+
+
+export interface EventSummary {
+  id: number;
+  title: string;
+  eventDate?: string;
+  paymentStatus?: string;
+}
+
 export interface OrganizerSummary {
   id: number;
   name: string;
@@ -42,11 +51,6 @@ export interface OrganizerSummary {
   phone?: string;
   isActive: boolean;
   isBlocked: boolean;
+  createdAt: string;
   events: EventSummary[];
-}
-
-export interface EventSummary {
-  id: number;
-  title: string;
-  paymentStatus?: string;
 }

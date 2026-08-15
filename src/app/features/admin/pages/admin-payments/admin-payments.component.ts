@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AdminService } from '../../../core/services/admin.service';
-import { PaymentService } from '../../../core/services/payment.service';
-import { ToastService } from '../../../core/services/toast.service';
-import { Payment } from '../../../core/models/payment.model';
-import { PAYMENT_STATUS_LABELS, PaymentStatus } from '../../../core/models/enums.model';
+import { AdminService } from '../../../../core/services/admin.service';
+import { PaymentService } from '../../../../core/services/payment.service';
+import { ToastService } from '../../../../core/services/toast.service';
+import { Payment } from '../../../../core/models/payment.model';
+import { PAYMENT_STATUS_LABELS, PaymentStatus } from '../../../../core/models/enums.model';
 
 type StatusFilter = 'ALL' | PaymentStatus;
 
