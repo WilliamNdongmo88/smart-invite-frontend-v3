@@ -1,0 +1,138 @@
+<div class="ap-page">
+
+  <!-- Header -->
+  <div class="ap-header">
+    <div>
+      <h1 class="ap-title">Paiements</h1>
+      <p class="ap-sub">Gestion et validation des preuves de paiement</p>
+    </div>
+    <button class="btn-refresh" (click)="load()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+      </svg>
+      Actualiser
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="ap-stats">
+    <div class="stat-card">
+      <span class="stat-label">Total</span>
+      <span class="stat-value">{{ stats().total }}</span>
+    </div>
+    <div class="stat-card review">
+      <span class="stat-label">En vérification</span>
+      <span class="stat-value">{{ stats().underReview }}</span>
+    </div>
+    <div class="stat-card approved">
+      <span class="stat-label">Approuvés</span>
+      <span class="stat-value">{{ stats().approved }}</span>
+    </div>
+    <div class="stat-card rejected">
+      <span class="stat-label">Rejetés</span>
+      <span class="stat-value">{{ stats().rejected }}</span>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="ap-tabs">
+    @for (tab of tabs; track tab.key) {
+      <button class="tab-btn" [class.active]="activeTab() === tab.key" (click)="setTab(tab.key)">
+        {{ tab.label }}
+        @if (tab.key !== 'ALL') {
+          <span class="tab-count">{{ countByStatus(tab.key) }}</span>
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Table -->
+  <div class="ap-card">
+    @if (loading()) {
+      <div class="ap-loading">Chargement…</div>
+    } @else if (filtered().length === 0) {
+      <div class="ap-empty">Aucun paiement dans cette catégorie.</div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Organisateur</th>
+              <th>Événement</th>
+              <th>Quota</th>
+              <th>Montant</th>
+              <th>Statut</th>
+              <th>Preuve</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of filtered(); track p.id) {
+              <tr>
+                <td class="id-cell">#{{ p.id }}</td>
+                <td>—</td>
+                <td class="event-cell">{{ p.eventTitle ?? '—' }}</td>
+                <td>{{ p.quota }}</td>
+                <td class="amount-cell">{{ formatAmount(p.amount) }}</td>
+                <td><span class="badge" [class]="statusClass(p.status)">{{ statusLabels[p.status] }}</span></td>
+                <td>
+                  @if (p.proofUrl) {
+                    <a [href]="p.proofUrl" target="_blank" class="proof-link">Voir</a>
+                  } @else {
+                    <span class="no-proof">—</span>
+                  }
+                </td>
+                <td class="date-cell">{{ formatDate(p.createdAt) }}</td>
+                <td class="actions-cell">
+                  @if (p.status === 'UNDER_REVIEW') {
+                    <button class="btn-approve" [disabled]="reviewing() === p.id" (click)="approve(p.id)">
+                      @if (reviewing() === p.id) { … } @else { ✓ Approuver }
+                    </button>
+                    <button class="btn-reject" [disabled]="reviewing() === p.id" (click)="openReject(p.id)">
+                      ✕ Rejeter
+                    </button>
+                  } @else {
+                    <span class="no-action">—</span>
+                  }
+                </td>
+              </tr>
+              @if (p.status === 'REJECTED' && p.rejectionReason) {
+                <tr class="reason-row">
+                  <td colspan="9">
+                    <span class="reason-label">Motif :</span> {{ p.rejectionReason }}
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- Reject Modal -->
+@if (rejectId()) {
+  <div class="modal-backdrop" (click)="closeReject()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Rejeter le paiement #{{ rejectId() }}</h3>
+      <p class="modal-sub">Veuillez indiquer le motif de rejet (obligatoire).</p>
+      <textarea
+        class="modal-textarea"
+        rows="4"
+        placeholder="Ex : Preuve illisible, montant incorrect…"
+        [(ngModel)]="rejectReason">
+      </textarea>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeReject()">Annuler</button>
+        <button class="btn-confirm-reject" [disabled]="!rejectReason.trim() || reviewing() !== null" (click)="confirmReject()">
+          Confirmer le rejet
+        </button>
+      </div>
+    </div>
+  </div>
+}
