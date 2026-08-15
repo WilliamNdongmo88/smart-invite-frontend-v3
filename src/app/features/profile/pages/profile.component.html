@@ -1,0 +1,238 @@
+<div class="pf-page">
+
+  @if (loading()) {
+    <div class="pf-loading">Chargement…</div>
+  } @else {
+
+    <!-- Header -->
+    <div class="pf-header">
+      <div class="pf-avatar-wrap">
+        <div class="pf-avatar">
+          @if (user()?.avatarUrl) {
+            <img [src]="user()!.avatarUrl" alt="avatar" class="avatar-img" />
+          } @else {
+            <span class="avatar-initials">{{ initials() }}</span>
+          }
+          @if (avatarUploading) {
+            <div class="avatar-overlay">…</div>
+          }
+        </div>
+        <label class="avatar-edit-btn" title="Changer l'avatar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          <input type="file" accept="image/*" class="hidden-input" (change)="onAvatarChange($event)" />
+        </label>
+      </div>
+      <div class="pf-header-info">
+        <h1 class="pf-name">{{ user()?.name }}</h1>
+        <p class="pf-email">{{ user()?.email }}</p>
+        <p class="pf-since">Membre depuis {{ formatDate(user()!.createdAt) }}</p>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="pf-tabs">
+      <button class="tab-btn" [class.active]="activeTab() === 'info'" (click)="setTab('info')">
+        Informations
+      </button>
+      <button class="tab-btn" [class.active]="activeTab() === 'notifications'" (click)="setTab('notifications')">
+        Notifications
+      </button>
+      <button class="tab-btn" [class.active]="activeTab() === 'security'" (click)="setTab('security')">
+        Sécurité
+      </button>
+    </div>
+
+    <!-- Tab: Informations -->
+    @if (activeTab() === 'info') {
+      <div class="pf-card">
+        <h2 class="card-title">Informations personnelles</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Nom complet</label>
+            <input class="form-input" type="text" [(ngModel)]="name" placeholder="Votre nom" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Téléphone / WhatsApp</label>
+            <input class="form-input" type="tel" [(ngModel)]="phone" placeholder="+237 6XX XXX XXX" />
+          </div>
+          <div class="form-group full">
+            <label class="form-label">Mode de notification préféré</label>
+            <div class="radio-group">
+              @for (mode of notifModes; track mode) {
+                <label class="radio-option" [class.selected]="notificationMode === mode">
+                  <input type="radio" [value]="mode" [(ngModel)]="notificationMode" />
+                  {{ notifModeLabels[mode] }}
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-save" [disabled]="saving()" (click)="saveInfo()">
+            @if (saving()) { Enregistrement… } @else { Enregistrer }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Notifications -->
+    @if (activeTab() === 'notifications') {
+      <div class="pf-card">
+        <h2 class="card-title">Préférences de notifications</h2>
+
+        <div class="toggle-list">
+          <div class="toggle-item">
+            <div class="toggle-info">
+              <span class="toggle-label">Présences confirmées</span>
+              <span class="toggle-desc">Recevoir une notification quand un invité confirme sa présence</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="attendanceNotifications" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div class="toggle-info">
+              <span class="toggle-label">Messages de remerciement</span>
+              <span class="toggle-desc">Être notifié des messages de remerciement envoyés</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="thankNotifications" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div class="toggle-info">
+              <span class="toggle-label">Rappels d'événements</span>
+              <span class="toggle-desc">Recevoir des rappels avant la date de l'événement</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="eventReminders" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div class="toggle-info">
+              <span class="toggle-label">Emails marketing</span>
+              <span class="toggle-desc">Recevoir des offres et actualités SmartInvite</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="marketingEmails" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="toggle-item">
+            <div class="toggle-info">
+              <span class="toggle-label">Me notifier</span>
+              <span class="toggle-desc">Activer toutes les notifications en temps réel</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" [(ngModel)]="notifyMe" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-save" [disabled]="saving()" (click)="saveNotifications()">
+            @if (saving()) { Enregistrement… } @else { Enregistrer }
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Sécurité -->
+    @if (activeTab() === 'security') {
+      <div class="pf-card">
+        <h2 class="card-title">Changer le mot de passe</h2>
+
+        <div class="form-grid">
+          <div class="form-group full">
+            <label class="form-label">Mot de passe actuel</label>
+            <div class="input-pw">
+              <input class="form-input" [type]="showCurrent ? 'text' : 'password'"
+                [(ngModel)]="currentPassword" placeholder="••••••••" />
+              <button class="pw-toggle" type="button" (click)="showCurrent = !showCurrent">
+                @if (showCurrent) {
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                } @else {
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nouveau mot de passe</label>
+            <div class="input-pw">
+              <input class="form-input" [type]="showNew ? 'text' : 'password'"
+                [(ngModel)]="newPassword" placeholder="••••••••" />
+              <button class="pw-toggle" type="button" (click)="showNew = !showNew">
+                @if (showNew) {
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                } @else {
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                }
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirmer le nouveau mot de passe</label>
+            <input class="form-input" type="password" [(ngModel)]="confirmPassword" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="btn-save" [disabled]="pwSaving || !currentPassword || !newPassword || !confirmPassword"
+            (click)="changePassword()">
+            @if (pwSaving) { Modification… } @else { Modifier le mot de passe }
+          </button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="pf-card danger-zone">
+        <h2 class="card-title danger">Zone de danger</h2>
+        <p class="danger-desc">La suppression de votre compte est irréversible. Toutes vos données seront définitivement effacées.</p>
+        <button class="btn-delete" (click)="deleteModal.set(true)">Supprimer mon compte</button>
+      </div>
+    }
+
+  }
+</div>
+
+<!-- Delete Modal -->
+@if (deleteModal()) {
+  <div class="modal-backdrop" (click)="deleteModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Supprimer le compte</h3>
+      <p class="modal-sub">
+        Cette action est <strong>irréversible</strong>. Tous vos événements, invités et données seront supprimés définitivement.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="deleteModal.set(false)">Annuler</button>
+        <button class="btn-confirm-delete" [disabled]="deleting()" (click)="confirmDelete()">
+          @if (deleting()) { Suppression… } @else { Oui, supprimer }
+        </button>
+      </div>
+    </div>
+  </div>
+}
