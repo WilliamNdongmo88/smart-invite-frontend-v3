@@ -19,9 +19,10 @@ export interface UpdateLinkRequest {
 }
 
 export interface ScanResponse {
-  scanStatus: 'VALID' | 'DUPLICATE' | 'EXPIRED' | 'INVALID';
+  result: 'VALID' | 'DUPLICATE' | 'EXPIRED' | 'INVALID';
   guestName?: string;
   eventTitle?: string;
+  tableNumber?: number;
   message: string;
 }
 

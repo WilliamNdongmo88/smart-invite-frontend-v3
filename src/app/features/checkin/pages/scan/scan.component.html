@@ -1,0 +1,107 @@
+<div class="scan-page">
+
+  <!-- Header stats -->
+  <div class="scan-stats">
+    <div class="stat"><span class="stat-n valid">{{ counts().valid }}</span><span class="stat-l">Valides</span></div>
+    <div class="stat"><span class="stat-n dup">{{ counts().duplicate }}</span><span class="stat-l">Doublons</span></div>
+    <div class="stat"><span class="stat-n inv">{{ counts().invalid }}</span><span class="stat-l">Invalides</span></div>
+    <div class="stat"><span class="stat-n tot">{{ counts().total }}</span><span class="stat-l">Total</span></div>
+  </div>
+
+  <!-- Camera zone -->
+  <div class="camera-wrap" [class]="'state-' + state()">
+
+    <!-- Feedback overlay -->
+    @if (state() !== 'idle' && state() !== 'scanning') {
+      <div class="feedback-overlay" [class]="'fb-' + state()">
+        <div class="fb-icon">{{ feedbackIcon() }}</div>
+        <div class="fb-title">{{ feedbackTitle() }}</div>
+        @if (lastResult()?.guestName) {
+          <div class="fb-guest">{{ lastResult()!.guestName }}</div>
+        }
+        @if (lastResult()?.eventTitle) {
+          <div class="fb-event">{{ lastResult()!.eventTitle }}</div>
+        }
+        @if (lastResult()?.tableNumber) {
+          <div class="fb-table">
+            <span class="fb-table-icon">📋</span>
+            Table n° {{ lastResult()!.tableNumber }}
+          </div>
+        }
+        <div class="fb-msg">{{ lastResult()?.message }}</div>
+        @if (state() === 'VALID' || state() === 'DUPLICATE') {
+          <button class="fb-next" (click)="resetForNext()">
+            Scanner le suivant
+          </button>
+        }
+      </div>
+    }
+
+    <!-- Video + canvas -->
+    <video #videoEl autoplay playsinline muted class="camera-video"
+            [class.hidden]="!cameraActive()"></video>
+    <canvas #canvasEl class="camera-canvas"></canvas>
+
+    <!-- Viewfinder -->
+    @if (cameraActive() && state() === 'scanning') {
+      <div class="viewfinder">
+        <div class="vf-corner tl"></div>
+        <div class="vf-corner tr"></div>
+        <div class="vf-corner bl"></div>
+        <div class="vf-corner br"></div>
+        <div class="vf-line"></div>
+      </div>
+    }
+
+    <!-- Camera off placeholder -->
+    @if (!cameraActive()) {
+      <div class="camera-off">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+          <circle cx="12" cy="13" r="4"/>
+        </svg>
+        <p>Caméra inactive</p>
+      </div>
+    }
+  </div>
+
+  <!-- Camera controls -->
+  <div class="cam-controls">
+    @if (!cameraActive()) {
+      <button class="btn-cam start" (click)="startCamera()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+        Démarrer la caméra
+      </button>
+    } @else {
+      <button class="btn-cam stop" (click)="stopCamera()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="6" width="12" height="12"/>
+        </svg>
+        Arrêter
+      </button>
+    }
+    @if (cameraError()) {
+      <span class="cam-error">{{ cameraError() }}</span>
+    }
+  </div>
+
+  <!-- Manual input -->
+  <div class="manual-section">
+    <p class="manual-label">Saisie manuelle du token</p>
+    <div class="manual-row">
+      <input
+        class="manual-input"
+        type="text"
+        placeholder="Collez ou tapez le token ici…"
+        [(ngModel)]="manualToken"
+        (keydown.enter)="submitManual()"
+      />
+      <button class="btn-submit" [disabled]="!manualToken.trim() || state() === 'scanning'" (click)="submitManual()">
+        Scanner
+      </button>
+    </div>
+  </div>
+
+</div>

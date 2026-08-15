@@ -152,7 +152,7 @@ export const routes: Routes = [
       {
         path: 'scan',
         loadComponent: () =>
-          import('./features/checkin/pages/scan.component').then((m) => m.ScanComponent),
+          import('./features/checkin/pages/scan/scan.component').then((m) => m.ScanComponent),
       },
       { path: '', redirectTo: 'scan', pathMatch: 'full' },
     ],
