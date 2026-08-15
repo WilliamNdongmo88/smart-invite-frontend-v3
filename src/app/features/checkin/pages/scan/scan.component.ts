@@ -155,6 +155,7 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
     this.processing = false;
     this.lastResult.set(null);
     this.state.set('idle');
+    this.startCamera();
   }
 
   submitManual(): void {

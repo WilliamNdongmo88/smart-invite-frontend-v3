@@ -78,30 +78,30 @@
 /* ── Feedback overlay ── */
 .feedback-overlay {
   position: absolute; inset: 0; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: .6rem;
-  padding: 1.5rem; text-align: center; animation: fb-in .2s ease;
+  align-items: center; justify-content: center; gap: .35rem;
+  padding: 1rem; text-align: center; animation: fb-in .2s ease;
 }
 @keyframes fb-in { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: scale(1); } }
 .fb-VALID     { background: rgba(34,197,94,.93); }
 .fb-DUPLICATE { background: rgba(245,158,11,.93); }
 .fb-EXPIRED, .fb-INVALID, .fb-error { background: rgba(239,68,68,.93); }
-.fb-icon  { font-size: 3.5rem; line-height: 1; }
-.fb-title { font-size: 1.4rem; font-weight: 700; color: #fff; }
-.fb-guest { font-size: 1.05rem; font-weight: 600; color: #fff; }
-.fb-event { font-size: .82rem; color: rgba(255,255,255,.82); }
+.fb-icon  { font-size: 2.2rem; line-height: 1; }
+.fb-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+.fb-guest { font-size: .9rem; font-weight: 600; color: #fff; }
+.fb-event { font-size: .75rem; color: rgba(255,255,255,.82); }
 .fb-table {
-  display: flex; align-items: center; gap: .4rem;
+  display: flex; align-items: center; gap: .35rem;
   background: rgba(0,0,0,.25); border-radius: 20px;
-  padding: .35rem .9rem; font-size: 1rem; font-weight: 700; color: #fff;
-  margin-top: .15rem;
+  padding: .25rem .75rem; font-size: .85rem; font-weight: 700; color: #fff;
+  margin-top: .1rem;
 }
-.fb-table-icon { font-size: 1rem; }
-.fb-msg   { font-size: .8rem; color: rgba(255,255,255,.72); margin-top: .2rem; }
+.fb-table-icon { font-size: .85rem; }
+.fb-msg   { font-size: .72rem; color: rgba(255,255,255,.72); margin-top: .1rem; }
 .fb-next {
-  margin-top: .5rem;
-  padding: .55rem 1.5rem; background: rgba(0,0,0,.3);
+  margin-top: .4rem;
+  padding: .45rem 1.25rem; background: rgba(0,0,0,.3);
   border: 2px solid rgba(255,255,255,.6); border-radius: 20px;
-  color: #fff; font-weight: 700; font-size: .9rem; cursor: pointer;
+  color: #fff; font-weight: 700; font-size: .82rem; cursor: pointer;
   transition: background .15s;
   &:hover { background: rgba(0,0,0,.5); }
 }
