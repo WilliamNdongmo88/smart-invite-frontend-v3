@@ -1,6 +1,6 @@
 import {
   Component, inject, signal, OnDestroy, AfterViewInit,
-  ViewChild, ElementRef, NgZone, PLATFORM_ID,
+  ViewChild, ElementRef, NgZone, PLATFORM_ID, Input,
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,7 @@ type FeedbackState = 'idle' | 'scanning' | 'VALID' | 'DUPLICATE' | 'EXPIRED' | '
 export class ScanComponent implements AfterViewInit, OnDestroy {
   @ViewChild('videoEl') videoRef!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasEl') canvasRef!: ElementRef<HTMLCanvasElement>;
+  @Input() eventId?: number;
 
   private readonly svc        = inject(CheckinService);
   private readonly zone       = inject(NgZone);
@@ -29,6 +30,7 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   state         = signal<FeedbackState>('idle');
   lastResult    = signal<ScanResponse | null>(null);
   counts        = signal({ valid: 0, duplicate: 0, invalid: 0, total: 0 });
+  soundEnabled  = signal(true);
 
   manualToken = '';
 
@@ -37,10 +39,36 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   private resetTimer: ReturnType<typeof setTimeout> | null = null;
   private processing = false;
   private jsqr: ((data: Uint8ClampedArray, w: number, h: number) => { data: string } | null) | null = null;
+  private audioCtx: AudioContext | null = null;
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       import('jsqr').then(m => { this.jsqr = m.default; });
+      this.loadParameters();
+    }
+  }
+
+  private loadParameters(): void {
+    this.svc.getStats().subscribe({
+      next: (res) => {
+        const p = res.data!;
+        this.soundEnabled.set(p.confirmationSound);
+        this.counts.set({
+          valid:     p.validScans,
+          duplicate: p.duplicateScans,
+          invalid:   p.invalidScans,
+          total:     p.totalScans,
+        });
+      },
+      error: () => {},
+    });
+  }
+
+  toggleSound(): void {
+    const next = !this.soundEnabled();
+    this.soundEnabled.set(next);
+    if (this.eventId) {
+      this.svc.updateSound(this.eventId, next).subscribe();
     }
   }
 
@@ -132,12 +160,40 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
       duplicate: res.result === 'DUPLICATE' ? c.duplicate + 1 : c.duplicate,
       invalid:   (res.result === 'INVALID' || res.result === 'EXPIRED') ? c.invalid + 1 : c.invalid,
     }));
-    // Arrêter la caméra sur VALID et DUPLICATE
+    if (this.soundEnabled()) this.playSound(res.result);
     if (res.result === 'VALID' || res.result === 'DUPLICATE') {
       this.stopCamera();
     } else {
       this.scheduleReset();
     }
+  }
+
+  private playSound(result: string): void {
+    try {
+      if (!this.audioCtx) this.audioCtx = new AudioContext();
+      const ctx = this.audioCtx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      if (result === 'VALID') {
+        // Deux bips montants courts
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.3);
+      } else {
+        // Bip grave descendant
+        osc.frequency.setValueAtTime(300, ctx.currentTime);
+        osc.frequency.setValueAtTime(150, ctx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.3, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.4);
+      }
+    } catch { /* AudioContext non disponible */ }
   }
 
   private scheduleReset(): void {

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { AgentResponse, CreateAgentRequest, ScanResponse } from '../models/checkin.model';
+import { AgentResponse, CheckinParameters, CreateAgentRequest, ScanResponse } from '../models/checkin.model';
 
 @Injectable({ providedIn: 'root' })
 export class CheckinService {
@@ -16,5 +16,17 @@ export class CheckinService {
 
   scan(token: string): Observable<ApiResponse<ScanResponse>> {
     return this.http.post<ApiResponse<ScanResponse>>(`${this.base}/scan/${token}`, {});
+  }
+
+  getParameters(eventId: number): Observable<ApiResponse<CheckinParameters>> {
+    return this.http.get<ApiResponse<CheckinParameters>>(`${this.base}/parameters/${eventId}`);
+  }
+
+  getStats(): Observable<ApiResponse<CheckinParameters>> {
+    return this.http.get<ApiResponse<CheckinParameters>>(`${this.base}/stats`);
+  }
+
+  updateSound(eventId: number, confirmationSound: boolean): Observable<ApiResponse<CheckinParameters>> {
+    return this.http.patch<ApiResponse<CheckinParameters>>(`${this.base}/parameters/${eventId}/sound`, { confirmationSound });
   }
 }

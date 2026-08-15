@@ -26,6 +26,15 @@ export interface ScanResponse {
   message: string;
 }
 
+export interface CheckinParameters {
+  eventId: number;
+  confirmationSound: boolean;
+  totalScans: number;
+  validScans: number;
+  duplicateScans: number;
+  invalidScans: number;
+}
+
 export interface CreateAgentRequest {
   userName: string;
   whatsapp: string;
