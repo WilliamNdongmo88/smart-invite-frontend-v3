@@ -1,0 +1,280 @@
+<div class="payments-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Paiements</h1>
+      <p class="page-sub">Gérez vos quotas d'invités et suivez vos paiements</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab() === 'subscribe'" (click)="setTab('subscribe')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Souscrire un quota
+    </button>
+    <button class="tab" [class.active]="activeTab() === 'history'" (click)="setTab('history')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+      Historique
+    </button>
+  </div>
+
+  <!-- ══ TAB : SOUSCRIRE ══ -->
+  @if (activeTab() === 'subscribe') {
+
+    <!-- Étape 1 : Formulaire de souscription -->
+    @if (!pendingPayment()) {
+      <div class="section-grid">
+
+        <!-- Formulaire -->
+        <div class="card">
+          <div class="card-head">
+            <div class="card-head-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div>
+              <h2 class="card-title">Nouveau quota</h2>
+              <p class="card-sub">Choisissez votre événement et le nombre d'invités</p>
+            </div>
+          </div>
+
+          <form [formGroup]="form" class="form-body">
+
+            <div class="field">
+              <label class="label">Événement <span class="req">*</span></label>
+              @if (loadingEvents()) {
+                <div class="input-skeleton"></div>
+              } @else {
+                <select formControlName="eventId" class="input" [class.error]="isInvalid('eventId')">
+                  <option [value]="null">Sélectionnez un événement</option>
+                  @for (e of events(); track e.id) {
+                    <option [value]="e.id">{{ e.title }}</option>
+                  }
+                </select>
+                @if (isInvalid('eventId')) { <p class="field-error">Veuillez sélectionner un événement</p> }
+              }
+            </div>
+
+            <div class="field">
+              <label class="label">Nombre d'invités <span class="req">*</span></label>
+              <input formControlName="quota" type="number" class="input" [class.error]="isInvalid('quota')"
+                min="1" placeholder="Ex : 100" />
+              @if (isInvalid('quota')) { <p class="field-error">Minimum 1 invité</p> }
+            </div>
+
+            <button type="button" class="btn-gold" [disabled]="subscribing() || form.invalid" (click)="subscribe()">
+              @if (subscribing()) { <span class="spinner-sm"></span> Traitement... }
+              @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Souscrire
+              }
+            </button>
+
+          </form>
+        </div>
+
+        <!-- Récapitulatif du plan -->
+        <div class="card plan-card">
+          <div class="card-head">
+            <div class="card-head-icon icon-gold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div>
+              <h2 class="card-title">Récapitulatif</h2>
+              <p class="card-sub">Détail du montant à payer</p>
+            </div>
+          </div>
+
+          @if (loadingPlan()) {
+            <div class="plan-skeleton">
+              <div class="skel-line"></div>
+              <div class="skel-line skel-short"></div>
+              <div class="skel-line"></div>
+            </div>
+          } @else if (plan()) {
+            <div class="plan-details">
+              <div class="plan-row">
+                <span class="plan-label">Quota demandé</span>
+                <span class="plan-value">{{ plan()!.quota }} invités</span>
+              </div>
+              <div class="plan-row">
+                <span class="plan-label">Prix unitaire</span>
+                <span class="plan-value">{{ plan()!.unitPrice }} XAF / invité</span>
+              </div>
+              <div class="plan-divider"></div>
+              <div class="plan-row plan-total">
+                <span class="plan-label">Total à payer</span>
+                <span class="plan-amount">{{ formatAmount(plan()!.totalAmount) }}</span>
+              </div>
+            </div>
+
+            <div class="payment-info">
+              <p class="info-title">📱 Comment payer ?</p>
+              <ol class="info-steps">
+                <li>Cliquez sur <strong>Souscrire</strong> pour initier le paiement</li>
+                <li>Effectuez le virement via <strong>Mobile Money</strong> ou <strong>virement bancaire</strong></li>
+                <li>Uploadez la <strong>preuve de paiement</strong> (capture d'écran ou reçu)</li>
+                <li>Notre équipe validera votre paiement sous <strong>24h</strong></li>
+              </ol>
+            </div>
+          }
+        </div>
+
+      </div>
+    }
+
+    <!-- Étape 2 : Upload preuve -->
+    @if (pendingPayment()) {
+      <div class="proof-section">
+        <div class="proof-header">
+          <div class="proof-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div>
+            <h2 class="proof-title">Souscription initiée !</h2>
+            <p class="proof-sub">
+              Quota de <strong>{{ pendingPayment()!.quota }} invités</strong> pour
+              <strong>{{ formatAmount(pendingPayment()!.amount) }}</strong>.
+              Uploadez maintenant votre preuve de paiement.
+            </p>
+          </div>
+        </div>
+
+        <div class="proof-card">
+          <div class="proof-steps">
+            <div class="proof-step done">
+              <div class="step-circle">✓</div>
+              <span>Souscription initiée</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="proof-step active">
+              <div class="step-circle">2</div>
+              <span>Preuve de paiement</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="proof-step">
+              <div class="step-circle">3</div>
+              <span>Validation (24h)</span>
+            </div>
+          </div>
+
+          <div class="upload-zone" [class.has-file]="proofFile()">
+            <input type="file" id="proof-upload" class="upload-input"
+              accept="image/jpeg,image/png,image/webp,application/pdf"
+              (change)="onProofChange($any($event))" />
+            <label for="proof-upload" class="upload-label">
+              @if (proofFile()) {
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                <span class="upload-filename">{{ proofPreview() }}</span>
+                <span class="upload-hint">Cliquer pour changer</span>
+              } @else {
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <span class="upload-text">Cliquer pour sélectionner votre preuve</span>
+                <span class="upload-hint">JPG, PNG, WEBP ou PDF — Max 10 Mo</span>
+              }
+            </label>
+          </div>
+
+          <div class="proof-actions">
+            <button class="btn-cancel" (click)="cancelProof()">Annuler</button>
+            <button class="btn-gold" [disabled]="!proofFile() || uploadingProof()" (click)="submitProof()">
+              @if (uploadingProof()) { <span class="spinner-sm"></span> Envoi... }
+              @else {
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Envoyer la preuve
+              }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+  }
+
+  <!-- ══ TAB : HISTORIQUE ══ -->
+  @if (activeTab() === 'history') {
+
+    <div class="history-tabs">
+      @for (t of historyTabs; track t.key) {
+        <button class="htab" [class.active]="historyTab() === t.key" (click)="setHistoryTab(t.key)">
+          {{ t.label }}
+        </button>
+      }
+    </div>
+
+    @if (loadingHistory()) {
+      <div class="skeleton-wrap">
+        @for (i of [1,2,3]; track i) { <div class="skeleton-row"></div> }
+      </div>
+    } @else if (filteredHistory().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <p class="empty-title">Aucun paiement</p>
+        <p class="empty-sub">
+          @if (historyTab() !== 'ALL') { Aucun paiement avec ce statut. }
+          @else { Vous n'avez pas encore effectué de paiement. }
+        </p>
+        @if (historyTab() === 'ALL') {
+          <button class="btn-gold btn-sm" (click)="setTab('subscribe')">Souscrire un quota</button>
+        }
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Quota</th>
+              <th>Montant</th>
+              <th>Statut</th>
+              <th>Preuve</th>
+              <th>Date</th>
+              <th>Motif refus</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of filteredHistory(); track p.id) {
+              <tr>
+                <td>
+                  <a [routerLink]="['/events', p.eventId]" class="event-link">
+                    {{ p.eventTitle || 'Événement #' + p.eventId }}
+                  </a>
+                </td>
+                <td><span class="quota-val">{{ p.quota }} invités</span></td>
+                <td><span class="amount-val">{{ formatAmount(p.amount) }}</span></td>
+                <td>
+                  <span class="status-badge" [class]="statusClass(p.status)">
+                    {{ statusLabels[p.status] }}
+                  </span>
+                </td>
+                <td>
+                  @if (p.proofUrl) {
+                    <a [href]="p.proofUrl" target="_blank" class="proof-link">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                      Voir
+                    </a>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+                <td><span class="muted">{{ formatDate(p.createdAt) }}</span></td>
+                <td>
+                  @if (p.rejectionReason) {
+                    <span class="rejection-reason">{{ p.rejectionReason }}</span>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+  }
+
+</div>
