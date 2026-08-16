@@ -36,6 +36,9 @@ export class LinksComponent implements OnInit {
   // Delete confirm
   deleteLink  = signal<Link | null>(null);
 
+  // Share modal
+  shareLink = signal<Link | null>(null);
+
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.load();
@@ -96,6 +99,16 @@ export class LinksComponent implements OnInit {
       next: () => { this.toast.success('Lien supprimé'); this.deleteLink.set(null); this.load(); this.deleting.set(null); },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.deleting.set(null); },
     });
+  }
+
+  share(link: Link): void {
+    this.shareLink.set(link);
+  }
+
+  shareWhatsApp(link: Link): void {
+    const url = encodeURIComponent(this.joinUrl(link));
+    const msg = encodeURIComponent(`Inscrivez-vous à l'événement : ${this.joinUrl(link)}`);
+    window.open(`https://wa.me/?text=${msg}`, '_blank');
   }
 
   copy(url: string): void {
