@@ -2,9 +2,12 @@ export interface Link {
   id: number;
   eventId: number;
   token: string;
+  url: string;
   usedCount: number;
   limitCount?: number;
   dateLimitLink?: string;
+  expired: boolean;
+  full: boolean;
 }
 
 export interface CreateLinkRequest {
