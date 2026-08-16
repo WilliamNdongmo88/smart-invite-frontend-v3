@@ -1,0 +1,215 @@
+<div class="lk-page">
+
+  <!-- Header -->
+  <div class="lk-header">
+    <div>
+      <h1 class="lk-title">Liens d'inscription</h1>
+      <p class="lk-sub">Partagez ces liens pour permettre aux invités de s'inscrire eux-mêmes</p>
+    </div>
+    <button class="btn-create" (click)="openCreate()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nouveau lien
+    </button>
+  </div>
+
+  <!-- Content -->
+  @if (loading()) {
+    <div class="lk-loading">Chargement…</div>
+  } @else if (links().length === 0) {
+    <div class="lk-empty">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#444" stroke-width="1.5">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+      </svg>
+      <p>Aucun lien créé pour cet événement.</p>
+      <button class="btn-create" (click)="openCreate()">Créer le premier lien</button>
+    </div>
+  } @else {
+    <div class="lk-list">
+      @for (link of links(); track link.id) {
+        <div class="lk-card" [class.expired]="link.expired" [class.full]="link.full">
+          <div class="lk-card-top">
+            <div class="lk-info">
+              <span class="badge" [class]="statusClass(link)">{{ statusLabel(link) }}</span>
+              <span class="lk-token">{{ link.token }}</span>
+            </div>
+            <div class="lk-actions">
+              <button class="btn-icon share" title="Partager" (click)="share(link)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                </svg>
+              </button>
+              <button class="btn-icon" title="Modifier" (click)="openEdit(link)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+              </button>
+              <button class="btn-icon danger" title="Supprimer" (click)="deleteLink.set(link)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+                  <path d="M10 11v6"/><path d="M14 11v6"/>
+                  <path d="M9 6V4h6v2"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- URL -->
+          <div class="lk-url-row">
+            <span class="lk-url">{{ joinUrl(link) }}</span>
+            <button class="btn-copy" (click)="copy(joinUrl(link))">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              Copier
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="lk-stats">
+            <div class="lk-stat">
+              <span class="stat-label">Utilisations</span>
+              <span class="stat-val">
+                {{ link.usedCount }}
+                @if (link.limitCount != null) { <span class="stat-limit">/ {{ link.limitCount }}</span> }
+              </span>
+            </div>
+            @if (link.dateLimitLink) {
+              <div class="lk-stat">
+                <span class="stat-label">Expire le</span>
+                <span class="stat-val" [class.expired-text]="link.expired">{{ formatDate(link.dateLimitLink) }}</span>
+              </div>
+            }
+          </div>
+
+          @if (!link.expired && !link.full) {
+            <div class="lk-progress-wrap">
+              @if (link.limitCount != null && link.limitCount > 0) {
+                <div class="lk-progress">
+                  <div class="lk-progress-bar" [style.width.%]="(link.usedCount / link.limitCount) * 100"></div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+</div>
+
+<!-- Create Modal -->
+@if (createModal()) {
+  <div class="modal-backdrop" (click)="createModal.set(false)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Nouveau lien d'inscription</h3>
+      <p class="modal-sub">Laissez les champs vides pour un lien sans restriction.</p>
+
+      <div class="modal-fields">
+        <div class="modal-field">
+          <label class="modal-label">Limite d'inscriptions (optionnel)</label>
+          <input class="modal-input" type="number" min="1" [(ngModel)]="newLimit" placeholder="Ex : 50" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">Date d'expiration (optionnel)</label>
+          <input class="modal-input" type="datetime-local" [(ngModel)]="newExpiry" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="createModal.set(false)">Annuler</button>
+        <button class="btn-confirm" [disabled]="saving()" (click)="create()">
+          @if (saving()) { Création… } @else { Créer le lien }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Edit Modal -->
+@if (editLink()) {
+  <div class="modal-backdrop" (click)="editLink.set(null)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Modifier le lien</h3>
+
+      <div class="modal-fields">
+        <div class="modal-field">
+          <label class="modal-label">Limite d'inscriptions</label>
+          <input class="modal-input" type="number" min="1" [(ngModel)]="editLimit" placeholder="Sans limite" />
+        </div>
+        <div class="modal-field">
+          <label class="modal-label">Date d'expiration</label>
+          <input class="modal-input" type="datetime-local" [(ngModel)]="editExpiry" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="editLink.set(null)">Annuler</button>
+        <button class="btn-confirm" [disabled]="saving()" (click)="saveEdit()">
+          @if (saving()) { Enregistrement… } @else { Enregistrer }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Share Modal -->
+@if (shareLink()) {
+  <div class="modal-backdrop" (click)="shareLink.set(null)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Partager le lien</h3>
+      <p class="modal-sub">Choisissez comment partager ce lien d'inscription.</p>
+
+      <div class="share-url-row">
+        <span class="share-url">{{ joinUrl(shareLink()!) }}</span>
+      </div>
+
+      <div class="share-options">
+        <button class="share-opt whatsapp" (click)="shareWhatsApp(shareLink()!); shareLink.set(null)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          WhatsApp
+        </button>
+        <button class="share-opt copy" (click)="copy(joinUrl(shareLink()!)); shareLink.set(null)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+          Copier le lien
+        </button>
+        <a class="share-opt open" [href]="joinUrl(shareLink()!)" target="_blank" (click)="shareLink.set(null)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+          Ouvrir
+        </a>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="shareLink.set(null)">Fermer</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Confirm -->
+@if (deleteLink()) {
+  <div class="modal-backdrop" (click)="deleteLink.set(null)">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3 class="modal-title">Supprimer le lien</h3>
+      <p class="modal-sub">Ce lien sera désactivé. Les inscriptions déjà effectuées ne seront pas supprimées.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="deleteLink.set(null)">Annuler</button>
+        <button class="btn-confirm danger" [disabled]="deleting() !== null" (click)="confirmDelete()">
+          @if (deleting() !== null) { Suppression… } @else { Supprimer }
+        </button>
+      </div>
+    </div>
+  </div>
+}

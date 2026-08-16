@@ -48,7 +48,7 @@ export const routes: Routes = [
       {
         path: 'join/:token',
         loadComponent: () =>
-          import('./features/links/pages/join.component').then((m) => m.JoinComponent),
+          import('./features/links/pages/join/join.component').then((m) => m.JoinComponent),
       },
     ],
   },

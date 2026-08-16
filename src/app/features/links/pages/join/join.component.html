@@ -1,0 +1,106 @@
+<main class="invitation-page">
+  <div class="paper-card">
+    <span class="wash wash-top"></span>
+    <span class="wash wash-bottom"></span>
+    <span class="leaf leaf-top" aria-hidden="true">⌁</span>
+    <span class="leaf leaf-bottom" aria-hidden="true">⌁</span>
+
+    @if (state() === 'error') {
+      <section class="state-card">
+        <div class="state-icon">!</div>
+        <h2>Lien invalide</h2>
+        <p>{{ errorMsg() }}</p>
+      </section>
+    }
+
+    @if (state() === 'form') {
+      <section class="invitation-content">
+        <p class="eyebrow">{{ eventTitle() }}</p>
+        <h1>Invitation</h1>
+        <p class="intro">Inscrivez-vous pour recevoir votre invitation personnalisée</p>
+
+        <div class="photo-frame simulated-photo">
+          <img [src]="couplePhoto()" alt="Photo de l’événement" />
+          <span class="photo-arch" aria-hidden="true"></span>
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+        <p class="event-message">{{ eventMessage() }}</p>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="field">
+            <label for="fullName">Nom complet <strong>*</strong></label>
+            <input id="fullName" formControlName="fullName" type="text" placeholder="Jean Dupont" [class.invalid]="isInvalid('fullName')" />
+            @if (isInvalid('fullName')) { <small>Minimum 2 caractères requis.</small> }
+          </div>
+
+          <div class="form-grid">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" formControlName="email" type="email" placeholder="jean@exemple.com" />
+            </div>
+            <div class="field">
+              <label for="phoneNumber">Téléphone</label>
+              <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="+237 6XX XXX XXX" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Mode de notification</label>
+            <div class="notification-options">
+              @for (option of notifOptions; track option.key) {
+                <label class="notification-option" [class.selected]="form.value.notificationMode === option.key">
+                  <input type="radio" formControlName="notificationMode" [value]="option.key" />
+                  <span>{{ option.icon }}</span>{{ option.label }}
+                </label>
+              }
+            </div>
+          </div>
+
+          @if (submitError()) { <div class="error-banner">{{ submitError() }}</div> }
+
+          <button type="submit" [disabled]="submitting()">
+            @if (submitting()) { <span class="spinner"></span> Inscription en cours… }
+            @else { Confirmer mon inscription <span>→</span> }
+          </button>
+        </form>
+      </section>
+    }
+
+    @if (state() === 'success' && result()) {
+      <section class="invitation-content success-content">
+        <p class="eyebrow">{{ eventTitle() }}</p>
+        <h1>Invitation</h1>
+
+        <div class="photo-frame simulated-photo">
+          <img [src]="couplePhoto()" alt="Photo de l’événement" />
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="success-mark">✓</div>
+        <h3>Inscription confirmée</h3>
+        <p class="success-message">Bienvenue <strong>{{ result()!.guestName }}</strong>.<br />{{ eventMessage() }}</p>
+        <p class="event-location">{{ eventLocation() }}</p>
+
+        @if (result()!.qrCodeUrl) {
+          <div class="qr-block">
+            <p>Votre QR Code d’accès</p>
+            <img [src]="result()!.qrCodeUrl" alt="QR Code d’accès" />
+          </div>
+        }
+
+        @if (result()!.pdfUrl) {
+          <a [href]="result()!.pdfUrl" target="_blank" rel="noopener" class="download-link">Télécharger la carte d’invitation</a>
+        }
+      </section>
+    }
+
+    <footer>Smart Invite <span>•</span> Gestion d’invitations</footer>
+  </div>
+</main>
