@@ -35,6 +35,11 @@ export class EventEditComponent implements OnInit {
   uploadPreview   = signal<string | null>(null);
   uploadObjectUrl = signal<SafeResourceUrl | null>(null);
 
+  // Photo couple
+  couplePhotoFile    = signal<File | null>(null);
+  couplePhotoPreview = signal<string | null>(null);
+  existingPhotoUrl   = signal<string | null>(null);
+
   readonly TOTAL_STEPS = 4;
 
   readonly typeOptions: TypeOption[] = [
@@ -102,6 +107,16 @@ export class EventEditComponent implements OnInit {
     return !!(c?.invalid && c?.touched);
   }
 
+  onCouplePhotoChange(event: globalThis.Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { this.toast.error('Seules les images sont acceptées'); return; }
+    this.couplePhotoFile.set(file);
+    const reader = new FileReader();
+    reader.onload = (e) => this.couplePhotoPreview.set(e.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -139,6 +154,8 @@ export class EventEditComponent implements OnInit {
           maxGuests:      e.maxGuests,
           description:    e.description ?? '',
         });
+        // Pré-charger la photo existante
+        if (e.couplePhotoUrl) this.existingPhotoUrl.set(e.couplePhotoUrl);
         this.step3.patchValue({
           eventDate:         this.toLocalInput(e.eventDate),
           religiousLocation: e.religiousLocation ?? '',
@@ -283,8 +300,17 @@ export class EventEditComponent implements OnInit {
 
   private done(): void {
     this.loading.set(false);
-    this.toast.success('Événement mis à jour avec succès !');
-    this.router.navigate(['/events', this.eventId()]);
+    const photo = this.couplePhotoFile();
+    const id = this.eventId();
+    if (photo && id) {
+      this.svc.uploadCouplePhoto(id, photo).subscribe({
+        next: () => { this.toast.success('Événement mis à jour avec succès !'); this.router.navigate(['/events', id]); },
+        error: () => { this.toast.error('Photo non uploadée'); this.router.navigate(['/events', id]); },
+      });
+    } else {
+      this.toast.success('Événement mis à jour avec succès !');
+      this.router.navigate(['/events', this.eventId()]);
+    }
   }
 
   private fail(): void {

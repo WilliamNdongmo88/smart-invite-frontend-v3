@@ -59,6 +59,12 @@ export class EventService {
     return this.http.get(`${this.base}/${id}/card/download`, { responseType: 'blob' });
   }
 
+  uploadCouplePhoto(id: number, file: File): Observable<ApiResponse<string>> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<ApiResponse<string>>(`${this.base}/${id}/photo`, form);
+  }
+
   uploadCustomCard(id: number, file: File): Observable<ApiResponse<any>> {
     const form = new FormData();
     form.append('file', file);

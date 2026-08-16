@@ -55,7 +55,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
             <router-outlet />
           </main>
           <footer class="admin-footer">
-            <span>© {{ year }} SmartInvite — Administration</span>
+            <span>© {{ year }} smart-invite — Administration</span>
           </footer>
         </div>
       </div>

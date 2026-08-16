@@ -55,7 +55,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
       </main>
 
       <footer class="user-footer">
-        <span>© {{ year }} SmartInvite</span>
+        <span>© {{ year }} smart-invite</span>
       </footer>
     </div>
   `,

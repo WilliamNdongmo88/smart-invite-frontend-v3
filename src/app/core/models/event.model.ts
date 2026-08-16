@@ -16,6 +16,7 @@ export interface Event {
   civilDateTime?: string;
   banquetLocation?: string;
   banquetDateTime?: string;
+  couplePhotoUrl?: string;
   showWeddingReligiousLocation: boolean;
   importMyModelCard: boolean;
   createdAt: string;

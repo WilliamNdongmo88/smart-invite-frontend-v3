@@ -9,8 +9,8 @@ import { Link, CreateLinkRequest, UpdateLinkRequest } from '../../../../core/mod
   selector: 'app-links',
   standalone: true,
   imports: [FormsModule],
-  templateUrl: 'links.component.html',
-  styleUrl: 'links.component.scss',
+  templateUrl: 'link.component.html',
+  styleUrl: 'link.component.scss',
 })
 export class LinksComponent implements OnInit {
   private readonly route    = inject(ActivatedRoute);

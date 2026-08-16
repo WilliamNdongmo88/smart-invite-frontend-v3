@@ -32,6 +32,10 @@ export class EventCreateComponent {
   uploadPreview = signal<string | null>(null);
   uploadObjectUrl = signal<SafeResourceUrl | null>(null);
 
+  // Photo couple
+  couplePhotoFile   = signal<File | null>(null);
+  couplePhotoPreview = signal<string | null>(null);
+
   readonly TOTAL_STEPS = 4;
 
   readonly typeOptions: TypeOption[] = [
@@ -101,6 +105,16 @@ export class EventCreateComponent {
     return !!(c?.invalid && c?.touched);
   }
 
+  onCouplePhotoChange(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { this.toast.error('Seules les images sont acceptées'); return; }
+    this.couplePhotoFile.set(file);
+    const reader = new FileReader();
+    reader.onload = (e) => this.couplePhotoPreview.set(e.target?.result as string);
+    reader.readAsDataURL(file);
+  }
+
   onFileChange(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
@@ -153,7 +167,7 @@ export class EventCreateComponent {
     // ── Cas 1 : sans carte ──
     if (mode === 'NONE') {
       this.svc.create(base).subscribe({
-        next: (res) => this.done(res.data!.id),
+        next: (res) => this.doneWithPhoto(res.data!.id),
         error: () => this.fail(),
       });
       return;
@@ -179,7 +193,7 @@ export class EventCreateComponent {
         },
       };
       this.svc.createWithCard(payload).subscribe({
-        next: (res) => this.done(res.data!.event.id),
+        next: (res) => this.doneWithPhoto(res.data!.event.id),
         error: () => this.fail(),
       });
       return;
@@ -192,7 +206,7 @@ export class EventCreateComponent {
     this.svc.create(base).pipe(
       switchMap((res) => this.svc.uploadCustomCard(res.data!.id, file))
     ).subscribe({
-      next: () => this.done(undefined),
+      next: (res) => this.doneWithPhoto(undefined as any),
       error: () => this.fail(),
     });
   }
@@ -212,6 +226,18 @@ export class EventCreateComponent {
     this.loading.set(false);
     this.toast.success('Événement créé avec succès !');
     this.router.navigate(id ? ['/events', id] : ['/events']);
+  }
+
+  private doneWithPhoto(id: number): void {
+    const photo = this.couplePhotoFile();
+    if (photo && id) {
+      this.svc.uploadCouplePhoto(id, photo).subscribe({
+        next: () => this.done(id),
+        error: () => { this.toast.error('Photo non uploadée'); this.done(id); },
+      });
+    } else {
+      this.done(id);
+    }
   }
 
   private fail(): void {

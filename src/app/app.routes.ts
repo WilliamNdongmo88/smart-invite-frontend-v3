@@ -128,7 +128,7 @@ export const routes: Routes = [
       {
         path: 'events/:id/links',
         loadComponent: () =>
-          import('./features/links/pages/links.component').then((m) => m.LinksComponent),
+          import('./features/links/pages/link/link.component').then((m) => m.LinksComponent),
       },
       {
         path: 'payments',
