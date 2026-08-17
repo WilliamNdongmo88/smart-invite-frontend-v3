@@ -445,6 +445,19 @@
     </div>
   }
 
+  <!-- Bouton aperçu (étape 4 uniquement) -->
+  @if (step() === 4) {
+    <div class="preview-bar">
+      <button type="button" class="btn-preview-full" (click)="previewJoinPage()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Aperçu de la page d'inscription
+      </button>
+    </div>
+  }
+
   <!-- Navigation -->
   <div class="wizard-nav">
     @if (step() > 1) {
@@ -466,25 +479,16 @@
         </svg>
       </button>
     } @else {
-      <div class="submit-group">
-        <button type="button" class="btn-preview" (click)="previewJoinPage()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
+      <button type="button" class="btn-submit" [disabled]="loading()" (click)="onSubmit()">
+        @if (loading()) {
+          <span class="spinner"></span> Création...
+        } @else {
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
           </svg>
-          Aperçu
-        </button>
-        <button type="button" class="btn-submit" [disabled]="loading()" (click)="onSubmit()">
-          @if (loading()) {
-            <span class="spinner"></span> Création...
-          } @else {
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            Créer l'événement
-          }
-        </button>
-      </div>
+          Créer l'événement
+        }
+      </button>
     }
   </div>
 
