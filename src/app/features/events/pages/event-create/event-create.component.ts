@@ -232,12 +232,42 @@ export class EventCreateComponent {
     const photo = this.couplePhotoFile();
     if (photo && id) {
       this.svc.uploadCouplePhoto(id, photo).subscribe({
-        next: () => this.done(id),
+        next: () => {
+          this.openJoinPreview();
+          this.done(id);
+        },
         error: () => { this.toast.error('Photo non uploadée'); this.done(id); },
       });
     } else {
       this.done(id);
     }
+  }
+
+  previewJoinPage(): void {
+    const v2 = this.step2.value;
+    const v3 = this.step3.value;
+    sessionStorage.setItem('join_preview', JSON.stringify({
+      eventTitle:      v2.title || '',
+      concernedNames:  v2.concernedNames || '',
+      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+      couplePhotoUrl:  this.couplePhotoPreview(),
+      banquetLocation: v3.banquetLocation || '',
+    }));
+    window.open('/join/preview', '_blank');
+  }
+
+  private openJoinPreview(): void {
+    const v2 = this.step2.value;
+    const v3 = this.step3.value;
+    const preview = {
+      eventTitle:      v2.title || '',
+      concernedNames:  v2.concernedNames || '',
+      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+      couplePhotoUrl:  this.couplePhotoPreview(),
+      banquetLocation: v3.banquetLocation || '',
+    };
+    sessionStorage.setItem('join_preview', JSON.stringify(preview));
+    window.open('/join/preview', '_blank');
   }
 
   private fail(): void {

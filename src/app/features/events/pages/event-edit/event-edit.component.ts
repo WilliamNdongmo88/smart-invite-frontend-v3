@@ -304,13 +304,44 @@ export class EventEditComponent implements OnInit {
     const id = this.eventId();
     if (photo && id) {
       this.svc.uploadCouplePhoto(id, photo).subscribe({
-        next: () => { this.toast.success('Événement mis à jour avec succès !'); this.router.navigate(['/events', id]); },
+        next: () => {
+          this.openJoinPreview();
+          this.toast.success('Événement mis à jour avec succès !');
+          this.router.navigate(['/events', id]);
+        },
         error: () => { this.toast.error('Photo non uploadée'); this.router.navigate(['/events', id]); },
       });
     } else {
       this.toast.success('Événement mis à jour avec succès !');
       this.router.navigate(['/events', this.eventId()]);
     }
+  }
+
+  previewJoinPage(): void {
+    const v2 = this.step2.value;
+    const v3 = this.step3.value;
+    sessionStorage.setItem('join_preview', JSON.stringify({
+      eventTitle:      v2.title || '',
+      concernedNames:  v2.concernedNames || '',
+      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+      couplePhotoUrl:  this.couplePhotoPreview() || this.existingPhotoUrl(),
+      banquetLocation: v3.banquetLocation || '',
+    }));
+    window.open('/join/preview', '_blank');
+  }
+
+  private openJoinPreview(): void {
+    const v2 = this.step2.value;
+    const v3 = this.step3.value;
+    const preview = {
+      eventTitle:      v2.title || '',
+      concernedNames:  v2.concernedNames || '',
+      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+      couplePhotoUrl:  this.couplePhotoPreview() || this.existingPhotoUrl(),
+      banquetLocation: v3.banquetLocation || '',
+    };
+    sessionStorage.setItem('join_preview', JSON.stringify(preview));
+    window.open('/join/preview', '_blank');
   }
 
   private fail(): void {

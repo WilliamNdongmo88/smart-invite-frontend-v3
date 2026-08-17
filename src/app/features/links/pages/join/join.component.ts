@@ -69,6 +69,19 @@ export class JoinComponent implements OnInit {
       this.state.set('error');
       return;
     }
+
+    // Mode prévisualisation locale (depuis sessionStorage)
+    if (token === 'preview') {
+      const raw = sessionStorage.getItem('join_preview');
+      if (raw) {
+        this.previewData.set(JSON.parse(raw));
+        this.state.set('form');
+      } else {
+        this.state.set('error');
+      }
+      return;
+    }
+
     this.svc.preview(token).subscribe({
       next: (res) => {
         this.previewData.set(res.data!);
