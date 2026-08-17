@@ -52,7 +52,7 @@ export class EventService {
   }
 
   updateWithCard(id: number, req: UpdateEventWithCardRequest): Observable<ApiResponse<EventWithCard>> {
-    return this.http.put<ApiResponse<EventWithCard>>(`${this.base}/${id}/with-card`, req);
+    return this.http.put<ApiResponse<EventWithCard>>(`${this.base}/${id}/card`, req);
   }
 
   downloadCardPdf(id: number): Observable<Blob> {
