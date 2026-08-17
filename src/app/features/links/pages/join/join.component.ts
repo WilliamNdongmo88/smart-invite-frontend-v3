@@ -7,6 +7,14 @@ import { NotificationMode } from '../../../../core/models/enums.model';
 
 type PageState = 'loading' | 'form' | 'success' | 'error';
 
+type LinkPreview = {
+  eventTitle: string;
+  concernedNames: string;
+  eventDate: string;
+  couplePhotoUrl: string | null;
+  banquetLocation: string | null;
+};
+
 type InvitationViewData = Invitation & {
   eventTitle?: string;
   eventName?: string;
@@ -33,13 +41,14 @@ export class JoinComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly svc = inject(LinkService);
 
-  state = signal<PageState>('form');
+  state = signal<PageState>('loading');
   submitting = signal(false);
   result = signal<Invitation | null>(null);
+  previewData = signal<LinkPreview | null>(null);
   errorMsg = signal('Ce lien est invalide ou a expiré.');
   submitError = signal<string | null>(null);
 
-  readonly simulatedCouplePhoto ='/img/photoCouple.avif';
+  readonly simulatedCouplePhoto = '/img/photoCouple.avif';
 
   readonly notifOptions: { key: NotificationMode; label: string; icon: string }[] = [
     { key: 'EMAIL', label: 'Email', icon: '✉' },
@@ -55,7 +64,18 @@ export class JoinComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    if (!this.route.snapshot.paramMap.get('token')) this.state.set('error');
+    const token = this.route.snapshot.paramMap.get('token');
+    if (!token) {
+      this.state.set('error');
+      return;
+    }
+    this.svc.preview(token).subscribe({
+      next: (res) => {
+        this.previewData.set(res.data!);
+        this.state.set('form');
+      },
+      error: () => this.state.set('error'),
+    });
   }
 
   isInvalid(field: string): boolean {
@@ -68,6 +88,8 @@ export class JoinComponent implements OnInit {
   }
 
   coupleNames(): string {
+    const p = this.previewData();
+    if (p?.concernedNames) return p.concernedNames;
     const data = this.data();
     if (data?.coupleNames) return data.coupleNames;
     if (data?.brideName && data?.groomName) return `${data.groomName} & ${data.brideName}`;
@@ -75,12 +97,16 @@ export class JoinComponent implements OnInit {
   }
 
   eventTitle(): string {
+    const p = this.previewData();
+    if (p?.eventTitle) return p.eventTitle;
     const data = this.data();
-    return data?.eventTitle || data?.eventName || 'Invitation à l’événement';
+    return data?.eventTitle || data?.eventName || "Invitation à l'événement";
   }
 
   eventDate(): string {
-    return this.data()?.eventDate || 'Date de l’événement';
+    const p = this.previewData();
+    if (p?.eventDate) return p.eventDate;
+    return this.data()?.eventDate || "Date de l'événement";
   }
 
   eventMessage(): string {
@@ -88,11 +114,15 @@ export class JoinComponent implements OnInit {
   }
 
   eventLocation(): string {
+    const p = this.previewData();
+    if (p?.banquetLocation) return p.banquetLocation;
     const data = this.data();
-    return data?.venue || data?.eventLocation || 'Lieu de l’événement';
+    return data?.venue || data?.eventLocation || "Lieu de l'événement";
   }
 
   couplePhoto(): string {
+    const p = this.previewData();
+    if (p?.couplePhotoUrl) return p.couplePhotoUrl;
     const data = this.data();
     return data?.couplePhotoUrl || data?.photoUrl || this.simulatedCouplePhoto;
   }
@@ -141,9 +171,3 @@ export class JoinComponent implements OnInit {
 }
 
 export type { InvitationViewData };
-
-/*
-  Propriétés optionnelles utilisées si l’API les renvoie :
-  eventTitle/eventName, coupleNames ou brideName + groomName, eventDate,
-  eventMessage, venue/eventLocation et couplePhotoUrl/photoUrl.
-*/

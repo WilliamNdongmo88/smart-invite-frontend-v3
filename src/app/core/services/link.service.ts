@@ -30,6 +30,16 @@ export class LinkService {
   }
 
   // Public — sans auth
+  preview(token: string): Observable<ApiResponse<{
+    eventTitle: string;
+    concernedNames: string;
+    eventDate: string;
+    couplePhotoUrl: string | null;
+    banquetLocation: string | null;
+  }>> {
+    return this.http.get<ApiResponse<any>>(`${this.base}/preview/${token}`);
+  }
+
   join(token: string, req: CreateGuestRequest): Observable<ApiResponse<Invitation>> {
     return this.http.post<ApiResponse<Invitation>>(`${this.base}/join/${token}`, req);
   }
