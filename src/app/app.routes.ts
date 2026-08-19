@@ -8,6 +8,14 @@ import { AgentLayoutComponent } from './layout/agent-layout/agent-layout.compone
 import { PublicLayoutComponent } from './layout/public-layout/public-layout.component';
 
 export const routes: Routes = [
+  // ── Page d'accueil ───────────────────────────────────────────────
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+    pathMatch: 'full',
+  },
+
   // ── Pages publiques (sans auth) ──────────────────────────────────
   {
     path: '',
@@ -164,5 +172,5 @@ export const routes: Routes = [
   },
 
   // ── Fallback ──────────────────────────────────────────────────────
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: '' },
 ];

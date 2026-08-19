@@ -1,0 +1,474 @@
+<!-- ══════════════════════════════════════════════════════════════
+     NAVIGATION STICKY
+══════════════════════════════════════════════════════════════ -->
+<nav class="site-nav" [class.nav-scrolled]="navScrolled()">
+  <a class="nav-logo" routerLink="/">Smart<span class="gold">Invite</span></a>
+
+  <ul class="nav-links">
+    <li><a href="#features">FONCTIONNALITÉS</a></li>
+    <li><a href="#how">COMMENT ÇA MARCHE</a></li>
+    <li><a href="#programme">PROGRAMME</a></li>
+    <li><a href="#temoignages">TÉMOIGNAGES</a></li>
+    <li><a href="#contact">CONTACT</a></li>
+  </ul>
+
+  <div class="nav-actions">
+    <a routerLink="/login" class="btn-nav-outline">Se connecter</a>
+    <a routerLink="/register" class="btn-nav-solid">Commencer</a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO — SAVE THE DATE
+══════════════════════════════════════════════════════════════ -->
+<section class="hero-section">
+
+  <!-- Orbes flottantes -->
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <!-- Éléments décoratifs parallax -->
+  <div class="deco-leaf" [style.transform]="parallaxY(-0.08)"></div>
+  <div class="deco-ribbon" [style.transform]="parallaxY(0.06)"></div>
+
+  <!-- SVG waves animées (fond) -->
+  <svg class="hero-waves" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.25"/>
+        <stop offset="100%" stop-color="#3d2e00" stop-opacity="0.08"/>
+      </linearGradient>
+      <linearGradient id="wg2" x1="100%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
+        <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.04"/>
+      </linearGradient>
+    </defs>
+    <path class="hw hw1" d="M-100,300 C200,100 500,500 800,300 S1200,100 1600,300" fill="none" stroke="url(#wg1)" stroke-width="120" stroke-linecap="round" opacity="0.6"/>
+    <path class="hw hw2" d="M-100,500 C300,300 600,700 900,500 S1300,300 1700,450" fill="none" stroke="url(#wg2)" stroke-width="80" stroke-linecap="round" opacity="0.5"/>
+    <path class="hw hw3" d="M-100,150 C400,50 700,400 1000,200 S1400,50 1700,200" fill="none" stroke="url(#wg1)" stroke-width="60" stroke-linecap="round" opacity="0.4"/>
+  </svg>
+
+  <!-- Contenu centré -->
+  <div class="hero-content">
+    <span class="eyebrow">GESTION D'INVITATIONS</span>
+
+    <h1 class="hero-title">
+      Smart<span class="amp">&</span>Invite
+    </h1>
+
+    <div class="hero-sep"><span class="heart">✦</span></div>
+
+    <p class="hero-sub">La plateforme élégante pour gérer vos événements et vos invités.</p>
+
+    <div class="hero-date-block">
+      <div class="date-bar"></div>
+      <div>
+        <div class="date-main">Mariages · Galas · Conférences</div>
+        <div class="date-place">INVITATIONS · CHECK-IN · STATISTIQUES</div>
+      </div>
+    </div>
+
+    <div class="hero-ctas">
+      <a routerLink="/register" class="btn-primary">CRÉER MON ÉVÉNEMENT</a>
+      <a href="#how" class="btn-outline">COMMENT ÇA MARCHE</a>
+    </div>
+
+    <!-- Compte à rebours -->
+    <div class="countdown">
+      <div class="count-chip">
+        <span class="count-val">{{ countdown().days }}</span>
+        <span class="count-label">JOURS</span>
+      </div>
+      <div class="count-sep">|</div>
+      <div class="count-chip">
+        <span class="count-val">{{ countdown().hours }}</span>
+        <span class="count-label">HEURES</span>
+      </div>
+      <div class="count-sep">|</div>
+      <div class="count-chip">
+        <span class="count-val">{{ countdown().minutes }}</span>
+        <span class="count-label">MINUTES</span>
+      </div>
+      <div class="count-sep">|</div>
+      <div class="count-chip">
+        <span class="count-val">{{ countdown().seconds }}</span>
+        <span class="count-label">SECONDES</span>
+      </div>
+    </div>
+    <p class="countdown-label">avant la prochaine mise à jour majeure</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEATURES (anciennement "Le Couple")
+══════════════════════════════════════════════════════════════ -->
+<section id="features" class="features-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">NOS FONCTIONNALITÉS</span>
+    <h2 class="section-title fade-up">Tout ce dont vous avez besoin</h2>
+    <p class="section-quote fade-up">« Un outil puissant, une expérience élégante. »</p>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📋</div>
+        <h3>Gestion des événements</h3>
+        <p>Créez et gérez plusieurs événements simultanément. Configurez chaque détail : date, lieu, programme, photo de couverture.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">👥</div>
+        <h3>Import des invités</h3>
+        <p>Importez vos listes via Excel ou ajoutez manuellement. Gérez les groupes, les tables et les régimes alimentaires.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">✉️</div>
+        <h3>Invitations personnalisées</h3>
+        <p>Générez des invitations élégantes avec QR code unique par invité. Envoi par email et/ou WhatsApp en un clic.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📊</div>
+        <h3>Suivi en temps réel</h3>
+        <p>Tableau de bord live : confirmations, refus, en attente. Taux de réponse, statistiques et export des données.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📱</div>
+        <h3>Check-in intelligent</h3>
+        <p>Application de scan QR code pour vos agents à l'entrée. Détection des doublons, validation instantanée.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🔗</div>
+        <h3>Liens d'inscription</h3>
+        <p>Créez des liens publics d'inscription pour que vos invités s'enregistrent eux-mêmes sur votre page d'événement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BANDEAU PARALLAX 1
+══════════════════════════════════════════════════════════════ -->
+<div class="parallax-band band-1">
+  <div class="band-overlay"></div>
+  <div class="band-content fade-up">
+    <span class="eyebrow">LA PLATEFORME</span>
+    <h2 class="band-title">Conçu pour l'élégance</h2>
+    <p class="band-sub">MARIAGES · GALAS · CONFÉRENCES · CÉRÉMONIES</p>
+    <p class="band-desc">Chaque fonctionnalité a été pensée pour offrir une expérience irréprochable à l'organisateur comme à l'invité.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HISTOIRE / STORY BOOK
+══════════════════════════════════════════════════════════════ -->
+<section id="how" class="story-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">NOTRE HISTOIRE</span>
+    <h2 class="section-title fade-up">Une solution construite avec soin</h2>
+    <p class="section-quote fade-up">« Une idée. Une conviction. Et une plateforme qui change tout. »</p>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <!-- Onglets chapitres -->
+    <div class="story-tabs fade-up">
+      @for (ch of chapters; track $index) {
+        <button class="story-tab" [class.active]="activeChapter() === $index" (click)="activeChapter.set($index)">
+          {{ ch.label }} <span class="tab-sub">{{ ch.sublabel }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Contenu chapitre actif -->
+    <div class="story-body fade-up">
+      <div class="story-photo">
+        <div class="story-photo-inner">
+          <img src="/img/photoCouple.avif" alt="Smart Invite" />
+          <div class="story-caption">{{ chapters[activeChapter()].caption }}</div>
+        </div>
+      </div>
+      <div class="story-text">
+        <div class="story-monogram">S <span class="amp">&</span> I</div>
+        <div class="story-year">{{ chapters[activeChapter()].year }}</div>
+        <h3 class="story-chapter-title">{{ chapters[activeChapter()].title }}</h3>
+        <p class="story-chapter-content">{{ chapters[activeChapter()].content }}</p>
+        <div class="story-nav">
+          <button class="btn-story-nav" (click)="prevChapter()">← PAGE PRÉCÉDENTE</button>
+          <span class="story-page">Page {{ activeChapter() + 1 }} / {{ chapters.length }}</span>
+          <button class="btn-story-nav" (click)="nextChapter()">PAGE SUIVANTE →</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="story-footer fade-up">Merci de faire confiance à Smart Invite pour vos événements les plus précieux.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BANDEAU PARALLAX 2 — Citation
+══════════════════════════════════════════════════════════════ -->
+<div class="parallax-band band-2">
+  <div class="band-overlay"></div>
+  <div class="band-content">
+    <p class="band-quote">« Chaque événement mérite d'être vécu pleinement — pas géré dans le stress. »</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GALERIE / APERÇUS
+══════════════════════════════════════════════════════════════ -->
+<section id="apercu" class="gallery-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">APERÇUS</span>
+    <h2 class="section-title fade-up">Smart Invite en action</h2>
+    <p class="section-quote fade-up">« Une interface pensée pour l'élégance et l'efficacité. »</p>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <div class="gallery-mosaic fade-up">
+      <div class="gallery-item gallery-lg">
+        <img src="/img/pic_wedding.png" alt="Dashboard Smart Invite" />
+        <div class="gallery-caption">Tableau de bord</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/photoCouple.avif" alt="Page d'invitation" />
+        <div class="gallery-caption">Page d'invitation</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/pic_wedding.png" alt="Check-in QR" />
+        <div class="gallery-caption">Check-in QR</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/photoCouple.avif" alt="Gestion invités" />
+        <div class="gallery-caption">Gestion invités</div>
+      </div>
+      <div class="gallery-item">
+        <img src="/img/pic_wedding.png" alt="Statistiques" />
+        <div class="gallery-caption">Statistiques live</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PROGRAMME / TIMELINE
+══════════════════════════════════════════════════════════════ -->
+<section id="programme" class="programme-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">PROGRAMME</span>
+    <h2 class="section-title fade-up">Le cycle de vie d'un événement</h2>
+    <p class="section-quote fade-up">« De la création à la clôture, Smart Invite vous accompagne. »</p>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <!-- Onglets -->
+    <div class="prog-tabs fade-up">
+      <button class="prog-tab" [class.active]="activeTab() === 'before'" (click)="activeTab.set('before')">
+        ☾ AVANT L'ÉVÉNEMENT
+      </button>
+      <button class="prog-tab" [class.active]="activeTab() === 'day'" (click)="activeTab.set('day')">
+        ☼ LE JOUR J
+      </button>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline-shell fade-up">
+      <div class="timeline-rail">
+        <div class="timeline-progress"></div>
+      </div>
+
+      @if (activeTab() === 'before') {
+        @for (item of programBefore; track $index) {
+          <div class="timeline-item">
+            <div class="timeline-dot">{{ item.icon }}</div>
+            <div class="timeline-card">
+              <div class="tl-time">{{ item.time }}</div>
+              <h4 class="tl-title">{{ item.title }}</h4>
+              <p class="tl-desc">{{ item.desc }}</p>
+            </div>
+          </div>
+        }
+      }
+
+      @if (activeTab() === 'day') {
+        @for (item of programDay; track $index) {
+          <div class="timeline-item">
+            <div class="timeline-dot">{{ item.icon }}</div>
+            <div class="timeline-card">
+              <div class="tl-time">{{ item.time }}</div>
+              <h4 class="tl-title">{{ item.title }}</h4>
+              <p class="tl-desc">{{ item.desc }}</p>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <p class="prog-footer fade-up">Chaque étape a été pensée pour vous faire gagner du temps et de la sérénité.</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BANDEAU PARALLAX 3 — CTA galerie
+══════════════════════════════════════════════════════════════ -->
+<div class="parallax-band band-3">
+  <div class="band-overlay"></div>
+  <div class="band-content fade-up">
+    <span class="eyebrow">ET CE N'EST PAS TOUT</span>
+    <h2 class="band-title">Votre événement mérite le meilleur</h2>
+    <a routerLink="/register" class="btn-primary">Créer mon compte gratuitement</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TÉMOIGNAGES
+══════════════════════════════════════════════════════════════ -->
+<section id="temoignages" class="temoignages-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">TÉMOIGNAGES</span>
+    <h2 class="section-title fade-up">Ils nous font confiance</h2>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <div class="temoignages-grid">
+      <div class="temoignage-card fade-up">
+        <p class="temo-text">« Smart Invite a transformé l'organisation de notre mariage. Fini le stress des confirmations ! Tout était centralisé et élégant. »</p>
+        <div class="temo-author">
+          <div class="temo-avatar">S</div>
+          <div>
+            <div class="temo-name">Sarah M.</div>
+            <div class="temo-role">Mariée · Yaoundé</div>
+          </div>
+        </div>
+      </div>
+      <div class="temoignage-card fade-up">
+        <p class="temo-text">« Le check-in QR code le jour J était parfait. Nos agents ont validé 200 invités en moins de 30 minutes. Impressionnant. »</p>
+        <div class="temo-author">
+          <div class="temo-avatar">K</div>
+          <div>
+            <div class="temo-name">Kevin T.</div>
+            <div class="temo-role">Organisateur · Douala</div>
+          </div>
+        </div>
+      </div>
+      <div class="temoignage-card fade-up">
+        <p class="temo-text">« Les invitations personnalisées avec QR code ont bluffé nos invités. La page d'inscription était magnifique et très simple à utiliser. »</p>
+        <div class="temo-author">
+          <div class="temo-avatar">A</div>
+          <div>
+            <div class="temo-name">Amina B.</div>
+            <div class="temo-role">Event Planner · Abidjan</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PALETTE / DESIGN SYSTEM
+══════════════════════════════════════════════════════════════ -->
+<section class="palette-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">✦ NOTRE DESIGN</span>
+    <h2 class="section-title fade-up">Palette Smart Invite</h2>
+    <p class="palette-desc fade-up">Un design system élégant, cohérent et adapté à tous vos événements.</p>
+
+    <div class="palette-tabs fade-up">
+      <button class="pal-tab" [class.active]="activePalette() === 'dark'" (click)="activePalette.set('dark')">Mode Sombre</button>
+      <button class="pal-tab" [class.active]="activePalette() === 'light'" (click)="activePalette.set('light')">Mode Clair</button>
+    </div>
+
+    <div class="palette-swatches fade-up">
+      @for (swatch of palettes[activePalette()]; track $index) {
+        <div class="swatch">
+          <div class="swatch-color" [style.background]="swatch.color"></div>
+          <span class="swatch-label">{{ swatch.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FAQ
+══════════════════════════════════════════════════════════════ -->
+<section class="faq-section">
+  <div class="section-inner">
+    <span class="eyebrow-dark fade-up">FAQ</span>
+    <h2 class="section-title fade-up">Questions Fréquentes</h2>
+    <div class="sep-heart fade-up"><span>✦</span></div>
+
+    <div class="faq-shell fade-up">
+      @for (item of faqs; track $index) {
+        <details class="faq-item">
+          <summary class="faq-q">{{ item.q }}</summary>
+          <p class="faq-a">{{ item.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RSVP / CTA FINAL
+══════════════════════════════════════════════════════════════ -->
+<section id="contact" class="rsvp-section">
+  <div class="band-overlay"></div>
+  <div class="rsvp-card fade-up">
+    <span class="eyebrow">REJOIGNEZ-NOUS</span>
+    <h2 class="rsvp-title">Prêt à créer votre premier événement ?</h2>
+    <div class="hero-sep"><span>✦</span></div>
+    <p class="rsvp-sub">Créez votre compte gratuitement et découvrez comment Smart Invite transforme l'organisation de vos événements.</p>
+    <div class="rsvp-ctas">
+      <a routerLink="/register" class="btn-primary">Créer mon compte</a>
+      <a routerLink="/login" class="btn-outline">Se connecter</a>
+    </div>
+  </div>
+
+  <!-- Formulaire contact -->
+  <div class="contact-form-wrap fade-up">
+    <h3 class="contact-title">Une question ?</h3>
+    <p class="contact-sub">Réponse envoyée via WhatsApp</p>
+
+    @if (!contactSent()) {
+      <div class="contact-form">
+        <input class="contact-input" type="text" placeholder="Votre nom"
+               [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
+        <textarea class="contact-input contact-textarea" placeholder="Écrivez votre question ici…" rows="4"
+                  [value]="contactMsg()" (input)="contactMsg.set($any($event.target).value)"></textarea>
+        <button class="btn-primary" (click)="sendContact()" [disabled]="contactSending()">
+          @if (contactSending()) { <span class="spinner"></span> }
+          Envoyer
+        </button>
+      </div>
+    } @else {
+      <div class="contact-success">
+        <p>Merci {{ contactName() }} ! 🎉</p>
+        <p>Votre question a été envoyée. On vous répond sur WhatsApp.</p>
+        <button class="btn-outline" (click)="resetContact()">Nouvelle question</button>
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">Smart<span class="gold">Invite</span></div>
+  <p class="footer-sub">La plateforme élégante de gestion d'invitations</p>
+  <div class="footer-sep">✦</div>
+  <p class="footer-love">AVEC TOUT NOTRE SOIN ✦</p>
+  <p class="footer-credit">© 2025 Smart Invite — Tous droits réservés</p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TOAST POPUP
+══════════════════════════════════════════════════════════════ -->
+@if (showToast()) {
+  <div class="toast-banner">
+    <button class="toast-close" (click)="showToast.set(false)">✕</button>
+    <div class="toast-badge">🎉 OFFRE DE LANCEMENT</div>
+    <p class="toast-text">Créez votre compte maintenant et bénéficiez de 3 mois d'accès premium offerts.</p>
+    <div class="toast-actions">
+      <a routerLink="/register" class="btn-primary btn-sm">En profiter</a>
+      <button class="btn-ghost" (click)="showToast.set(false)">Plus tard</button>
+    </div>
+  </div>
+}
