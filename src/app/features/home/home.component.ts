@@ -1,10 +1,15 @@
 import {
-  Component, OnInit, OnDestroy, signal, PLATFORM_ID, inject, AfterViewInit, ElementRef, ViewChildren, QueryList
+  Component, OnInit, OnDestroy, AfterViewInit,
+  signal, inject, PLATFORM_ID, ElementRef
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
+
+type ChapterKey = 'rencontre' | 'complicite' | 'parcours' | 'celebration';
+type TabKey = 'before' | 'day';
+type PaletteKey = 'terracotta' | 'champagne';
 
 @Component({
   selector: 'app-home',
@@ -15,95 +20,125 @@ interface CountdownValue { days: string; hours: string; minutes: string; seconds
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly el = inject(ElementRef);
 
   // ── Countdown ──────────────────────────────────────────────────────
+  readonly TARGET_DATE = new Date('2026-08-08T14:00:00').getTime();
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
   private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
   // ── Story book ─────────────────────────────────────────────────────
   activeChapter = signal(0);
-  chapters = [
+  readonly chapters = [
     {
-      label: 'CHAPITRE I', sublabel: 'Le problème',
-      year: '2024', title: 'Des invitations perdues dans les emails',
-      caption: 'Le chaos des invitations',
-      content: 'Chaque organisateur d\'événement a vécu ce cauchemar : des centaines d\'emails envoyés, des réponses éparpillées, des invités qui n\'ont jamais reçu leur invitation. La gestion manuelle des invitations est chronophage, source d\'erreurs et de stress.',
+      label: 'CHAPITRE I', sublabel: 'La rencontre',
+      year: '2008', title: 'Une rencontre inattendue',
+      caption: 'Le premier regard',
+      image: '/images/chap1-veste.webp',
+      paragraphs: [
+        'À cette époque au sein de l\'ACR, rien ne laisse imaginer ce que deviendra leur histoire. Ils collaborent, organisent des événements et partagent un même environnement… sans savoir qu\'ils avancent déjà dans la même direction.',
+      ],
     },
     {
-      label: 'CHAPITRE II', sublabel: 'La vision',
-      year: '2024', title: 'Une plateforme pensée pour l\'élégance',
-      caption: 'La solution intelligente',
-      content: 'Smart Invite est né d\'une conviction simple : chaque événement mérite une gestion à la hauteur de son importance. Nous avons conçu une plateforme qui allie puissance technologique et élégance visuelle pour transformer l\'expérience de l\'organisateur comme de l\'invité.',
+      label: 'CHAPITRE II', sublabel: 'La complicité',
+      year: '2010', title: 'L\'amitié devenue évidence',
+      caption: 'Les souvenirs à deux',
+      image: '/images/couple_zome_amor.webp',
+      paragraphs: [
+        'En 2010, leurs chemins se croisent à nouveau. Et cette fois, quelque chose change. Les échanges deviennent plus naturels. Les conversations s\'allongent. Les silences deviennent confortables, et les rires arrivent sans effort.',
+        'Parler de tout et de rien devient une évidence. Et les absences… un peu plus longues, commencent à dire ce que les mots n\'avaient pas encore formulé.',
+      ],
     },
     {
-      label: 'CHAPITRE III', sublabel: 'Les fonctionnalités',
-      year: '2025', title: 'Tout ce dont vous avez besoin',
-      caption: 'Fonctionnalités complètes',
-      content: 'Créez vos événements en quelques minutes, importez vos listes d\'invités, générez des invitations personnalisées avec QR code, suivez les confirmations en temps réel, et gérez le check-in le jour J avec notre application dédiée. Smart Invite couvre tout le cycle de vie de votre événement.',
+      label: 'CHAPITRE III', sublabel: 'Notre parcours',
+      year: '2011 – 2025', title: 'Le chemin ensemble',
+      caption: 'Toi et moi, pour la vie',
+      image: '/images/image-1-converted.webp',
+      paragraphs: [
+        'Ce n\'est plus seulement une rencontre ni une évidence… C\'est une vie construite à deux. Avec le temps, nous avons appris à avancer côte à côte, à travers les jours simples comme les moments plus intenses.',
+        'Notre histoire s\'est écrit naturellement, entre projets partagés, voyages, souvenirs et cette façon unique de nous comprendre. Peu à peu, nos rêves sont devenus une réalité. Et chaque étape nous a rapprochés encore plus, avec cette même complicité discrète, sincère et essentielle.',
+        'Aujourd\'hui, tout ce chemin nous conduit vers ce qui vient.',
+      ],
     },
     {
-      label: 'CHAPITRE IV', sublabel: 'Votre événement',
-      year: '2025', title: 'Prêt à créer votre premier événement ?',
-      caption: 'Commencez maintenant',
-      content: 'Rejoignez les organisateurs qui font confiance à Smart Invite pour leurs mariages, galas, conférences et célébrations. Créez votre compte gratuitement et découvrez comment transformer votre prochain événement en une expérience inoubliable.',
+      label: 'CHAPITRE IV', sublabel: 'La célébration',
+      year: '07 & 08 août 2026', title: 'Deux jours pour se dire OUI',
+      caption: 'Le prochain chapitre',
+      image: '/images/venue/domaine-vue-aerienne.webp',
+      paragraphs: [
+        'Tout converge désormais vers ce moment : celui de célébrer notre union avec ceux que nous aimons. Bien plus qu\'une célébration, c\'est une pause dans le temps.',
+        'Un moment de gratitude pour tout ce que nous avons traversé ensemble : les saisons, les joies, les épreuves et tout ce qui a façonné notre histoire. Cette étape ne marque pas le début d\'une nouvelle histoire. Elle célèbre celle que nous écrivons déjà depuis tant d\'années, avec patience, amour et confiance.',
+        'Que la tendresse et la complicité continuent de guider ce que nous avons encore à écrire ensemble.',
+      ],
     },
   ];
 
-  // ── Programme tabs ─────────────────────────────────────────────────
-  activeTab = signal<'before' | 'day'>('day');
+  // ── Programme ──────────────────────────────────────────────────────
+  activeTab = signal<TabKey>('day');
 
-  programBefore = [
-    { icon: '✦', time: 'J-30', title: 'Création de l\'événement', desc: 'Configurez votre événement, personnalisez votre page d\'invitation et définissez les détails.' },
-    { icon: '♡', time: 'J-21', title: 'Import des invités', desc: 'Importez votre liste d\'invités via Excel ou ajoutez-les manuellement un par un.' },
-    { icon: '◉', time: 'J-14', title: 'Envoi des invitations', desc: 'Envoyez les invitations personnalisées par email et/ou WhatsApp en un clic.' },
-    { icon: '♢', time: 'J-7', title: 'Suivi des confirmations', desc: 'Consultez en temps réel qui a confirmé, qui est en attente, qui a décliné.' },
+  readonly programBefore = [
+    { icon: '♡', time: '14h – 15h',    title: 'Mariage Mairie',          desc: 'Cérémonie civile en présence des proches. Le premier « oui » officiel.' },
+    { icon: '⌖', time: '15h – 15h30',  title: 'Déplacement au Thabord',  desc: 'Direction le Thabord pour la séance photos dans un cadre verdoyant.' },
+    { icon: '●', time: '15h30 – 16h30',title: 'Séance Photos Thabord',   desc: 'Séance photos avec les mariés et les proches dans le magnifique parc du Thabord.' },
+    { icon: '✦', time: '17h – 18h30',  title: 'Collation au Domaine',    desc: 'Un moment convivial autour d\'un verre et de petites douceurs au domaine.' },
   ];
 
-  programDay = [
-    { icon: '⌖', time: 'Matin', title: 'Préparation du check-in', desc: 'Activez le mode check-in et assignez vos agents à l\'entrée de l\'événement.' },
-    { icon: '♫', time: 'Accueil', title: 'Scan des QR codes', desc: 'Chaque invité présente son QR code. Validation instantanée, détection des doublons.' },
-    { icon: '●', time: 'En direct', title: 'Tableau de bord live', desc: 'Suivez l\'affluence en temps réel : valides, doublons, invalides, total présents.' },
-    { icon: '✦', time: 'Après', title: 'Rapport complet', desc: 'Exportez le rapport de présence avec toutes les statistiques de votre événement.' },
+  readonly programDay = [
+    { icon: '♡', time: '10h00 – 11h30', title: 'Cérémonie Religieuse',          desc: 'Le moment le plus émouvant. Cérémonie solennelle entourée de tous ceux qu\'on aime.' },
+    { icon: '♢', time: '12h – 14h',     title: 'Vin d\'Honneur',                desc: 'Champagne, pièces raffinées et rencontre des familles dans les jardins du domaine.' },
+    { icon: '♫', time: '12h – 14h',     title: 'Le Coin des P\'tits Loups',     desc: 'Un espace ludique dédié aux plus petits, avec des jeux pour leur plus grand bonheur.' },
+    { icon: '◉', time: '19h – 20h',     title: 'Arrivée / Installation',        desc: 'Installation à table, retrouvailles et montée en ambiance pour la soirée.' },
   ];
 
-  // ── FAQ ────────────────────────────────────────────────────────────
-  faqs = [
-    { q: 'Smart Invite est-il gratuit ?', a: 'Smart Invite propose une offre d\'essai gratuite. Des plans payants sont disponibles pour les événements de grande envergure avec des fonctionnalités avancées.' },
-    { q: 'Combien d\'invités puis-je gérer ?', a: 'Il n\'y a pas de limite stricte. La plateforme est conçue pour gérer des événements de 10 à plusieurs milliers d\'invités.' },
-    { q: 'Les invités ont-ils besoin d\'un compte ?', a: 'Non. Les invités reçoivent un lien unique et peuvent confirmer leur présence sans créer de compte.' },
-    { q: 'Le check-in fonctionne-t-il hors ligne ?', a: 'L\'application de check-in nécessite une connexion internet pour synchroniser les données en temps réel.' },
-  ];
-
-  // ── Palette dress code (réutilisé pour "thème design") ─────────────
-  activePalette = signal<'dark' | 'light'>('dark');
-  palettes = {
-    dark: [
-      { color: '#111111', label: 'Onyx' },
-      { color: '#1a1a1a', label: 'Charbon' },
-      { color: '#c9a84c', label: 'Or' },
-      { color: '#2a2a2a', label: 'Graphite' },
+  // ── Dress code palettes ────────────────────────────────────────────
+  activePalette = signal<PaletteKey>('terracotta');
+  readonly palettes: Record<PaletteKey, { color: string; label: string }[]> = {
+    terracotta: [
+      { color: '#b65a3a', label: 'Terracotta' },
+      { color: '#8d4128', label: 'Sienne' },
+      { color: '#d58a67', label: 'Pêche' },
+      { color: '#f2d2c2', label: 'Rosée' },
     ],
-    light: [
-      { color: '#ffffff', label: 'Blanc' },
-      { color: '#f5f0e8', label: 'Ivoire' },
-      { color: '#c9a84c', label: 'Or' },
-      { color: '#888888', label: 'Argent' },
+    champagne: [
+      { color: '#f1e0bc', label: 'Champagne' },
+      { color: '#dcc295', label: 'Doré' },
+      { color: '#b99768', label: 'Miel' },
+      { color: '#fff3dc', label: 'Ivoire' },
     ],
   };
 
-  // ── Parallax / scroll ──────────────────────────────────────────────
-  scrollY = signal(0);
-  navScrolled = signal(false);
-  showToast = signal(false);
-  private scrollListener: (() => void) | null = null;
-  private toastShown = false;
+  // ── FAQ ────────────────────────────────────────────────────────────
+  readonly faqs = [
+    {
+      q: 'Le dress code est-il obligatoire ?',
+      a: 'Pas de dress code strict, mais nous comptons sur votre bon goût — habillez-vous de façon soignée et appropriée à l\'occasion. 😊',
+    },
+    {
+      q: 'Comment confirmer ma présence ?',
+      a: 'Via le lien RSVP reçu sur WhatsApp. Votre réponse est enregistrée instantanément.',
+    },
+  ];
 
   // ── Contact form ───────────────────────────────────────────────────
-  contactName = signal('');
-  contactMsg = signal('');
-  contactSent = signal(false);
+  contactName  = signal('');
+  contactPhone = signal('');
+  contactMsg   = signal('');
+  contactSent    = signal(false);
   contactSending = signal(false);
 
+  // ── Music player ───────────────────────────────────────────────────
+  musicPlaying = signal(false);
+  private audio: HTMLAudioElement | null = null;
+
+  // ── Scroll / nav / toast ───────────────────────────────────────────
+  scrollY      = signal(0);
+  navScrolled  = signal(false);
+  showToast    = signal(false);
+  private toastShown = false;
+  private scrollListener: (() => void) | null = null;
+  private timelineProgress = signal(0);
+
+  // ── Lifecycle ──────────────────────────────────────────────────────
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.startCountdown();
@@ -114,64 +149,68 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.initFadeObserver();
+    this.audio = new Audio('/audio/river-flows.mp3');
+    this.audio.loop = true;
+    this.audio.volume = 0.6;
   }
 
   ngOnDestroy(): void {
     if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.scrollListener) window.removeEventListener('scroll', this.scrollListener);
+    if (this.audio) { this.audio.pause(); this.audio = null; }
   }
 
+  // ── Countdown ──────────────────────────────────────────────────────
   private startCountdown(): void {
-    const target = new Date('2026-01-01T00:00:00').getTime();
     const update = () => {
-      const now = Date.now();
-      const diff = target - now;
+      const diff = this.TARGET_DATE - Date.now();
       if (diff <= 0) {
         this.countdown.set({ days: '000', hours: '00', minutes: '00', seconds: '00' });
         return;
       }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
       this.countdown.set({
-        days: String(d).padStart(3, '0'),
-        hours: String(h).padStart(2, '0'),
-        minutes: String(m).padStart(2, '0'),
-        seconds: String(s).padStart(2, '0'),
+        days:    String(Math.floor(diff / 86_400_000)).padStart(3, '0'),
+        hours:   String(Math.floor((diff % 86_400_000) / 3_600_000)).padStart(2, '0'),
+        minutes: String(Math.floor((diff % 3_600_000) / 60_000)).padStart(2, '0'),
+        seconds: String(Math.floor((diff % 60_000) / 1_000)).padStart(2, '0'),
       });
     };
     update();
     this.countdownInterval = setInterval(update, 1000);
   }
 
+  // ── Scroll ─────────────────────────────────────────────────────────
   private onScroll(): void {
     const y = window.scrollY;
     this.scrollY.set(y);
     this.navScrolled.set(y > 60);
-    if (!this.toastShown && y > 400) {
+    if (!this.toastShown && y > 500) {
       this.toastShown = true;
-      setTimeout(() => this.showToast.set(true), 300);
+      setTimeout(() => this.showToast.set(true), 400);
     }
   }
 
+  // ── IntersectionObserver fade-up ───────────────────────────────────
   private initFadeObserver(): void {
-    const els = document.querySelectorAll('.fade-up');
+    const els = this.el.nativeElement.querySelectorAll('.fade-up');
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          obs.unobserve(e.target);
-        }
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
       });
     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-    els.forEach(el => obs.observe(el));
+    els.forEach((el: Element) => obs.observe(el));
   }
 
+  // ── Parallax ───────────────────────────────────────────────────────
   parallaxY(factor: number): string {
     return `translate3d(0, ${Math.min(120, this.scrollY() * factor)}px, 0)`;
   }
 
+  parallaxYNeg(factor: number): string {
+    return `translate3d(0, ${-Math.min(120, this.scrollY() * factor)}px, 0)`;
+  }
+
+  // ── Story navigation ───────────────────────────────────────────────
   prevChapter(): void {
     this.activeChapter.update(c => (c - 1 + this.chapters.length) % this.chapters.length);
   }
@@ -179,14 +218,32 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.activeChapter.update(c => (c + 1) % this.chapters.length);
   }
 
+  // ── Music ──────────────────────────────────────────────────────────
+  toggleMusic(): void {
+    if (!this.audio) return;
+    if (this.musicPlaying()) {
+      this.audio.pause();
+      this.musicPlaying.set(false);
+    } else {
+      this.audio.play().catch(() => {});
+      this.musicPlaying.set(true);
+    }
+  }
+
+  // ── Contact WhatsApp ───────────────────────────────────────────────
   sendContact(): void {
-    if (!this.contactName() || !this.contactMsg()) return;
+    if (!this.contactName() || !this.contactPhone() || !this.contactMsg()) return;
     this.contactSending.set(true);
+    const now = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
     const msg = encodeURIComponent(
-      `Bonjour, j'ai une question concernant Smart Invite.\nNom: ${this.contactName()}\nMessage: ${this.contactMsg()}\nEnvoyé depuis le site le ${new Date().toLocaleDateString('fr-FR')}`
+      `Bonjour, j'ai une question concernant le mariage de Leatitia & Christophe.\n` +
+      `Nom : ${this.contactName()}\n` +
+      `Téléphone : ${this.contactPhone()}\n` +
+      `Question : ${this.contactMsg()}\n` +
+      `Envoyé depuis le site le ${now}`
     );
     setTimeout(() => {
-      window.open(`https://wa.me/237600000000?text=${msg}`, '_blank');
+      window.location.assign(`https://wa.me/33624623647?text=${msg}`);
       this.contactSending.set(false);
       this.contactSent.set(true);
     }, 800);
@@ -194,6 +251,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   resetContact(): void {
     this.contactName.set('');
+    this.contactPhone.set('');
     this.contactMsg.set('');
     this.contactSent.set(false);
   }

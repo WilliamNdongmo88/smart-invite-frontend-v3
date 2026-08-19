@@ -2,76 +2,71 @@
      NAVIGATION STICKY
 ══════════════════════════════════════════════════════════════ -->
 <nav class="site-nav" [class.nav-scrolled]="navScrolled()">
-  <a class="nav-logo" routerLink="/">Smart<span class="gold">Invite</span></a>
+  <a class="nav-logo" href="#top">L<span class="amp-logo">&amp;</span>C</a>
 
   <ul class="nav-links">
-    <li><a href="#features">FONCTIONNALITÉS</a></li>
-    <li><a href="#how">COMMENT ÇA MARCHE</a></li>
-    <li><a href="#programme">PROGRAMME</a></li>
-    <li><a href="#temoignages">TÉMOIGNAGES</a></li>
-    <li><a href="#contact">CONTACT</a></li>
+    <li><a href="#couple">LE COUPLE</a></li>
+    <li><a href="#histoire">NOTRE HISTOIRE</a></li>
+    <li><a href="#evenements">ÉVÉNEMENTS</a></li>
+    <li><a href="#photos">PHOTOS</a></li>
+    <li><a href="#infos">INFOS</a></li>
+    <li><a href="#rsvp">RSVP</a></li>
   </ul>
 
   <div class="nav-actions">
-    <a routerLink="/login" class="btn-nav-outline">Se connecter</a>
-    <a routerLink="/register" class="btn-nav-solid">Commencer</a>
+    <a
+      class="btn-nav-cagnotte"
+      href="https://tribee.fr/participations/mariage-leatitia-christophe"
+      target="_blank" rel="noopener">
+      🎁 CAGNOTTE TRIBEE
+    </a>
+    <a routerLink="/portier" class="btn-nav-portier">PORTIER</a>
   </div>
 </nav>
 
 <!-- ══════════════════════════════════════════════════════════════
      HERO — SAVE THE DATE
 ══════════════════════════════════════════════════════════════ -->
-<section class="hero-section">
-
+<section id="top" class="hero-section">
   <!-- Orbes flottantes -->
-  <div class="orb orb-a"></div>
-  <div class="orb orb-b"></div>
-  <div class="orb orb-c"></div>
+  <div class="orb orb-a" [style.transform]="parallaxY(0.04)"></div>
+  <div class="orb orb-b" [style.transform]="parallaxY(0.02)"></div>
+  <div class="orb orb-c" [style.transform]="parallaxY(0.06)"></div>
 
-  <!-- Éléments décoratifs parallax -->
-  <div class="deco-leaf" [style.transform]="parallaxY(-0.08)"></div>
+  <!-- Éléments déco parallax -->
+  <div class="deco-leaf"   [style.transform]="parallaxYNeg(0.08)"></div>
   <div class="deco-ribbon" [style.transform]="parallaxY(0.06)"></div>
 
-  <!-- SVG waves animées (fond) -->
-  <svg class="hero-waves" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="wg1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.25"/>
-        <stop offset="100%" stop-color="#3d2e00" stop-opacity="0.08"/>
-      </linearGradient>
-      <linearGradient id="wg2" x1="100%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#c9a84c" stop-opacity="0.15"/>
-        <stop offset="100%" stop-color="#c9a84c" stop-opacity="0.04"/>
-      </linearGradient>
-    </defs>
-    <path class="hw hw1" d="M-100,300 C200,100 500,500 800,300 S1200,100 1600,300" fill="none" stroke="url(#wg1)" stroke-width="120" stroke-linecap="round" opacity="0.6"/>
-    <path class="hw hw2" d="M-100,500 C300,300 600,700 900,500 S1300,300 1700,450" fill="none" stroke="url(#wg2)" stroke-width="80" stroke-linecap="round" opacity="0.5"/>
-    <path class="hw hw3" d="M-100,150 C400,50 700,400 1000,200 S1400,50 1700,200" fill="none" stroke="url(#wg1)" stroke-width="60" stroke-linecap="round" opacity="0.4"/>
-  </svg>
+  <!-- Overlay -->
+  <div class="hero-overlay"></div>
 
-  <!-- Contenu centré -->
+  <!-- Contenu -->
   <div class="hero-content">
-    <span class="eyebrow">GESTION D'INVITATIONS</span>
+    <span class="eyebrow-hero">SAVE THE DATE</span>
 
     <h1 class="hero-title">
-      Smart<span class="amp">&</span>Invite
+      Leatitia <span class="amp-title">&amp;</span> Christophe
     </h1>
 
-    <div class="hero-sep"><span class="heart">✦</span></div>
+    <div class="sep-ornament">
+      <span class="sep-line"></span>
+      <span class="sep-heart">♡</span>
+      <span class="sep-line"></span>
+    </div>
 
-    <p class="hero-sub">La plateforme élégante pour gérer vos événements et vos invités.</p>
+    <p class="hero-sub">Une célébration pensée comme un souvenir éternel.</p>
 
     <div class="hero-date-block">
       <div class="date-bar"></div>
       <div>
-        <div class="date-main">Mariages · Galas · Conférences</div>
-        <div class="date-place">INVITATIONS · CHECK-IN · STATISTIQUES</div>
+        <div class="date-main">Les 07 &amp; 08 Août 2026</div>
+        <div class="date-place">MA CABANE AU CANADA · GOSNÉ</div>
       </div>
     </div>
 
     <div class="hero-ctas">
-      <a routerLink="/register" class="btn-primary">CRÉER MON ÉVÉNEMENT</a>
-      <a href="#how" class="btn-outline">COMMENT ÇA MARCHE</a>
+      <a href="#evenements" class="btn-primary">DÉCOUVRIR LE PROGRAMME</a>
+      <a href="#infos" class="btn-outline-hero">INFOS PRATIQUES</a>
     </div>
 
     <!-- Compte à rebours -->
@@ -96,100 +91,129 @@
         <span class="count-label">SECONDES</span>
       </div>
     </div>
-    <p class="countdown-label">avant la prochaine mise à jour majeure</p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     FEATURES (anciennement "Le Couple")
+     LE COUPLE
 ══════════════════════════════════════════════════════════════ -->
-<section id="features" class="features-section">
+<section id="couple" class="couple-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">NOS FONCTIONNALITÉS</span>
-    <h2 class="section-title fade-up">Tout ce dont vous avez besoin</h2>
-    <p class="section-quote fade-up">« Un outil puissant, une expérience élégante. »</p>
-    <div class="sep-heart fade-up"><span>✦</span></div>
+    <span class="eyebrow-gold fade-up">LES FUTURS MARIÉS</span>
+    <h2 class="section-title fade-up">Le Couple</h2>
+    <p class="section-quote fade-up">« Deux forces, une seule et même direction. »</p>
+    <div class="sep-ornament fade-up">
+      <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+    </div>
 
-    <div class="features-grid">
-      <div class="feature-card fade-up">
-        <div class="feature-icon">📋</div>
-        <h3>Gestion des événements</h3>
-        <p>Créez et gérez plusieurs événements simultanément. Configurez chaque détail : date, lieu, programme, photo de couverture.</p>
+    <div class="couple-grid">
+      <!-- Mariée -->
+      <div class="portrait-wrap fade-up">
+        <div class="portrait-circle">
+          <img src="/images/leatitia-seule.webp" alt="Leatitia — La Mariée" loading="lazy" />
+          <div class="portrait-fade"></div>
+          <div class="portrait-ring"></div>
+        </div>
+        <h3 class="portrait-name">Leatitia</h3>
+        <p class="portrait-role">La Mariée</p>
+        <p class="portrait-bio">
+          Réservée et attentive, Leatitia est de celles qui parlent peu mais ressentent profondément.
+          Elle observe, écoute et accorde sa confiance avec sincérité. Derrière son calme se cachent
+          une grande sensibilité, une foi profonde et une capacité naturelle à prendre soin des autres
+          avec discrétion et douceur. Dans leur histoire, elle apporte l'équilibre, la sérénité et
+          cette présence apaisante qui transforme les choses simples en moments précieux.
+        </p>
       </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">👥</div>
-        <h3>Import des invités</h3>
-        <p>Importez vos listes via Excel ou ajoutez manuellement. Gérez les groupes, les tables et les régimes alimentaires.</p>
+
+      <!-- Monogramme central -->
+      <div class="couple-monogram fade-up">
+        <div class="mono-text">L <span class="amp-mono">&amp;</span> C</div>
+        <p class="mono-sub">Deux façons d'être. Une seule évidence.</p>
       </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">✉️</div>
-        <h3>Invitations personnalisées</h3>
-        <p>Générez des invitations élégantes avec QR code unique par invité. Envoi par email et/ou WhatsApp en un clic.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">📊</div>
-        <h3>Suivi en temps réel</h3>
-        <p>Tableau de bord live : confirmations, refus, en attente. Taux de réponse, statistiques et export des données.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">📱</div>
-        <h3>Check-in intelligent</h3>
-        <p>Application de scan QR code pour vos agents à l'entrée. Détection des doublons, validation instantanée.</p>
-      </div>
-      <div class="feature-card fade-up">
-        <div class="feature-icon">🔗</div>
-        <h3>Liens d'inscription</h3>
-        <p>Créez des liens publics d'inscription pour que vos invités s'enregistrent eux-mêmes sur votre page d'événement.</p>
+
+      <!-- Marié -->
+      <div class="portrait-wrap fade-up">
+        <div class="portrait-circle">
+          <img src="/images/chris-seul.webp" alt="Christophe — Le Marié" loading="lazy" />
+          <div class="portrait-fade"></div>
+          <div class="portrait-ring"></div>
+        </div>
+        <h3 class="portrait-name">Christophe</h3>
+        <p class="portrait-role">Le Marié</p>
+        <p class="portrait-bio">
+          Christophe aime les gens, les échanges et les moments partagés. Toujours entouré, toujours
+          prêt à rassembler, il possède cette énergie chaleureuse qui crée du lien naturellement autour
+          de lui. Mais derrière cette aisance se trouve surtout un homme profondément attentif, loyal et
+          vrai. Dans leur histoire, il apporte l'élan, la spontanéité et cette capacité à aimer
+          pleinement, sans retenue.
+        </p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     BANDEAU PARALLAX 1
+     BANDEAU PARALLAX — MA CABANE AU CANADA
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-1">
+<div class="parallax-band band-venue">
   <div class="band-overlay"></div>
   <div class="band-content fade-up">
-    <span class="eyebrow">LA PLATEFORME</span>
-    <h2 class="band-title">Conçu pour l'élégance</h2>
-    <p class="band-sub">MARIAGES · GALAS · CONFÉRENCES · CÉRÉMONIES</p>
-    <p class="band-desc">Chaque fonctionnalité a été pensée pour offrir une expérience irréprochable à l'organisateur comme à l'invité.</p>
+    <span class="eyebrow-band">LE LIEU</span>
+    <h2 class="band-title">Ma Cabane Au Canada</h2>
+    <p class="band-sub">GOSNÉ</p>
+    <p class="band-desc">
+      Entre jardins et lumière de fin d'été, chaque zone du domaine est pensée pour vivre
+      la fête — du vin d'honneur à la dernière danse.
+    </p>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     HISTOIRE / STORY BOOK
+     NOTRE HISTOIRE — STORY BOOK
 ══════════════════════════════════════════════════════════════ -->
-<section id="how" class="story-section">
+<section id="histoire" class="story-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">NOTRE HISTOIRE</span>
-    <h2 class="section-title fade-up">Une solution construite avec soin</h2>
-    <p class="section-quote fade-up">« Une idée. Une conviction. Et une plateforme qui change tout. »</p>
-    <div class="sep-heart fade-up"><span>✦</span></div>
+    <span class="eyebrow-gold fade-up">NOTRE HISTOIRE</span>
+    <h2 class="section-title fade-up">Une histoire construite avec le temps</h2>
+    <p class="section-quote fade-up">
+      « Une rencontre. Une amitié. Une évidence. Et Seize années à avancer naturellement ensemble. »
+    </p>
+    <div class="sep-ornament fade-up">
+      <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+    </div>
 
-    <!-- Onglets chapitres -->
+    <!-- Onglets -->
     <div class="story-tabs fade-up">
       @for (ch of chapters; track $index) {
-        <button class="story-tab" [class.active]="activeChapter() === $index" (click)="activeChapter.set($index)">
+        <button
+          class="story-tab"
+          [class.active]="activeChapter() === $index"
+          (click)="activeChapter.set($index)">
           {{ ch.label }} <span class="tab-sub">{{ ch.sublabel }}</span>
         </button>
       }
     </div>
 
-    <!-- Contenu chapitre actif -->
+    <!-- Corps du chapitre -->
     <div class="story-body fade-up">
-      <div class="story-photo">
+      <div class="story-photo-wrap">
         <div class="story-photo-inner">
-          <img src="/img/photoCouple.avif" alt="Smart Invite" />
+          <img
+            [src]="chapters[activeChapter()].image"
+            [alt]="chapters[activeChapter()].title"
+            loading="lazy" />
           <div class="story-caption">{{ chapters[activeChapter()].caption }}</div>
         </div>
+        <div class="story-sprig">✦</div>
       </div>
+
       <div class="story-text">
-        <div class="story-monogram">S <span class="amp">&</span> I</div>
+        <div class="story-monogram">L <span class="amp-mono">&amp;</span> C</div>
         <div class="story-year">{{ chapters[activeChapter()].year }}</div>
         <h3 class="story-chapter-title">{{ chapters[activeChapter()].title }}</h3>
-        <p class="story-chapter-content">{{ chapters[activeChapter()].content }}</p>
+        @for (p of chapters[activeChapter()].paragraphs; track $index) {
+          <p class="story-chapter-content">{{ p }}</p>
+        }
         <div class="story-nav">
           <button class="btn-story-nav" (click)="prevChapter()">← PAGE PRÉCÉDENTE</button>
           <span class="story-page">Page {{ activeChapter() + 1 }} / {{ chapters.length }}</span>
@@ -198,72 +222,100 @@
       </div>
     </div>
 
-    <p class="story-footer fade-up">Merci de faire confiance à Smart Invite pour vos événements les plus précieux.</p>
+    <p class="story-footer fade-up">
+      Merci de faire partie de notre histoire. Merci d'avoir traversé tant de chapitres à nos côtés.
+      Et merci d'être là pour écrire la suite avec nous.
+    </p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     BANDEAU PARALLAX 2 — Citation
+     BANDEAU PARALLAX — CITATION
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-2">
+<div class="parallax-band band-quote">
   <div class="band-overlay"></div>
   <div class="band-content">
-    <p class="band-quote">« Chaque événement mérite d'être vécu pleinement — pas géré dans le stress. »</p>
+    <p class="band-big-quote">
+      « Il n'y a qu'un bonheur dans la vie, aimer et être aimé. »
+    </p>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     GALERIE / APERÇUS
+     NOS PLUS BEAUX MOMENTS — GALERIE
 ══════════════════════════════════════════════════════════════ -->
-<section id="apercu" class="gallery-section">
+<section id="photos" class="gallery-section">
+  <div class="gallery-deco-top"></div>
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">APERÇUS</span>
-    <h2 class="section-title fade-up">Smart Invite en action</h2>
-    <p class="section-quote fade-up">« Une interface pensée pour l'élégance et l'efficacité. »</p>
-    <div class="sep-heart fade-up"><span>✦</span></div>
+    <span class="eyebrow-gold fade-up">NOS PHOTOS</span>
+    <h2 class="section-title fade-up">Nos Plus Beaux Moments</h2>
+    <p class="section-quote fade-up">Puissiez-vous vivre aussi longtemps que vous aimez.</p>
+    <div class="sep-ornament fade-up">
+      <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+    </div>
 
     <div class="gallery-mosaic fade-up">
       <div class="gallery-item gallery-lg">
-        <img src="/img/pic_wedding.png" alt="Dashboard Smart Invite" />
-        <div class="gallery-caption">Tableau de bord</div>
+        <img src="/images/couple-fond-hero.webp" alt="Notre complicité" loading="lazy" />
+        <div class="gallery-caption">Notre complicité</div>
       </div>
       <div class="gallery-item">
-        <img src="/img/photoCouple.avif" alt="Page d'invitation" />
-        <div class="gallery-caption">Page d'invitation</div>
+        <img src="/images/galerie-photo-1.webp" alt="En amoureux" loading="lazy" />
+        <div class="gallery-caption">En amoureux</div>
       </div>
       <div class="gallery-item">
-        <img src="/img/pic_wedding.png" alt="Check-in QR" />
-        <div class="gallery-caption">Check-in QR</div>
+        <img src="/images/couple_en_fete.webp" alt="Complices" loading="lazy" />
+        <div class="gallery-caption">Complices</div>
       </div>
       <div class="gallery-item">
-        <img src="/img/photoCouple.avif" alt="Gestion invités" />
-        <div class="gallery-caption">Gestion invités</div>
+        <img src="/images/invitation-couple-real.webp" alt="Nos racines, notre fierté" loading="lazy" />
+        <div class="gallery-caption">Nos racines, notre fierté</div>
       </div>
       <div class="gallery-item">
-        <img src="/img/pic_wedding.png" alt="Statistiques" />
-        <div class="gallery-caption">Statistiques live</div>
+        <img src="/images/mr-mme-zome.webp" alt="Mr & Mme" loading="lazy" />
+        <div class="gallery-caption">Mr &amp; Mme</div>
       </div>
+      <div class="gallery-item">
+        <img src="/images/save-the-date-invit1.webp" alt="Save the date" loading="lazy" />
+        <div class="gallery-caption">Save the date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bandeau de clôture -->
+  <div class="gallery-close-band">
+    <div class="band-overlay"></div>
+    <div class="band-content fade-up">
+      <span class="eyebrow-band">ET CE N'EST PAS TOUT</span>
+      <h2 class="band-title">Notre histoire continue — Le temps de la célébrer ensemble</h2>
+      <a href="#evenements" class="btn-primary">Voir le programme</a>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PROGRAMME / TIMELINE
+     LE WEEK-END EN SCÈNES — PROGRAMME
 ══════════════════════════════════════════════════════════════ -->
-<section id="programme" class="programme-section">
+<section id="evenements" class="programme-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">PROGRAMME</span>
-    <h2 class="section-title fade-up">Le cycle de vie d'un événement</h2>
-    <p class="section-quote fade-up">« De la création à la clôture, Smart Invite vous accompagne. »</p>
-    <div class="sep-heart fade-up"><span>✦</span></div>
+    <span class="eyebrow-gold fade-up">PROGRAMME</span>
+    <h2 class="section-title fade-up">Le Week-end en Scènes</h2>
+    <p class="section-quote fade-up">« Si vous n'avez qu'un sourire, offrez-le aux gens que vous aimez. »</p>
+    <div class="sep-ornament fade-up">
+      <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+    </div>
 
-    <!-- Onglets -->
+    <!-- Onglets jours -->
     <div class="prog-tabs fade-up">
       <button class="prog-tab" [class.active]="activeTab() === 'before'" (click)="activeTab.set('before')">
-        ☾ AVANT L'ÉVÉNEMENT
+        <span class="prog-tab-icon">☾</span>
+        <span class="prog-tab-date">07 AOÛT</span>
+        <span class="prog-tab-label">La Veille</span>
       </button>
       <button class="prog-tab" [class.active]="activeTab() === 'day'" (click)="activeTab.set('day')">
-        ☼ LE JOUR J
+        <span class="prog-tab-icon">☼</span>
+        <span class="prog-tab-date">08 AOÛT</span>
+        <span class="prog-tab-label">Le Jour J</span>
       </button>
     </div>
 
@@ -274,6 +326,7 @@
       </div>
 
       @if (activeTab() === 'before') {
+        <p class="timeline-day-label">Vendredi 7 Août 2026 · La Veille</p>
         @for (item of programBefore; track $index) {
           <div class="timeline-item">
             <div class="timeline-dot">{{ item.icon }}</div>
@@ -287,6 +340,7 @@
       }
 
       @if (activeTab() === 'day') {
+        <p class="timeline-day-label">Samedi 8 Août 2026 · Le Grand Jour</p>
         @for (item of programDay; track $index) {
           <div class="timeline-item">
             <div class="timeline-dot">{{ item.icon }}</div>
@@ -300,87 +354,169 @@
       }
     </div>
 
-    <p class="prog-footer fade-up">Chaque étape a été pensée pour vous faire gagner du temps et de la sérénité.</p>
+    <p class="prog-footer fade-up">Chaque instant a été imaginé pour être vécu ensemble.</p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     BANDEAU PARALLAX 3 — CTA galerie
+     BANDEAU PARALLAX — HÔTEL B&B
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-3">
+<div class="parallax-band band-hotel">
   <div class="band-overlay"></div>
   <div class="band-content fade-up">
-    <span class="eyebrow">ET CE N'EST PAS TOUT</span>
-    <h2 class="band-title">Votre événement mérite le meilleur</h2>
-    <a routerLink="/register" class="btn-primary">Créer mon compte gratuitement</a>
+    <span class="eyebrow-band">OFFRE HÉBERGEMENT</span>
+    <h2 class="band-title">B&amp;B Hôtel Rennes Liffré</h2>
+    <div class="hotel-chips">
+      <span class="chip">Code promo <strong>MARIAGEZOME</strong></span>
+      <span class="chip"><strong>20 %</strong> de réduction</span>
+      <span class="chip">Du <strong>01/08</strong> au <strong>14/08</strong></span>
+    </div>
+    <a href="https://www.hotel-bb.com/fr/hotel/rennes-liffre" target="_blank" rel="noopener"
+       class="btn-outline-band">RÉSERVER AVEC LE CODE</a>
   </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     TÉMOIGNAGES
+     INFOS PRATIQUES
 ══════════════════════════════════════════════════════════════ -->
-<section id="temoignages" class="temoignages-section">
+<section id="infos" class="infos-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">TÉMOIGNAGES</span>
-    <h2 class="section-title fade-up">Ils nous font confiance</h2>
-    <div class="sep-heart fade-up"><span>✦</span></div>
+    <span class="eyebrow-gold fade-up">BON À SAVOIR</span>
+    <h2 class="section-title fade-up">Infos Pratiques</h2>
 
-    <div class="temoignages-grid">
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Smart Invite a transformé l'organisation de notre mariage. Fini le stress des confirmations ! Tout était centralisé et élégant. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">S</div>
-          <div>
-            <div class="temo-name">Sarah M.</div>
-            <div class="temo-role">Mariée · Yaoundé</div>
-          </div>
-        </div>
+    <div class="infos-grid fade-up">
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <h3 class="info-title">Lieu</h3>
+        <p class="info-subtitle">Ma Cabane Au Canada</p>
+        <p class="info-detail">Accueil invités dès 12h00 · Parking sur place</p>
       </div>
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Le check-in QR code le jour J était parfait. Nos agents ont validé 200 invités en moins de 30 minutes. Impressionnant. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">K</div>
-          <div>
-            <div class="temo-name">Kevin T.</div>
-            <div class="temo-role">Organisateur · Douala</div>
-          </div>
-        </div>
+      <div class="info-card">
+        <div class="info-icon">🏨</div>
+        <h3 class="info-title">Hébergement</h3>
+        <p class="info-subtitle">Autour de Rennes</p>
+        <p class="info-detail">Hôtels recommandés à -20 min · Infos avec l'invitation</p>
       </div>
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Les invitations personnalisées avec QR code ont bluffé nos invités. La page d'inscription était magnifique et très simple à utiliser. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">A</div>
-          <div>
-            <div class="temo-name">Amina B.</div>
-            <div class="temo-role">Event Planner · Abidjan</div>
-          </div>
-        </div>
+      <div class="info-card">
+        <div class="info-icon">💬</div>
+        <h3 class="info-title">RSVP</h3>
+        <p class="info-subtitle">Lien personnel WhatsApp</p>
+        <p class="info-detail">Confirmez via votre lien unique · Places, régime, table</p>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PALETTE / DESIGN SYSTEM
+     LE DOMAINE / LOCALISATION
 ══════════════════════════════════════════════════════════════ -->
-<section class="palette-section">
+<section class="domaine-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">✦ NOTRE DESIGN</span>
-    <h2 class="section-title fade-up">Palette Smart Invite</h2>
-    <p class="palette-desc fade-up">Un design system élégant, cohérent et adapté à tous vos événements.</p>
+    <span class="eyebrow-gold fade-up">LE DOMAINE</span>
+    <h2 class="section-title fade-up">Ma Cabane Au Canada</h2>
+    <p class="section-quote fade-up">Un écrin naturel pour célébrer ensemble.</p>
 
-    <div class="palette-tabs fade-up">
-      <button class="pal-tab" [class.active]="activePalette() === 'dark'" (click)="activePalette.set('dark')">Mode Sombre</button>
-      <button class="pal-tab" [class.active]="activePalette() === 'light'" (click)="activePalette.set('light')">Mode Clair</button>
+    <h3 class="domaine-sub-title fade-up">Localisation &amp; Hébergements</h3>
+    <p class="domaine-intro fade-up">
+      Le domaine se situe à Gosné, à proximité de Rennes. Ouvrez directement l'itinéraire dans votre
+      application de navigation.
+    </p>
+
+    <!-- Adresse -->
+    <div class="domaine-address-card fade-up">
+      <div class="address-info">
+        <p class="address-name">Ma Cabane Au Canada</p>
+        <p class="address-detail">35140 Gosné · Hôtels à moins de 20 min</p>
+      </div>
+      <a
+        href="https://www.google.com/maps/search/?api=1&query=Ma%20Cabane%20Au%20Canada%2C%2035140%20Gosn%C3%A9"
+        target="_blank" rel="noopener"
+        class="btn-primary">
+        Ouvrir l'itinéraire
+      </a>
     </div>
 
-    <div class="palette-swatches fade-up">
-      @for (swatch of palettes[activePalette()]; track $index) {
-        <div class="swatch">
-          <div class="swatch-color" [style.background]="swatch.color"></div>
-          <span class="swatch-label">{{ swatch.label }}</span>
+    <!-- Hébergements recommandés -->
+    <h3 class="domaine-sub-title fade-up">Hébergements Recommandés</h3>
+    <p class="domaine-intro fade-up">Quelques suggestions à proximité du lieu de réception</p>
+
+    <div class="hotels-grid fade-up">
+      <div class="hotel-card hotel-promo">
+        <div class="hotel-badge">Offre invitée</div>
+        <h4 class="hotel-name">B&amp;B Hotel Rennes Liffré</h4>
+        <p class="hotel-desc">Une adresse pratique pour dormir à proximité du mariage, avec une remise réservée aux invités.</p>
+        <div class="hotel-chips-mini">
+          <span class="chip-sm">MARIAGEZOME</span>
+          <span class="chip-sm">20 %</span>
+          <span class="chip-sm">01/08 – 14/08</span>
         </div>
-      }
+        <a href="https://www.hotel-bb.com/fr/hotel/rennes-liffre" target="_blank" rel="noopener" class="btn-hotel">Réserver →</a>
+      </div>
+
+      <div class="hotel-card">
+        <h4 class="hotel-name">La Reposée Hôtel &amp; Spa</h4>
+        <p class="hotel-location">Liffré · ~12 min</p>
+        <p class="hotel-price">130 €/nuit</p>
+        <p class="hotel-desc">Spa, restaurant, chambres rénovées.</p>
+        <a href="https://www.lareposee.fr" target="_blank" rel="noopener" class="btn-hotel">Réserver →</a>
+      </div>
+
+      <div class="hotel-card">
+        <h4 class="hotel-name">Kosy Suite</h4>
+        <p class="hotel-location">Saint-Aubin-du-Cormier · ~10 min</p>
+        <p class="hotel-price">74 €/nuit</p>
+        <p class="hotel-desc">Noté 8.7/10, idéal petit budget.</p>
+        <a href="https://www.booking.com/searchresults.fr.html?ss=Saint-Aubin-du-Cormier" target="_blank" rel="noopener" class="btn-hotel">Voir sur Booking →</a>
+      </div>
+
+      <div class="hotel-card">
+        <h4 class="hotel-name">Ibis Rennes Cesson-Sévigné</h4>
+        <p class="hotel-location">Cesson-Sévigné · ~20 min</p>
+        <p class="hotel-price">65 €/nuit</p>
+        <p class="hotel-desc">Classique, parking, petit-déj en option.</p>
+        <a href="https://www.booking.com/searchresults.fr.html?ss=ibis+Rennes+Cesson" target="_blank" rel="noopener" class="btn-hotel">Voir sur Booking →</a>
+      </div>
+
+      <div class="hotel-card hotel-gite">
+        <div class="hotel-badge hotel-badge-limited">⚡ Places limitées</div>
+        <h4 class="hotel-name">Mon Chalet au Canada</h4>
+        <p class="hotel-location">Sur le domaine · 0 min</p>
+        <p class="hotel-price">Sur devis</p>
+        <p class="hotel-desc">Gîte 23 couchages, spa, terrasse. Infos dans l'invitation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DRESS CODE
+══════════════════════════════════════════════════════════════ -->
+<section class="dress-code-section">
+  <div class="section-inner">
+    <span class="eyebrow-gold fade-up">✦ Thème de la soirée</span>
+    <h2 class="section-title fade-up">Palette Terracotta Chic</h2>
+
+    <div class="palette-board fade-up">
+      <p class="palette-desc">
+        Le plus important, c'est que vous soyez à l'aise et que vous passiez une soirée inoubliable.
+        Pas de dress code imposé — venez comme vous vous sentez le mieux !
+      </p>
+
+      <div class="palette-tabs">
+        <button class="pal-tab" [class.active]="activePalette() === 'terracotta'" (click)="activePalette.set('terracotta')">Terracotta</button>
+        <button class="pal-tab" [class.active]="activePalette() === 'champagne'" (click)="activePalette.set('champagne')">Champagne</button>
+      </div>
+
+      <div class="palette-swatches">
+        @for (swatch of palettes[activePalette()]; track $index) {
+          <div class="swatch">
+            <div class="swatch-color" [style.background]="swatch.color"></div>
+            <span class="swatch-label">{{ swatch.label }}</span>
+          </div>
+        }
+      </div>
+
+      <p class="palette-advice">Conseil : évitez le blanc intégral (réservé à la mariée).</p>
     </div>
   </div>
 </section>
@@ -390,9 +526,8 @@
 ══════════════════════════════════════════════════════════════ -->
 <section class="faq-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">FAQ</span>
+    <span class="eyebrow-gold fade-up">FAQ</span>
     <h2 class="section-title fade-up">Questions Fréquentes</h2>
-    <div class="sep-heart fade-up"><span>✦</span></div>
 
     <div class="faq-shell fade-up">
       @for (item of faqs; track $index) {
@@ -406,22 +541,28 @@
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     RSVP / CTA FINAL
+     RSVP FINAL
 ══════════════════════════════════════════════════════════════ -->
-<section id="contact" class="rsvp-section">
+<section id="rsvp" class="rsvp-section">
   <div class="band-overlay"></div>
+
   <div class="rsvp-card fade-up">
-    <span class="eyebrow">REJOIGNEZ-NOUS</span>
-    <h2 class="rsvp-title">Prêt à créer votre premier événement ?</h2>
-    <div class="hero-sep"><span>✦</span></div>
-    <p class="rsvp-sub">Créez votre compte gratuitement et découvrez comment Smart Invite transforme l'organisation de vos événements.</p>
+    <span class="eyebrow-band">VENEZ CÉLÉBRER AVEC NOUS</span>
+    <h2 class="rsvp-title">Nous avons hâte de vous retrouver !</h2>
+    <div class="sep-ornament sep-light">
+      <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+    </div>
+    <p class="rsvp-sub">
+      Surveillez WhatsApp : votre invitation personnelle contient votre lien RSVP unique et
+      toutes les informations logistiques pour cette journée inoubliable.
+    </p>
     <div class="rsvp-ctas">
-      <a routerLink="/register" class="btn-primary">Créer mon compte</a>
-      <a routerLink="/login" class="btn-outline">Se connecter</a>
+      <a href="#evenements" class="btn-primary">Voir le programme</a>
+      <a href="#histoire" class="btn-outline-hero">Notre histoire</a>
     </div>
   </div>
 
-  <!-- Formulaire contact -->
+  <!-- Formulaire -->
   <div class="contact-form-wrap fade-up">
     <h3 class="contact-title">Une question ?</h3>
     <p class="contact-sub">Réponse envoyée via WhatsApp</p>
@@ -429,19 +570,27 @@
     @if (!contactSent()) {
       <div class="contact-form">
         <input class="contact-input" type="text" placeholder="Votre nom"
-               [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
-        <textarea class="contact-input contact-textarea" placeholder="Écrivez votre question ici…" rows="4"
-                  [value]="contactMsg()" (input)="contactMsg.set($any($event.target).value)"></textarea>
-        <button class="btn-primary" (click)="sendContact()" [disabled]="contactSending()">
-          @if (contactSending()) { <span class="spinner"></span> }
-          Envoyer
+               [value]="contactName()"
+               (input)="contactName.set($any($event.target).value)" />
+        <input class="contact-input" type="tel"
+               placeholder="Numéro WhatsApp ex: +33 6 12 34 56 78"
+               [value]="contactPhone()"
+               (input)="contactPhone.set($any($event.target).value)" />
+        <textarea class="contact-input contact-textarea"
+                  placeholder="Écrivez votre question ici…"
+                  rows="4"
+                  [value]="contactMsg()"
+                  (input)="contactMsg.set($any($event.target).value)"></textarea>
+        <button class="btn-primary btn-full" (click)="sendContact()" [disabled]="contactSending()">
+          @if (contactSending()) { <span class="spinner"></span> Envoi… }
+          @else { Envoyer }
         </button>
       </div>
     } @else {
       <div class="contact-success">
-        <p>Merci {{ contactName() }} ! 🎉</p>
+        <p class="success-title">Merci {{ contactName() }} ! 🎉</p>
         <p>Votre question a été envoyée. On vous répond sur WhatsApp.</p>
-        <button class="btn-outline" (click)="resetContact()">Nouvelle question</button>
+        <button class="btn-outline-hero" (click)="resetContact()">Nouvelle question</button>
       </div>
     }
   </div>
@@ -451,23 +600,42 @@
      FOOTER
 ══════════════════════════════════════════════════════════════ -->
 <footer class="site-footer">
-  <div class="footer-logo">Smart<span class="gold">Invite</span></div>
-  <p class="footer-sub">La plateforme élégante de gestion d'invitations</p>
-  <div class="footer-sep">✦</div>
-  <p class="footer-love">AVEC TOUT NOTRE SOIN ✦</p>
-  <p class="footer-credit">© 2025 Smart Invite — Tous droits réservés</p>
+  <div class="footer-logo">Leatitia &amp; Christophe</div>
+  <p class="footer-sub">08 Août 2026 · Ma Cabane Au Canada · Rennes</p>
+  <div class="sep-ornament sep-light footer-sep">
+    <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
+  </div>
+  <p class="footer-love">AVEC TOUT NOTRE AMOUR ❤</p>
+  <p class="footer-credit">
+    SITE RÉALISÉ PAR
+    <a href="https://indyli-services.com" target="_blank" rel="noopener">INDYLI SERVICES</a>
+  </p>
 </footer>
 
 <!-- ══════════════════════════════════════════════════════════════
-     TOAST POPUP
+     BOUTON MUSIQUE (fixe)
+══════════════════════════════════════════════════════════════ -->
+<button class="music-fab" (click)="toggleMusic()" [class.playing]="musicPlaying()"
+        [title]="musicPlaying() ? 'Pause musique' : 'Jouer la musique'"
+        aria-label="Musique">
+  @if (musicPlaying()) { 🔊 } @else { 🔈 }
+</button>
+
+<!-- ══════════════════════════════════════════════════════════════
+     TOAST — CAGNOTTE DES MARIÉS
 ══════════════════════════════════════════════════════════════ -->
 @if (showToast()) {
-  <div class="toast-banner">
-    <button class="toast-close" (click)="showToast.set(false)">✕</button>
-    <div class="toast-badge">🎉 OFFRE DE LANCEMENT</div>
-    <p class="toast-text">Créez votre compte maintenant et bénéficiez de 3 mois d'accès premium offerts.</p>
+  <div class="cagnotte-toast">
+    <button class="toast-close" (click)="showToast.set(false)" aria-label="Fermer">✕</button>
+    <div class="toast-badge">🎁 CAGNOTTE DES MARIÉS</div>
+    <p class="toast-text">
+      Vous souhaitez contribuer au bonheur de Leatitia &amp; Christophe ?
+      Participez à notre cagnotte en ligne Tribee.
+    </p>
     <div class="toast-actions">
-      <a routerLink="/register" class="btn-primary btn-sm">En profiter</a>
+      <a href="https://tribee.fr/participations/mariage-leatitia-christophe"
+         target="_blank" rel="noopener"
+         class="btn-primary btn-sm">Participer à la cagnotte</a>
       <button class="btn-ghost" (click)="showToast.set(false)">Plus tard</button>
     </div>
   </div>
