@@ -324,7 +324,7 @@ $border:  #2a2a2a;
   align-items: center;
   text-align: center;
   gap: 1rem;
-  padding: 2rem 1.5rem;
+  padding: 2rem 1.5rem 3rem;
   max-width: 800px;
 }
 
@@ -385,57 +385,8 @@ $border:  #2a2a2a;
   gap: 1rem;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 0.5rem;
 }
 
-/* Countdown */
-.countdown {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(201,168,76,0.2);
-  border-radius: 4px;
-  padding: 0.85rem 1.5rem;
-}
-
-.count-chip {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.count-val {
-  font-family: 'Arial', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: $gold;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.count-label {
-  font-family: 'Arial', sans-serif;
-  font-size: 0.52rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: #666;
-}
-
-.count-sep {
-  color: $border;
-  font-size: 1.2rem;
-  font-weight: 300;
-}
-
-.countdown-label {
-  font-size: 0.72rem;
-  color: #555;
-  font-style: italic;
-  margin-top: -0.25rem;
-}
 
 /* ═══════════════════════════════════════════════════════════════
    FEATURES
@@ -1294,8 +1245,6 @@ $border:  #2a2a2a;
   .site-nav { padding: 0.875rem 1.25rem; }
   .nav-actions .btn-nav-outline { display: none; }
   .hero-title { font-size: clamp(2.8rem, 12vw, 5rem); }
-  .countdown { gap: 0.5rem; padding: 0.65rem 1rem; }
-  .count-val { font-size: 1.3rem; }
   .hero-ctas { flex-direction: column; width: 100%; }
   .btn-primary, .btn-outline { width: 100%; justify-content: center; }
   .features-grid { grid-template-columns: 1fr; }
@@ -1312,11 +1261,10 @@ $border:  #2a2a2a;
 }
 
 @media (max-width: 480px) {
+  .hero-section {margin-top: -5rem; margin-bottom: -6rem;}
   .section-inner { padding: 3.5rem 1rem; }
   .band-content { padding: 2.5rem 1rem; }
   .hero-content { padding: 1.5rem 1rem; }
-  .countdown { flex-wrap: wrap; justify-content: center; }
-  .count-sep { display: none; }
   .temoignage-card { padding: 1.5rem 1.25rem; }
   .palette-swatches { gap: 1rem; }
   .swatch-color { width: 60px; height: 60px; }

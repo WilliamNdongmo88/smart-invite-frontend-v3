@@ -1,10 +1,8 @@
 import {
-  Component, OnInit, OnDestroy, signal, PLATFORM_ID, inject, AfterViewInit, ElementRef, ViewChildren, QueryList
+  Component, OnInit, OnDestroy, signal, PLATFORM_ID, inject, AfterViewInit
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
-
-interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
 
 @Component({
   selector: 'app-home',
@@ -15,10 +13,6 @@ interface CountdownValue { days: string; hours: string; minutes: string; seconds
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly platformId = inject(PLATFORM_ID);
-
-  // ── Countdown ──────────────────────────────────────────────────────
-  countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
-  private countdownInterval: ReturnType<typeof setInterval> | null = null;
 
   // ── Story book ─────────────────────────────────────────────────────
   activeChapter = signal(0);
@@ -106,7 +100,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    this.startCountdown();
     this.scrollListener = () => this.onScroll();
     window.addEventListener('scroll', this.scrollListener, { passive: true });
   }
@@ -117,32 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
-    if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.scrollListener) window.removeEventListener('scroll', this.scrollListener);
-  }
-
-  private startCountdown(): void {
-    const target = new Date('2026-01-01T00:00:00').getTime();
-    const update = () => {
-      const now = Date.now();
-      const diff = target - now;
-      if (diff <= 0) {
-        this.countdown.set({ days: '000', hours: '00', minutes: '00', seconds: '00' });
-        return;
-      }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor((diff % 86400000) / 3600000);
-      const m = Math.floor((diff % 3600000) / 60000);
-      const s = Math.floor((diff % 60000) / 1000);
-      this.countdown.set({
-        days: String(d).padStart(3, '0'),
-        hours: String(h).padStart(2, '0'),
-        minutes: String(m).padStart(2, '0'),
-        seconds: String(s).padStart(2, '0'),
-      });
-    };
-    update();
-    this.countdownInterval = setInterval(update, 1000);
   }
 
   private onScroll(): void {
