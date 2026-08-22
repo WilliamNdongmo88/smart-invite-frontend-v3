@@ -187,7 +187,7 @@ function deepClone<T>(val: T): T {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: 'home.component.html',
   styleUrl:    'home.component.scss',
 })
