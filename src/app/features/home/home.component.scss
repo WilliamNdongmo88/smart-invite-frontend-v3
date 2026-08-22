@@ -36,12 +36,70 @@
     radial-gradient(ellipse 38% 38% at 100% 100%, rgba(182,90,58,.14) 0%, transparent 100%);
 }
 
-/* ─── Fade-up animation ──────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL STORYTELLING — Système de révélation universel
+   
+   Usage HTML :
+     <el class="reveal">                     fade-up simple
+     <el class="reveal reveal--left">        glisse depuis la gauche
+     <el class="reveal reveal--right">       glisse depuis la droite
+     <el class="reveal reveal--scale">       zoom léger
+     <el class="reveal" style="--d:150ms">   délai personnalisé (stagger)
+   
+   L'IntersectionObserver existant ajoute .visible quand l'élément
+   entre dans le viewport.
+   
+   .fade-up est conservé comme alias pour la rétrocompatibilité.
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Variables de timing ──────────────────────────────────────── */
+:host {
+  --reveal-duration:  0.75s;
+  --reveal-ease:      cubic-bezier(0.22, 1, 0.36, 1); /* ease-out-expo */
+  --reveal-distance:  36px;
+  --d: 0ms; /* délai stagger, surchargeable par élément */
+}
+
+/* ── État initial (caché) ─────────────────────────────────────── */
+.reveal,
 .fade-up {
   opacity: 0;
-  transform: translateY(40px);
-  transition: opacity .8s ease, transform .8s ease;
-  &.visible { opacity: 1; transform: translateY(0); }
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity  var(--reveal-duration) var(--reveal-ease) var(--d),
+    transform var(--reveal-duration) var(--reveal-ease) var(--d);
+  will-change: opacity, transform;
+}
+
+/* ── Variantes directionnelles ───────────────────────────────── */
+.reveal--left  { transform: translateX(calc(-1 * var(--reveal-distance))); }
+.reveal--right { transform: translateX(var(--reveal-distance)); }
+.reveal--scale { transform: scale(0.92); }
+.reveal--fade  { transform: none; } /* opacity seul */
+
+/* ── État visible ─────────────────────────────────────────────── */
+.reveal.visible,
+.fade-up.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Stagger automatique pour les enfants directs ────────────── */
+/* Appliqué au conteneur avec .stagger, chaque enfant reçoit un délai */
+.stagger > * {
+  --d: 0ms;
+}
+@for $i from 1 through 8 {
+  .stagger > *:nth-child(#{$i}) { --d: #{($i - 1) * 80}ms; }
+}
+
+/* ── Section entrance : la section entière s'anime à l'entrée ── */
+/* Chaque section principale obtient une légère élévation initiale */
+.section-entrance {
+  > .section-inner,
+  > .band-content {
+    /* Les enfants avec .reveal géreront leurs propres animations */
+  }
 }
 
 /* ─── Shared helpers ─────────────────────────────────────────── */
@@ -1508,9 +1566,6 @@
   .infos-grid { grid-template-columns: 1fr; }
   .hotels-grid { grid-template-columns: 1fr; }
   .gallery-mosaic { grid-template-columns: 1fr; }
-  .parallax-band { background-attachment: scroll; }
-  .gallery-close-band { background-attachment: scroll; }
-  .rsvp-section { background-attachment: scroll; }
   .prog-tabs { flex-direction: column; align-items: center; }
   .prog-tab { width: 100%; max-width: 240px; }
   .story-tabs { flex-direction: column; align-items: center; }
@@ -1535,6 +1590,147 @@
   .portrait-bio { text-align: center; }
   .palette-swatches { grid-template-columns: repeat(4, 1fr); }
   .swatch-color { width: 48px; height: 48px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLL STORYTELLING — RESPONSIVE (tablette & mobile)
+   
+   Adaptations :
+   - Distance de reveal réduite pour éviter les débordements
+   - Translations horizontales (--left/--right) converties en
+     fade vertical sur mobile (pas d'overflow X)
+   - Parallax .band-bg : amplitude réduite sur mobile/tablette
+   - Délais hero raccourcis sur mobile (l'utilisateur scrolle vite)
+   - Respect de prefers-reduced-motion
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Tablette (≤ 1024px) ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  :host {
+    --reveal-distance: 28px;  /* légèrement réduit vs 36px desktop */
+  }
+
+  /* Parallax moins prononcé sur tablette */
+  @supports (animation-timeline: scroll()) {
+    @keyframes parallaxDrift {
+      from { transform: translateY(-7%); }
+      to   { transform: translateY(7%);  }
+    }
+  }
+}
+
+/* ── Mobile (≤ 768px) ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  :host {
+    --reveal-distance:  20px;   /* petit déplacement, propre sur petit écran */
+    --reveal-duration:  0.6s;   /* légèrement plus rapide */
+  }
+
+  /* Sur mobile, les translations latérales (--left / --right)
+     deviennent un simple fade-up pour éviter tout overflow X.
+     On écrase la transform initiale sans toucher à l'opacity. */
+  .reveal--left,
+  .reveal--right {
+    transform: translateY(var(--reveal-distance));
+  }
+
+  /* Le scale reste mais moins prononcé */
+  .reveal--scale {
+    transform: scale(0.96) translateY(calc(var(--reveal-distance) * 0.5));
+  }
+
+  /* Stagger réduit sur mobile (max 5 enfants, 60ms entre chacun) */
+  @for $i from 1 through 8 {
+    .stagger > *:nth-child(#{$i}) { --d: #{($i - 1) * 60}ms; }
+  }
+
+  /* Délais du hero réduits : l'utilisateur est déjà là, pas besoin d'attendre */
+  .hero-section .reveal[style*="--d:200ms"] { --d: 100ms; }
+  .hero-section .reveal[style*="--d:300ms"] { --d: 160ms; }
+  .hero-section .reveal[style*="--d:420ms"] { --d: 220ms; }
+  .hero-section .reveal[style*="--d:480ms"] { --d: 260ms; }
+  .hero-section .reveal[style*="--d:540ms"] { --d: 300ms; }
+  .hero-section .reveal[style*="--d:600ms"] { --d: 340ms; }
+  .hero-section .reveal[style*="--d:700ms"] { --d: 380ms; }
+
+  /* Parallax réduit sur mobile : évite les bords visibles sur petit viewport */
+  @supports (animation-timeline: scroll()) {
+    @keyframes parallaxDrift {
+      from { transform: translateY(-5%); }
+      to   { transform: translateY(5%);  }
+    }
+
+    @keyframes parallaxDriftHero {
+      from { transform: translateY(0%); }
+      to   { transform: translateY(8%); }
+    }
+  }
+
+  /* Sur mobile, le band-bg ne dépasse que peu */
+  .band-bg {
+    inset: -8% 0;
+    @supports not (animation-timeline: scroll()) {
+      inset: 0;
+      background-attachment: scroll; /* iOS Safari : fixed crée des artefacts */
+    }
+  }
+
+  .hero-bg {
+    inset: 0 0 -10%;
+    @supports not (animation-timeline: scroll()) {
+      inset: 0;
+      background-attachment: scroll;
+    }
+  }
+
+  /* Section entrance : pas de min-height forcé sur mobile */
+  .section-entrance {
+    min-height: unset;
+  }
+}
+
+/* ── Petit mobile (≤ 480px) ──────────────────────────────────── */
+@media (max-width: 480px) {
+  :host {
+    --reveal-distance: 16px;
+    --reveal-duration: 0.55s;
+  }
+
+  /* Désactiver complètement le parallax sur très petit écran
+     (performances limitées, viewport trop étroit) */
+  .band-bg {
+    inset: 0;
+    animation: none !important;
+    background-attachment: scroll;
+  }
+  .hero-bg {
+    inset: 0;
+    animation: none !important;
+    background-attachment: scroll;
+  }
+
+  /* Stagger minimal */
+  @for $i from 1 through 8 {
+    .stagger > *:nth-child(#{$i}) { --d: #{($i - 1) * 40}ms; }
+  }
+}
+
+/* ── Respect de prefers-reduced-motion ───────────────────────── */
+/* Si l'utilisateur a demandé moins d'animations (accessibilité),
+   on désactive toutes les transitions de reveal et le parallax */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .band-bg,
+  .hero-bg {
+    animation: none !important;
+    inset: 0;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════

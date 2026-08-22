@@ -331,6 +331,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
     this.initFadeObserver();
+    // Le hero est visible dès le chargement — déclencher ses reveals immédiatement
+    setTimeout(() => {
+      const heroReveals = this.el.nativeElement
+        .querySelectorAll('.hero-section .reveal, .hero-section .fade-up');
+      heroReveals.forEach((el: Element) => el.classList.add('visible'));
+    }, 50);
     this.audio = new Audio('/audio/river-flows.mp3');
     this.audio.loop = true;
     this.audio.volume = 0.6;
@@ -375,13 +381,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Fade observer ─────────────────────────────────────────────────
   private initFadeObserver(): void {
-    const els = this.el.nativeElement.querySelectorAll('.fade-up');
+    // Cible .fade-up ET .reveal
+    const els = this.el.nativeElement.querySelectorAll('.fade-up, .reveal');
+
     const obs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px',
+    });
+
     els.forEach((el: Element) => obs.observe(el));
+
+    // Observer dédié pour les titres de section (seuil plus bas = déclenche plus tôt)
+    const titleEls = this.el.nativeElement.querySelectorAll('.section-title, .band-title, .hero-title');
+    const titleObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          titleObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.01, rootMargin: '0px 0px 0px 0px' });
+
+    titleEls.forEach((el: Element) => titleObs.observe(el));
   }
 
   // ── Parallax ──────────────────────────────────────────────────────

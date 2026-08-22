@@ -13,7 +13,7 @@
     <li><a href="#rsvp">RSVP</a></li>
   </ul>
 
-  <div class="nav-actions">
+  <!-- <div class="nav-actions">
     <a
       class="btn-nav-cagnotte"
       href="https://tribee.fr/participations/mariage-leatitia-christophe"
@@ -32,7 +32,7 @@
         Éditer
       </button>
     }
-  </div>
+  </div> -->
 </nav>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -57,6 +57,9 @@
     </button>
   }
 
+  <!-- Fond hero parallax -->
+  <div class="band-bg hero-bg" [style.backgroundImage]="'url(' + bgs().hero + ')'"></div>
+
   <!-- Orbes flottantes -->
   <div class="orb orb-a" [style.transform]="parallaxY(0.04)"></div>
   <div class="orb orb-b" [style.transform]="parallaxY(0.02)"></div>
@@ -71,21 +74,21 @@
 
   <!-- Contenu -->
   <div class="hero-content">
-    <span class="eyebrow-hero">SAVE THE DATE</span>
+    <span class="eyebrow-hero reveal reveal--fade" style="--d:200ms">SAVE THE DATE</span>
 
-    <h1 class="hero-title">
+    <h1 class="hero-title reveal" style="--d:300ms">
       {{ hero().brideFirstName }} <span class="amp-title">&amp;</span> {{ hero().groomFirstName }}
     </h1>
 
-    <div class="sep-ornament">
+    <div class="sep-ornament reveal reveal--scale" style="--d:420ms">
       <span class="sep-line"></span>
       <span class="sep-heart">♡</span>
       <span class="sep-line"></span>
     </div>
 
-    <p class="hero-sub">{{ hero().heroCatchphrase }}</p>
+    <p class="hero-sub reveal" style="--d:480ms">{{ hero().heroCatchphrase }}</p>
 
-    <div class="hero-date-block">
+    <div class="hero-date-block reveal" style="--d:540ms">
       <div class="date-bar"></div>
       <div>
         <div class="date-main">{{ hero().dateLabel }}</div>
@@ -93,13 +96,13 @@
       </div>
     </div>
 
-    <div class="hero-ctas">
+    <div class="hero-ctas reveal" style="--d:600ms">
       <a href="#evenements" class="btn-primary">DÉCOUVRIR LE PROGRAMME</a>
       <a href="#infos" class="btn-outline-hero">INFOS PRATIQUES</a>
     </div>
 
     <!-- Compte à rebours -->
-    <div class="countdown">
+    <div class="countdown reveal reveal--scale" style="--d:700ms">
       <div class="count-chip">
         <span class="count-val">{{ countdown().days }}</span>
         <span class="count-label">JOURS</span>
@@ -126,7 +129,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      LE COUPLE
 ══════════════════════════════════════════════════════════════ -->
-<section id="couple" class="couple-section">
+<section id="couple" class="couple-section section-entrance">
   <!-- Crayon section Couple -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--section" (click)="openEdit('couple')" title="Éditer le Couple">
@@ -137,16 +140,16 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">LES FUTURS MARIÉS</span>
-    <h2 class="section-title fade-up">Le Couple</h2>
-    <p class="section-quote fade-up">« {{ couple().coupleTagline }} »</p>
-    <div class="sep-ornament fade-up">
+    <span class="eyebrow-gold reveal" style="--d:0ms">LES FUTURS MARIÉS</span>
+    <h2 class="section-title reveal" style="--d:80ms">Le Couple</h2>
+    <p class="section-quote reveal" style="--d:160ms">« {{ couple().coupleTagline }} »</p>
+    <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
 
     <div class="couple-grid">
       <!-- Mariée -->
-      <div class="portrait-wrap fade-up">
+      <div class="portrait-wrap reveal reveal--left" style="--d:120ms">
         <div class="portrait-circle">
           <img [src]="couple().bridePortraitUrl" [alt]="hero().brideFirstName + ' — La Mariée'" loading="lazy" />
           <div class="portrait-fade"></div>
@@ -158,13 +161,13 @@
       </div>
 
       <!-- Monogramme central -->
-      <div class="couple-monogram fade-up">
+      <div class="couple-monogram reveal reveal--scale" style="--d:200ms">
         <div class="mono-text">{{ hero().brideFirstName[0] }} <span class="amp-mono">&amp;</span> {{ hero().groomFirstName[0] }}</div>
         <p class="mono-sub">{{ couple().coupleTagline }}</p>
       </div>
 
       <!-- Marié -->
-      <div class="portrait-wrap fade-up">
+      <div class="portrait-wrap reveal reveal--right" style="--d:120ms">
         <div class="portrait-circle">
           <img [src]="couple().groomPortraitUrl" [alt]="hero().groomFirstName + ' — Le Marié'" loading="lazy" />
           <div class="portrait-fade"></div>
@@ -181,7 +184,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX — MA CABANE AU CANADA
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-venue" [style.backgroundImage]="'url(' + bgs().venue + ')'">
+<div class="parallax-band band-venue">
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -190,12 +193,13 @@
       </svg>
     </button>
   }
+  <div class="band-bg" [style.backgroundImage]="'url(' + bgs().venue + ')'"></div>
   <div class="band-overlay"></div>
-  <div class="band-content fade-up">
-    <span class="eyebrow-band">LE LIEU</span>
-    <h2 class="band-title">{{ hero().venueName }}</h2>
-    <p class="band-sub">{{ hero().venueCity }}</p>
-    <p class="band-desc">
+  <div class="band-content">
+    <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">LE LIEU</span>
+    <h2 class="band-title reveal" style="--d:100ms">{{ hero().venueName }}</h2>
+    <p class="band-sub reveal" style="--d:180ms">{{ hero().venueCity }}</p>
+    <p class="band-desc reveal" style="--d:260ms">
       Entre jardins et lumière de fin d'été, chaque zone du domaine est pensée pour vivre
       la fête — du vin d'honneur à la dernière danse.
     </p>
@@ -205,7 +209,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      NOTRE HISTOIRE — STORY BOOK
 ══════════════════════════════════════════════════════════════ -->
-<section id="histoire" class="story-section">
+<section id="histoire" class="story-section section-entrance">
   <!-- Crayon section Histoire -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--section" (click)="openEdit('story')" title="Éditer Notre Histoire">
@@ -216,15 +220,15 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">NOTRE HISTOIRE</span>
-    <h2 class="section-title fade-up">{{ story().headline }}</h2>
-    <p class="section-quote fade-up">{{ story().subheadline }}</p>
-    <div class="sep-ornament fade-up">
+    <span class="eyebrow-gold reveal" style="--d:0ms">NOTRE HISTOIRE</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ story().headline }}</h2>
+    <p class="section-quote reveal" style="--d:160ms">{{ story().subheadline }}</p>
+    <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
 
     <!-- Onglets -->
-    <div class="story-tabs fade-up">
+    <div class="story-tabs reveal" style="--d:240ms">
       @for (ch of story().chapters; track $index) {
         <button
           class="story-tab"
@@ -236,7 +240,7 @@
     </div>
 
     <!-- Corps du chapitre -->
-    <div class="story-body fade-up">
+    <div class="story-body reveal" style="--d:80ms">
       <div class="story-photo-wrap">
         <div class="story-photo-inner">
           <img
@@ -263,14 +267,14 @@
       </div>
     </div>
 
-    <p class="story-footer fade-up">{{ story().footer }}</p>
+    <p class="story-footer reveal reveal--fade" style="--d:0ms">{{ story().footer }}</p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX — CITATION
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-quote" [style.backgroundImage]="'url(' + bgs().quote + ')'">
+<div class="parallax-band band-quote">
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -279,9 +283,10 @@
       </svg>
     </button>
   }
+  <div class="band-bg" [style.backgroundImage]="'url(' + bgs().quote + ')'"></div>
   <div class="band-overlay"></div>
   <div class="band-content">
-    <p class="band-big-quote">
+    <p class="band-big-quote reveal reveal--scale" style="--d:0ms">
       « Il n'y a qu'un bonheur dans la vie, aimer et être aimé. »
     </p>
   </div>
@@ -290,7 +295,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      NOS PLUS BEAUX MOMENTS — GALERIE
 ══════════════════════════════════════════════════════════════ -->
-<section id="photos" class="gallery-section">
+<section id="photos" class="gallery-section section-entrance">
   <div class="gallery-deco-top"></div>
   <!-- Crayon section Galerie -->
   @if (isLoggedIn()) {
@@ -302,14 +307,14 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">NOS PHOTOS</span>
-    <h2 class="section-title fade-up">Nos Plus Beaux Moments</h2>
-    <p class="section-quote fade-up">Puissiez-vous vivre aussi longtemps que vous aimez.</p>
-    <div class="sep-ornament fade-up">
+    <span class="eyebrow-gold reveal" style="--d:0ms">NOS PHOTOS</span>
+    <h2 class="section-title reveal" style="--d:80ms">Nos Plus Beaux Moments</h2>
+    <p class="section-quote reveal" style="--d:160ms">Puissiez-vous vivre aussi longtemps que vous aimez.</p>
+    <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
 
-    <div class="gallery-mosaic fade-up">
+    <div class="gallery-mosaic reveal" style="--d:120ms">
       @for (item of gallery().items; track $index) {
         <div class="gallery-item" [class.gallery-lg]="item.large">
           <img [src]="item.url" [alt]="item.caption" loading="lazy" />
@@ -320,7 +325,7 @@
   </div>
 
   <!-- Bandeau de clôture -->
-  <div class="gallery-close-band" [style.backgroundImage]="'url(' + bgs().galleryBand + ')'">
+  <div class="gallery-close-band">
     @if (isLoggedIn()) {
       <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -329,11 +334,12 @@
         </svg>
       </button>
     }
+    <div class="band-bg" [style.backgroundImage]="'url(' + bgs().galleryBand + ')'"></div>
     <div class="band-overlay"></div>
-    <div class="band-content fade-up">
-      <span class="eyebrow-band">ET CE N'EST PAS TOUT</span>
-      <h2 class="band-title">Notre histoire continue — Le temps de la célébrer ensemble</h2>
-      <a href="#evenements" class="btn-primary">Voir le programme</a>
+    <div class="band-content">
+      <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">ET CE N'EST PAS TOUT</span>
+      <h2 class="band-title reveal" style="--d:100ms">Notre histoire continue — Le temps de la célébrer ensemble</h2>
+      <a href="#evenements" class="btn-primary reveal reveal--scale" style="--d:200ms">Voir le programme</a>
     </div>
   </div>
 </section>
@@ -341,7 +347,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      LE WEEK-END EN SCÈNES — PROGRAMME
 ══════════════════════════════════════════════════════════════ -->
-<section id="evenements" class="programme-section">
+<section id="evenements" class="programme-section section-entrance">
   <!-- Crayon section Programme -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--section" (click)="openEdit('program')" title="Éditer le Programme">
@@ -352,15 +358,15 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">PROGRAMME</span>
-    <h2 class="section-title fade-up">Le Week-end en Scènes</h2>
-    <p class="section-quote fade-up">« Si vous n'avez qu'un sourire, offrez-le aux gens que vous aimez. »</p>
-    <div class="sep-ornament fade-up">
+    <span class="eyebrow-gold reveal" style="--d:0ms">PROGRAMME</span>
+    <h2 class="section-title reveal" style="--d:80ms">Le Week-end en Scènes</h2>
+    <p class="section-quote reveal" style="--d:160ms">« Si vous n'avez qu'un sourire, offrez-le aux gens que vous aimez. »</p>
+    <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
 
     <!-- Onglets jours -->
-    <div class="prog-tabs fade-up">
+    <div class="prog-tabs reveal" style="--d:240ms">
       @for (day of program().days; track $index) {
         <button class="prog-tab" [class.active]="activeDayIdx() === $index" (click)="activeDayIdx.set($index)">
           <span class="prog-tab-icon">{{ day.tabIcon }}</span>
@@ -371,7 +377,7 @@
     </div>
 
     <!-- Timeline -->
-    <div class="timeline-shell fade-up">
+    <div class="timeline-shell reveal" style="--d:80ms">
       <div class="timeline-rail">
         <div class="timeline-progress"></div>
       </div>
@@ -391,19 +397,19 @@
       }
     </div>
 
-    <p class="prog-footer fade-up">{{ program().footer }}</p>
+    <p class="prog-footer reveal reveal--fade" style="--d:0ms">{{ program().footer }}</p>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
      INFOS PRATIQUES
 ══════════════════════════════════════════════════════════════ -->
-<section id="infos" class="infos-section">
+<section id="infos" class="infos-section section-entrance">
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">BON À SAVOIR</span>
-    <h2 class="section-title fade-up">Infos Pratiques</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">BON À SAVOIR</span>
+    <h2 class="section-title reveal" style="--d:80ms">Infos Pratiques</h2>
 
-    <div class="infos-grid fade-up">
+    <div class="infos-grid stagger reveal" style="--d:160ms">
       <div class="info-card">
         <div class="info-icon">📍</div>
         <h3 class="info-title">Lieu</h3>
@@ -423,7 +429,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      DRESS CODE
 ══════════════════════════════════════════════════════════════ -->
-<section class="dress-code-section">
+<section class="dress-code-section section-entrance">
   <!-- Crayon section Dress Code -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--section" (click)="openEdit('dressCode')" title="Éditer le Dress Code">
@@ -434,10 +440,10 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">✦ Thème de la soirée</span>
-    <h2 class="section-title fade-up">{{ dressCode().title }}</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">✦ Thème de la soirée</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ dressCode().title }}</h2>
 
-    <div class="palette-board fade-up">
+    <div class="palette-board reveal" style="--d:160ms">
       <p class="palette-desc">{{ dressCode().description }}</p>
 
       <div class="palette-tabs">
@@ -462,7 +468,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      FAQ
 ══════════════════════════════════════════════════════════════ -->
-<section class="faq-section">
+<section class="faq-section section-entrance">
   <!-- Crayon section FAQ -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--section" (click)="openEdit('faq')" title="Éditer la FAQ">
@@ -473,10 +479,10 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold fade-up">FAQ</span>
-    <h2 class="section-title fade-up">Questions Fréquentes</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">FAQ</span>
+    <h2 class="section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
 
-    <div class="faq-shell fade-up">
+    <div class="faq-shell reveal" style="--d:160ms">
       @for (item of faq().items; track $index) {
         <details class="faq-item">
           <summary class="faq-q">{{ item.q }}</summary>
@@ -490,7 +496,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      RSVP FINAL
 ══════════════════════════════════════════════════════════════ -->
-<section id="rsvp" class="rsvp-section" [style.backgroundImage]="'url(' + bgs().rsvp + ')'">
+<section id="rsvp" class="rsvp-section section-entrance">
   <!-- Crayon section RSVP -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
@@ -499,10 +505,19 @@
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
       </svg>
     </button>
+    <button class="edit-pencil edit-pencil--band edit-pencil--rsvp-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </button>
   }
+  <div class="band-bg" [style.backgroundImage]="'url(' + bgs().rsvp + ')'"></div>
   <div class="band-overlay"></div>
 
-  <div class="rsvp-card fade-up">
+  <div class="rsvp-card reveal reveal--scale" style="--d:100ms">
     <span class="eyebrow-band">VENEZ CÉLÉBRER AVEC NOUS</span>
     <h2 class="rsvp-title">{{ rsvp().title }}</h2>
     <div class="sep-ornament sep-light">
@@ -537,7 +552,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      TOAST CAGNOTTE
 ══════════════════════════════════════════════════════════════ -->
-@if (showToast()) {
+<!-- @if (showToast()) {
   <div class="cagnotte-toast">
     <button class="toast-close" (click)="showToast.set(false)">✕</button>
     <p class="toast-badge">🎁 CAGNOTTE</p>
@@ -551,7 +566,7 @@
       <button class="btn-outline-hero" (click)="showToast.set(false)">Plus tard</button>
     </div>
   </div>
-}
+} -->
 
 <!-- ══════════════════════════════════════════════════════════════
      MODAL D'ÉDITION
