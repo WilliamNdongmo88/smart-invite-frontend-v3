@@ -2545,3 +2545,65 @@ section { position: relative; }
     color: #fff;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CRAYON FOOTER
+═══════════════════════════════════════════════════════════════ */
+.site-footer { position: relative; }
+
+.edit-pencil--footer {
+  top: 1rem;
+  right: 1rem;
+  opacity: 0;
+  border-color: rgba(201,169,97,.45);
+  background: rgba(20,14,8,.65);
+  color: var(--gold);
+
+  &:hover {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: #fff;
+  }
+}
+
+.site-footer:hover .edit-pencil--footer,
+.site-footer:focus-within .edit-pencil--footer {
+  opacity: 1;
+}
+
+/* ─── Aperçu live footer dans le modal ────────────────────────── */
+.edit-footer-preview {
+  background: #2d241b;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  border: 1px solid rgba(201,169,97,.15);
+  margin-top: .5rem;
+}
+
+.edit-footer-preview-logo {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  color: var(--gold);
+  line-height: 1.2;
+}
+
+.edit-footer-preview-sub {
+  font-family: 'Belleza', sans-serif;
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5);
+}
+
+.edit-footer-preview-love {
+  font-family: 'Belleza', sans-serif;
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}

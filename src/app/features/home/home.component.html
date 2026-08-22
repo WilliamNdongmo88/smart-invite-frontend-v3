@@ -535,13 +535,21 @@
      FOOTER
 ══════════════════════════════════════════════════════════════ -->
 <footer class="site-footer">
-  <div class="footer-logo">Leatitia &amp; Christophe</div>
-  <p class="footer-sub">08 Août 2026 · Ma Cabane Au Canada · Rennes</p>
-  <div class="sep-ornament sep-light footer-sep">
+  @if (isLoggedIn()) {
+    <button class="edit-pencil edit-pencil--footer" (click)="openEdit('footer')" title="Éditer le Footer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="footer-logo reveal reveal--scale" style="--d:0ms">{{ footer().logoText }}</div>
+  <p class="footer-sub reveal" style="--d:80ms">{{ footer().subText }}</p>
+  <div class="sep-ornament sep-light footer-sep reveal" style="--d:140ms">
     <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
   </div>
-  <p class="footer-love">AVEC TOUT NOTRE AMOUR ❤</p>
-  <p class="footer-credit">
+  <p class="footer-love reveal reveal--fade" style="--d:200ms">{{ footer().loveText }}</p>
+  <p class="footer-credit reveal reveal--fade" style="--d:260ms">
     SITE RÉALISÉ PAR
     <a href="https://indyli-services.com" target="_blank" rel="noopener">INDYLI SERVICES</a>
   </p>
@@ -1197,6 +1205,41 @@
                 </div>
               </div>
             }
+          </div>
+        }
+
+        <!-- ── FOOTER ── -->
+        @if (activeSection() === 'footer') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Footer</h3>
+
+            <div class="edit-field">
+              <label class="edit-label">Logo / Noms <span class="edit-hint">affiché en script cursive</span></label>
+              <input class="edit-input" type="text"
+                     [ngModel]="draft().footer.logoText"
+                     (ngModelChange)="updateDraftFooter('logoText', $event)" />
+            </div>
+
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre <span class="edit-hint">date · lieu · ville</span></label>
+              <input class="edit-input" type="text"
+                     [ngModel]="draft().footer.subText"
+                     (ngModelChange)="updateDraftFooter('subText', $event)" />
+            </div>
+
+            <div class="edit-field">
+              <label class="edit-label">Message d'amour</label>
+              <input class="edit-input" type="text"
+                     [ngModel]="draft().footer.loveText"
+                     (ngModelChange)="updateDraftFooter('loveText', $event)" />
+            </div>
+
+            <!-- Aperçu live -->
+            <div class="edit-footer-preview">
+              <div class="edit-footer-preview-logo">{{ draft().footer.logoText }}</div>
+              <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
+              <p class="edit-footer-preview-love">{{ draft().footer.loveText }}</p>
+            </div>
           </div>
         }
 

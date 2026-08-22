@@ -9,7 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
 import {
   HomeContent, EditSection, EDIT_SECTION_LABELS,
   HomeChapter, HomeProgramItem, HomeFaqItem, HomeProgramDay, HomeGalleryItem,
-  HomeBackgroundsContent,
+  HomeBackgroundsContent, HomeFooterContent,
 } from './home-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
@@ -177,6 +177,11 @@ const INITIAL_CONTENT: HomeContent = {
     galleryBand: '/images/paralax_ce_nest_pas_tout.webp',
     rsvp:        '/images/venue/domaine-vue-aerienne.webp',
   },
+  footer: {
+    logoText: 'Leatitia & Christophe',
+    subText:  '08 Août 2026 · Ma Cabane Au Canada · Rennes',
+    loveText: 'AVEC TOUT NOTRE AMOUR ❤',
+  },
 };
 
 // Deep-clone helper
@@ -211,6 +216,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly rsvp      = computed(() => this.content().rsvp);
   readonly gallery   = computed(() => this.content().gallery);
   readonly bgs       = computed(() => this.content().backgrounds);
+  readonly footer    = computed(() => this.content().footer);
 
   readonly palettes = computed<Record<PaletteKey, { color: string; label: string }[]>>(() => ({
     terracotta: this.content().dressCode.paletteTerracotta,
@@ -229,7 +235,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
     { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
   ];
-  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds'];
+  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer'];
   draft = signal<HomeContent>(deepClone(INITIAL_CONTENT));
 
   // ── Countdown ─────────────────────────────────────────────────────
@@ -313,6 +319,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Rétrocompatibilité : ajouter backgrounds si absent
         if (!(parsed as HomeContent).backgrounds) {
           (parsed as HomeContent).backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
+        }
+        // Rétrocompatibilité : ajouter footer si absent
+        if (!(parsed as HomeContent).footer) {
+          (parsed as HomeContent).footer = deepClone(INITIAL_CONTENT.footer);
         }
 
         this.content.set(parsed as HomeContent);
@@ -671,6 +681,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const url = await this.readFileAsDataUrl(file);
     const d = deepClone(this.draft());
     d.gallery.items[idx].url = url;
+    this.draft.set(d);
+  }
+
+  // ── Draft — Footer ────────────────────────────────────────────
+  updateDraftFooter(key: keyof HomeFooterContent, value: string): void {
+    const d = deepClone(this.draft());
+    d.footer[key] = value;
     this.draft.set(d);
   }
 

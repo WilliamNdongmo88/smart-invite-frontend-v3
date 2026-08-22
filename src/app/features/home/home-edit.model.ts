@@ -101,6 +101,12 @@ export interface HomeBackgroundsContent {
   rsvp: string;        // .rsvp-section
 }
 
+export interface HomeFooterContent {
+  logoText: string;    // ex : "Leatitia & Christophe"
+  subText: string;     // ex : "08 Août 2026 · Ma Cabane Au Canada · Rennes"
+  loveText: string;    // ex : "AVEC TOUT NOTRE AMOUR ❤"
+}
+
 export interface HomeContent {
   hero: HomeHeroContent;
   couple: HomeCoupleContent;
@@ -111,6 +117,7 @@ export interface HomeContent {
   rsvp: HomeRsvpContent;
   gallery: HomeGalleryContent;
   backgrounds: HomeBackgroundsContent;
+  footer: HomeFooterContent;
 }
 
 // Section names for the edit modal tabs
@@ -123,7 +130,8 @@ export type EditSection =
   | 'faq'
   | 'rsvp'
   | 'gallery'
-  | 'backgrounds';
+  | 'backgrounds'
+  | 'footer';
 
 export const EDIT_SECTION_LABELS: Record<EditSection, string> = {
   hero:        'Hero & Date',
@@ -135,4 +143,5 @@ export const EDIT_SECTION_LABELS: Record<EditSection, string> = {
   rsvp:        'RSVP',
   gallery:     'Galerie Photos',
   backgrounds: 'Fonds & Bandeaux',
+  footer:      'Footer',
 };
