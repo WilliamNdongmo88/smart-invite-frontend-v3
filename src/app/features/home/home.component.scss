@@ -2242,3 +2242,110 @@ section { position: relative; }
     color: rgba(255,255,255,.65);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   FONDS & BANDEAUX — formulaire d'édition
+═══════════════════════════════════════════════════════════════ */
+.edit-bg-card {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: .75rem;
+}
+
+.edit-bg-preview-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 110px;
+  height: 70px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.1);
+
+  &:hover .edit-upload-overlay { opacity: 1; }
+}
+
+.edit-bg-preview {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-color: rgba(255,255,255,.05);
+
+  .edit-upload-placeholder {
+    height: 100%;
+    font-size: .55rem;
+    gap: .25rem;
+    color: rgba(255,255,255,.25);
+  }
+}
+
+.edit-bg-info {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.edit-bg-label {
+  font-family: 'Belleza', sans-serif;
+  font-size: .78rem;
+  color: rgba(255,255,255,.8);
+  letter-spacing: .04em;
+}
+
+.edit-bg-hint {
+  font-family: 'Belleza', sans-serif;
+  font-size: .65rem;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .02em;
+  line-height: 1.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CRAYONS — bandeaux background (div, pas section)
+═══════════════════════════════════════════════════════════════ */
+
+/* Couvrir les <div> bandeaux en plus des <section> */
+.parallax-band,
+.gallery-close-band {
+  position: relative;
+
+  &:hover > .edit-pencil,
+  &:focus-within > .edit-pencil {
+    opacity: 1;
+  }
+}
+
+/* Crayon positionné sur un bandeau parallax */
+.edit-pencil--band {
+  top: 1rem;
+  right: 1rem;
+  opacity: 0;
+  /* hérite de .edit-pencil pour le reste */
+  border-color: rgba(255,255,255,.35);
+  background: rgba(20,14,8,.65);
+  color: var(--gold);
+  z-index: 10;
+}
+
+/* Second crayon Hero (fond) — positionné à côté du premier */
+.edit-pencil--hero-bg {
+  top: 5.5rem;
+  right: 4rem; /* décalé par rapport à edit-pencil--hero qui est à right:1.5rem */
+  opacity: 1;
+  border-color: rgba(255,255,255,.35);
+  background: rgba(20,14,8,.65);
+  color: rgba(255,255,255,.7);
+
+  &:hover {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: #fff;
+  }
+}

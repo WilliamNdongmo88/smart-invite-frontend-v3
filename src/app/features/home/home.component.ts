@@ -9,6 +9,7 @@ import { AuthService } from '../../core/services/auth.service';
 import {
   HomeContent, EditSection, EDIT_SECTION_LABELS,
   HomeChapter, HomeProgramItem, HomeFaqItem, HomeProgramDay, HomeGalleryItem,
+  HomeBackgroundsContent,
 } from './home-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
@@ -169,6 +170,13 @@ const INITIAL_CONTENT: HomeContent = {
       { url: '/images/save-the-date-invit1.webp',    caption: 'Save the date',           large: false },
     ],
   },
+  backgrounds: {
+    hero:        '/images/background-section-hero.webp',
+    venue:       '/images/venue/parc-etang.webp',
+    quote:       '/images/fond-section-photo.webp',
+    galleryBand: '/images/paralax_ce_nest_pas_tout.webp',
+    rsvp:        '/images/venue/domaine-vue-aerienne.webp',
+  },
 };
 
 // Deep-clone helper
@@ -202,6 +210,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly faq       = computed(() => this.content().faq);
   readonly rsvp      = computed(() => this.content().rsvp);
   readonly gallery   = computed(() => this.content().gallery);
+  readonly bgs       = computed(() => this.content().backgrounds);
 
   readonly palettes = computed<Record<PaletteKey, { color: string; label: string }[]>>(() => ({
     terracotta: this.content().dressCode.paletteTerracotta,
@@ -212,7 +221,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   editOpen      = signal(false);
   activeSection = signal<EditSection>('hero');
   readonly SECTION_LABELS = EDIT_SECTION_LABELS;
-  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery'];
+  // Label/hint pour chaque fond — utilisé dans le template
+  readonly BG_FIELDS: { key: keyof HomeBackgroundsContent; label: string; hint: string }[] = [
+    { key: 'hero',        label: 'Hero principal',  hint: 'Grande image de fond du haut de page' },
+    { key: 'venue',       label: 'Bandeau Lieu',    hint: 'Parallax « Ma Cabane Au Canada »' },
+    { key: 'quote',       label: 'Bandeau Citation',hint: 'Parallax « Il n\'y a qu\'un bonheur… »' },
+    { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
+    { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
+  ];
+  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds'];
   draft = signal<HomeContent>(deepClone(INITIAL_CONTENT));
 
   // ── Countdown ─────────────────────────────────────────────────────
@@ -292,6 +309,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         // Rétrocompatibilité : ajouter gallery si absente
         if (!(parsed as HomeContent).gallery) {
           (parsed as HomeContent).gallery = deepClone(INITIAL_CONTENT.gallery);
+        }
+        // Rétrocompatibilité : ajouter backgrounds si absent
+        if (!(parsed as HomeContent).backgrounds) {
+          (parsed as HomeContent).backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
         }
 
         this.content.set(parsed as HomeContent);
@@ -623,6 +644,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const d = deepClone(this.draft());
     d.gallery.items[idx].url = url;
     this.draft.set(d);
+  }
+
+  // ── Draft — Backgrounds ──────────────────────────────────────────
+  updateDraftBackground(key: keyof HomeBackgroundsContent, value: string): void {
+    const d = deepClone(this.draft());
+    d.backgrounds[key] = value;
+    this.draft.set(d);
+  }
+
+  async onBackgroundImageChange(event: Event, key: keyof HomeBackgroundsContent): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = await this.readFileAsDataUrl(file);
+    this.updateDraftBackground(key, url);
   }
 
   // ── Helpers ───────────────────────────────────────────────────────

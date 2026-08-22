@@ -93,6 +93,14 @@ export interface HomeGalleryContent {
   items: HomeGalleryItem[];
 }
 
+export interface HomeBackgroundsContent {
+  hero: string;        // .hero-section
+  venue: string;       // .band-venue
+  quote: string;       // .band-quote
+  galleryBand: string; // .gallery-close-band
+  rsvp: string;        // .rsvp-section
+}
+
 export interface HomeContent {
   hero: HomeHeroContent;
   couple: HomeCoupleContent;
@@ -102,6 +110,7 @@ export interface HomeContent {
   faq: HomeFaqContent;
   rsvp: HomeRsvpContent;
   gallery: HomeGalleryContent;
+  backgrounds: HomeBackgroundsContent;
 }
 
 // Section names for the edit modal tabs
@@ -113,15 +122,17 @@ export type EditSection =
   | 'dressCode'
   | 'faq'
   | 'rsvp'
-  | 'gallery';
+  | 'gallery'
+  | 'backgrounds';
 
 export const EDIT_SECTION_LABELS: Record<EditSection, string> = {
-  hero:      'Hero & Date',
-  couple:    'Le Couple',
-  story:     'Notre Histoire',
-  program:   'Programme',
-  dressCode: 'Dress Code',
-  faq:       'FAQ',
-  rsvp:      'RSVP',
-  gallery:   'Galerie Photos',
+  hero:        'Hero & Date',
+  couple:      'Le Couple',
+  story:       'Notre Histoire',
+  program:     'Programme',
+  dressCode:   'Dress Code',
+  faq:         'FAQ',
+  rsvp:        'RSVP',
+  gallery:     'Galerie Photos',
+  backgrounds: 'Fonds & Bandeaux',
 };
