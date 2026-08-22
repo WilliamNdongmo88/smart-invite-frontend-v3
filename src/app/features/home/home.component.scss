@@ -1517,7 +1517,7 @@
   .story-tab { width: 100%; max-width: 280px; }
   .story-nav { flex-direction: column; gap: .6rem; align-items: center; }
   .domaine-address-card { flex-direction: column; text-align: center; }
-  .palette-swatches { grid-template-columns: repeat(2, 1fr); }
+  .palette-swatches { grid-template-columns: repeat(2, 1fr); margin-left: -28px;}
   .rsvp-card { padding: 1.75rem 1.25rem; }
   .cagnotte-toast { bottom: 5rem; right: 1rem; }
   .music-fab { bottom: 1.25rem; right: 1.25rem; width: 50px; height: 50px; font-size: 1.2rem; }

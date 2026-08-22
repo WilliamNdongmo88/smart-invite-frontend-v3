@@ -260,7 +260,7 @@ Fond brun foncé `#2d241b` (ou proche), centré :
 2. « 08 Août 2026 · Ma Cabane Au Canada · Rennes » (petit, clair)
 3. Séparateur ornemental
 4. « AVEC TOUT NOTRE AMOUR ❤ » (majuscules espacées, doré)
-5. « SITE RÉALISÉ PAR **INDYLI SERVICES** » (lien vers https://indyli-services.com)
+5. « SITE RÉALISÉ PAR **WILLIAM NDONGMO** » (lien vers https://will-portfolio-rosy.vercel.app/)
 
 ---
 

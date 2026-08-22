@@ -117,6 +117,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       q: 'Comment confirmer ma présence ?',
       a: 'Via le lien RSVP reçu sur WhatsApp. Votre réponse est enregistrée instantanément.',
     },
+    {
+      q: 'Quand le QR code sera-t-il utilisé ?',
+      a: 'Le jour J, a l\'heure du banquet.'
+    },
   ];
 
   // ── Contact form ───────────────────────────────────────────────────
