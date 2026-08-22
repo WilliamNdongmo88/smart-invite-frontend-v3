@@ -52,11 +52,17 @@ export interface HomeStoryContent {
   footer: string;
 }
 
+export interface HomeProgramDay {
+  date: string;           // YYYY-MM-DD — sert au tri chronologique
+  label: string;          // ex : "Vendredi 7 Août 2026 · La Veille"
+  tabIcon: string;        // ex : "☾"
+  tabDate: string;        // ex : "07 AOÛT"
+  tabLabel: string;       // ex : "La Veille"
+  items: HomeProgramItem[];
+}
+
 export interface HomeProgramContent {
-  beforeDayLabel: string;
-  dayLabel: string;
-  programBefore: HomeProgramItem[];
-  programDay: HomeProgramItem[];
+  days: HomeProgramDay[];
   footer: string;
 }
 

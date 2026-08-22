@@ -338,16 +338,13 @@
 
     <!-- Onglets jours -->
     <div class="prog-tabs fade-up">
-      <button class="prog-tab" [class.active]="activeTab() === 'before'" (click)="activeTab.set('before')">
-        <span class="prog-tab-icon">☾</span>
-        <span class="prog-tab-date">07 AOÛT</span>
-        <span class="prog-tab-label">La Veille</span>
-      </button>
-      <button class="prog-tab" [class.active]="activeTab() === 'day'" (click)="activeTab.set('day')">
-        <span class="prog-tab-icon">☼</span>
-        <span class="prog-tab-date">08 AOÛT</span>
-        <span class="prog-tab-label">Le Jour J</span>
-      </button>
+      @for (day of program().days; track $index) {
+        <button class="prog-tab" [class.active]="activeDayIdx() === $index" (click)="activeDayIdx.set($index)">
+          <span class="prog-tab-icon">{{ day.tabIcon }}</span>
+          <span class="prog-tab-date">{{ day.tabDate }}</span>
+          <span class="prog-tab-label">{{ day.tabLabel }}</span>
+        </button>
+      }
     </div>
 
     <!-- Timeline -->
@@ -356,23 +353,9 @@
         <div class="timeline-progress"></div>
       </div>
 
-      @if (activeTab() === 'before') {
-        <p class="timeline-day-label">{{ program().beforeDayLabel }}</p>
-        @for (item of program().programBefore; track $index) {
-          <div class="timeline-item">
-            <div class="timeline-dot">{{ item.icon }}</div>
-            <div class="timeline-card">
-              <div class="tl-time">{{ item.time }}</div>
-              <h4 class="tl-title">{{ item.title }}</h4>
-              <p class="tl-desc">{{ item.desc }}</p>
-            </div>
-          </div>
-        }
-      }
-
-      @if (activeTab() === 'day') {
-        <p class="timeline-day-label">{{ program().dayLabel }}</p>
-        @for (item of program().programDay; track $index) {
+      @if (program().days[activeDayIdx()]; as day) {
+        <p class="timeline-day-label">{{ day.label }}</p>
+        @for (item of day.items; track $index) {
           <div class="timeline-item">
             <div class="timeline-dot">{{ item.icon }}</div>
             <div class="timeline-card">
@@ -797,100 +780,109 @@
               <label class="edit-label">Texte de pied de section</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().program.footer"
-                     (ngModelChange)="updateDraftProgram('footer', $event)" />
+                     (ngModelChange)="updateDraftProgramFooter($event)" />
             </div>
 
-            <!-- Veille -->
-            <div class="edit-divider"><span>Vendredi — La Veille</span></div>
+            @for (day of draft().program.days; track $index) {
+              <div class="edit-chapter-block">
 
-            <div class="edit-field">
-              <label class="edit-label">Libellé du jour</label>
-              <input class="edit-input" type="text"
-                     [ngModel]="draft().program.beforeDayLabel"
-                     (ngModelChange)="updateDraftProgram('beforeDayLabel', $event)" />
-            </div>
-
-            @for (item of draft().program.programBefore; track $index) {
-              <div class="edit-program-item">
-                <div class="edit-program-item-header">
-                  <span class="edit-program-idx">{{ $index + 1 }}</span>
-                  <button class="edit-btn-remove" (click)="removeProgramItem('programBefore', $index)" title="Supprimer">✕</button>
+                <div class="edit-chapter-header">
+                  <span class="edit-chapter-num">Jour {{ $index + 1 }}</span>
+                  <button class="edit-btn-remove"
+                          (click)="removeDay($index)"
+                          [disabled]="draft().program.days.length <= 1"
+                          title="Supprimer ce jour">✕</button>
                 </div>
+
+                <!-- Date (tri) + icône onglet -->
                 <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Date <span class="edit-hint">AAAA-MM-JJ — sert au tri</span></label>
+                    <input class="edit-input" type="date"
+                           [ngModel]="day.date"
+                           (ngModelChange)="updateDraftDay($index, 'date', $event)" />
+                  </div>
                   <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône</label>
+                    <label class="edit-label">Icône onglet</label>
                     <input class="edit-input" type="text"
-                           [ngModel]="item.icon"
-                           (ngModelChange)="updateDraftProgramItem('programBefore', $index, 'icon', $event)" />
+                           [ngModel]="day.tabIcon"
+                           (ngModelChange)="updateDraftDay($index, 'tabIcon', $event)" />
+                  </div>
+                </div>
+
+                <!-- Date onglet + libellé onglet -->
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Date onglet <span class="edit-hint">ex : 07 AOÛT</span></label>
+                    <input class="edit-input" type="text"
+                           [ngModel]="day.tabDate"
+                           (ngModelChange)="updateDraftDay($index, 'tabDate', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Horaire</label>
+                    <label class="edit-label">Libellé onglet <span class="edit-hint">ex : La Veille</span></label>
                     <input class="edit-input" type="text"
-                           [ngModel]="item.time"
-                           (ngModelChange)="updateDraftProgramItem('programBefore', $index, 'time', $event)" />
+                           [ngModel]="day.tabLabel"
+                           (ngModelChange)="updateDraftDay($index, 'tabLabel', $event)" />
                   </div>
                 </div>
+
+                <!-- Libellé timeline -->
                 <div class="edit-field">
-                  <label class="edit-label">Titre</label>
+                  <label class="edit-label">Libellé timeline <span class="edit-hint">ex : Vendredi 7 Août 2026 · La Veille</span></label>
                   <input class="edit-input" type="text"
-                         [ngModel]="item.title"
-                         (ngModelChange)="updateDraftProgramItem('programBefore', $index, 'title', $event)" />
+                         [ngModel]="day.label"
+                         (ngModelChange)="updateDraftDay($index, 'label', $event)" />
                 </div>
-                <div class="edit-field">
-                  <label class="edit-label">Description</label>
-                  <textarea class="edit-textarea" rows="2"
-                            [ngModel]="item.desc"
-                            (ngModelChange)="updateDraftProgramItem('programBefore', $index, 'desc', $event)"></textarea>
-                </div>
+
+                <!-- Créneaux -->
+                <div class="edit-divider"><span>Créneaux</span></div>
+
+                @for (item of day.items; track $index; let itemIdx = $index) {
+                  <div class="edit-program-item">
+                    <div class="edit-program-item-header">
+                      <span class="edit-program-idx">{{ itemIdx + 1 }}</span>
+                      <button class="edit-btn-remove" (click)="removeDayItem($index, itemIdx)" title="Supprimer">✕</button>
+                    </div>
+                    <div class="edit-field-row">
+                      <div class="edit-field edit-field--icon">
+                        <label class="edit-label">Icône</label>
+                        <input class="edit-input" type="text"
+                               [ngModel]="item.icon"
+                               (ngModelChange)="updateDraftDayItem($index, itemIdx, 'icon', $event)" />
+                      </div>
+                      <div class="edit-field">
+                        <label class="edit-label">Horaire</label>
+                        <input class="edit-input" type="text"
+                               [ngModel]="item.time"
+                               (ngModelChange)="updateDraftDayItem($index, itemIdx, 'time', $event)" />
+                      </div>
+                    </div>
+                    <div class="edit-field">
+                      <label class="edit-label">Titre</label>
+                      <input class="edit-input" type="text"
+                             [ngModel]="item.title"
+                             (ngModelChange)="updateDraftDayItem($index, itemIdx, 'title', $event)" />
+                    </div>
+                    <div class="edit-field">
+                      <label class="edit-label">Description</label>
+                      <textarea class="edit-textarea" rows="2"
+                                [ngModel]="item.desc"
+                                (ngModelChange)="updateDraftDayItem($index, itemIdx, 'desc', $event)"></textarea>
+                    </div>
+                  </div>
+                }
+
+                <button class="edit-btn-add" (click)="addDayItem($index)">+ Ajouter un créneau</button>
               </div>
             }
-            <button class="edit-btn-add" (click)="addProgramItem('programBefore')">+ Ajouter un créneau</button>
 
-            <!-- Jour J -->
-            <div class="edit-divider"><span>Samedi — Le Jour J</span></div>
-
-            <div class="edit-field">
-              <label class="edit-label">Libellé du jour</label>
-              <input class="edit-input" type="text"
-                     [ngModel]="draft().program.dayLabel"
-                     (ngModelChange)="updateDraftProgram('dayLabel', $event)" />
-            </div>
-
-            @for (item of draft().program.programDay; track $index) {
-              <div class="edit-program-item">
-                <div class="edit-program-item-header">
-                  <span class="edit-program-idx">{{ $index + 1 }}</span>
-                  <button class="edit-btn-remove" (click)="removeProgramItem('programDay', $index)" title="Supprimer">✕</button>
-                </div>
-                <div class="edit-field-row">
-                  <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône</label>
-                    <input class="edit-input" type="text"
-                           [ngModel]="item.icon"
-                           (ngModelChange)="updateDraftProgramItem('programDay', $index, 'icon', $event)" />
-                  </div>
-                  <div class="edit-field">
-                    <label class="edit-label">Horaire</label>
-                    <input class="edit-input" type="text"
-                           [ngModel]="item.time"
-                           (ngModelChange)="updateDraftProgramItem('programDay', $index, 'time', $event)" />
-                  </div>
-                </div>
-                <div class="edit-field">
-                  <label class="edit-label">Titre</label>
-                  <input class="edit-input" type="text"
-                         [ngModel]="item.title"
-                         (ngModelChange)="updateDraftProgramItem('programDay', $index, 'title', $event)" />
-                </div>
-                <div class="edit-field">
-                  <label class="edit-label">Description</label>
-                  <textarea class="edit-textarea" rows="2"
-                            [ngModel]="item.desc"
-                            (ngModelChange)="updateDraftProgramItem('programDay', $index, 'desc', $event)"></textarea>
-                </div>
-              </div>
-            }
-            <button class="edit-btn-add" (click)="addProgramItem('programDay')">+ Ajouter un créneau</button>
+            <button class="edit-btn-day-toggle edit-btn-day-toggle--add" (click)="addDay()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Ajouter une journée au programme
+            </button>
           </div>
         }
 

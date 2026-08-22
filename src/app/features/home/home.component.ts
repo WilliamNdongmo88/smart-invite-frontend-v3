@@ -8,12 +8,21 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import {
   HomeContent, EditSection, EDIT_SECTION_LABELS,
-  HomeChapter, HomeProgramItem, HomeFaqItem,
+  HomeChapter, HomeProgramItem, HomeFaqItem, HomeProgramDay,
 } from './home-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
-type TabKey = 'before' | 'day';
 type PaletteKey = 'terracotta' | 'champagne';
+
+// ── Tri chronologique des jours (sans date → en dernier) ────────────
+function sortDays(days: HomeProgramDay[]): HomeProgramDay[] {
+  return [...days].sort((a, b) => {
+    if (!a.date && !b.date) return 0;
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    return a.date < b.date ? -1 : a.date > b.date ? 1 : 0;
+  });
+}
 
 // ── Contenu initial (source de vérité) ──────────────────────────────
 const INITIAL_CONTENT: HomeContent = {
@@ -92,19 +101,33 @@ const INITIAL_CONTENT: HomeContent = {
     footer: 'Merci de faire partie de notre histoire. Merci d\'avoir traversé tant de chapitres à nos côtés. Et merci d\'être là pour écrire la suite avec nous.',
   },
   program: {
-    beforeDayLabel: 'Vendredi 7 Août 2026 · La Veille',
-    dayLabel:       'Samedi 8 Août 2026 · Le Grand Jour',
-    programBefore: [
-      { icon: '♡', time: '14h – 15h',     title: 'Mariage Mairie',          desc: 'Cérémonie civile en présence des proches. Le premier « oui » officiel.' },
-      { icon: '⌖', time: '15h – 15h30',   title: 'Déplacement au Thabord',  desc: 'Direction le Thabord pour la séance photos dans un cadre verdoyant.' },
-      { icon: '●', time: '15h30 – 16h30', title: 'Séance Photos Thabord',   desc: 'Séance photos avec les mariés et les proches dans le magnifique parc du Thabord.' },
-      { icon: '✦', time: '17h – 18h30',   title: 'Collation au Domaine',    desc: 'Un moment convivial autour d\'un verre et de petites douceurs au domaine.' },
-    ],
-    programDay: [
-      { icon: '♡', time: '10h00 – 11h30', title: 'Cérémonie Religieuse',        desc: 'Le moment le plus émouvant. Cérémonie solennelle entourée de tous ceux qu\'on aime.' },
-      { icon: '♢', time: '12h – 14h',     title: 'Vin d\'Honneur',             desc: 'Champagne, pièces raffinées et rencontre des familles dans les jardins du domaine.' },
-      { icon: '♫', time: '12h – 14h',     title: 'Le Coin des P\'tits Loups',  desc: 'Un espace ludique dédié aux plus petits, avec des jeux pour leur plus grand bonheur.' },
-      { icon: '◉', time: '19h – 20h',     title: 'Arrivée / Installation',      desc: 'Installation à table, retrouvailles et montée en ambiance pour la soirée.' },
+    days: [
+      {
+        date:     '2026-08-07',
+        label:    'Vendredi 7 Août 2026 · La Veille',
+        tabIcon:  '☾',
+        tabDate:  '07 AOÛT',
+        tabLabel: 'La Veille',
+        items: [
+          { icon: '♡', time: '14h – 15h',     title: 'Mariage Mairie',          desc: 'Cérémonie civile en présence des proches. Le premier « oui » officiel.' },
+          { icon: '⌖', time: '15h – 15h30',   title: 'Déplacement au Thabord',  desc: 'Direction le Thabord pour la séance photos dans un cadre verdoyant.' },
+          { icon: '●', time: '15h30 – 16h30', title: 'Séance Photos Thabord',   desc: 'Séance photos avec les mariés et les proches dans le magnifique parc du Thabord.' },
+          { icon: '✦', time: '17h – 18h30',   title: 'Collation au Domaine',    desc: 'Un moment convivial autour d\'un verre et de petites douceurs au domaine.' },
+        ],
+      },
+      {
+        date:     '2026-08-08',
+        label:    'Samedi 8 Août 2026 · Le Grand Jour',
+        tabIcon:  '☼',
+        tabDate:  '08 AOÛT',
+        tabLabel: 'Le Jour J',
+        items: [
+          { icon: '♡', time: '10h00 – 11h30', title: 'Cérémonie Religieuse',       desc: 'Le moment le plus émouvant. Cérémonie solennelle entourée de tous ceux qu\'on aime.' },
+          { icon: '♢', time: '12h – 14h',     title: 'Vin d\'Honneur',            desc: 'Champagne, pièces raffinées et rencontre des familles dans les jardins du domaine.' },
+          { icon: '♫', time: '12h – 14h',     title: 'Le Coin des P\'tits Loups', desc: 'Un espace ludique dédié aux plus petits, avec des jeux pour leur plus grand bonheur.' },
+          { icon: '◉', time: '19h – 20h',     title: 'Arrivée / Installation',     desc: 'Installation à table, retrouvailles et montée en ambiance pour la soirée.' },
+        ],
+      },
     ],
     footer: 'Chaque instant a été imaginé pour être vécu ensemble.',
   },
@@ -151,17 +174,16 @@ function deepClone<T>(val: T): T {
   styleUrl:    'home.component.scss',
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly el         = inject(ElementRef);
+  private readonly platformId  = inject(PLATFORM_ID);
+  private readonly el          = inject(ElementRef);
   private readonly authService = inject(AuthService);
 
   // ── Auth ───────────────────────────────────────────────────────────
   readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
 
-  // ── Contenu éditable (source réactive) ────────────────────────────
+  // ── Contenu éditable ──────────────────────────────────────────────
   content = signal<HomeContent>(deepClone(INITIAL_CONTENT));
 
-  // Accès rapide aux sous-sections (computed)
   readonly hero      = computed(() => this.content().hero);
   readonly couple    = computed(() => this.content().couple);
   readonly story     = computed(() => this.content().story);
@@ -170,19 +192,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly faq       = computed(() => this.content().faq);
   readonly rsvp      = computed(() => this.content().rsvp);
 
-  // Palettes mappées pour le template
   readonly palettes = computed<Record<PaletteKey, { color: string; label: string }[]>>(() => ({
     terracotta: this.content().dressCode.paletteTerracotta,
     champagne:  this.content().dressCode.paletteChampagne,
   }));
 
-  // ── Edit modal state ──────────────────────────────────────────────
-  editOpen       = signal(false);
-  activeSection  = signal<EditSection>('hero');
+  // ── Edit modal ────────────────────────────────────────────────────
+  editOpen      = signal(false);
+  activeSection = signal<EditSection>('hero');
   readonly SECTION_LABELS = EDIT_SECTION_LABELS;
   readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp'];
-
-  // Draft travaillé dans le formulaire avant application
   draft = signal<HomeContent>(deepClone(INITIAL_CONTENT));
 
   // ── Countdown ─────────────────────────────────────────────────────
@@ -192,10 +211,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // ── Story book ────────────────────────────────────────────────────
   activeChapter = signal(0);
 
-  // ── Programme ─────────────────────────────────────────────────────
-  activeTab = signal<TabKey>('day');
+  // ── Programme : index du jour actif ───────────────────────────────
+  activeDayIdx = signal(0);
 
-  // ── Dress code palettes ───────────────────────────────────────────
+  // ── Dress code ────────────────────────────────────────────────────
   activePalette = signal<PaletteKey>('terracotta');
 
   // ── Contact form ──────────────────────────────────────────────────
@@ -205,7 +224,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   contactSent    = signal(false);
   contactSending = signal(false);
 
-  // ── Music player ──────────────────────────────────────────────────
+  // ── Music ─────────────────────────────────────────────────────────
   musicPlaying = signal(false);
   private audio: HTMLAudioElement | null = null;
 
@@ -213,7 +232,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   scrollY     = signal(0);
   navScrolled = signal(false);
   showToast   = signal(false);
-  private toastShown      = false;
+  private toastShown     = false;
   private scrollListener: (() => void) | null = null;
   private readonly timelineProgress = signal(0);
 
@@ -221,11 +240,51 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    // Restore saved content if any
     const saved = localStorage.getItem('si_home_content');
     if (saved) {
-      try { this.content.set(JSON.parse(saved)); } catch { /* ignore */ }
+      try {
+        const parsed = JSON.parse(saved) as HomeContent & {
+          program: HomeContent['program'] & {
+            // champs de l'ancienne structure à migrer
+            beforeDayLabel?: string;
+            dayLabel?: string;
+            programBefore?: HomeProgramItem[];
+            programDay?: HomeProgramItem[];
+          };
+        };
+
+        // Rétrocompatibilité : ancienne structure à 2 champs fixes → liste de jours
+        if (parsed.program && !parsed.program.days) {
+          const days: HomeProgramDay[] = [];
+          if (parsed.program.programBefore?.length) {
+            days.push({
+              date:     '2026-08-07',
+              label:    parsed.program.beforeDayLabel ?? 'La Veille',
+              tabIcon:  '☾', tabDate: '07 AOÛT', tabLabel: 'La Veille',
+              items:    parsed.program.programBefore,
+            });
+          }
+          if (parsed.program.programDay?.length) {
+            days.push({
+              date:     '2026-08-08',
+              label:    parsed.program.dayLabel ?? 'Le Grand Jour',
+              tabIcon:  '☼', tabDate: '08 AOÛT', tabLabel: 'Le Jour J',
+              items:    parsed.program.programDay,
+            });
+          }
+          (parsed.program as HomeContent['program']) = {
+            days: sortDays(days),
+            footer: parsed.program.footer ?? '',
+          };
+        }
+
+        this.content.set(parsed as HomeContent);
+      } catch { /* ignore */ }
     }
+
+    // Recaler l'index actif
+    const count = this.content().program.days.length;
+    if (this.activeDayIdx() >= count) this.activeDayIdx.set(Math.max(0, count - 1));
 
     this.startCountdown();
     this.scrollListener = () => this.onScroll();
@@ -277,7 +336,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // ── IntersectionObserver fade-up ──────────────────────────────────
+  // ── Fade observer ─────────────────────────────────────────────────
   private initFadeObserver(): void {
     const els = this.el.nativeElement.querySelectorAll('.fade-up');
     const obs = new IntersectionObserver((entries) => {
@@ -310,11 +369,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   toggleMusic(): void {
     if (!this.audio) return;
     if (this.musicPlaying()) {
-      this.audio.pause();
-      this.musicPlaying.set(false);
+      this.audio.pause(); this.musicPlaying.set(false);
     } else {
-      this.audio.play().catch(() => {});
-      this.musicPlaying.set(true);
+      this.audio.play().catch(() => {}); this.musicPlaying.set(true);
     }
   }
 
@@ -323,14 +380,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.contactName() || !this.contactPhone() || !this.contactMsg()) return;
     this.contactSending.set(true);
     const now = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
-    const bride = this.hero().brideFirstName;
-    const groom = this.hero().groomFirstName;
     const msg = encodeURIComponent(
-      `Bonjour, j'ai une question concernant le mariage de ${bride} & ${groom}.\n` +
-      `Nom : ${this.contactName()}\n` +
-      `Téléphone : ${this.contactPhone()}\n` +
-      `Question : ${this.contactMsg()}\n` +
-      `Envoyé depuis le site le ${now}`
+      `Bonjour, j'ai une question concernant le mariage de ${this.hero().brideFirstName} & ${this.hero().groomFirstName}.\n` +
+      `Nom : ${this.contactName()}\nTéléphone : ${this.contactPhone()}\n` +
+      `Question : ${this.contactMsg()}\nEnvoyé depuis le site le ${now}`
     );
     setTimeout(() => {
       window.location.assign(`https://wa.me/33624623647?text=${msg}`);
@@ -340,65 +393,65 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetContact(): void {
-    this.contactName.set('');
-    this.contactPhone.set('');
-    this.contactMsg.set('');
-    this.contactSent.set(false);
+    this.contactName.set(''); this.contactPhone.set('');
+    this.contactMsg.set('');  this.contactSent.set(false);
   }
 
   // ── Edit modal ────────────────────────────────────────────────────
-
-  /** Ouvre le modal sur une section donnée */
   openEdit(section: EditSection = 'hero'): void {
     this.draft.set(deepClone(this.content()));
     this.activeSection.set(section);
     this.editOpen.set(true);
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = 'hidden';
-    }
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
   }
 
-  /** Ferme le modal sans sauvegarder */
   closeEdit(): void {
     this.editOpen.set(false);
-    if (isPlatformBrowser(this.platformId)) {
-      document.body.style.overflow = '';
-    }
+    if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
   }
 
-  /** Applique le draft et persiste en localStorage */
   saveEdit(): void {
-    this.content.set(deepClone(this.draft()));
+    const d = deepClone(this.draft());
+    // Tri chronologique à la sauvegarde
+    d.program.days = sortDays(d.program.days);
+    this.content.set(d);
+    // Recaler l'index si un jour a été supprimé
+    const count = this.content().program.days.length;
+    if (this.activeDayIdx() >= count) this.activeDayIdx.set(Math.max(0, count - 1));
     if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('si_home_content', JSON.stringify(this.content()));
     }
     this.closeEdit();
   }
 
-  /** Remet le contenu d'origine */
   resetToDefault(): void {
     if (confirm('Remettre tout le contenu d\'origine ? Cette action est irréversible.')) {
       this.content.set(deepClone(INITIAL_CONTENT));
-      if (isPlatformBrowser(this.platformId)) {
-        localStorage.removeItem('si_home_content');
-      }
+      this.activeDayIdx.set(0);
+      if (isPlatformBrowser(this.platformId)) localStorage.removeItem('si_home_content');
       this.closeEdit();
     }
   }
 
-  /** Met à jour une valeur imbriquée dans le draft */
+  onBackdropClick(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('edit-modal-backdrop')) this.closeEdit();
+  }
+
+  // ── Draft — Hero ──────────────────────────────────────────────────
   updateDraftHero(key: keyof HomeContent['hero'], value: string): void {
     const d = deepClone(this.draft());
     (d.hero as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
   }
 
+  // ── Draft — Couple ────────────────────────────────────────────────
   updateDraftCouple(key: keyof HomeContent['couple'], value: string): void {
     const d = deepClone(this.draft());
     (d.couple as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
   }
 
+  // ── Draft — Story ─────────────────────────────────────────────────
   updateDraftStory(key: 'headline' | 'subheadline' | 'footer', value: string): void {
     const d = deepClone(this.draft());
     d.story[key] = value;
@@ -419,12 +472,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const d = deepClone(this.draft());
     d.story.chapters.push({
       label: `CHAPITRE ${d.story.chapters.length + 1}`,
-      sublabel: '',
-      year: '',
-      title: '',
-      caption: '',
-      image: '',
-      paragraphs: [''],
+      sublabel: '', year: '', title: '', caption: '', image: '', paragraphs: [''],
     });
     this.draft.set(d);
   }
@@ -435,38 +483,57 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.draft.set(d);
   }
 
-  updateDraftProgram(key: 'beforeDayLabel' | 'dayLabel' | 'footer', value: string): void {
+  // ── Draft — Programme (jours dynamiques) ──────────────────────────
+  updateDraftProgramFooter(value: string): void {
     const d = deepClone(this.draft());
-    d.program[key] = value;
+    d.program.footer = value;
     this.draft.set(d);
   }
 
-  updateDraftProgramItem(
-    list: 'programBefore' | 'programDay',
-    idx: number,
-    key: keyof HomeProgramItem,
-    value: string,
-  ): void {
+  updateDraftDay(dayIdx: number, key: keyof HomeProgramDay, value: string): void {
     const d = deepClone(this.draft());
-    (d.program[list][idx] as unknown as Record<string, string>)[key] = value;
+    if (key === 'items') return;
+    (d.program.days[dayIdx] as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
   }
 
-  addProgramItem(list: 'programBefore' | 'programDay'): void {
+  addDay(): void {
     const d = deepClone(this.draft());
-    d.program[list].push({ icon: '✦', time: '', title: '', desc: '' });
+    d.program.days.push({
+      date: '', label: 'Nouveau Jour',
+      tabIcon: '✦', tabDate: '', tabLabel: 'Nouveau Jour', items: [],
+    });
     this.draft.set(d);
   }
 
-  removeProgramItem(list: 'programBefore' | 'programDay', idx: number): void {
+  removeDay(dayIdx: number): void {
     const d = deepClone(this.draft());
-    d.program[list].splice(idx, 1);
+    d.program.days.splice(dayIdx, 1);
     this.draft.set(d);
   }
 
+  updateDraftDayItem(dayIdx: number, itemIdx: number, key: keyof HomeProgramItem, value: string): void {
+    const d = deepClone(this.draft());
+    (d.program.days[dayIdx].items[itemIdx] as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  addDayItem(dayIdx: number): void {
+    const d = deepClone(this.draft());
+    d.program.days[dayIdx].items.push({ icon: '✦', time: '', title: '', desc: '' });
+    this.draft.set(d);
+  }
+
+  removeDayItem(dayIdx: number, itemIdx: number): void {
+    const d = deepClone(this.draft());
+    d.program.days[dayIdx].items.splice(itemIdx, 1);
+    this.draft.set(d);
+  }
+
+  // ── Draft — Dress Code ────────────────────────────────────────────
   updateDraftDressCode(key: keyof HomeContent['dressCode'], value: string): void {
     const d = deepClone(this.draft());
-    if (key === 'paletteTerracotta' || key === 'paletteChampagne') return; // handled via palette methods
+    if (key === 'paletteTerracotta' || key === 'paletteChampagne') return;
     (d.dressCode as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
   }
@@ -482,6 +549,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.draft.set(d);
   }
 
+  // ── Draft — FAQ ───────────────────────────────────────────────────
   updateDraftFaqItem(idx: number, key: keyof HomeFaqItem, value: string): void {
     const d = deepClone(this.draft());
     d.faq.items[idx][key] = value;
@@ -500,20 +568,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.draft.set(d);
   }
 
+  // ── Draft — RSVP ──────────────────────────────────────────────────
   updateDraftRsvp(key: keyof HomeContent['rsvp'], value: string): void {
     const d = deepClone(this.draft());
     d.rsvp[key] = value;
     this.draft.set(d);
   }
 
-  /** Ferme le modal si on clique sur le backdrop */
-  onBackdropClick(event: MouseEvent): void {
-    if ((event.target as HTMLElement).classList.contains('edit-modal-backdrop')) {
-      this.closeEdit();
-    }
-  }
-
-  /** Retourne les paragraphes d'un chapitre joints par double saut de ligne (pour textarea) */
+  // ── Helpers ───────────────────────────────────────────────────────
   chapterParagraphsText(idx: number): string {
     return this.draft().story.chapters[idx].paragraphs.join('\n\n');
   }
