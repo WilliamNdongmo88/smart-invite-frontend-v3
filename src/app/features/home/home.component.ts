@@ -1,150 +1,232 @@
 import {
   Component, OnInit, OnDestroy, AfterViewInit,
-  signal, inject, PLATFORM_ID, ElementRef
+  signal, computed, inject, PLATFORM_ID, ElementRef
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../core/services/auth.service';
+import {
+  HomeContent, EditSection, EDIT_SECTION_LABELS,
+  HomeChapter, HomeProgramItem, HomeFaqItem,
+} from './home-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
-
-type ChapterKey = 'rencontre' | 'complicite' | 'parcours' | 'celebration';
 type TabKey = 'before' | 'day';
 type PaletteKey = 'terracotta' | 'champagne';
 
-@Component({
-  selector: 'app-home',
-  standalone: true,
-  imports: [RouterLink],
-  templateUrl: 'home.component.html',
-  styleUrl: 'home.component.scss',
-})
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly el = inject(ElementRef);
-
-  // ── Countdown ──────────────────────────────────────────────────────
-  readonly TARGET_DATE = new Date('2026-08-08T14:00:00').getTime();
-  countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
-  private countdownInterval: ReturnType<typeof setInterval> | null = null;
-
-  // ── Story book ─────────────────────────────────────────────────────
-  activeChapter = signal(0);
-  readonly chapters = [
-    {
-      label: 'CHAPITRE I', sublabel: 'La rencontre',
-      year: '2008', title: 'Une rencontre inattendue',
-      caption: 'Le premier regard',
-      image: '/images/chap1-veste.webp',
-      paragraphs: [
-        'À cette époque au sein de l\'ACR, rien ne laisse imaginer ce que deviendra leur histoire. Ils collaborent, organisent des événements et partagent un même environnement… sans savoir qu\'ils avancent déjà dans la même direction.',
-      ],
-    },
-    {
-      label: 'CHAPITRE II', sublabel: 'La complicité',
-      year: '2010', title: 'L\'amitié devenue évidence',
-      caption: 'Les souvenirs à deux',
-      image: '/images/couple_zome_amor.webp',
-      paragraphs: [
-        'En 2010, leurs chemins se croisent à nouveau. Et cette fois, quelque chose change. Les échanges deviennent plus naturels. Les conversations s\'allongent. Les silences deviennent confortables, et les rires arrivent sans effort.',
-        'Parler de tout et de rien devient une évidence. Et les absences… un peu plus longues, commencent à dire ce que les mots n\'avaient pas encore formulé.',
-      ],
-    },
-    {
-      label: 'CHAPITRE III', sublabel: 'Notre parcours',
-      year: '2011 – 2025', title: 'Le chemin ensemble',
-      caption: 'Toi et moi, pour la vie',
-      image: '/images/image-1-converted.webp',
-      paragraphs: [
-        'Ce n\'est plus seulement une rencontre ni une évidence… C\'est une vie construite à deux. Avec le temps, nous avons appris à avancer côte à côte, à travers les jours simples comme les moments plus intenses.',
-        'Notre histoire s\'est écrit naturellement, entre projets partagés, voyages, souvenirs et cette façon unique de nous comprendre. Peu à peu, nos rêves sont devenus une réalité. Et chaque étape nous a rapprochés encore plus, avec cette même complicité discrète, sincère et essentielle.',
-        'Aujourd\'hui, tout ce chemin nous conduit vers ce qui vient.',
-      ],
-    },
-    {
-      label: 'CHAPITRE IV', sublabel: 'La célébration',
-      year: '07 & 08 août 2026', title: 'Deux jours pour se dire OUI',
-      caption: 'Le prochain chapitre',
-      image: '/images/venue/domaine-vue-aerienne.webp',
-      paragraphs: [
-        'Tout converge désormais vers ce moment : celui de célébrer notre union avec ceux que nous aimons. Bien plus qu\'une célébration, c\'est une pause dans le temps.',
-        'Un moment de gratitude pour tout ce que nous avons traversé ensemble : les saisons, les joies, les épreuves et tout ce qui a façonné notre histoire. Cette étape ne marque pas le début d\'une nouvelle histoire. Elle célèbre celle que nous écrivons déjà depuis tant d\'années, avec patience, amour et confiance.',
-        'Que la tendresse et la complicité continuent de guider ce que nous avons encore à écrire ensemble.',
-      ],
-    },
-  ];
-
-  // ── Programme ──────────────────────────────────────────────────────
-  activeTab = signal<TabKey>('day');
-
-  readonly programBefore = [
-    { icon: '♡', time: '14h – 15h',    title: 'Mariage Mairie',          desc: 'Cérémonie civile en présence des proches. Le premier « oui » officiel.' },
-    { icon: '⌖', time: '15h – 15h30',  title: 'Déplacement au Thabord',  desc: 'Direction le Thabord pour la séance photos dans un cadre verdoyant.' },
-    { icon: '●', time: '15h30 – 16h30',title: 'Séance Photos Thabord',   desc: 'Séance photos avec les mariés et les proches dans le magnifique parc du Thabord.' },
-    { icon: '✦', time: '17h – 18h30',  title: 'Collation au Domaine',    desc: 'Un moment convivial autour d\'un verre et de petites douceurs au domaine.' },
-  ];
-
-  readonly programDay = [
-    { icon: '♡', time: '10h00 – 11h30', title: 'Cérémonie Religieuse',          desc: 'Le moment le plus émouvant. Cérémonie solennelle entourée de tous ceux qu\'on aime.' },
-    { icon: '♢', time: '12h – 14h',     title: 'Vin d\'Honneur',                desc: 'Champagne, pièces raffinées et rencontre des familles dans les jardins du domaine.' },
-    { icon: '♫', time: '12h – 14h',     title: 'Le Coin des P\'tits Loups',     desc: 'Un espace ludique dédié aux plus petits, avec des jeux pour leur plus grand bonheur.' },
-    { icon: '◉', time: '19h – 20h',     title: 'Arrivée / Installation',        desc: 'Installation à table, retrouvailles et montée en ambiance pour la soirée.' },
-  ];
-
-  // ── Dress code palettes ────────────────────────────────────────────
-  activePalette = signal<PaletteKey>('terracotta');
-  readonly palettes: Record<PaletteKey, { color: string; label: string }[]> = {
-    terracotta: [
+// ── Contenu initial (source de vérité) ──────────────────────────────
+const INITIAL_CONTENT: HomeContent = {
+  hero: {
+    brideFirstName:  'Leatitia',
+    groomFirstName:  'Christophe',
+    dateLabel:       'Les 07 & 08 Août 2026',
+    venueName:       'MA CABANE AU CANADA',
+    venueCity:       'GOSNÉ',
+    heroCatchphrase: 'Une célébration pensée comme un souvenir éternel.',
+    targetDate:      '2026-08-08T14:00:00',
+  },
+  couple: {
+    bridePortraitUrl: '/images/leatitia-seule.webp',
+    brideBio:
+      'Réservée et attentive, Leatitia est de celles qui parlent peu mais ressentent profondément. ' +
+      'Elle observe, écoute et accorde sa confiance avec sincérité. Derrière son calme se cachent ' +
+      'une grande sensibilité, une foi profonde et une capacité naturelle à prendre soin des autres ' +
+      'avec discrétion et douceur. Dans leur histoire, elle apporte l\'équilibre, la sérénité et ' +
+      'cette présence apaisante qui transforme les choses simples en moments précieux.',
+    groomPortraitUrl: '/images/chris-seul.webp',
+    groomBio:
+      'Christophe aime les gens, les échanges et les moments partagés. Toujours entouré, toujours ' +
+      'prêt à rassembler, il possède cette énergie chaleureuse qui crée du lien naturellement autour ' +
+      'de lui. Mais derrière cette aisance se trouve surtout un homme profondément attentif, loyal et ' +
+      'vrai. Dans leur histoire, il apporte l\'élan, la spontanéité et cette capacité à aimer ' +
+      'pleinement, sans retenue.',
+    coupleTagline: 'Deux façons d\'être. Une seule évidence.',
+  },
+  story: {
+    headline:    'Une histoire construite avec le temps',
+    subheadline: '« Une rencontre. Une amitié. Une évidence. Et Seize années à avancer naturellement ensemble. »',
+    chapters: [
+      {
+        label: 'CHAPITRE I', sublabel: 'La rencontre',
+        year: '2008', title: 'Une rencontre inattendue',
+        caption: 'Le premier regard',
+        image: '/images/chap1-veste.webp',
+        paragraphs: [
+          'À cette époque au sein de l\'ACR, rien ne laisse imaginer ce que deviendra leur histoire. Ils collaborent, organisent des événements et partagent un même environnement… sans savoir qu\'ils avancent déjà dans la même direction.',
+        ],
+      },
+      {
+        label: 'CHAPITRE II', sublabel: 'La complicité',
+        year: '2010', title: 'L\'amitié devenue évidence',
+        caption: 'Les souvenirs à deux',
+        image: '/images/couple_zome_amor.webp',
+        paragraphs: [
+          'En 2010, leurs chemins se croisent à nouveau. Et cette fois, quelque chose change. Les échanges deviennent plus naturels. Les conversations s\'allongent. Les silences deviennent confortables, et les rires arrivent sans effort.',
+          'Parler de tout et de rien devient une évidence. Et les absences… un peu plus longues, commencent à dire ce que les mots n\'avaient pas encore formulé.',
+        ],
+      },
+      {
+        label: 'CHAPITRE III', sublabel: 'Notre parcours',
+        year: '2011 – 2025', title: 'Le chemin ensemble',
+        caption: 'Toi et moi, pour la vie',
+        image: '/images/image-1-converted.webp',
+        paragraphs: [
+          'Ce n\'est plus seulement une rencontre ni une évidence… C\'est une vie construite à deux. Avec le temps, nous avons appris à avancer côte à côte, à travers les jours simples comme les moments plus intenses.',
+          'Notre histoire s\'est écrit naturellement, entre projets partagés, voyages, souvenirs et cette façon unique de nous comprendre. Peu à peu, nos rêves sont devenus une réalité. Et chaque étape nous a rapprochés encore plus, avec cette même complicité discrète, sincère et essentielle.',
+          'Aujourd\'hui, tout ce chemin nous conduit vers ce qui vient.',
+        ],
+      },
+      {
+        label: 'CHAPITRE IV', sublabel: 'La célébration',
+        year: '07 & 08 août 2026', title: 'Deux jours pour se dire OUI',
+        caption: 'Le prochain chapitre',
+        image: '/images/venue/domaine-vue-aerienne.webp',
+        paragraphs: [
+          'Tout converge désormais vers ce moment : celui de célébrer notre union avec ceux que nous aimons. Bien plus qu\'une célébration, c\'est une pause dans le temps.',
+          'Un moment de gratitude pour tout ce que nous avons traversé ensemble : les saisons, les joies, les épreuves et tout ce qui a façonné notre histoire. Cette étape ne marque pas le début d\'une nouvelle histoire. Elle célèbre celle que nous écrivons déjà depuis tant d\'années, avec patience, amour et confiance.',
+          'Que la tendresse et la complicité continuent de guider ce que nous avons encore à écrire ensemble.',
+        ],
+      },
+    ],
+    footer: 'Merci de faire partie de notre histoire. Merci d\'avoir traversé tant de chapitres à nos côtés. Et merci d\'être là pour écrire la suite avec nous.',
+  },
+  program: {
+    beforeDayLabel: 'Vendredi 7 Août 2026 · La Veille',
+    dayLabel:       'Samedi 8 Août 2026 · Le Grand Jour',
+    programBefore: [
+      { icon: '♡', time: '14h – 15h',     title: 'Mariage Mairie',          desc: 'Cérémonie civile en présence des proches. Le premier « oui » officiel.' },
+      { icon: '⌖', time: '15h – 15h30',   title: 'Déplacement au Thabord',  desc: 'Direction le Thabord pour la séance photos dans un cadre verdoyant.' },
+      { icon: '●', time: '15h30 – 16h30', title: 'Séance Photos Thabord',   desc: 'Séance photos avec les mariés et les proches dans le magnifique parc du Thabord.' },
+      { icon: '✦', time: '17h – 18h30',   title: 'Collation au Domaine',    desc: 'Un moment convivial autour d\'un verre et de petites douceurs au domaine.' },
+    ],
+    programDay: [
+      { icon: '♡', time: '10h00 – 11h30', title: 'Cérémonie Religieuse',        desc: 'Le moment le plus émouvant. Cérémonie solennelle entourée de tous ceux qu\'on aime.' },
+      { icon: '♢', time: '12h – 14h',     title: 'Vin d\'Honneur',             desc: 'Champagne, pièces raffinées et rencontre des familles dans les jardins du domaine.' },
+      { icon: '♫', time: '12h – 14h',     title: 'Le Coin des P\'tits Loups',  desc: 'Un espace ludique dédié aux plus petits, avec des jeux pour leur plus grand bonheur.' },
+      { icon: '◉', time: '19h – 20h',     title: 'Arrivée / Installation',      desc: 'Installation à table, retrouvailles et montée en ambiance pour la soirée.' },
+    ],
+    footer: 'Chaque instant a été imaginé pour être vécu ensemble.',
+  },
+  dressCode: {
+    title:       'Palette Terracotta Chic',
+    description: 'Le plus important, c\'est que vous soyez à l\'aise et que vous passiez une soirée inoubliable. Pas de dress code imposé — venez comme vous vous sentez le mieux !',
+    advice:      'Conseil : évitez le blanc intégral (réservé à la mariée).',
+    paletteTerracotta: [
       { color: '#b65a3a', label: 'Terracotta' },
       { color: '#8d4128', label: 'Sienne' },
       { color: '#d58a67', label: 'Pêche' },
       { color: '#f2d2c2', label: 'Rosée' },
     ],
-    champagne: [
+    paletteChampagne: [
       { color: '#f1e0bc', label: 'Champagne' },
       { color: '#dcc295', label: 'Doré' },
       { color: '#b99768', label: 'Miel' },
       { color: '#fff3dc', label: 'Ivoire' },
     ],
-  };
+  },
+  faq: {
+    items: [
+      { q: 'Le dress code est-il obligatoire ?',   a: 'Pas de dress code strict, mais nous comptons sur votre bon goût — habillez-vous de façon soignée et appropriée à l\'occasion. 😊' },
+      { q: 'Comment confirmer ma présence ?',       a: 'Via le lien RSVP reçu sur WhatsApp. Votre réponse est enregistrée instantanément.' },
+      { q: 'Quand le QR code sera-t-il utilisé ?',  a: 'Le jour J, a l\'heure du banquet.' },
+    ],
+  },
+  rsvp: {
+    title:    'Nous avons hâte de vous retrouver !',
+    subtitle: 'Surveillez WhatsApp : votre invitation personnelle contient votre lien RSVP unique et toutes les informations logistiques pour cette journée inoubliable.',
+  },
+};
 
-  // ── FAQ ────────────────────────────────────────────────────────────
-  readonly faqs = [
-    {
-      q: 'Le dress code est-il obligatoire ?',
-      a: 'Pas de dress code strict, mais nous comptons sur votre bon goût — habillez-vous de façon soignée et appropriée à l\'occasion. 😊',
-    },
-    {
-      q: 'Comment confirmer ma présence ?',
-      a: 'Via le lien RSVP reçu sur WhatsApp. Votre réponse est enregistrée instantanément.',
-    },
-    {
-      q: 'Quand le QR code sera-t-il utilisé ?',
-      a: 'Le jour J, a l\'heure du banquet.'
-    },
-  ];
+// Deep-clone helper
+function deepClone<T>(val: T): T {
+  return JSON.parse(JSON.stringify(val));
+}
 
-  // ── Contact form ───────────────────────────────────────────────────
-  contactName  = signal('');
-  contactPhone = signal('');
-  contactMsg   = signal('');
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [RouterLink, FormsModule],
+  templateUrl: 'home.component.html',
+  styleUrl:    'home.component.scss',
+})
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly el         = inject(ElementRef);
+  private readonly authService = inject(AuthService);
+
+  // ── Auth ───────────────────────────────────────────────────────────
+  readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
+
+  // ── Contenu éditable (source réactive) ────────────────────────────
+  content = signal<HomeContent>(deepClone(INITIAL_CONTENT));
+
+  // Accès rapide aux sous-sections (computed)
+  readonly hero      = computed(() => this.content().hero);
+  readonly couple    = computed(() => this.content().couple);
+  readonly story     = computed(() => this.content().story);
+  readonly program   = computed(() => this.content().program);
+  readonly dressCode = computed(() => this.content().dressCode);
+  readonly faq       = computed(() => this.content().faq);
+  readonly rsvp      = computed(() => this.content().rsvp);
+
+  // Palettes mappées pour le template
+  readonly palettes = computed<Record<PaletteKey, { color: string; label: string }[]>>(() => ({
+    terracotta: this.content().dressCode.paletteTerracotta,
+    champagne:  this.content().dressCode.paletteChampagne,
+  }));
+
+  // ── Edit modal state ──────────────────────────────────────────────
+  editOpen       = signal(false);
+  activeSection  = signal<EditSection>('hero');
+  readonly SECTION_LABELS = EDIT_SECTION_LABELS;
+  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp'];
+
+  // Draft travaillé dans le formulaire avant application
+  draft = signal<HomeContent>(deepClone(INITIAL_CONTENT));
+
+  // ── Countdown ─────────────────────────────────────────────────────
+  countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
+  private countdownInterval: ReturnType<typeof setInterval> | null = null;
+
+  // ── Story book ────────────────────────────────────────────────────
+  activeChapter = signal(0);
+
+  // ── Programme ─────────────────────────────────────────────────────
+  activeTab = signal<TabKey>('day');
+
+  // ── Dress code palettes ───────────────────────────────────────────
+  activePalette = signal<PaletteKey>('terracotta');
+
+  // ── Contact form ──────────────────────────────────────────────────
+  contactName    = signal('');
+  contactPhone   = signal('');
+  contactMsg     = signal('');
   contactSent    = signal(false);
   contactSending = signal(false);
 
-  // ── Music player ───────────────────────────────────────────────────
+  // ── Music player ──────────────────────────────────────────────────
   musicPlaying = signal(false);
   private audio: HTMLAudioElement | null = null;
 
-  // ── Scroll / nav / toast ───────────────────────────────────────────
-  scrollY      = signal(0);
-  navScrolled  = signal(false);
-  showToast    = signal(false);
-  private toastShown = false;
+  // ── Scroll / nav / toast ──────────────────────────────────────────
+  scrollY     = signal(0);
+  navScrolled = signal(false);
+  showToast   = signal(false);
+  private toastShown      = false;
   private scrollListener: (() => void) | null = null;
-  private timelineProgress = signal(0);
+  private readonly timelineProgress = signal(0);
 
-  // ── Lifecycle ──────────────────────────────────────────────────────
+  // ── Lifecycle ─────────────────────────────────────────────────────
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
+
+    // Restore saved content if any
+    const saved = localStorage.getItem('si_home_content');
+    if (saved) {
+      try { this.content.set(JSON.parse(saved)); } catch { /* ignore */ }
+    }
+
     this.startCountdown();
     this.scrollListener = () => this.onScroll();
     window.addEventListener('scroll', this.scrollListener, { passive: true });
@@ -164,10 +246,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.audio) { this.audio.pause(); this.audio = null; }
   }
 
-  // ── Countdown ──────────────────────────────────────────────────────
+  // ── Countdown ─────────────────────────────────────────────────────
   private startCountdown(): void {
+    const getTarget = () => new Date(this.content().hero.targetDate).getTime();
     const update = () => {
-      const diff = this.TARGET_DATE - Date.now();
+      const diff = getTarget() - Date.now();
       if (diff <= 0) {
         this.countdown.set({ days: '000', hours: '00', minutes: '00', seconds: '00' });
         return;
@@ -175,15 +258,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.countdown.set({
         days:    String(Math.floor(diff / 86_400_000)).padStart(3, '0'),
         hours:   String(Math.floor((diff % 86_400_000) / 3_600_000)).padStart(2, '0'),
-        minutes: String(Math.floor((diff % 3_600_000) / 60_000)).padStart(2, '0'),
-        seconds: String(Math.floor((diff % 60_000) / 1_000)).padStart(2, '0'),
+        minutes: String(Math.floor((diff % 3_600_000)  / 60_000)).padStart(2, '0'),
+        seconds: String(Math.floor((diff % 60_000)     / 1_000)).padStart(2, '0'),
       });
     };
     update();
     this.countdownInterval = setInterval(update, 1000);
   }
 
-  // ── Scroll ─────────────────────────────────────────────────────────
+  // ── Scroll ────────────────────────────────────────────────────────
   private onScroll(): void {
     const y = window.scrollY;
     this.scrollY.set(y);
@@ -194,7 +277,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // ── IntersectionObserver fade-up ───────────────────────────────────
+  // ── IntersectionObserver fade-up ──────────────────────────────────
   private initFadeObserver(): void {
     const els = this.el.nativeElement.querySelectorAll('.fade-up');
     const obs = new IntersectionObserver((entries) => {
@@ -205,24 +288,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     els.forEach((el: Element) => obs.observe(el));
   }
 
-  // ── Parallax ───────────────────────────────────────────────────────
+  // ── Parallax ──────────────────────────────────────────────────────
   parallaxY(factor: number): string {
     return `translate3d(0, ${Math.min(120, this.scrollY() * factor)}px, 0)`;
   }
-
   parallaxYNeg(factor: number): string {
     return `translate3d(0, ${-Math.min(120, this.scrollY() * factor)}px, 0)`;
   }
 
-  // ── Story navigation ───────────────────────────────────────────────
+  // ── Story navigation ──────────────────────────────────────────────
   prevChapter(): void {
-    this.activeChapter.update(c => (c - 1 + this.chapters.length) % this.chapters.length);
+    const len = this.story().chapters.length;
+    this.activeChapter.update(c => (c - 1 + len) % len);
   }
   nextChapter(): void {
-    this.activeChapter.update(c => (c + 1) % this.chapters.length);
+    const len = this.story().chapters.length;
+    this.activeChapter.update(c => (c + 1) % len);
   }
 
-  // ── Music ──────────────────────────────────────────────────────────
+  // ── Music ─────────────────────────────────────────────────────────
   toggleMusic(): void {
     if (!this.audio) return;
     if (this.musicPlaying()) {
@@ -234,13 +318,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // ── Contact WhatsApp ───────────────────────────────────────────────
+  // ── Contact WhatsApp ──────────────────────────────────────────────
   sendContact(): void {
     if (!this.contactName() || !this.contactPhone() || !this.contactMsg()) return;
     this.contactSending.set(true);
     const now = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const bride = this.hero().brideFirstName;
+    const groom = this.hero().groomFirstName;
     const msg = encodeURIComponent(
-      `Bonjour, j'ai une question concernant le mariage de Leatitia & Christophe.\n` +
+      `Bonjour, j'ai une question concernant le mariage de ${bride} & ${groom}.\n` +
       `Nom : ${this.contactName()}\n` +
       `Téléphone : ${this.contactPhone()}\n` +
       `Question : ${this.contactMsg()}\n` +
@@ -258,5 +344,177 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.contactPhone.set('');
     this.contactMsg.set('');
     this.contactSent.set(false);
+  }
+
+  // ── Edit modal ────────────────────────────────────────────────────
+
+  /** Ouvre le modal sur une section donnée */
+  openEdit(section: EditSection = 'hero'): void {
+    this.draft.set(deepClone(this.content()));
+    this.activeSection.set(section);
+    this.editOpen.set(true);
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  /** Ferme le modal sans sauvegarder */
+  closeEdit(): void {
+    this.editOpen.set(false);
+    if (isPlatformBrowser(this.platformId)) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  /** Applique le draft et persiste en localStorage */
+  saveEdit(): void {
+    this.content.set(deepClone(this.draft()));
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('si_home_content', JSON.stringify(this.content()));
+    }
+    this.closeEdit();
+  }
+
+  /** Remet le contenu d'origine */
+  resetToDefault(): void {
+    if (confirm('Remettre tout le contenu d\'origine ? Cette action est irréversible.')) {
+      this.content.set(deepClone(INITIAL_CONTENT));
+      if (isPlatformBrowser(this.platformId)) {
+        localStorage.removeItem('si_home_content');
+      }
+      this.closeEdit();
+    }
+  }
+
+  /** Met à jour une valeur imbriquée dans le draft */
+  updateDraftHero(key: keyof HomeContent['hero'], value: string): void {
+    const d = deepClone(this.draft());
+    (d.hero as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftCouple(key: keyof HomeContent['couple'], value: string): void {
+    const d = deepClone(this.draft());
+    (d.couple as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftStory(key: 'headline' | 'subheadline' | 'footer', value: string): void {
+    const d = deepClone(this.draft());
+    d.story[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftChapter(idx: number, key: keyof HomeChapter, value: string): void {
+    const d = deepClone(this.draft());
+    if (key === 'paragraphs') {
+      d.story.chapters[idx].paragraphs = value.split('\n\n').filter(p => p.trim());
+    } else {
+      (d.story.chapters[idx] as unknown as Record<string, string>)[key] = value;
+    }
+    this.draft.set(d);
+  }
+
+  addChapter(): void {
+    const d = deepClone(this.draft());
+    d.story.chapters.push({
+      label: `CHAPITRE ${d.story.chapters.length + 1}`,
+      sublabel: '',
+      year: '',
+      title: '',
+      caption: '',
+      image: '',
+      paragraphs: [''],
+    });
+    this.draft.set(d);
+  }
+
+  removeChapter(idx: number): void {
+    const d = deepClone(this.draft());
+    d.story.chapters.splice(idx, 1);
+    this.draft.set(d);
+  }
+
+  updateDraftProgram(key: 'beforeDayLabel' | 'dayLabel' | 'footer', value: string): void {
+    const d = deepClone(this.draft());
+    d.program[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftProgramItem(
+    list: 'programBefore' | 'programDay',
+    idx: number,
+    key: keyof HomeProgramItem,
+    value: string,
+  ): void {
+    const d = deepClone(this.draft());
+    (d.program[list][idx] as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  addProgramItem(list: 'programBefore' | 'programDay'): void {
+    const d = deepClone(this.draft());
+    d.program[list].push({ icon: '✦', time: '', title: '', desc: '' });
+    this.draft.set(d);
+  }
+
+  removeProgramItem(list: 'programBefore' | 'programDay', idx: number): void {
+    const d = deepClone(this.draft());
+    d.program[list].splice(idx, 1);
+    this.draft.set(d);
+  }
+
+  updateDraftDressCode(key: keyof HomeContent['dressCode'], value: string): void {
+    const d = deepClone(this.draft());
+    if (key === 'paletteTerracotta' || key === 'paletteChampagne') return; // handled via palette methods
+    (d.dressCode as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftPaletteItem(
+    palette: 'paletteTerracotta' | 'paletteChampagne',
+    idx: number,
+    key: 'color' | 'label',
+    value: string,
+  ): void {
+    const d = deepClone(this.draft());
+    (d.dressCode[palette][idx] as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  updateDraftFaqItem(idx: number, key: keyof HomeFaqItem, value: string): void {
+    const d = deepClone(this.draft());
+    d.faq.items[idx][key] = value;
+    this.draft.set(d);
+  }
+
+  addFaqItem(): void {
+    const d = deepClone(this.draft());
+    d.faq.items.push({ q: '', a: '' });
+    this.draft.set(d);
+  }
+
+  removeFaqItem(idx: number): void {
+    const d = deepClone(this.draft());
+    d.faq.items.splice(idx, 1);
+    this.draft.set(d);
+  }
+
+  updateDraftRsvp(key: keyof HomeContent['rsvp'], value: string): void {
+    const d = deepClone(this.draft());
+    d.rsvp[key] = value;
+    this.draft.set(d);
+  }
+
+  /** Ferme le modal si on clique sur le backdrop */
+  onBackdropClick(event: MouseEvent): void {
+    if ((event.target as HTMLElement).classList.contains('edit-modal-backdrop')) {
+      this.closeEdit();
+    }
+  }
+
+  /** Retourne les paragraphes d'un chapitre joints par double saut de ligne (pour textarea) */
+  chapterParagraphsText(idx: number): string {
+    return this.draft().story.chapters[idx].paragraphs.join('\n\n');
   }
 }
