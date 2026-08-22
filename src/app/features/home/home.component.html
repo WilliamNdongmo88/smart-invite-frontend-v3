@@ -268,6 +268,15 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="photos" class="gallery-section">
   <div class="gallery-deco-top"></div>
+  <!-- Crayon section Galerie -->
+  @if (isLoggedIn()) {
+    <button class="edit-pencil edit-pencil--section" (click)="openEdit('gallery')" title="Éditer la Galerie">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
   <div class="section-inner">
     <span class="eyebrow-gold fade-up">NOS PHOTOS</span>
     <h2 class="section-title fade-up">Nos Plus Beaux Moments</h2>
@@ -277,30 +286,12 @@
     </div>
 
     <div class="gallery-mosaic fade-up">
-      <div class="gallery-item gallery-lg">
-        <img src="/images/couple-fond-hero.webp" alt="Notre complicité" loading="lazy" />
-        <div class="gallery-caption">Notre complicité</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/images/galerie-photo-1.webp" alt="En amoureux" loading="lazy" />
-        <div class="gallery-caption">En amoureux</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/images/couple_en_fete.webp" alt="Complices" loading="lazy" />
-        <div class="gallery-caption">Complices</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/images/invitation-couple-real.webp" alt="Nos racines, notre fierté" loading="lazy" />
-        <div class="gallery-caption">Nos racines, notre fierté</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/images/mr-mme-zome.webp" alt="Mr & Mme" loading="lazy" />
-        <div class="gallery-caption">Mr &amp; Mme</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/images/save-the-date-invit1.webp" alt="Save the date" loading="lazy" />
-        <div class="gallery-caption">Save the date</div>
-      </div>
+      @for (item of gallery().items; track $index) {
+        <div class="gallery-item" [class.gallery-lg]="item.large">
+          <img [src]="item.url" [alt]="item.caption" loading="lazy" />
+          <div class="gallery-caption">{{ item.caption }}</div>
+        </div>
+      }
     </div>
   </div>
 
@@ -640,40 +631,80 @@
               <span>Mariée</span>
             </div>
 
-            <div class="edit-field">
-              <label class="edit-label">URL portrait mariée</label>
-              <input class="edit-input" type="text"
-                     [ngModel]="draft().couple.bridePortraitUrl"
-                     (ngModelChange)="updateDraftCouple('bridePortraitUrl', $event)" />
-              @if (draft().couple.bridePortraitUrl) {
-                <img class="edit-img-preview" [src]="draft().couple.bridePortraitUrl" alt="Aperçu mariée" />
-              }
-            </div>
-            <div class="edit-field">
-              <label class="edit-label">Biographie mariée</label>
-              <textarea class="edit-textarea" rows="5"
-                        [ngModel]="draft().couple.brideBio"
-                        (ngModelChange)="updateDraftCouple('brideBio', $event)"></textarea>
+            <div class="edit-portrait-row">
+              <div class="edit-field">
+                <label class="edit-label">Portrait mariée</label>
+                <div class="edit-upload-zone" (click)="brideInput.click()">
+                  @if (draft().couple.bridePortraitUrl) {
+                    <img class="edit-upload-preview" [src]="draft().couple.bridePortraitUrl" alt="Aperçu mariée" />
+                  } @else {
+                    <div class="edit-upload-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                      <span>Choisir une photo</span>
+                    </div>
+                  }
+                  <div class="edit-upload-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Changer la photo</span>
+                  </div>
+                </div>
+                <input #brideInput type="file" accept="image/*" class="edit-upload-input"
+                       (change)="onBridePortraitChange($event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Biographie mariée</label>
+                <textarea class="edit-textarea" rows="5"
+                          [ngModel]="draft().couple.brideBio"
+                          (ngModelChange)="updateDraftCouple('brideBio', $event)"></textarea>
+              </div>
             </div>
 
             <div class="edit-divider">
               <span>Marié</span>
             </div>
 
-            <div class="edit-field">
-              <label class="edit-label">URL portrait marié</label>
-              <input class="edit-input" type="text"
-                     [ngModel]="draft().couple.groomPortraitUrl"
-                     (ngModelChange)="updateDraftCouple('groomPortraitUrl', $event)" />
-              @if (draft().couple.groomPortraitUrl) {
-                <img class="edit-img-preview" [src]="draft().couple.groomPortraitUrl" alt="Aperçu marié" />
-              }
-            </div>
-            <div class="edit-field">
-              <label class="edit-label">Biographie marié</label>
-              <textarea class="edit-textarea" rows="5"
-                        [ngModel]="draft().couple.groomBio"
-                        (ngModelChange)="updateDraftCouple('groomBio', $event)"></textarea>
+            <div class="edit-portrait-row">
+              <div class="edit-field">
+                <label class="edit-label">Portrait marié</label>
+                <div class="edit-upload-zone" (click)="groomInput.click()">
+                  @if (draft().couple.groomPortraitUrl) {
+                    <img class="edit-upload-preview" [src]="draft().couple.groomPortraitUrl" alt="Aperçu marié" />
+                  } @else {
+                    <div class="edit-upload-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                      <span>Choisir une photo</span>
+                    </div>
+                  }
+                  <div class="edit-upload-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Changer la photo</span>
+                  </div>
+                </div>
+                <input #groomInput type="file" accept="image/*" class="edit-upload-input"
+                       (change)="onGroomPortraitChange($event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Biographie marié</label>
+                <textarea class="edit-textarea" rows="5"
+                          [ngModel]="draft().couple.groomBio"
+                          (ngModelChange)="updateDraftCouple('groomBio', $event)"></textarea>
+              </div>
             </div>
           </div>
         }
@@ -752,10 +783,31 @@
                 </div>
 
                 <div class="edit-field">
-                  <label class="edit-label">URL image</label>
-                  <input class="edit-input" type="text"
-                         [ngModel]="ch.image"
-                         (ngModelChange)="updateDraftChapter($index, 'image', $event)" />
+                  <label class="edit-label">Image du chapitre</label>
+                  <div class="edit-upload-zone edit-upload-zone--wide" (click)="chapterImgInput.click()">
+                    @if (ch.image) {
+                      <img class="edit-upload-preview edit-upload-preview--wide" [src]="ch.image" [alt]="ch.title" />
+                    } @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Choisir une image</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                      <span>Changer l'image</span>
+                    </div>
+                  </div>
+                  <input #chapterImgInput type="file" accept="image/*" class="edit-upload-input"
+                         (change)="onChapterImageChange($event, $index)" />
                 </div>
 
                 <div class="edit-field">
@@ -985,6 +1037,71 @@
                         [ngModel]="draft().rsvp.subtitle"
                         (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
             </div>
+          </div>
+        }
+
+        <!-- ── GALERIE ── -->
+        @if (activeSection() === 'gallery') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Galerie Photos</h3>
+            <p class="edit-form-note">
+              La première photo marquée <strong>Grande</strong> occupera 2 rangées dans la mosaïque.
+            </p>
+
+            <div class="edit-gallery-grid">
+              @for (item of draft().gallery.items; track $index) {
+                <div class="edit-gallery-item">
+
+                  <!-- Zone d'upload -->
+                  <div class="edit-gallery-upload" (click)="galleryFileInput.click()">
+                    @if (item.url) {
+                      <img [src]="item.url" [alt]="item.caption" />
+                    } @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Ajouter</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #galleryFileInput type="file" accept="image/*" class="edit-upload-input"
+                         (change)="onGalleryImageChange($event, $index)" />
+
+                  <!-- Légende -->
+                  <input class="edit-input edit-gallery-caption" type="text"
+                         placeholder="Légende…"
+                         [ngModel]="item.caption"
+                         (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
+
+                  <!-- Pied : badge Grande + supprimer -->
+                  <div class="edit-gallery-item-footer">
+                    <button class="edit-gallery-badge"
+                            [class.active]="item.large"
+                            (click)="toggleDraftGalleryLarge($index)"
+                            title="Grande photo (2 rangées)">
+                      {{ item.large ? '★ Grande' : '☆ Grande' }}
+                    </button>
+                    <button class="edit-btn-remove"
+                            (click)="removeGalleryItem($index)"
+                            [disabled]="draft().gallery.items.length <= 1"
+                            title="Supprimer">✕</button>
+                  </div>
+
+                </div>
+              }
+            </div>
+
+            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
           </div>
         }
 

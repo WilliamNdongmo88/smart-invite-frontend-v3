@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import {
   HomeContent, EditSection, EDIT_SECTION_LABELS,
-  HomeChapter, HomeProgramItem, HomeFaqItem, HomeProgramDay,
+  HomeChapter, HomeProgramItem, HomeFaqItem, HomeProgramDay, HomeGalleryItem,
 } from './home-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
@@ -159,6 +159,16 @@ const INITIAL_CONTENT: HomeContent = {
     title:    'Nous avons hâte de vous retrouver !',
     subtitle: 'Surveillez WhatsApp : votre invitation personnelle contient votre lien RSVP unique et toutes les informations logistiques pour cette journée inoubliable.',
   },
+  gallery: {
+    items: [
+      { url: '/images/couple-fond-hero.webp',       caption: 'Notre complicité',        large: true  },
+      { url: '/images/galerie-photo-1.webp',         caption: 'En amoureux',             large: false },
+      { url: '/images/couple_en_fete.webp',          caption: 'Complices',               large: false },
+      { url: '/images/invitation-couple-real.webp',  caption: 'Nos racines, notre fierté', large: false },
+      { url: '/images/mr-mme-zome.webp',             caption: 'Mr & Mme',                large: false },
+      { url: '/images/save-the-date-invit1.webp',    caption: 'Save the date',           large: false },
+    ],
+  },
 };
 
 // Deep-clone helper
@@ -191,6 +201,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly dressCode = computed(() => this.content().dressCode);
   readonly faq       = computed(() => this.content().faq);
   readonly rsvp      = computed(() => this.content().rsvp);
+  readonly gallery   = computed(() => this.content().gallery);
 
   readonly palettes = computed<Record<PaletteKey, { color: string; label: string }[]>>(() => ({
     terracotta: this.content().dressCode.paletteTerracotta,
@@ -201,7 +212,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   editOpen      = signal(false);
   activeSection = signal<EditSection>('hero');
   readonly SECTION_LABELS = EDIT_SECTION_LABELS;
-  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp'];
+  readonly SECTIONS: EditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery'];
   draft = signal<HomeContent>(deepClone(INITIAL_CONTENT));
 
   // ── Countdown ─────────────────────────────────────────────────────
@@ -276,6 +287,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             days: sortDays(days),
             footer: parsed.program.footer ?? '',
           };
+        }
+
+        // Rétrocompatibilité : ajouter gallery si absente
+        if (!(parsed as HomeContent).gallery) {
+          (parsed as HomeContent).gallery = deepClone(INITIAL_CONTENT.gallery);
         }
 
         this.content.set(parsed as HomeContent);
@@ -575,8 +591,82 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.draft.set(d);
   }
 
+  // ── Draft — Galerie ───────────────────────────────────────────────
+  updateDraftGalleryCaption(idx: number, value: string): void {
+    const d = deepClone(this.draft());
+    d.gallery.items[idx].caption = value;
+    this.draft.set(d);
+  }
+
+  toggleDraftGalleryLarge(idx: number): void {
+    const d = deepClone(this.draft());
+    d.gallery.items[idx].large = !d.gallery.items[idx].large;
+    this.draft.set(d);
+  }
+
+  addGalleryItem(): void {
+    const d = deepClone(this.draft());
+    d.gallery.items.push({ url: '', caption: '', large: false });
+    this.draft.set(d);
+  }
+
+  removeGalleryItem(idx: number): void {
+    const d = deepClone(this.draft());
+    d.gallery.items.splice(idx, 1);
+    this.draft.set(d);
+  }
+
+  async onGalleryImageChange(event: Event, idx: number): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = await this.readFileAsDataUrl(file);
+    const d = deepClone(this.draft());
+    d.gallery.items[idx].url = url;
+    this.draft.set(d);
+  }
+
   // ── Helpers ───────────────────────────────────────────────────────
   chapterParagraphsText(idx: number): string {
     return this.draft().story.chapters[idx].paragraphs.join('\n\n');
+  }
+
+  // ── Upload d'images (Data URL — prêt pour remplacement HTTP) ──────
+
+  /**
+   * Lit un fichier image et retourne une Data URL via FileReader.
+   * Quand le backend sera prêt, remplacer le corps par un appel HTTP
+   * et résoudre la promesse avec l'URL distante retournée.
+   */
+  private readFileAsDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = () => resolve(reader.result as string);
+      reader.onerror = () => reject(reader.error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /** Upload portrait mariée */
+  async onBridePortraitChange(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = await this.readFileAsDataUrl(file);
+    this.updateDraftCouple('bridePortraitUrl', url);
+  }
+
+  /** Upload portrait marié */
+  async onGroomPortraitChange(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = await this.readFileAsDataUrl(file);
+    this.updateDraftCouple('groomPortraitUrl', url);
+  }
+
+  /** Upload image d'un chapitre */
+  async onChapterImageChange(event: Event, idx: number): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    const url = await this.readFileAsDataUrl(file);
+    this.updateDraftChapter(idx, 'image', url);
   }
 }

@@ -83,6 +83,16 @@ export interface HomeRsvpContent {
   subtitle: string;
 }
 
+export interface HomeGalleryItem {
+  url: string;
+  caption: string;
+  large: boolean; // true = occupe 2 rangées (effet mosaïque)
+}
+
+export interface HomeGalleryContent {
+  items: HomeGalleryItem[];
+}
+
 export interface HomeContent {
   hero: HomeHeroContent;
   couple: HomeCoupleContent;
@@ -91,6 +101,7 @@ export interface HomeContent {
   dressCode: HomeDressCodeContent;
   faq: HomeFaqContent;
   rsvp: HomeRsvpContent;
+  gallery: HomeGalleryContent;
 }
 
 // Section names for the edit modal tabs
@@ -101,14 +112,16 @@ export type EditSection =
   | 'program'
   | 'dressCode'
   | 'faq'
-  | 'rsvp';
+  | 'rsvp'
+  | 'gallery';
 
 export const EDIT_SECTION_LABELS: Record<EditSection, string> = {
-  hero: 'Hero & Date',
-  couple: 'Le Couple',
-  story: 'Notre Histoire',
-  program: 'Programme',
+  hero:      'Hero & Date',
+  couple:    'Le Couple',
+  story:     'Notre Histoire',
+  program:   'Programme',
   dressCode: 'Dress Code',
-  faq: 'FAQ',
-  rsvp: 'RSVP',
+  faq:       'FAQ',
+  rsvp:      'RSVP',
+  gallery:   'Galerie Photos',
 };
