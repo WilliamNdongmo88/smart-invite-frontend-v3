@@ -93,6 +93,9 @@ export class EventEditComponent implements OnInit {
   get isConference(): boolean {
     return this.step1.value.type === 'CONFERENCE';
   }
+  get isGala(): boolean {
+    return this.step1.value.type === 'GALA';
+  }
 
   get progress(): number { return (this.step() / this.TOTAL_STEPS) * 100; }
 
@@ -140,6 +143,11 @@ export class EventEditComponent implements OnInit {
     // CONFERENCE dès l'étape 1 → éditeur dédié directement
     if (current === 1 && this.isConference) {
       this.router.navigate(['/events', this.eventId(), 'conference']);
+      return;
+    }
+    // GALA dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isGala) {
+      this.router.navigate(['/events', this.eventId(), 'gala']);
       return;
     }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }

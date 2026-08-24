@@ -1,0 +1,817 @@
+<!-- ══════════════════════════════════════════════════════════════
+     NAVIGATION STICKY
+══════════════════════════════════════════════════════════════ -->
+<nav class="gala-nav" [class.nav-scrolled]="navScrolled()">
+  <button type="button" class="gala-nav-logo" (click)="scrollTo('top')">{{ hero().title }}</button>
+
+  <ul class="gala-nav-links">
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('about')">LA SOIRÉE</button></li>
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('program')">PROGRAMME</button></li>
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('performers')">ARTISTES</button></li>
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('dresscode')">DRESS CODE</button></li>
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('faq')">FAQ</button></li>
+    <li><button type="button" class="gala-nav-link-btn" (click)="scrollTo('rsvp')">RÉSERVATION</button></li>
+  </ul>
+
+  <div class="gala-nav-actions">
+    @if (isEditMode()) {
+      <a [routerLink]="['/events', eventId()]" class="gala-btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Retour
+      </a>
+    } @else {
+      <a [routerLink]="'/events/new'" class="gala-btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Annuler
+      </a>
+    }
+    @if (saving()) {
+      <span class="gala-saving"><span class="gala-saving-dot"></span>Sauvegarde...</span>
+    }
+    @if (isLoggedIn()) {
+      <button class="gala-btn-edit" (click)="openEdit('hero')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Éditer
+      </button>
+    }
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════ -->
+<section id="top" class="gala-hero">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--hero" (click)="openEdit('hero')" title="Éditer le Hero">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+    <button class="gala-pencil gala-pencil--hero-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </button>
+  }
+
+  <div class="gala-hero-bg band-bg" [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'"></div>
+  <div class="gala-hero-overlay"></div>
+
+  <div class="gala-hero-content">
+    <span class="gala-eyebrow reveal reveal--fade" style="--d:100ms">{{ hero().edition }}</span>
+
+    <h1 class="gala-hero-title reveal" style="--d:200ms">{{ hero().title }}</h1>
+    <p class="gala-hero-subtitle reveal reveal--fade" style="--d:320ms">{{ hero().subtitle }}</p>
+
+    <div class="gala-sep reveal reveal--scale" style="--d:400ms">
+      <span class="gala-sep-line"></span>
+      <span class="gala-sep-diamond">◆</span>
+      <span class="gala-sep-line"></span>
+    </div>
+
+    <p class="gala-hero-catchphrase reveal reveal--fade" style="--d:460ms">{{ hero().catchphrase }}</p>
+
+    <div class="gala-hero-meta reveal" style="--d:520ms">
+      <span class="gala-meta-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        {{ hero().dateLabel }}
+      </span>
+      <span class="gala-meta-sep">·</span>
+      <span class="gala-meta-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        {{ hero().venueName }} · {{ hero().venueCity }}
+      </span>
+      <span class="gala-meta-sep">·</span>
+      <span class="gala-meta-item gala-meta-dresscode">👔 {{ hero().dressCode }}</span>
+    </div>
+
+    <div class="gala-hero-ctas reveal" style="--d:600ms">
+      <button type="button" class="gala-btn-primary" (click)="scrollTo('rsvp')">RÉSERVER MA PLACE</button>
+      <button type="button" class="gala-btn-outline" (click)="scrollTo('program')">VOIR LE PROGRAMME</button>
+    </div>
+
+    <div class="gala-countdown reveal reveal--scale" style="--d:700ms">
+      <div class="gala-count-chip"><span class="gala-count-val">{{ countdown().days }}</span><span class="gala-count-label">JOURS</span></div>
+      <span class="gala-count-sep">:</span>
+      <div class="gala-count-chip"><span class="gala-count-val">{{ countdown().hours }}</span><span class="gala-count-label">HEURES</span></div>
+      <span class="gala-count-sep">:</span>
+      <div class="gala-count-chip"><span class="gala-count-val">{{ countdown().minutes }}</span><span class="gala-count-label">MIN</span></div>
+      <span class="gala-count-sep">:</span>
+      <div class="gala-count-chip"><span class="gala-count-val">{{ countdown().seconds }}</span><span class="gala-count-label">SEC</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     À PROPOS
+══════════════════════════════════════════════════════════════ -->
+<section id="about" class="gala-section gala-about section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('about')" title="Éditer À Propos">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow-dark reveal" style="--d:0ms">LA SOIRÉE</span>
+    <h2 class="gala-section-title reveal" style="--d:80ms">{{ about().headline }}</h2>
+    <p class="gala-about-desc reveal" style="--d:160ms">{{ about().description }}</p>
+    <div class="gala-cause-card reveal reveal--scale" style="--d:240ms">
+      <span class="gala-cause-icon">{{ about().causeIcon }}</span>
+      <p class="gala-cause-text">{{ about().cause }}</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PROGRAMME
+══════════════════════════════════════════════════════════════ -->
+<section id="program" class="gala-section gala-program-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('program')" title="Éditer le Programme">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow reveal" style="--d:0ms">DÉROULÉ</span>
+    <h2 class="gala-section-title gala-section-title--light reveal" style="--d:80ms">{{ program().headline }}</h2>
+
+    <div class="gala-timeline">
+      @for (item of program().items; track $index) {
+        <div class="gala-timeline-item reveal" [style.--d]="($index * 70 + 120) + 'ms'">
+          <div class="gala-tl-icon">{{ item.icon }}</div>
+          <div class="gala-tl-body">
+            <span class="gala-tl-time">{{ item.time }}</span>
+            <h4 class="gala-tl-title">{{ item.title }}</h4>
+            <p class="gala-tl-desc">{{ item.desc }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <p class="gala-program-footer reveal" style="--d:0ms">{{ program().footer }}</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BANDEAU PARALLAX
+══════════════════════════════════════════════════════════════ -->
+<div class="gala-band">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-band-bg band-bg" [style.backgroundImage]="bgs().programBand ? 'url(' + bgs().programBand + ')' : 'none'"></div>
+  <div class="gala-band-overlay"></div>
+  <div class="gala-band-content">
+    <p class="gala-band-quote reveal reveal--scale" style="--d:0ms">
+      « Une soirée qui allie le plaisir des sens et la générosité du cœur. »
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     ARTISTES
+══════════════════════════════════════════════════════════════ -->
+<section id="performers" class="gala-section gala-performers-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('performers')" title="Éditer les Artistes">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow-dark reveal" style="--d:0ms">SUR SCÈNE</span>
+    <h2 class="gala-section-title reveal" style="--d:80ms">{{ performers().headline }}</h2>
+    <p class="gala-section-quote reveal" style="--d:140ms">{{ performers().subheadline }}</p>
+
+    <div class="gala-performers-grid">
+      @for (p of performers().performers; track $index) {
+        <div class="gala-performer-card reveal" [style.--d]="($index * 90) + 'ms'">
+          <div class="gala-performer-portrait">
+            @if (p.portraitUrl) {
+              <img [src]="p.portraitUrl" [alt]="p.name" loading="lazy" />
+            } @else {
+              <div class="gala-performer-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/>
+                </svg>
+              </div>
+            }
+          </div>
+          <h3 class="gala-performer-name">{{ p.name }}</h3>
+          <p class="gala-performer-role">{{ p.role }}</p>
+          <p class="gala-performer-bio">{{ p.bio }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GALERIE
+══════════════════════════════════════════════════════════════ -->
+<section class="gala-section gala-gallery-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('gallery')" title="Éditer la Galerie">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow reveal" style="--d:0ms">ÉDITIONS PRÉCÉDENTES</span>
+    <h2 class="gala-section-title gala-section-title--light reveal" style="--d:80ms">Revivez la Magie</h2>
+
+    <div class="gala-gallery-mosaic reveal" style="--d:160ms">
+      @for (item of gallery().items; track $index) {
+        <div class="gala-gallery-item" [class.gala-gallery-lg]="item.large">
+          @if (item.url) {
+            <img [src]="item.url" [alt]="item.caption" loading="lazy" />
+          } @else {
+            <div class="gala-gallery-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+          }
+          <div class="gala-gallery-caption">{{ item.caption }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     DRESS CODE
+══════════════════════════════════════════════════════════════ -->
+<section id="dresscode" class="gala-section gala-dresscode-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('dressCode')" title="Éditer le Dress Code">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow-dark reveal" style="--d:0ms">TENUE</span>
+    <h2 class="gala-section-title reveal" style="--d:80ms">{{ dressCode().title }}</h2>
+    <p class="gala-dresscode-desc reveal" style="--d:140ms">{{ dressCode().description }}</p>
+
+    <div class="gala-swatches reveal stagger" style="--d:200ms">
+      @for (sw of dressCode().swatches; track $index) {
+        <div class="gala-swatch">
+          <div class="gala-swatch-color" [style.background]="sw.color"></div>
+          <span class="gala-swatch-label">{{ sw.label }}</span>
+        </div>
+      }
+    </div>
+
+    <p class="gala-dresscode-advice reveal" style="--d:280ms">{{ dressCode().advice }}</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FAQ
+══════════════════════════════════════════════════════════════ -->
+<section id="faq" class="gala-section gala-faq-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--section" (click)="openEdit('faq')" title="Éditer la FAQ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="gala-section-inner">
+    <span class="gala-eyebrow-dark reveal" style="--d:0ms">FAQ</span>
+    <h2 class="gala-section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
+    <div class="gala-faq-shell reveal" style="--d:160ms">
+      @for (item of faq().items; track $index) {
+        <details class="gala-faq-item">
+          <summary class="gala-faq-q">{{ item.q }}</summary>
+          <p class="gala-faq-a">{{ item.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RSVP
+══════════════════════════════════════════════════════════════ -->
+<section id="rsvp" class="gala-rsvp-section">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+    <button class="gala-pencil gala-pencil--rsvp-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </button>
+  }
+  <div class="band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
+  <div class="gala-rsvp-overlay"></div>
+
+  <div class="gala-rsvp-card reveal reveal--scale" style="--d:80ms">
+    <span class="gala-rsvp-eyebrow">RÉSERVATION</span>
+    <h2 class="gala-rsvp-title">{{ rsvp().title }}</h2>
+    <div class="gala-sep gala-sep--light">
+      <span class="gala-sep-line"></span>
+      <span class="gala-sep-diamond">◆</span>
+      <span class="gala-sep-line"></span>
+    </div>
+    <p class="gala-rsvp-sub">{{ rsvp().subtitle }}</p>
+    <div class="gala-rsvp-ctas">
+      <button type="button" class="gala-btn-primary" (click)="scrollTo('program')">Voir le programme</button>
+      <button type="button" class="gala-btn-outline gala-btn-outline--light" (click)="scrollTo('performers')">Les artistes</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer class="gala-footer">
+  @if (isLoggedIn()) {
+    <button class="gala-pencil gala-pencil--footer" (click)="openEdit('footer')" title="Éditer le Footer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <p class="gala-footer-logo reveal reveal--scale" style="--d:0ms">{{ footer().logoText }}</p>
+  <p class="gala-footer-sub reveal" style="--d:80ms">{{ footer().subText }}</p>
+  <div class="gala-sep gala-sep--footer reveal" style="--d:120ms">
+    <span class="gala-sep-line"></span><span class="gala-sep-diamond">◆</span><span class="gala-sep-line"></span>
+  </div>
+  <p class="gala-footer-tagline reveal reveal--fade" style="--d:180ms">{{ footer().tagline }}</p>
+  <p class="gala-footer-credit reveal reveal--fade" style="--d:240ms">
+    SITE RÉALISÉ PAR <a href="https://indyli-services.com" target="_blank" rel="noopener">INDYLI SERVICES</a>
+  </p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL D'ÉDITION
+══════════════════════════════════════════════════════════════ -->
+@if (editOpen()) {
+  <div class="edit-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true">
+    <div class="edit-modal">
+      <div class="edit-modal-header">
+        <h2 class="edit-modal-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+          Éditer le gala
+        </h2>
+        <button class="edit-modal-close" (click)="closeEdit()">✕</button>
+      </div>
+
+      <div class="edit-modal-tabs" role="tablist">
+        @for (sec of SECTIONS; track sec) {
+          <button class="edit-modal-tab" [class.active]="activeSection() === sec"
+                  (click)="activeSection.set(sec)" role="tab">{{ SECTION_LABELS[sec] }}</button>
+        }
+      </div>
+
+      <div class="edit-modal-body">
+
+        <!-- HERO -->
+        @if (activeSection() === 'hero') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Hero &amp; Date</h3>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Nom du gala</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Édition</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.edition" (ngModelChange)="updateDraftHero('edition', $event)" />
+              </div>
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.subtitle" (ngModelChange)="updateDraftHero('subtitle', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Phrase d'accroche</label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.catchphrase" (ngModelChange)="updateDraftHero('catchphrase', $event)" />
+            </div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Date affichée</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.dateLabel" (ngModelChange)="updateDraftHero('dateLabel', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Dress code</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.dressCode" (ngModelChange)="updateDraftHero('dressCode', $event)" />
+              </div>
+            </div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Nom du lieu</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.venueName" (ngModelChange)="updateDraftHero('venueName', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Ville</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.venueCity" (ngModelChange)="updateDraftHero('venueCity', $event)" />
+              </div>
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Date countdown <span class="edit-hint">ISO</span></label>
+              <input class="edit-input" type="datetime-local" [ngModel]="draft().hero.targetDate" (ngModelChange)="updateDraftHero('targetDate', $event)" />
+            </div>
+            <div class="edit-divider"><span>Capacité</span></div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Invités maximum</label>
+                <input class="edit-input" type="number" min="1"
+                       [class.edit-input--error]="!draft().hero.maxGuests || draft().hero.maxGuests < 1"
+                       [ngModel]="draft().hero.maxGuests" (ngModelChange)="updateDraftMaxGuests($event)" />
+                @if (!draft().hero.maxGuests || draft().hero.maxGuests < 1) {
+                  <p class="edit-field-error">Ce champ est requis pour enregistrer.</p>
+                }
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Montant <span class="edit-hint">calculé auto.</span></label>
+                <div class="edit-budget-display">
+                  💳 {{ draft().hero.budget || '—' }}
+                  @if (draft().hero.maxGuests > 0) {
+                    <span class="edit-budget-detail">({{ draft().hero.maxGuests }} × 52 XAF)</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ABOUT -->
+        @if (activeSection() === 'about') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">À Propos</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().about.headline" (ngModelChange)="updateDraftAbout('headline', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Description</label>
+              <textarea class="edit-textarea" rows="5" [ngModel]="draft().about.description" (ngModelChange)="updateDraftAbout('description', $event)"></textarea>
+            </div>
+            <div class="edit-field-row">
+              <div class="edit-field edit-field--icon">
+                <label class="edit-label">Icône cause</label>
+                <input class="edit-input" type="text" [ngModel]="draft().about.causeIcon" (ngModelChange)="updateDraftAbout('causeIcon', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Message cause caritative</label>
+                <input class="edit-input" type="text" [ngModel]="draft().about.cause" (ngModelChange)="updateDraftAbout('cause', $event)" />
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- PROGRAMME -->
+        @if (activeSection() === 'program') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Programme</h3>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Titre de section</label>
+                <input class="edit-input" type="text" [ngModel]="draft().program.headline" (ngModelChange)="updateDraftProgramHeadline($event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Note de bas de page</label>
+                <input class="edit-input" type="text" [ngModel]="draft().program.footer" (ngModelChange)="updateDraftProgramFooter($event)" />
+              </div>
+            </div>
+            @for (item of draft().program.items; track $index) {
+              <div class="edit-program-item">
+                <div class="edit-program-item-header">
+                  <span class="edit-program-idx">{{ $index + 1 }}</span>
+                  <button class="edit-btn-remove" (click)="removeProgramItem($index)" [disabled]="draft().program.items.length <= 1">✕</button>
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field edit-field--icon">
+                    <label class="edit-label">Icône</label>
+                    <input class="edit-input" type="text" [ngModel]="item.icon" (ngModelChange)="updateDraftProgramItem($index, 'icon', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Horaire</label>
+                    <input class="edit-input" type="text" [ngModel]="item.time" (ngModelChange)="updateDraftProgramItem($index, 'time', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Titre</label>
+                  <input class="edit-input" type="text" [ngModel]="item.title" (ngModelChange)="updateDraftProgramItem($index, 'title', $event)" />
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Description</label>
+                  <textarea class="edit-textarea" rows="2" [ngModel]="item.desc" (ngModelChange)="updateDraftProgramItem($index, 'desc', $event)"></textarea>
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addProgramItem()">+ Ajouter un moment</button>
+          </div>
+        }
+
+        <!-- PERFORMERS -->
+        @if (activeSection() === 'performers') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Artistes</h3>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Titre de section</label>
+                <input class="edit-input" type="text" [ngModel]="draft().performers.headline" (ngModelChange)="updateDraftPerformersHeadline('headline', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Sous-titre</label>
+                <input class="edit-input" type="text" [ngModel]="draft().performers.subheadline" (ngModelChange)="updateDraftPerformersHeadline('subheadline', $event)" />
+              </div>
+            </div>
+            @for (p of draft().performers.performers; track $index) {
+              <div class="edit-chapter-block">
+                <div class="edit-chapter-header">
+                  <span class="edit-chapter-num">{{ p.name || 'Artiste ' + ($index + 1) }}</span>
+                  <button class="edit-btn-remove" (click)="removePerformer($index)" [disabled]="draft().performers.performers.length <= 1">✕</button>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Photo</label>
+                  <div class="edit-upload-zone" style="width:100px;height:100px" (click)="perfInput.click()">
+                    @if (p.portraitUrl) {
+                      <img class="edit-upload-preview" [src]="p.portraitUrl" [alt]="p.name" />
+                    } @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M9 19V6l12-3v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="15" r="3"/>
+                        </svg>
+                        <span>Photo</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #perfInput type="file" accept="image/*" class="edit-upload-input" (change)="onPerformerPortraitChange($event, $index)" />
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Nom</label>
+                    <input class="edit-input" type="text" [ngModel]="p.name" (ngModelChange)="updateDraftPerformer($index, 'name', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Rôle</label>
+                    <input class="edit-input" type="text" [ngModel]="p.role" (ngModelChange)="updateDraftPerformer($index, 'role', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Biographie</label>
+                  <textarea class="edit-textarea" rows="3" [ngModel]="p.bio" (ngModelChange)="updateDraftPerformer($index, 'bio', $event)"></textarea>
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addPerformer()">+ Ajouter un artiste</button>
+          </div>
+        }
+
+        <!-- DRESS CODE -->
+        @if (activeSection() === 'dressCode') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Dress Code</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().dressCode.title" (ngModelChange)="updateDraftDressCode('title', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Description</label>
+              <textarea class="edit-textarea" rows="3" [ngModel]="draft().dressCode.description" (ngModelChange)="updateDraftDressCode('description', $event)"></textarea>
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Conseil</label>
+              <input class="edit-input" type="text" [ngModel]="draft().dressCode.advice" (ngModelChange)="updateDraftDressCode('advice', $event)" />
+            </div>
+            <div class="edit-divider"><span>Couleurs</span></div>
+            @for (sw of draft().dressCode.swatches; track $index) {
+              <div class="edit-palette-item">
+                <input class="edit-input edit-input--color" type="color" [ngModel]="sw.color" (ngModelChange)="updateDraftSwatch($index, 'color', $event)" />
+                <input class="edit-input" type="text" placeholder="Nom" [ngModel]="sw.label" (ngModelChange)="updateDraftSwatch($index, 'label', $event)" />
+                <button class="edit-btn-remove" (click)="removeSwatch($index)" [disabled]="draft().dressCode.swatches.length <= 1">✕</button>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addSwatch()">+ Ajouter une couleur</button>
+          </div>
+        }
+
+        <!-- FAQ -->
+        @if (activeSection() === 'faq') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">FAQ</h3>
+            @for (item of draft().faq.items; track $index) {
+              <div class="edit-faq-item">
+                <div class="edit-faq-item-header">
+                  <span class="edit-program-idx">Q{{ $index + 1 }}</span>
+                  <button class="edit-btn-remove" (click)="removeFaqItem($index)">✕</button>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Question</label>
+                  <input class="edit-input" type="text" [ngModel]="item.q" (ngModelChange)="updateDraftFaqItem($index, 'q', $event)" />
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Réponse</label>
+                  <textarea class="edit-textarea" rows="3" [ngModel]="item.a" (ngModelChange)="updateDraftFaqItem($index, 'a', $event)"></textarea>
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addFaqItem()">+ Ajouter une question</button>
+          </div>
+        }
+
+        <!-- RSVP -->
+        @if (activeSection() === 'rsvp') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Réservation</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().rsvp.title" (ngModelChange)="updateDraftRsvp('title', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre</label>
+              <textarea class="edit-textarea" rows="4" [ngModel]="draft().rsvp.subtitle" (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
+            </div>
+          </div>
+        }
+
+        <!-- GALLERY -->
+        @if (activeSection() === 'gallery') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Galerie</h3>
+            <div class="edit-gallery-grid">
+              @for (item of draft().gallery.items; track $index) {
+                <div class="edit-gallery-item">
+                  <div class="edit-gallery-upload" (click)="galleryInput.click()">
+                    @if (item.url) { <img [src]="item.url" [alt]="item.caption" /> }
+                    @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg><span>Ajouter</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #galleryInput type="file" accept="image/*" class="edit-upload-input" (change)="onGalleryImageChange($event, $index)" />
+                  <input class="edit-input edit-gallery-caption" type="text" placeholder="Légende…"
+                         [ngModel]="item.caption" (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
+                  <div class="edit-gallery-item-footer">
+                    <button class="edit-gallery-badge" [class.active]="item.large" (click)="toggleDraftGalleryLarge($index)">{{ item.large ? '★ Grande' : '☆ Grande' }}</button>
+                    <button class="edit-btn-remove" (click)="removeGalleryItem($index)" [disabled]="draft().gallery.items.length <= 1">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
+          </div>
+        }
+
+        <!-- BACKGROUNDS -->
+        @if (activeSection() === 'backgrounds') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Fonds &amp; Bandeaux</h3>
+            @for (bg of BG_FIELDS; track bg.key) {
+              <div class="edit-bg-card">
+                <div class="edit-bg-preview-wrap" (click)="bgInput.click()">
+                  <div class="edit-bg-preview" [style.backgroundImage]="draft().backgrounds[bg.key] ? 'url(' + draft().backgrounds[bg.key] + ')' : 'none'">
+                    @if (!draft().backgrounds[bg.key]) {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/>
+                          <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                        </svg><span>Aucune image</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="edit-upload-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Changer</span>
+                  </div>
+                </div>
+                <input #bgInput type="file" accept="image/*" class="edit-upload-input" (change)="onBackgroundImageChange($event, bg.key)" />
+                <div class="edit-bg-info">
+                  <span class="edit-bg-label">{{ bg.label }}</span>
+                  <span class="edit-bg-hint">{{ bg.hint }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- FOOTER -->
+        @if (activeSection() === 'footer') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Footer</h3>
+            <div class="edit-field">
+              <label class="edit-label">Nom</label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.logoText" (ngModelChange)="updateDraftFooter('logoText', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre <span class="edit-hint">date · lieu · ville</span></label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.subText" (ngModelChange)="updateDraftFooter('subText', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Tagline</label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.tagline" (ngModelChange)="updateDraftFooter('tagline', $event)" />
+            </div>
+            <div class="edit-footer-preview">
+              <div class="edit-footer-preview-logo" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem">{{ draft().footer.logoText }}</div>
+              <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
+              <p class="edit-footer-preview-love">{{ draft().footer.tagline }}</p>
+            </div>
+          </div>
+        }
+
+      </div><!-- /body -->
+
+      <div class="edit-modal-footer">
+        <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
+        <div class="edit-modal-footer-right">
+          <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
+          <button class="edit-btn-save" (click)="saveEdit()"
+                  [disabled]="!draft().hero.maxGuests || draft().hero.maxGuests < 1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Enregistrer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

@@ -63,6 +63,19 @@
           </div>
         </div>
       }
+      @if (isGala) {
+        <div class="recommendation-banner recommendation-banner--gala">
+          <span class="rec-icon">🎭</span>
+          <div class="rec-text">
+            <strong>Événement Gala</strong>
+            <span>
+              Les galas bénéficient d'un éditeur dédié avec page personnalisée,
+              programme de soirée, artistes et galerie.
+              Cliquez sur <strong>Accéder à l'éditeur Gala</strong> pour continuer.
+            </span>
+          </div>
+        </div>
+      }
       @if (isConference) {
         <div class="recommendation-banner recommendation-banner--conference">
           <span class="rec-icon">🎤</span>
@@ -83,7 +96,7 @@
             <button type="button" class="type-card" [class.selected]="step1.value.type === opt.key" (click)="selectType(opt.key)">
               <span class="type-icon">{{ opt.icon }}</span>
               <span class="type-label">{{ opt.label }}</span>
-              @if (opt.key === 'MARIAGE' || opt.key === 'CONFERENCE') {
+              @if (opt.key === 'MARIAGE' || opt.key === 'CONFERENCE' || opt.key === 'GALA') {
                 <span class="type-badge">Éditeur dédié</span>
               }
             </button>
@@ -393,6 +406,11 @@
           </svg>
         } @else if (step() === 1 && isConference) {
           Accéder à l'éditeur Conférence
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        } @else if (step() === 1 && isGala) {
+          Accéder à l'éditeur Gala
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="9 18 15 12 9 6"/>
           </svg>

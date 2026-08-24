@@ -86,6 +86,8 @@ export class EventCreateComponent {
   get isMariage(): boolean { return this.step1.value.type === 'MARIAGE'; }
   /** CONFERENCE → redirige vers le ConferenceDetailsComponent dédié */
   get isConference(): boolean { return this.step1.value.type === 'CONFERENCE'; }
+  /** GALA → redirige vers le GalaDetailsComponent dédié */
+  get isGala(): boolean { return this.step1.value.type === 'GALA'; }
   get progress(): number   { return (this.step() / this.TOTAL_STEPS) * 100; }
 
   selectType(type: EventType): void { this.step1.patchValue({ type }); }
@@ -127,6 +129,11 @@ export class EventCreateComponent {
     // CONFERENCE dès l'étape 1 → éditeur dédié directement
     if (current === 1 && this.isConference) {
       this.router.navigate(['/events/conference/new']);
+      return;
+    }
+    // GALA dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isGala) {
+      this.router.navigate(['/events/gala/new']);
       return;
     }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }
