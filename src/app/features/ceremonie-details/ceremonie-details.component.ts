@@ -321,7 +321,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
       localStorage.setItem(key, JSON.stringify(this.content()));
     }
     console.log('══════════ CeremonieDetailsContent — JSON complet ══════════');
-    console.log(JSON.stringify(this.content(), null, 2));
+    console.log(JSON.stringify({ eventType: 'CEREMONIE', ...this.content() }, null, 2));
     console.log('════════════════════════════════════════════════════════════');
     this.closeEdit();
   }

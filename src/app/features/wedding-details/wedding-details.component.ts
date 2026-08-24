@@ -573,7 +573,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
     // ── Console.log du JSON complet pour validation (appel API désactivé) ──
     console.log('══════════ WeddingDetailsContent — JSON complet ══════════');
-    console.log(JSON.stringify(this.content(), null, 2));
+    console.log(JSON.stringify({ eventType: 'MARIAGE', ...this.content() }, null, 2));
     console.log('══════════════════════════════════════════════════════════');
 
     this.closeEdit();

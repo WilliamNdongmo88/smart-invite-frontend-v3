@@ -349,7 +349,7 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
       localStorage.setItem(key, JSON.stringify(this.content()));
     }
     console.log('══════════ GalaDetailsContent — JSON complet ══════════');
-    console.log(JSON.stringify(this.content(), null, 2));
+    console.log(JSON.stringify({ eventType: 'GALA', ...this.content() }, null, 2));
     console.log('═══════════════════════════════════════════════════════');
     this.closeEdit();
   }

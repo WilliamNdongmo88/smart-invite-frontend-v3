@@ -417,7 +417,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     console.log('══════════ ConferenceDetailsContent — JSON complet ══════════');
-    console.log(JSON.stringify(this.content(), null, 2));
+    console.log(JSON.stringify({ eventType: 'CONFERENCE', ...this.content() }, null, 2));
     console.log('════════════════════════════════════════════════════════════');
 
     this.closeEdit();
