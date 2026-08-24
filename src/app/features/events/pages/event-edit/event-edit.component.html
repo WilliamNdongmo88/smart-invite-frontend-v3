@@ -88,6 +88,18 @@
             </div>
           </div>
         }
+        @if (isCeremonie) {
+          <div class="recommendation-banner recommendation-banner--ceremonie">
+            <span class="rec-icon">🎗️</span>
+            <div class="rec-text">
+              <strong>Événement Cérémonie</strong>
+              <span>
+                Cliquez sur <strong>Accéder à l'éditeur Cérémonie</strong> pour modifier
+                votre page de cérémonie (programme, personnes clés, tenue…).
+              </span>
+            </div>
+          </div>
+        }
 
         <form [formGroup]="step1">
           <div class="type-grid">
@@ -95,7 +107,7 @@
               <button type="button" class="type-card" [class.selected]="step1.value.type === opt.key" (click)="selectType(opt.key)">
                 <span class="type-icon">{{ opt.icon }}</span>
                 <span class="type-label">{{ opt.label }}</span>
-                @if (opt.key === 'MARIAGE' || opt.key === 'CONFERENCE' || opt.key === 'GALA') {
+                @if (opt.key === 'MARIAGE' || opt.key === 'CONFERENCE' || opt.key === 'GALA' || opt.key === 'CEREMONIE') {
                   <span class="type-badge">Éditeur dédié</span>
                 }
               </button>
@@ -455,6 +467,11 @@
             </svg>
           } @else if (step() === 1 && isGala) {
             Accéder à l'éditeur Gala
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          } @else if (step() === 1 && isCeremonie) {
+            Accéder à l'éditeur Cérémonie
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6"/>
             </svg>

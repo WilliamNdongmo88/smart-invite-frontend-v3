@@ -96,6 +96,9 @@ export class EventEditComponent implements OnInit {
   get isGala(): boolean {
     return this.step1.value.type === 'GALA';
   }
+  get isCeremonie(): boolean {
+    return this.step1.value.type === 'CEREMONIE';
+  }
 
   get progress(): number { return (this.step() / this.TOTAL_STEPS) * 100; }
 
@@ -148,6 +151,11 @@ export class EventEditComponent implements OnInit {
     // GALA dès l'étape 1 → éditeur dédié directement
     if (current === 1 && this.isGala) {
       this.router.navigate(['/events', this.eventId(), 'gala']);
+      return;
+    }
+    // CEREMONIE dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isCeremonie) {
+      this.router.navigate(['/events', this.eventId(), 'ceremonie']);
       return;
     }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }

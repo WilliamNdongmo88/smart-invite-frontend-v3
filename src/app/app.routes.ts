@@ -127,6 +127,12 @@ export const routes: Routes = [
           import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
       },
       {
+        // Création d'une cérémonie → CeremonieDetailsComponent en mode création
+        path: 'events/ceremonie/new',
+        loadComponent: () =>
+          import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
+      },
+      {
         path: 'events/:id',
         loadComponent: () =>
           import('./features/events/pages/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
@@ -153,6 +159,12 @@ export const routes: Routes = [
         path: 'events/:id/gala',
         loadComponent: () =>
           import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
+      },
+      {
+        // Édition d'une cérémonie → CeremonieDetailsComponent en mode édition
+        path: 'events/:id/ceremonie',
+        loadComponent: () =>
+          import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
       },
       {
         path: 'events/:id/card',

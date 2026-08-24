@@ -88,6 +88,8 @@ export class EventCreateComponent {
   get isConference(): boolean { return this.step1.value.type === 'CONFERENCE'; }
   /** GALA → redirige vers le GalaDetailsComponent dédié */
   get isGala(): boolean { return this.step1.value.type === 'GALA'; }
+  /** CEREMONIE → redirige vers le CeremonieDetailsComponent dédié */
+  get isCeremonie(): boolean { return this.step1.value.type === 'CEREMONIE'; }
   get progress(): number   { return (this.step() / this.TOTAL_STEPS) * 100; }
 
   selectType(type: EventType): void { this.step1.patchValue({ type }); }
@@ -134,6 +136,11 @@ export class EventCreateComponent {
     // GALA dès l'étape 1 → éditeur dédié directement
     if (current === 1 && this.isGala) {
       this.router.navigate(['/events/gala/new']);
+      return;
+    }
+    // CEREMONIE dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isCeremonie) {
+      this.router.navigate(['/events/ceremonie/new']);
       return;
     }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }
