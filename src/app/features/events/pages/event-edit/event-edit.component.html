@@ -64,6 +64,18 @@
             </div>
           </div>
         }
+        @if (isConference) {
+          <div class="recommendation-banner recommendation-banner--conference">
+            <span class="rec-icon">🎤</span>
+            <div class="rec-text">
+              <strong>Événement Conférence</strong>
+              <span>
+                Cliquez sur <strong>Accéder à l'éditeur Conférence</strong> pour modifier
+                votre page de conférence (programme, intervenants, sponsors…).
+              </span>
+            </div>
+          </div>
+        }
 
         <form [formGroup]="step1">
           <div class="type-grid">
@@ -71,7 +83,7 @@
               <button type="button" class="type-card" [class.selected]="step1.value.type === opt.key" (click)="selectType(opt.key)">
                 <span class="type-icon">{{ opt.icon }}</span>
                 <span class="type-label">{{ opt.label }}</span>
-                @if (opt.key === 'MARIAGE') {
+                @if (opt.key === 'MARIAGE' || opt.key === 'CONFERENCE') {
                   <span class="type-badge">Éditeur dédié</span>
                 }
               </button>
@@ -421,6 +433,11 @@
         <button type="button" class="btn-next" (click)="next()">
           @if (step() === 1 && isMariage) {
             Accéder à l'éditeur Mariage
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          } @else if (step() === 1 && isConference) {
+            Accéder à l'éditeur Conférence
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="9 18 15 12 9 6"/>
             </svg>

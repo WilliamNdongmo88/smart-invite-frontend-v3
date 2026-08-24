@@ -90,6 +90,9 @@ export class EventEditComponent implements OnInit {
   get isMariage(): boolean {
     return this.step1.value.type === 'MARIAGE';
   }
+  get isConference(): boolean {
+    return this.step1.value.type === 'CONFERENCE';
+  }
 
   get progress(): number { return (this.step() / this.TOTAL_STEPS) * 100; }
 
@@ -132,6 +135,11 @@ export class EventEditComponent implements OnInit {
     // MARIAGE dès l'étape 1 → éditeur dédié directement
     if (current === 1 && this.isMariage) {
       this.router.navigate(['/events', this.eventId(), 'wedding']);
+      return;
+    }
+    // CONFERENCE dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isConference) {
+      this.router.navigate(['/events', this.eventId(), 'conference']);
       return;
     }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }

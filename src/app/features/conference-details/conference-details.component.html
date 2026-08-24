@@ -1,0 +1,1001 @@
+<!-- ══════════════════════════════════════════════════════════════
+     NAVIGATION STICKY
+══════════════════════════════════════════════════════════════ -->
+<nav class="conf-nav" [class.nav-scrolled]="navScrolled()">
+  <a class="conf-nav-logo" href="#top">{{ hero().title }}</a>
+
+  <ul class="conf-nav-links">
+    <li><a href="#about">À PROPOS</a></li>
+    <li><a href="#agenda">PROGRAMME</a></li>
+    <li><a href="#speakers">INTERVENANTS</a></li>
+    <li><a href="#sponsors">SPONSORS</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#rsvp">INSCRIPTION</a></li>
+  </ul>
+
+  <div class="conf-nav-actions">
+    @if (isEditMode()) {
+      <a [routerLink]="['/events', eventId()]" class="conf-btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Retour
+      </a>
+    } @else {
+      <a [routerLink]="'/events/new'" class="conf-btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Annuler
+      </a>
+    }
+    @if (saving()) {
+      <span class="conf-saving">
+        <span class="conf-saving-dot"></span>Sauvegarde...
+      </span>
+    }
+    @if (isLoggedIn()) {
+      <button class="conf-btn-edit" (click)="openEdit('hero')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+        Éditer
+      </button>
+    }
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════════════════════ -->
+<section id="top" class="conf-hero">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--hero" (click)="openEdit('hero')" title="Éditer le Hero">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+    <button class="conf-pencil conf-pencil--hero-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </button>
+  }
+
+  <div class="conf-hero-bg band-bg" [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'"></div>
+  <div class="conf-hero-overlay"></div>
+
+  <div class="conf-hero-content">
+    <span class="conf-eyebrow reveal reveal--fade" style="--d:100ms">{{ hero().edition }}</span>
+    <h1 class="conf-hero-title reveal" style="--d:200ms">{{ hero().title }}</h1>
+    <p class="conf-hero-subtitle reveal reveal--fade" style="--d:320ms">{{ hero().subtitle }}</p>
+
+    <div class="conf-sep reveal reveal--scale" style="--d:400ms">
+      <span class="conf-sep-line"></span>
+      <span class="conf-sep-dot">◆</span>
+      <span class="conf-sep-line"></span>
+    </div>
+
+    <p class="conf-hero-catchphrase reveal reveal--fade" style="--d:460ms">{{ hero().catchphrase }}</p>
+
+    <div class="conf-hero-meta reveal" style="--d:520ms">
+      <div class="conf-meta-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        {{ hero().dateLabel }}
+      </div>
+      <span class="conf-meta-sep">·</span>
+      <div class="conf-meta-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
+        {{ hero().venueName }} · {{ hero().venueCity }}
+      </div>
+    </div>
+
+    <div class="conf-hero-ctas reveal" style="--d:600ms">
+      <a href="#rsvp" class="conf-btn-primary">S'INSCRIRE</a>
+      <a href="#agenda" class="conf-btn-outline">VOIR LE PROGRAMME</a>
+    </div>
+
+    <!-- Countdown -->
+    <div class="conf-countdown reveal reveal--scale" style="--d:700ms">
+      <div class="conf-count-chip">
+        <span class="conf-count-val">{{ countdown().days }}</span>
+        <span class="conf-count-label">JOURS</span>
+      </div>
+      <div class="conf-count-sep">:</div>
+      <div class="conf-count-chip">
+        <span class="conf-count-val">{{ countdown().hours }}</span>
+        <span class="conf-count-label">HEURES</span>
+      </div>
+      <div class="conf-count-sep">:</div>
+      <div class="conf-count-chip">
+        <span class="conf-count-val">{{ countdown().minutes }}</span>
+        <span class="conf-count-label">MIN</span>
+      </div>
+      <div class="conf-count-sep">:</div>
+      <div class="conf-count-chip">
+        <span class="conf-count-val">{{ countdown().seconds }}</span>
+        <span class="conf-count-label">SEC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     À PROPOS
+══════════════════════════════════════════════════════════════ -->
+<section id="about" class="conf-section conf-about section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('about')" title="Éditer À Propos">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <div class="conf-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">L'ÉVÉNEMENT</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">{{ about().headline }}</h2>
+    <p class="conf-about-desc reveal" style="--d:160ms">{{ about().description }}</p>
+
+    <div class="conf-stats stagger reveal" style="--d:240ms">
+      @for (stat of about().stats; track $index) {
+        <div class="conf-stat-card">
+          <span class="conf-stat-icon">{{ stat.icon }}</span>
+          <span class="conf-stat-value">{{ stat.value }}</span>
+          <span class="conf-stat-label">{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PROGRAMME / AGENDA
+══════════════════════════════════════════════════════════════ -->
+<section id="agenda" class="conf-section conf-agenda section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('agenda')" title="Éditer le Programme">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <span class="conf-eyebrow reveal" style="--d:0ms">AGENDA</span>
+    <h2 class="conf-section-title conf-section-title--light reveal" style="--d:80ms">Programme Détaillé</h2>
+    <p class="conf-section-sub reveal" style="--d:140ms">Deux jours d'immersion, d'échanges et d'inspiration.</p>
+
+    <!-- Onglets jours -->
+    <div class="conf-day-tabs reveal" style="--d:200ms">
+      @for (day of agenda().days; track $index) {
+        <button class="conf-day-tab" [class.active]="activeDayIdx() === $index" (click)="activeDayIdx.set($index)">
+          <span class="conf-day-tab-icon">{{ day.tabIcon }}</span>
+          <span class="conf-day-tab-date">{{ day.tabDate }}</span>
+          <span class="conf-day-tab-label">{{ day.tabLabel }}</span>
+        </button>
+      }
+    </div>
+
+    <!-- Sessions du jour actif -->
+    @if (agenda().days[activeDayIdx()]; as day) {
+      <p class="conf-day-label reveal" style="--d:60ms">{{ day.label }}</p>
+      <div class="conf-sessions">
+        @for (s of day.sessions; track $index) {
+          <div class="conf-session" [class]="'conf-session--' + s.type">
+            <div class="conf-session-icon">{{ s.icon }}</div>
+            <div class="conf-session-body">
+              <div class="conf-session-time">{{ s.time }}</div>
+              <h4 class="conf-session-title">{{ s.title }}</h4>
+              @if (s.speaker) {
+                <p class="conf-session-speaker">{{ s.speaker }}</p>
+              }
+              @if (s.room) {
+                <p class="conf-session-room">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
+                       fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                  </svg>
+                  {{ s.room }}
+                </p>
+              }
+            </div>
+            <span class="conf-session-badge">{{ sessionTypeLabel(s.type) }}</span>
+          </div>
+        }
+      </div>
+    }
+    <p class="conf-agenda-footer reveal" style="--d:0ms">{{ agenda().footer }}</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BANDEAU PARALLAX — AGENDA BAND
+══════════════════════════════════════════════════════════════ -->
+<div class="conf-band">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-band-bg band-bg" [style.backgroundImage]="bgs().agendaBand ? 'url(' + bgs().agendaBand + ')' : 'none'"></div>
+  <div class="conf-band-overlay"></div>
+  <div class="conf-band-content">
+    <p class="conf-band-quote reveal reveal--scale" style="--d:0ms">
+      « L'intelligence, c'est la capacité de s'adapter au changement. »
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     INTERVENANTS
+══════════════════════════════════════════════════════════════ -->
+<section id="speakers" class="conf-section conf-speakers-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('speakers')" title="Éditer les Intervenants">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">LES EXPERTS</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">{{ speakers().headline }}</h2>
+    <p class="conf-section-quote reveal" style="--d:140ms">{{ speakers().subheadline }}</p>
+
+    <div class="conf-speakers-grid">
+      @for (sp of speakers().speakers; track $index) {
+        <div class="conf-speaker-card reveal" [style.--d]="($index * 80) + 'ms'">
+          @if (sp.isKeynote) {
+            <span class="conf-keynote-badge">Keynote</span>
+          }
+          <div class="conf-speaker-portrait">
+            @if (sp.portraitUrl) {
+              <img [src]="sp.portraitUrl" [alt]="sp.name" loading="lazy" />
+            } @else {
+              <div class="conf-speaker-portrait-placeholder">
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+            }
+          </div>
+          <h3 class="conf-speaker-name">{{ sp.name }}</h3>
+          <p class="conf-speaker-title">{{ sp.title }}</p>
+          <p class="conf-speaker-company">{{ sp.company }}</p>
+          <p class="conf-speaker-bio">{{ sp.bio }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     GALERIE
+══════════════════════════════════════════════════════════════ -->
+<section class="conf-section conf-gallery-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('gallery')" title="Éditer la Galerie">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">ÉDITIONS PRÉCÉDENTES</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">Revivez l'Expérience</h2>
+
+    <div class="conf-gallery-mosaic reveal" style="--d:160ms">
+      @for (item of gallery().items; track $index) {
+        <div class="conf-gallery-item" [class.conf-gallery-lg]="item.large">
+          @if (item.url) {
+            <img [src]="item.url" [alt]="item.caption" loading="lazy" />
+          } @else {
+            <div class="conf-gallery-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </div>
+          }
+          <div class="conf-gallery-caption">{{ item.caption }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SPONSORS
+══════════════════════════════════════════════════════════════ -->
+<section id="sponsors" class="conf-section conf-sponsors-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('sponsors')" title="Éditer les Sponsors">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">ILS NOUS FONT CONFIANCE</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">{{ sponsors().headline }}</h2>
+
+    <!-- Platine -->
+    @if (platinumSponsors().length) {
+      <p class="conf-sponsor-level-label reveal" style="--d:120ms">✦ PLATINE</p>
+      <div class="conf-sponsors-row conf-sponsors-row--platine stagger">
+        @for (sp of platinumSponsors(); track $index) {
+          <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
+            @if (sp.logoUrl) { <img [src]="sp.logoUrl" [alt]="sp.name" /> }
+            @else { <span class="conf-sponsor-name">{{ sp.name }}</span> }
+          </a>
+        }
+      </div>
+    }
+    <!-- Or -->
+    @if (goldSponsors().length) {
+      <p class="conf-sponsor-level-label reveal" style="--d:140ms">◆ OR</p>
+      <div class="conf-sponsors-row conf-sponsors-row--or stagger">
+        @for (sp of goldSponsors(); track $index) {
+          <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
+            @if (sp.logoUrl) { <img [src]="sp.logoUrl" [alt]="sp.name" /> }
+            @else { <span class="conf-sponsor-name">{{ sp.name }}</span> }
+          </a>
+        }
+      </div>
+    }
+    <!-- Argent -->
+    @if (silverSponsors().length) {
+      <p class="conf-sponsor-level-label reveal" style="--d:160ms">● ARGENT</p>
+      <div class="conf-sponsors-row conf-sponsors-row--argent stagger">
+        @for (sp of silverSponsors(); track $index) {
+          <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
+            @if (sp.logoUrl) { <img [src]="sp.logoUrl" [alt]="sp.name" /> }
+            @else { <span class="conf-sponsor-name">{{ sp.name }}</span> }
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FAQ
+══════════════════════════════════════════════════════════════ -->
+<section id="faq" class="conf-section conf-faq-section section-entrance">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('faq')" title="Éditer la FAQ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-section-inner">
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">FAQ</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
+    <div class="conf-faq-shell reveal" style="--d:160ms">
+      @for (item of faq().items; track $index) {
+        <details class="conf-faq-item">
+          <summary class="conf-faq-q">{{ item.q }}</summary>
+          <p class="conf-faq-a">{{ item.a }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RSVP / INSCRIPTION
+══════════════════════════════════════════════════════════════ -->
+<section id="rsvp" class="conf-rsvp-section">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+    <button class="conf-pencil conf-pencil--rsvp-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </button>
+  }
+  <div class="conf-band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
+  <div class="conf-band-overlay"></div>
+
+  <div class="conf-rsvp-card reveal reveal--scale" style="--d:80ms">
+    <span class="conf-rsvp-eyebrow">REJOIGNEZ-NOUS</span>
+    <h2 class="conf-rsvp-title">{{ rsvp().title }}</h2>
+    <div class="conf-sep conf-sep--light">
+      <span class="conf-sep-line"></span>
+      <span class="conf-sep-dot">◆</span>
+      <span class="conf-sep-line"></span>
+    </div>
+    <p class="conf-rsvp-sub">{{ rsvp().subtitle }}</p>
+    <div class="conf-rsvp-ctas">
+      <a href="#agenda" class="conf-btn-primary">Voir le programme</a>
+      <a href="#speakers" class="conf-btn-outline conf-btn-outline--light">Les intervenants</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════════════════════ -->
+<footer class="conf-footer">
+  @if (isLoggedIn()) {
+    <button class="conf-pencil conf-pencil--footer" (click)="openEdit('footer')" title="Éditer le Footer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
+  <p class="conf-footer-logo reveal reveal--scale" style="--d:0ms">{{ footer().logoText }}</p>
+  <p class="conf-footer-sub reveal" style="--d:80ms">{{ footer().subText }}</p>
+  <div class="conf-sep conf-sep--footer reveal" style="--d:120ms">
+    <span class="conf-sep-line"></span><span class="conf-sep-dot">◆</span><span class="conf-sep-line"></span>
+  </div>
+  <p class="conf-footer-tagline reveal reveal--fade" style="--d:180ms">{{ footer().tagline }}</p>
+  <p class="conf-footer-credit reveal reveal--fade" style="--d:240ms">
+    SITE RÉALISÉ PAR <a href="https://indyli-services.com" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
+  </p>
+</footer>
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODAL D'ÉDITION
+══════════════════════════════════════════════════════════════ -->
+@if (editOpen()) {
+  <div class="edit-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true">
+    <div class="edit-modal">
+
+      <div class="edit-modal-header">
+        <h2 class="edit-modal-title">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+          </svg>
+          Éditer la conférence
+        </h2>
+        <button class="edit-modal-close" (click)="closeEdit()">✕</button>
+      </div>
+
+      <div class="edit-modal-tabs" role="tablist">
+        @for (sec of SECTIONS; track sec) {
+          <button class="edit-modal-tab" [class.active]="activeSection() === sec"
+                  (click)="activeSection.set(sec)" role="tab">
+            {{ SECTION_LABELS[sec] }}
+          </button>
+        }
+      </div>
+
+      <div class="edit-modal-body">
+
+        <!-- ── HERO ── -->
+        @if (activeSection() === 'hero') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Hero &amp; Date</h3>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Nom de la conférence</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Édition</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.edition" (ngModelChange)="updateDraftHero('edition', $event)" />
+              </div>
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.subtitle" (ngModelChange)="updateDraftHero('subtitle', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Phrase d'accroche</label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.catchphrase" (ngModelChange)="updateDraftHero('catchphrase', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Date affichée</label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.dateLabel" (ngModelChange)="updateDraftHero('dateLabel', $event)" />
+            </div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Nom du lieu</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.venueName" (ngModelChange)="updateDraftHero('venueName', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Ville</label>
+                <input class="edit-input" type="text" [ngModel]="draft().hero.venueCity" (ngModelChange)="updateDraftHero('venueCity', $event)" />
+              </div>
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Date countdown <span class="edit-hint">ISO : AAAA-MM-JJTHH:MM:SS</span></label>
+              <input class="edit-input" type="datetime-local" [ngModel]="draft().hero.targetDate" (ngModelChange)="updateDraftHero('targetDate', $event)" />
+            </div>
+            <div class="edit-divider"><span>Capacité</span></div>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Participants maximum</label>
+                <input class="edit-input" type="number" min="1"
+                       [class.edit-input--error]="!draft().hero.maxAttendees || draft().hero.maxAttendees < 1"
+                       [ngModel]="draft().hero.maxAttendees" (ngModelChange)="updateDraftMaxAttendees($event)" />
+                @if (!draft().hero.maxAttendees || draft().hero.maxAttendees < 1) {
+                  <p class="edit-field-error">Ce champ est requis pour enregistrer.</p>
+                }
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Montant à payer <span class="edit-hint">calculé auto.</span></label>
+                <div class="edit-budget-display">
+                  💳 {{ draft().hero.budget || '—' }}
+                  @if (draft().hero.maxAttendees > 0) {
+                    <span class="edit-budget-detail">({{ draft().hero.maxAttendees }} × 52 XAF)</span>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- ── À PROPOS ── -->
+        @if (activeSection() === 'about') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">À Propos</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().about.headline" (ngModelChange)="updateDraftAbout('headline', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Description</label>
+              <textarea class="edit-textarea" rows="5" [ngModel]="draft().about.description" (ngModelChange)="updateDraftAbout('description', $event)"></textarea>
+            </div>
+            <div class="edit-divider"><span>Statistiques clés</span></div>
+            @for (stat of draft().about.stats; track $index) {
+              <div class="edit-program-item">
+                <div class="edit-program-item-header">
+                  <span class="edit-program-idx">Stat {{ $index + 1 }}</span>
+                  <button class="edit-btn-remove" (click)="removeStat($index)" [disabled]="draft().about.stats.length <= 1">✕</button>
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field edit-field--icon">
+                    <label class="edit-label">Icône</label>
+                    <input class="edit-input" type="text" [ngModel]="stat.icon" (ngModelChange)="updateDraftStat($index, 'icon', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Valeur <span class="edit-hint">ex : 2 500+</span></label>
+                    <input class="edit-input" type="text" [ngModel]="stat.value" (ngModelChange)="updateDraftStat($index, 'value', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Libellé</label>
+                  <input class="edit-input" type="text" [ngModel]="stat.label" (ngModelChange)="updateDraftStat($index, 'label', $event)" />
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addStat()">+ Ajouter une statistique</button>
+          </div>
+        }
+
+        <!-- ── AGENDA ── -->
+        @if (activeSection() === 'agenda') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Programme</h3>
+            <div class="edit-field">
+              <label class="edit-label">Note de bas de page</label>
+              <input class="edit-input" type="text" [ngModel]="draft().agenda.footer" (ngModelChange)="updateDraftAgendaFooter($event)" />
+            </div>
+            @for (day of draft().agenda.days; track $index) {
+              <div class="edit-chapter-block">
+                <div class="edit-chapter-header">
+                  <span class="edit-chapter-num">Jour {{ $index + 1 }}</span>
+                  <button class="edit-btn-remove" (click)="removeDay($index)" [disabled]="draft().agenda.days.length <= 1">✕</button>
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Date <span class="edit-hint">AAAA-MM-JJ</span></label>
+                    <input class="edit-input" type="date" [ngModel]="day.date" (ngModelChange)="updateDraftDay($index, 'date', $event)" />
+                  </div>
+                  <div class="edit-field edit-field--icon">
+                    <label class="edit-label">Icône</label>
+                    <input class="edit-input" type="text" [ngModel]="day.tabIcon" (ngModelChange)="updateDraftDay($index, 'tabIcon', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Date onglet <span class="edit-hint">ex : 15 SEPT</span></label>
+                    <input class="edit-input" type="text" [ngModel]="day.tabDate" (ngModelChange)="updateDraftDay($index, 'tabDate', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Libellé onglet <span class="edit-hint">ex : Jour 1</span></label>
+                    <input class="edit-input" type="text" [ngModel]="day.tabLabel" (ngModelChange)="updateDraftDay($index, 'tabLabel', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Libellé complet</label>
+                  <input class="edit-input" type="text" [ngModel]="day.label" (ngModelChange)="updateDraftDay($index, 'label', $event)" />
+                </div>
+                <div class="edit-divider"><span>Sessions</span></div>
+                @for (s of day.sessions; track $index; let sIdx = $index) {
+                  <div class="edit-program-item">
+                    <div class="edit-program-item-header">
+                      <span class="edit-program-idx">{{ sIdx + 1 }}</span>
+                      <button class="edit-btn-remove" (click)="removeSession($index, sIdx)">✕</button>
+                    </div>
+                    <div class="edit-field-row">
+                      <div class="edit-field edit-field--icon">
+                        <label class="edit-label">Icône</label>
+                        <input class="edit-input" type="text" [ngModel]="s.icon" (ngModelChange)="updateDraftSession($index, sIdx, 'icon', $event)" />
+                      </div>
+                      <div class="edit-field">
+                        <label class="edit-label">Horaire</label>
+                        <input class="edit-input" type="text" [ngModel]="s.time" (ngModelChange)="updateDraftSession($index, sIdx, 'time', $event)" />
+                      </div>
+                    </div>
+                    <div class="edit-field">
+                      <label class="edit-label">Titre</label>
+                      <input class="edit-input" type="text" [ngModel]="s.title" (ngModelChange)="updateDraftSession($index, sIdx, 'title', $event)" />
+                    </div>
+                    <div class="edit-field-row">
+                      <div class="edit-field">
+                        <label class="edit-label">Intervenant(s)</label>
+                        <input class="edit-input" type="text" [ngModel]="s.speaker" (ngModelChange)="updateDraftSession($index, sIdx, 'speaker', $event)" />
+                      </div>
+                      <div class="edit-field">
+                        <label class="edit-label">Salle</label>
+                        <input class="edit-input" type="text" [ngModel]="s.room" (ngModelChange)="updateDraftSession($index, sIdx, 'room', $event)" />
+                      </div>
+                    </div>
+                    <div class="edit-field">
+                      <label class="edit-label">Type</label>
+                      <select class="edit-input" [ngModel]="s.type" (ngModelChange)="updateDraftSession($index, sIdx, 'type', $event)">
+                        <option value="keynote">Keynote</option>
+                        <option value="workshop">Atelier</option>
+                        <option value="panel">Panel</option>
+                        <option value="networking">Networking</option>
+                        <option value="break">Pause</option>
+                      </select>
+                    </div>
+                  </div>
+                }
+                <button class="edit-btn-add" (click)="addSession($index)">+ Ajouter une session</button>
+              </div>
+            }
+            <button class="edit-btn-day-toggle edit-btn-day-toggle--add" (click)="addDay()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              Ajouter une journée
+            </button>
+          </div>
+        }
+
+        <!-- ── SPEAKERS ── -->
+        @if (activeSection() === 'speakers') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Intervenants</h3>
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Titre de section</label>
+                <input class="edit-input" type="text" [ngModel]="draft().speakers.headline" (ngModelChange)="updateDraftSpeakersHeadline('headline', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Sous-titre</label>
+                <input class="edit-input" type="text" [ngModel]="draft().speakers.subheadline" (ngModelChange)="updateDraftSpeakersHeadline('subheadline', $event)" />
+              </div>
+            </div>
+            @for (sp of draft().speakers.speakers; track $index) {
+              <div class="edit-chapter-block">
+                <div class="edit-chapter-header">
+                  <span class="edit-chapter-num">{{ sp.name || 'Intervenant ' + ($index + 1) }}</span>
+                  <button class="edit-btn-remove" (click)="removeSpeaker($index)" [disabled]="draft().speakers.speakers.length <= 1">✕</button>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Portrait</label>
+                  <div class="edit-upload-zone" style="width:100px;height:100px" (click)="spInput.click()">
+                    @if (sp.portraitUrl) {
+                      <img class="edit-upload-preview" [src]="sp.portraitUrl" [alt]="sp.name" />
+                    } @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <span>Photo</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #spInput type="file" accept="image/*" class="edit-upload-input" (change)="onSpeakerPortraitChange($event, $index)" />
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Nom complet</label>
+                    <input class="edit-input" type="text" [ngModel]="sp.name" (ngModelChange)="updateDraftSpeaker($index, 'name', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Titre / Poste</label>
+                    <input class="edit-input" type="text" [ngModel]="sp.title" (ngModelChange)="updateDraftSpeaker($index, 'title', $event)" />
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Entreprise / Organisation</label>
+                  <input class="edit-input" type="text" [ngModel]="sp.company" (ngModelChange)="updateDraftSpeaker($index, 'company', $event)" />
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Biographie</label>
+                  <textarea class="edit-textarea" rows="3" [ngModel]="sp.bio" (ngModelChange)="updateDraftSpeaker($index, 'bio', $event)"></textarea>
+                </div>
+                <div class="edit-toggle-row">
+                  <div class="edit-toggle-info">
+                    <span class="edit-toggle-label">Keynote speaker</span>
+                    <span class="edit-toggle-desc">Affiche le badge Keynote sur la carte</span>
+                  </div>
+                  <label class="edit-toggle-switch" [class.checked]="sp.isKeynote">
+                    <input type="checkbox" [ngModel]="sp.isKeynote" (ngModelChange)="updateDraftSpeaker($index, 'isKeynote', $event)" />
+                    <span class="edit-toggle-track"><span class="edit-toggle-thumb"></span></span>
+                  </label>
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addSpeaker()">+ Ajouter un intervenant</button>
+          </div>
+        }
+
+        <!-- ── SPONSORS ── -->
+        @if (activeSection() === 'sponsors') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Sponsors</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre de section</label>
+              <input class="edit-input" type="text" [ngModel]="draft().sponsors.headline" (ngModelChange)="updateDraftSponsorsHeadline($event)" />
+            </div>
+            @for (sp of draft().sponsors.sponsors; track $index) {
+              <div class="edit-program-item">
+                <div class="edit-program-item-header">
+                  <span class="edit-program-idx">{{ sp.name || 'Sponsor ' + ($index + 1) }}</span>
+                  <button class="edit-btn-remove" (click)="removeSponsor($index)">✕</button>
+                </div>
+                <div class="edit-field-row">
+                  <div class="edit-field">
+                    <label class="edit-label">Nom</label>
+                    <input class="edit-input" type="text" [ngModel]="sp.name" (ngModelChange)="updateDraftSponsor($index, 'name', $event)" />
+                  </div>
+                  <div class="edit-field">
+                    <label class="edit-label">Niveau</label>
+                    <select class="edit-input" [ngModel]="sp.level" (ngModelChange)="updateDraftSponsor($index, 'level', $event)">
+                      <option value="platine">Platine</option>
+                      <option value="or">Or</option>
+                      <option value="argent">Argent</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Logo</label>
+                  <div class="edit-upload-zone" style="width:100%;height:60px" (click)="spLogoInput.click()">
+                    @if (sp.logoUrl) {
+                      <img class="edit-upload-preview" [src]="sp.logoUrl" [alt]="sp.name" style="object-fit:contain;padding:4px" />
+                    } @else {
+                      <div class="edit-upload-placeholder"><span>Importer logo</span></div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #spLogoInput type="file" accept="image/*" class="edit-upload-input" (change)="onSponsorLogoChange($event, $index)" />
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Site web</label>
+                  <input class="edit-input" type="url" [ngModel]="sp.websiteUrl" (ngModelChange)="updateDraftSponsor($index, 'websiteUrl', $event)" />
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addSponsor()">+ Ajouter un sponsor</button>
+          </div>
+        }
+
+        <!-- ── FAQ ── -->
+        @if (activeSection() === 'faq') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">FAQ</h3>
+            @for (item of draft().faq.items; track $index) {
+              <div class="edit-faq-item">
+                <div class="edit-faq-item-header">
+                  <span class="edit-program-idx">Q{{ $index + 1 }}</span>
+                  <button class="edit-btn-remove" (click)="removeFaqItem($index)">✕</button>
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Question</label>
+                  <input class="edit-input" type="text" [ngModel]="item.q" (ngModelChange)="updateDraftFaqItem($index, 'q', $event)" />
+                </div>
+                <div class="edit-field">
+                  <label class="edit-label">Réponse</label>
+                  <textarea class="edit-textarea" rows="3" [ngModel]="item.a" (ngModelChange)="updateDraftFaqItem($index, 'a', $event)"></textarea>
+                </div>
+              </div>
+            }
+            <button class="edit-btn-add" (click)="addFaqItem()">+ Ajouter une question</button>
+          </div>
+        }
+
+        <!-- ── RSVP ── -->
+        @if (activeSection() === 'rsvp') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Inscription</h3>
+            <div class="edit-field">
+              <label class="edit-label">Titre</label>
+              <input class="edit-input" type="text" [ngModel]="draft().rsvp.title" (ngModelChange)="updateDraftRsvp('title', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre</label>
+              <textarea class="edit-textarea" rows="4" [ngModel]="draft().rsvp.subtitle" (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
+            </div>
+          </div>
+        }
+
+        <!-- ── GALERIE ── -->
+        @if (activeSection() === 'gallery') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Galerie</h3>
+            <div class="edit-gallery-grid">
+              @for (item of draft().gallery.items; track $index) {
+                <div class="edit-gallery-item">
+                  <div class="edit-gallery-upload" (click)="galleryInput.click()">
+                    @if (item.url) {
+                      <img [src]="item.url" [alt]="item.caption" />
+                    } @else {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Ajouter</span>
+                      </div>
+                    }
+                    <div class="edit-upload-overlay">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <input #galleryInput type="file" accept="image/*" class="edit-upload-input" (change)="onGalleryImageChange($event, $index)" />
+                  <input class="edit-input edit-gallery-caption" type="text" placeholder="Légende…"
+                         [ngModel]="item.caption" (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
+                  <div class="edit-gallery-item-footer">
+                    <button class="edit-gallery-badge" [class.active]="item.large" (click)="toggleDraftGalleryLarge($index)">
+                      {{ item.large ? '★ Grande' : '☆ Grande' }}
+                    </button>
+                    <button class="edit-btn-remove" (click)="removeGalleryItem($index)" [disabled]="draft().gallery.items.length <= 1">✕</button>
+                  </div>
+                </div>
+              }
+            </div>
+            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
+          </div>
+        }
+
+        <!-- ── BACKGROUNDS ── -->
+        @if (activeSection() === 'backgrounds') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Fonds &amp; Bandeaux</h3>
+            @for (bg of BG_FIELDS; track bg.key) {
+              <div class="edit-bg-card">
+                <div class="edit-bg-preview-wrap" (click)="bgInput.click()">
+                  <div class="edit-bg-preview" [style.backgroundImage]="draft().backgrounds[bg.key] ? 'url(' + draft().backgrounds[bg.key] + ')' : 'none'">
+                    @if (!draft().backgrounds[bg.key]) {
+                      <div class="edit-upload-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="3" y="3" width="18" height="18" rx="2"/>
+                          <circle cx="8.5" cy="8.5" r="1.5"/>
+                          <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <span>Aucune image</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="edit-upload-overlay">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <span>Changer</span>
+                  </div>
+                </div>
+                <input #bgInput type="file" accept="image/*" class="edit-upload-input" (change)="onBackgroundImageChange($event, bg.key)" />
+                <div class="edit-bg-info">
+                  <span class="edit-bg-label">{{ bg.label }}</span>
+                  <span class="edit-bg-hint">{{ bg.hint }}</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ── FOOTER ── -->
+        @if (activeSection() === 'footer') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">Footer</h3>
+            <div class="edit-field">
+              <label class="edit-label">Nom / Logo texte</label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.logoText" (ngModelChange)="updateDraftFooter('logoText', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Sous-titre <span class="edit-hint">date · lieu · ville</span></label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.subText" (ngModelChange)="updateDraftFooter('subText', $event)" />
+            </div>
+            <div class="edit-field">
+              <label class="edit-label">Tagline</label>
+              <input class="edit-input" type="text" [ngModel]="draft().footer.tagline" (ngModelChange)="updateDraftFooter('tagline', $event)" />
+            </div>
+            <div class="edit-footer-preview">
+              <div class="edit-footer-preview-logo" style="font-family:'Belleza',sans-serif;font-size:1.5rem">{{ draft().footer.logoText }}</div>
+              <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
+              <p class="edit-footer-preview-love" style="font-size:.6rem;letter-spacing:.2em">{{ draft().footer.tagline }}</p>
+            </div>
+          </div>
+        }
+
+      </div><!-- /edit-modal-body -->
+
+      <div class="edit-modal-footer">
+        <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
+        <div class="edit-modal-footer-right">
+          <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
+          <button class="edit-btn-save" (click)="saveEdit()"
+                  [disabled]="!draft().hero.maxAttendees || draft().hero.maxAttendees < 1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Enregistrer
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}
