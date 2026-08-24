@@ -43,11 +43,10 @@ export class EventEditComponent implements OnInit {
   readonly TOTAL_STEPS = 4;
 
   readonly typeOptions: TypeOption[] = [
-    { key: 'MARIAGE',                 label: 'Mariage',                 icon: '💍' },
-    { key: 'FIANCAILLES',             label: 'Fiançailles',             icon: '💒' },
-    { key: 'ANNIVERSAIRE_MARIAGE',    label: 'Anniversaire de mariage', icon: '🥂' },
-    { key: 'ANNIVERSAIRE',            label: 'Anniversaire',            icon: '🎂' },
-    { key: 'EVENEMENT_PROFESSIONNEL', label: 'Événement professionnel', icon: '💼' },
+    { key: 'MARIAGE',    label: 'Mariage',    icon: '💍' },
+    { key: 'GALA',       label: 'Gala',       icon: '🎭' },
+    { key: 'CONFERENCE', label: 'Conférence', icon: '🎤' },
+    { key: 'CEREMONIE',  label: 'Cérémonie',  icon: '🎗️' },
   ];
 
   // ── Step 1 ──
@@ -64,13 +63,14 @@ export class EventEditComponent implements OnInit {
   // ── Step 3 ──
   step3 = this.fb.group({
     eventDate:         [''],
+    banquetLocation:   [''],
+    banquetDateTime:   [''],
+    // Champs mariage conservés pour compatibilité (non affichés pour les autres types)
     religiousLocation: [''],
     religiousDateTime: [''],
     civilLocation:     [''],
     civilDateTime:     [''],
-    banquetLocation:   [''],
-    banquetDateTime:   [''],
-    showWeddingReligiousLocation: [true],
+    showWeddingReligiousLocation: [false],
   });
 
   // ── Step 4 : card fields ──
@@ -88,8 +88,7 @@ export class EventEditComponent implements OnInit {
   });
 
   get isMariage(): boolean {
-    const t = this.step1.value.type;
-    return t === 'MARIAGE' || t === 'FIANCAILLES';
+    return this.step1.value.type === 'MARIAGE';
   }
 
   get progress(): number { return (this.step() / this.TOTAL_STEPS) * 100; }
@@ -130,6 +129,11 @@ export class EventEditComponent implements OnInit {
   next(): void {
     const current = this.step();
     if (current === 1 && this.step1.invalid) { this.step1.markAllAsTouched(); return; }
+    // MARIAGE dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isMariage) {
+      this.router.navigate(['/events', this.eventId(), 'wedding']);
+      return;
+    }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }
     if (current < this.TOTAL_STEPS) this.step.set(current + 1);
   }
@@ -158,12 +162,12 @@ export class EventEditComponent implements OnInit {
         if (e.couplePhotoUrl) this.existingPhotoUrl.set(e.couplePhotoUrl);
         this.step3.patchValue({
           eventDate:         this.toLocalInput(e.eventDate),
+          banquetLocation:   e.banquetLocation   ?? '',
+          banquetDateTime:   this.toLocalInput(e.banquetDateTime),
           religiousLocation: e.religiousLocation ?? '',
           religiousDateTime: this.toLocalInput(e.religiousDateTime),
-          civilLocation:     e.civilLocation ?? '',
+          civilLocation:     e.civilLocation     ?? '',
           civilDateTime:     this.toLocalInput(e.civilDateTime),
-          banquetLocation:   e.banquetLocation ?? '',
-          banquetDateTime:   this.toLocalInput(e.banquetDateTime),
           showWeddingReligiousLocation: e.showWeddingReligiousLocation,
         });
         // Déterminer le mode carte selon importMyModelCard
@@ -216,8 +220,10 @@ export class EventEditComponent implements OnInit {
       concernedNames: v2.concernedNames || undefined,
       maxGuests:      v2.maxGuests,
       budget:         this.computedBudget || undefined,
-      eventDate:      this.isMariage ? (v3.civilDateTime || undefined) : (v3.eventDate || undefined),
-      showWeddingReligiousLocation: this.isMariage ? v3.showWeddingReligiousLocation : false,
+      eventDate:      v3.eventDate       || undefined,
+      banquetLocation: v3.banquetLocation || undefined,
+      banquetDateTime: v3.banquetDateTime || undefined,
+      showWeddingReligiousLocation: false,
       importMyModelCard: mode === 'UPLOAD',
     };
 
@@ -226,8 +232,7 @@ export class EventEditComponent implements OnInit {
       base.religiousDateTime = v3.religiousDateTime || undefined;
       base.civilLocation     = v3.civilLocation     || undefined;
       base.civilDateTime     = v3.civilDateTime     || undefined;
-      base.banquetLocation   = v3.banquetLocation   || undefined;
-      base.banquetDateTime   = v3.banquetDateTime   || undefined;
+      base.showWeddingReligiousLocation = v3.showWeddingReligiousLocation;
     }
 
     const id = this.eventId();
@@ -323,7 +328,7 @@ export class EventEditComponent implements OnInit {
     sessionStorage.setItem('join_preview', JSON.stringify({
       eventTitle:      v2.title || '',
       concernedNames:  v2.concernedNames || '',
-      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+      eventDate:       v3.eventDate || '',
       couplePhotoUrl:  this.couplePhotoPreview() || this.existingPhotoUrl(),
       banquetLocation: v3.banquetLocation || '',
     }));

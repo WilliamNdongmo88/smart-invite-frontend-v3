@@ -3,9 +3,11 @@ import {
   signal, computed, inject, PLATFORM_ID, ElementRef
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { EventService } from '../../core/services/event.service';
+import { ToastService } from '../../core/services/toast.service';
 import {
   WeddingDetailsContent,
   WeddingDetailsEditSection,
@@ -42,6 +44,8 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     venueCity:       'GOSNÉ',
     heroCatchphrase: 'Une célébration pensée comme un souvenir éternel.',
     targetDate:      '2026-08-08T14:00:00',
+    maxGuests:       300,
+    budget:          '15 600 XAF',
   },
   couple: {
     bridePortraitUrl: '/images/leatitia-seule.webp',
@@ -207,6 +211,19 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   private readonly platformId  = inject(PLATFORM_ID);
   private readonly el          = inject(ElementRef);
   private readonly authService = inject(AuthService);
+  private readonly route       = inject(ActivatedRoute);
+  private readonly router      = inject(Router);
+  private readonly eventSvc    = inject(EventService);
+  private readonly toast       = inject(ToastService);
+
+  // ── Mode création vs édition ──────────────────────────────────────
+  /** ID de l'événement existant (null = mode création) */
+  readonly eventId    = signal<number | null>(null);
+  readonly isEditMode = computed(() => this.eventId() !== null);
+  /** Nombre max d'invités transmis depuis le wizard event-create/edit */
+  readonly maxGuests  = signal<number>(300);
+  /** Sauvegarde en cours vers le backend */
+  saving = signal(false);
 
   // ── Auth ───────────────────────────────────────────────────────────
   readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
@@ -281,12 +298,64 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const saved = localStorage.getItem('si_home_content');
+    // ── Détecter le mode (création vs édition) ──────────────────────
+    const idParam        = this.route.snapshot.paramMap.get('id');
+    const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
+    if (maxGuestsParam) {
+      const n = Number(maxGuestsParam);
+      if (!isNaN(n) && n > 0) {
+        this.maxGuests.set(n);
+        // Répercuter immédiatement dans le content
+        this.content.update(c => {
+          const d = deepClone(c);
+          d.hero.maxGuests = n;
+          d.hero.budget    = n > 0 ? `${(n * 52).toLocaleString('fr-FR')} XAF` : '';
+          return d;
+        });
+      }
+    }
+    if (idParam) {
+      const id = Number(idParam);
+      this.eventId.set(id);
+      // Charger l'événement existant pour pré-remplir les données
+      this.eventSvc.findById(id).subscribe({
+        next: (res) => {
+          const e = res.data!;
+          // Mettre à jour les champs du content à partir de l'événement backend
+          this.content.update(c => {
+            const updated = deepClone(c);
+            // Hero
+            const names = (e.concernedNames ?? '').split('&').map((s: string) => s.trim());
+            updated.hero.brideFirstName  = names[0] || updated.hero.brideFirstName;
+            updated.hero.groomFirstName  = names[1] || updated.hero.groomFirstName;
+            updated.hero.dateLabel       = e.eventDate
+              ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+              : updated.hero.dateLabel;
+            updated.hero.targetDate      = e.eventDate ?? updated.hero.targetDate;
+            updated.hero.venueName       = e.banquetLocation ?? updated.hero.venueName;
+            // Footer
+            updated.footer.logoText      = e.concernedNames ?? updated.footer.logoText;
+            updated.footer.subText       = [
+              e.eventDate ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '',
+              e.banquetLocation ?? '',
+            ].filter(Boolean).join(' · ') || updated.footer.subText;
+            return updated;
+          });
+        },
+        error: () => {
+          this.toast.error("Impossible de charger l'événement");
+          this.router.navigate(['/events']);
+        },
+      });
+    }
+
+    // ── Charger le contenu sauvegardé en localStorage ───────────────
+    const storageKey = idParam ? `si_wedding_${idParam}` : 'si_home_content';
+    const saved = localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as WeddingDetailsContent & {
           program: WeddingDetailsContent['program'] & {
-            // champs de l'ancienne structure à migrer
             beforeDayLabel?: string;
             dayLabel?: string;
             programBefore?: WeddingDetailsProgramItem[];
@@ -299,18 +368,16 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
           const days: WeddingDetailsProgramDay[] = [];
           if (parsed.program.programBefore?.length) {
             days.push({
-              date:     '2026-08-07',
-              label:    parsed.program.beforeDayLabel ?? 'La Veille',
-              tabIcon:  '☾', tabDate: '07 AOÛT', tabLabel: 'La Veille',
-              items:    parsed.program.programBefore,
+              date: '2026-08-07', label: parsed.program.beforeDayLabel ?? 'La Veille',
+              tabIcon: '☾', tabDate: '07 AOÛT', tabLabel: 'La Veille',
+              items: parsed.program.programBefore,
             });
           }
           if (parsed.program.programDay?.length) {
             days.push({
-              date:     '2026-08-08',
-              label:    parsed.program.dayLabel ?? 'Le Grand Jour',
-              tabIcon:  '☼', tabDate: '08 AOÛT', tabLabel: 'Le Jour J',
-              items:    parsed.program.programDay,
+              date: '2026-08-08', label: parsed.program.dayLabel ?? 'Le Grand Jour',
+              tabIcon: '☼', tabDate: '08 AOÛT', tabLabel: 'Le Jour J',
+              items: parsed.program.programDay,
             });
           }
           (parsed.program as WeddingDetailsContent['program']) = {
@@ -319,15 +386,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
           };
         }
 
-        // Rétrocompatibilité : ajouter gallery si absente
         if (!(parsed as WeddingDetailsContent).gallery) {
           (parsed as WeddingDetailsContent).gallery = deepClone(INITIAL_CONTENT.gallery);
         }
-        // Rétrocompatibilité : ajouter backgrounds si absent
         if (!(parsed as WeddingDetailsContent).backgrounds) {
           (parsed as WeddingDetailsContent).backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
         }
-        // Rétrocompatibilité : ajouter footer si absent
         if (!(parsed as WeddingDetailsContent).footer) {
           (parsed as WeddingDetailsContent).footer = deepClone(INITIAL_CONTENT.footer);
         }
@@ -500,17 +564,114 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     // Recaler l'index si un jour a été supprimé
     const count = this.content().program.days.length;
     if (this.activeDayIdx() >= count) this.activeDayIdx.set(Math.max(0, count - 1));
+
+    // Persister en localStorage (clé propre par événement si mode édition)
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('si_home_content', JSON.stringify(this.content()));
+      const key = this.eventId() ? `si_wedding_${this.eventId()}` : 'si_home_content';
+      localStorage.setItem(key, JSON.stringify(this.content()));
     }
+
+    // ── Console.log du JSON complet pour validation (appel API désactivé) ──
+    console.log('══════════ WeddingDetailsContent — JSON complet ══════════');
+    console.log(JSON.stringify(this.content(), null, 2));
+    console.log('══════════════════════════════════════════════════════════');
+
     this.closeEdit();
+  }
+
+  /** Mappe le WeddingDetailsContent vers un CreateEventRequest et appelle l'API */
+  private saveToBackend(): void {
+    const c = this.content();
+    const req = this.contentToEventRequest(c);
+    const id = this.eventId();
+
+    this.saving.set(true);
+
+    if (id) {
+      // Mode édition — PUT /api/events/:id
+      this.eventSvc.update(id, req).subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.toast.success('Mariage mis à jour avec succès !');
+        },
+        error: () => {
+          this.saving.set(false);
+          this.toast.error('Erreur lors de la mise à jour. Les modifications sont sauvegardées localement.');
+        },
+      });
+    } else {
+      // Mode création — POST /api/events
+      this.eventSvc.create(req).subscribe({
+        next: (res) => {
+          const newId = res.data!.id;
+          this.eventId.set(newId);
+          this.saving.set(false);
+          this.toast.success('Mariage créé avec succès !');
+          // Migrer la clé localStorage vers la clé propre à l'événement
+          if (isPlatformBrowser(this.platformId)) {
+            const content = localStorage.getItem('si_home_content');
+            if (content) {
+              localStorage.setItem(`si_wedding_${newId}`, content);
+            }
+          }
+          // Mettre à jour l'URL sans recharger la page
+          this.router.navigate(['/events', newId, 'wedding'], { replaceUrl: true });
+        },
+        error: () => {
+          this.saving.set(false);
+          this.toast.error('Erreur lors de la création. Les modifications sont sauvegardées localement.');
+        },
+      });
+    }
+  }
+
+  /** Construit le payload API à partir du contenu éditeur */
+  private contentToEventRequest(c: WeddingDetailsContent): any {
+    const h = c.hero;
+    const targetDateStr = h.targetDate.substring(0, 10); // "YYYY-MM-DD"
+
+    // Jour J = le jour dont la date correspond à targetDate (ou le dernier si non trouvé)
+    const jourJ  = c.program.days.find(d => d.date === targetDateStr)
+                ?? c.program.days[c.program.days.length - 1];
+
+    // Veille = le ou les jours avant le Jour J, on prend le dernier avant targetDate
+    const veille = [...c.program.days]
+                     .filter(d => d.date && d.date < targetDateStr)
+                     .sort((a, b) => b.date.localeCompare(a.date))[0];
+
+    // Construire le nom du couple depuis les prénoms héros ou le footer
+    const coupleName = c.footer.logoText
+      || `${h.brideFirstName} & ${h.groomFirstName}`;
+
+    return {
+      title:                       `Mariage ${h.brideFirstName} & ${h.groomFirstName}`,
+      type:                        'MARIAGE',
+      concernedNames:              coupleName,
+      description:                 c.rsvp.subtitle || undefined,
+      maxGuests:                   this.maxGuests(),
+      eventDate:                   h.targetDate  || undefined,
+      // Jour J → banquet (réception principale)
+      banquetLocation:             jourJ?.label   || undefined,
+      banquetDateTime:             jourJ?.date     ? `${jourJ.date}T${h.targetDate.substring(11) || '14:00:00'}` : undefined,
+      // Veille → civil (mariage civil / accueil)
+      civilLocation:               veille?.label  || undefined,
+      civilDateTime:               veille?.date    ? `${veille.date}T14:00:00` : undefined,
+      // Champs religieux non gérés par le WeddingDetailsComponent pour l'instant
+      religiousLocation:           undefined,
+      religiousDateTime:           undefined,
+      showWeddingReligiousLocation: false,
+      importMyModelCard:            false,
+    };
   }
 
   resetToDefault(): void {
     if (confirm('Remettre tout le contenu d\'origine ? Cette action est irréversible.')) {
       this.content.set(deepClone(INITIAL_CONTENT));
       this.activeDayIdx.set(0);
-      if (isPlatformBrowser(this.platformId)) localStorage.removeItem('si_home_content');
+      if (isPlatformBrowser(this.platformId)) {
+        const key = this.eventId() ? `si_wedding_${this.eventId()}` : 'si_home_content';
+        localStorage.removeItem(key);
+      }
       this.closeEdit();
     }
   }
@@ -523,6 +684,15 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   updateDraftHero(key: keyof WeddingDetailsContent['hero'], value: string): void {
     const d = deepClone(this.draft());
     (d.hero as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
+  /** Met à jour maxGuests et recalcule budget automatiquement */
+  updateDraftMaxGuests(value: number): void {
+    const d = deepClone(this.draft());
+    const n = Number(value) || 0;
+    d.hero.maxGuests = n;
+    d.hero.budget    = n > 0 ? `${(n * 52).toLocaleString('fr-FR')} XAF` : '';
     this.draft.set(d);
   }
 

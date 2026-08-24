@@ -35,6 +35,8 @@ export interface WeddingDetailsHeroContent {
   venueCity: string;
   heroCatchphrase: string;
   targetDate: string; // ISO string pour le countdown
+  maxGuests: number;  // nombre max d'invités (saisi dans le wizard)
+  budget: string;     // montant calculé automatiquement (maxGuests × 52 XAF)
 }
 
 export interface WeddingDetailsCoupleContent {

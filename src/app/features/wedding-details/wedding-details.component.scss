@@ -1575,7 +1575,7 @@
   .palette-swatches { grid-template-columns: repeat(2, 1fr); margin-left: -28px;}
   .rsvp-card { padding: 1.75rem 1.25rem; }
   .cagnotte-toast { bottom: 5rem; right: 1rem; }
-  .music-fab { bottom: 1.25rem; right: 1.25rem; width: 50px; height: 50px; font-size: 1.2rem; }
+  .music-fab { bottom: 1.25rem; right: 1.25rem; width: 50px; height: 50px; font-size: 1.2rem; margin-bottom: 2rem;}
 }
 
 @media (max-width: 480px) {
@@ -2606,4 +2606,94 @@ section { position: relative; }
   letter-spacing: .2em;
   text-transform: uppercase;
   color: var(--gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAV — Bouton retour & indicateur de sauvegarde
+═══════════════════════════════════════════════════════════════ */
+.btn-nav-back {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  color: rgba(255,255,255,.65);
+  font-family: 'Belleza', sans-serif;
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: .45rem .9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  transition: color .2s, border-color .2s, background .2s;
+
+  &:hover {
+    color: #fff;
+    border-color: rgba(255,255,255,.35);
+    background: rgba(255,255,255,.12);
+  }
+}
+
+.nav-saving-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: 'Belleza', sans-serif;
+  font-size: .65rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .8;
+}
+
+.nav-saving-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: savingPulse 1s ease-in-out infinite;
+}
+
+@keyframes savingPulse {
+  0%, 100% { opacity: .3; transform: scale(.8); }
+  50%       { opacity: 1;  transform: scale(1.2); }
+}
+
+/* Badge "Éditeur dédié" dans event-create / event-edit */
+.type-badge {
+  display: inline-block;
+  font-family: 'Belleza', sans-serif;
+  font-size: .55rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(201,169,97,.4);
+  border-radius: 4px;
+  padding: .1rem .35rem;
+  margin-top: .25rem;
+}
+
+/* Bannière mariage dans event-create / event-edit */
+.recommendation-banner--wedding {
+  border-color: rgba(201,169,97,.3);
+  background: rgba(201,169,97,.06);
+}
+
+/* ── Budget display dans le modal d'édition ──────────────────────── */
+.edit-budget-display {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  padding: .6rem .85rem;
+  font-family: 'Belleza', sans-serif;
+  font-size: .85rem;
+  color: var(--gold);
+}
+.edit-budget-detail {
+  font-size: .68rem;
+  color: rgba(255,255,255,.35);
+  letter-spacing: .04em;
 }

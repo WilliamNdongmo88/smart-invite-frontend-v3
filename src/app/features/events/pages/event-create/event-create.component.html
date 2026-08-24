@@ -49,12 +49,30 @@
         <h2 class="wizard-title">Quel type d'événement organisez-vous ?</h2>
         <p class="wizard-sub">Sélectionnez le type pour adapter le formulaire</p>
       </div>
+
+      @if (isMariage) {
+        <div class="recommendation-banner recommendation-banner--wedding">
+          <span class="rec-icon">💍</span>
+          <div class="rec-text">
+            <strong>Événement Mariage</strong>
+            <span>
+              Les mariages bénéficient d'un éditeur dédié avec page personnalisée,
+              galerie photos, programme sur plusieurs jours et bien plus encore.
+              Cliquez sur <strong>Accéder à l'éditeur Mariage</strong> pour continuer.
+            </span>
+          </div>
+        </div>
+      }
+
       <form [formGroup]="step1">
         <div class="type-grid">
           @for (opt of typeOptions; track opt.key) {
             <button type="button" class="type-card" [class.selected]="step1.value.type === opt.key" (click)="selectType(opt.key)">
               <span class="type-icon">{{ opt.icon }}</span>
               <span class="type-label">{{ opt.label }}</span>
+              @if (opt.key === 'MARIAGE') {
+                <span class="type-badge">Éditeur dédié</span>
+              }
             </button>
           }
         </div>
@@ -78,16 +96,14 @@
           <div class="field full">
             <label class="label">Titre <span class="req">*</span></label>
             <input formControlName="title" type="text" class="input" [class.error]="isInvalid(step2,'title')"
-              placeholder="Ex : Mariage de Sophie & Thomas" />
+              placeholder="Ex : Gala de charité 2026" />
             @if (isInvalid(step2,'title')) { <p class="field-error">Requis, minimum 3 caractères</p> }
           </div>
 
-          @if (isMariage) {
-            <div class="field full">
-              <label class="label">Noms des mariés / fiancés</label>
-              <input formControlName="concernedNames" type="text" class="input" placeholder="Sophie & Thomas" />
-            </div>
-          }
+          <div class="field full">
+            <label class="label">Noms / personnes concernées</label>
+            <input formControlName="concernedNames" type="text" class="input" placeholder="Association XYZ, Dr. Dupont…" />
+          </div>
 
           <div class="field">
             <label class="label">Invités maximum <span class="req">*</span></label>
@@ -111,16 +127,15 @@
               placeholder="Décrivez votre événement..."></textarea>
           </div>
 
-          <!-- Photo du couple / événement -->
           <div class="field full">
-            <label class="label">Photo du couple / événement <span class="label-hint">(affichée sur la page d'inscription)</span></label>
+            <label class="label">Photo de l'événement <span class="label-hint">(affichée sur la page d'inscription)</span></label>
             <div class="photo-upload-zone" [class.has-photo]="couplePhotoPreview()">
-              <input type="file" accept="image/*" id="couple-photo" class="upload-input" (change)="onCouplePhotoChange($event)" />
+              <input type="file" accept="image/*" id="event-photo" class="upload-input" (change)="onCouplePhotoChange($event)" />
               @if (couplePhotoPreview()) {
                 <img [src]="couplePhotoPreview()" class="photo-preview" alt="Prévisualisation" />
-                <label for="couple-photo" class="photo-change-btn">Changer la photo</label>
+                <label for="event-photo" class="photo-change-btn">Changer la photo</label>
               } @else {
-                <label for="couple-photo" class="photo-upload-label">
+                <label for="event-photo" class="photo-upload-label">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
                     <rect x="3" y="3" width="18" height="18" rx="2"/>
                     <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -138,84 +153,28 @@
     </div>
   }
 
-  <!-- ════ STEP 3 : Dates & Lieux ════ -->
+  <!-- ════ STEP 3 : Date & Lieu ════ -->
   @if (step() === 3) {
     <div class="wizard-card">
       <div class="wizard-head">
-        <h2 class="wizard-title">{{ isMariage ? 'Lieux & dates' : 'Date & lieu' }}</h2>
-        <p class="wizard-sub">{{ isMariage ? 'Renseignez les différentes cérémonies' : "Quand et où se déroule l'événement ?" }}</p>
+        <h2 class="wizard-title">Date &amp; Lieu</h2>
+        <p class="wizard-sub">Quand et où se déroule l'événement ?</p>
       </div>
       <form [formGroup]="step3">
-
-        @if (!isMariage) {
-          <div class="fields-grid">
-            <div class="field">
-              <label class="label">Date & heure</label>
-              <input formControlName="eventDate" type="datetime-local" class="input" />
-            </div>
+        <div class="fields-grid">
+          <div class="field">
+            <label class="label">Date &amp; heure</label>
+            <input formControlName="eventDate" type="datetime-local" class="input" />
           </div>
-        } @else {
-
-          <div class="wedding-sections">
-
-            <div class="wedding-block">
-              <div class="wedding-block-header">
-                <span class="wb-icon">⛪</span>
-                <h3 class="wb-title">Cérémonie religieuse</h3>
-                <label class="toggle-label">
-                  <input type="checkbox" formControlName="showWeddingReligiousLocation" class="toggle-input" />
-                  <span class="toggle-track"><span class="toggle-thumb"></span></span>
-                  <span class="toggle-text">Sur l'invitation</span>
-                </label>
-              </div>
-              <div class="fields-grid">
-                <div class="field">
-                  <label class="label">Lieu</label>
-                  <input formControlName="religiousLocation" type="text" class="input" placeholder="Église Saint-Pierre" />
-                </div>
-                <div class="field">
-                  <label class="label">Date & heure</label>
-                  <input formControlName="religiousDateTime" type="datetime-local" class="input" />
-                </div>
-              </div>
-            </div>
-
-            <div class="wedding-block">
-              <div class="wedding-block-header">
-                <span class="wb-icon">🏛️</span>
-                <h3 class="wb-title">Cérémonie civile</h3>
-              </div>
-              <div class="fields-grid">
-                <div class="field">
-                  <label class="label">Lieu</label>
-                  <input formControlName="civilLocation" type="text" class="input" placeholder="Mairie centrale" />
-                </div>
-                <div class="field">
-                  <label class="label">Date & heure</label>
-                  <input formControlName="civilDateTime" type="datetime-local" class="input" />
-                </div>
-              </div>
-            </div>
-
-            <div class="wedding-block">
-              <div class="wedding-block-header">
-                <span class="wb-icon">🥂</span>
-                <h3 class="wb-title">Réception / Banquet</h3>
-              </div>
-              <div class="fields-grid">
-                <div class="field">
-                  <label class="label">Lieu</label>
-                  <input formControlName="banquetLocation" type="text" class="input" placeholder="Palais des fêtes" />
-                </div>
-                <div class="field">
-                  <label class="label">Date & heure</label>
-                  <input formControlName="banquetDateTime" type="datetime-local" class="input" />
-                </div>
-              </div>
-            </div>
-
+          <div class="field">
+            <label class="label">Lieu de la réception</label>
+            <input formControlName="banquetLocation" type="text" class="input" placeholder="Salle des fêtes, Hôtel Ivoire…" />
           </div>
-        }
+          <div class="field">
+            <label class="label">Date &amp; heure de la réception</label>
+            <input formControlName="banquetDateTime" type="datetime-local" class="input" />
+          </div>
+        </div>
       </form>
     </div>
   }
@@ -232,12 +191,11 @@
             <p class="wizard-sub">Choisissez comment gérer votre carte d'invitation</p>
           </div>
 
-          <!-- Recommandation banner -->
           <div class="recommendation-banner">
             <span class="rec-icon">💡</span>
             <div class="rec-text">
               <strong>Conseil Smart Invite</strong>
-              <span>Pour un rendu professionnel et personnalisé, nous vous recommandons d'importer votre propre modèle de carte au format PDF. Vous gardez ainsi un contrôle total sur le design de vos invitations.</span>
+              <span>Pour un rendu professionnel, importez votre propre modèle de carte au format PDF.</span>
             </div>
           </div>
 
@@ -260,38 +218,32 @@
             </button>
           </div>
 
-          <!-- CUSTOM card form -->
           @if (cardMode() === 'CUSTOM') {
             <form [formGroup]="cardForm" class="card-form">
               <div class="fields-grid">
                 <div class="field full">
                   <label class="label">Titre de l'invitation</label>
-                  <input formControlName="title" type="text" class="input"
-                    placeholder="Vous êtes cordialement invités..." />
+                  <input formControlName="title" type="text" class="input" placeholder="Vous êtes cordialement invités..." />
                 </div>
                 <div class="field full">
                   <label class="label">Message principal</label>
-                  <textarea formControlName="mainMessage" class="input textarea" rows="2"
-                    placeholder="C'est avec une immense joie que nous vous invitons..."></textarea>
+                  <textarea formControlName="mainMessage" class="input textarea" rows="2"></textarea>
                 </div>
                 <div class="field full">
                   <label class="label">Message partie 1</label>
-                  <input formControlName="mainMessagePart1" type="text" class="input"
-                    placeholder="Votre présence sera pour nous un immense bonheur." />
+                  <input formControlName="mainMessagePart1" type="text" class="input" />
                 </div>
                 <div class="field full">
                   <label class="label">Message partie 2</label>
-                  <input formControlName="mainMessagePart2" type="text" class="input"
-                    placeholder="Nous espérons partager avec vous des moments de joie." />
+                  <input formControlName="mainMessagePart2" type="text" class="input" />
                 </div>
                 <div class="field full">
                   <label class="label">Sous-message</label>
-                  <input formControlName="sousMainMessage" type="text" class="input"
-                    placeholder="Merci de confirmer votre présence avant le..." />
+                  <input formControlName="sousMainMessage" type="text" class="input" placeholder="Merci de confirmer votre présence avant le..." />
                 </div>
                 <div class="field">
                   <label class="label">Thème / ambiance</label>
-                  <input formControlName="eventTheme" type="text" class="input" placeholder="Chic & Glamour" />
+                  <input formControlName="eventTheme" type="text" class="input" placeholder="Black Tie, Casual…" />
                 </div>
                 <div class="field">
                   <label class="label">Code vestimentaire</label>
@@ -299,24 +251,20 @@
                 </div>
                 <div class="field full">
                   <label class="label">Instructions QR code</label>
-                  <input formControlName="qrInstructions" type="text" class="input"
-                    placeholder="Présentez ce QR code à l'entrée" />
+                  <input formControlName="qrInstructions" type="text" class="input" />
                 </div>
                 <div class="field full">
                   <label class="label">Message de remerciement</label>
-                  <input formControlName="thanksMessage1" type="text" class="input"
-                    placeholder="Merci de partager ce moment unique avec nous." />
+                  <input formControlName="thanksMessage1" type="text" class="input" />
                 </div>
                 <div class="field full">
                   <label class="label">Message de clôture</label>
-                  <input formControlName="closingMessage" type="text" class="input"
-                    placeholder="Au plaisir de vous accueillir" />
+                  <input formControlName="closingMessage" type="text" class="input" />
                 </div>
               </div>
             </form>
           }
 
-          <!-- UPLOAD PDF -->
           @if (cardMode() === 'UPLOAD') {
             <div class="upload-zone" [class.has-file]="uploadFile()">
               <input type="file" accept="application/pdf" id="pdf-upload" class="upload-input" (change)="onFileChange($event)" />
@@ -338,106 +286,58 @@
               </label>
             </div>
           }
-
         </div>
       </div>
 
-      <!-- Colonne droite : prévisualisation PDF importé -->
+      <!-- Prévisualisation PDF importé -->
       @if (cardMode() === 'UPLOAD' && uploadObjectUrl()) {
         <div class="preview-col">
           <iframe [src]="uploadObjectUrl()" class="pdf-iframe" title="Prévisualisation PDF"></iframe>
         </div>
       }
 
-      <!-- Colonne droite : prévisualisation CUSTOM -->
+      <!-- Prévisualisation CUSTOM -->
       @if (cardMode() === 'CUSTOM') {
         <div class="preview-col">
           <div class="preview-wrapper">
-
-            <!-- Bande supérieure -->
             <div class="preview-top-band">
               <img src="/img/logo.png" class="preview-logo" alt="Smart Invite" />
               <p class="preview-title">{{ cardForm.value.title || "Titre de l'invitation" }}</p>
             </div>
-
             <div class="preview-body">
-
-              <!-- Salutation + messages -->
               <p class="preview-salutation">Cher/Chère Invité(e),</p>
               <div class="preview-messages">
                 <span>{{ cardForm.value.mainMessage }}</span>
                 <span>{{ cardForm.value.mainMessagePart1 }}</span>
                 <span>{{ cardForm.value.mainMessagePart2 }}</span>
               </div>
-
               <hr class="preview-divider" />
               <p class="preview-programme-title">PROGRAMME</p>
-
-              <!-- Cérémonies -->
-              @if (isMariage) {
-                <div class="preview-programme">
-                  @if (step3.value.civilLocation || step3.value.civilDateTime) {
-                    <div class="preview-ceremony">
-                      <span class="preview-ceremony-title">MARIAGE CIVIL {{ formatPreviewDate(step3.value.civilDateTime) }}</span>
-                      <span class="preview-ceremony-loc">{{ step3.value.civilLocation }}</span>
-                    </div>
-                  }
-                  @if (step3.value.showWeddingReligiousLocation && (step3.value.religiousLocation || step3.value.religiousDateTime)) {
-                    <div class="preview-ceremony">
-                      <span class="preview-ceremony-title">CÉRÉMONIE RELIGIEUSE {{ formatPreviewDate(step3.value.religiousDateTime) }}</span>
-                      <span class="preview-ceremony-loc">{{ step3.value.religiousLocation }}</span>
-                    </div>
-                  }
-                  @if (step3.value.banquetLocation || step3.value.banquetDateTime) {
-                    <div class="preview-ceremony">
-                      <span class="preview-ceremony-title">RÉCEPTION NUPTIALE {{ formatPreviewDate(step3.value.banquetDateTime) }}</span>
-                      <span class="preview-ceremony-loc">{{ step3.value.banquetLocation }}</span>
-                    </div>
+              <div class="preview-programme">
+                <div class="preview-ceremony">
+                  <span class="preview-ceremony-title">{{ step2.value.title }}</span>
+                  <span class="preview-ceremony-loc">{{ formatPreviewDate(step3.value.eventDate) }}</span>
+                  @if (step3.value.banquetLocation) {
+                    <span class="preview-ceremony-loc">{{ step3.value.banquetLocation }}</span>
                   }
                 </div>
-              } @else {
-                <div class="preview-programme">
-                  <div class="preview-ceremony">
-                    <span class="preview-ceremony-title">{{ step2.value.title }}</span>
-                    <span class="preview-ceremony-loc">{{ formatPreviewDate(step3.value.eventDate) }}</span>
-                  </div>
-                </div>
-              }
-
-              <hr class="preview-divider" />
-
-              @if (cardForm.value.eventTheme) {
-                <p class="preview-theme">THÈME DE LA SOIRÉE : {{ cardForm.value.eventTheme }}</p>
-              }
-
-              <div class="preview-qr-zone">
-                <img src="/img/qrcode.png" class="preview-logo" alt="Smart Invite" />
-                <!-- <div class="preview-qr-placeholder">QR CODE</div> -->
-                @if (cardForm.value.qrInstructions) {
-                  <p class="preview-qr-text">{{ cardForm.value.qrInstructions }}</p>
-                }
-                @if (cardForm.value.dressCodeMessage) {
-                  <p class="preview-qr-text">{{ cardForm.value.dressCodeMessage }}</p>
-                }
-                @if (cardForm.value.sousMainMessage) {
-                  <p class="preview-qr-text">{{ cardForm.value.sousMainMessage }}</p>
-                }
               </div>
-
-              @if (cardForm.value.thanksMessage1) {
-                <p class="preview-thanks">{{ cardForm.value.thanksMessage1 }}</p>
+              <hr class="preview-divider" />
+              @if (cardForm.value.eventTheme) {
+                <p class="preview-theme">THÈME : {{ cardForm.value.eventTheme }}</p>
               }
-              @if (cardForm.value.closingMessage) {
-                <p class="preview-closing">{{ cardForm.value.closingMessage }}</p>
-              }
-
+              <div class="preview-qr-zone">
+                <img src="/img/qrcode.png" class="preview-logo" alt="QR" />
+                @if (cardForm.value.qrInstructions) { <p class="preview-qr-text">{{ cardForm.value.qrInstructions }}</p> }
+                @if (cardForm.value.dressCodeMessage) { <p class="preview-qr-text">{{ cardForm.value.dressCodeMessage }}</p> }
+                @if (cardForm.value.sousMainMessage) { <p class="preview-qr-text">{{ cardForm.value.sousMainMessage }}</p> }
+              </div>
+              @if (cardForm.value.thanksMessage1) { <p class="preview-thanks">{{ cardForm.value.thanksMessage1 }}</p> }
+              @if (cardForm.value.closingMessage)  { <p class="preview-closing">{{ cardForm.value.closingMessage }}</p> }
             </div>
-
-            <!-- Bande inférieure -->
             <div class="preview-bottom-band">
               <p class="preview-names">{{ step2.value.concernedNames || step2.value.title }}</p>
             </div>
-
           </div>
         </div>
       }
@@ -445,7 +345,7 @@
     </div>
   }
 
-  <!-- Bouton aperçu (étape 4 uniquement) -->
+  <!-- Bouton aperçu (étape 4) -->
   @if (step() === 4) {
     <div class="preview-bar">
       <button type="button" class="btn-preview-full" (click)="previewJoinPage()">
@@ -473,10 +373,17 @@
 
     @if (step() < 4) {
       <button type="button" class="btn-next" (click)="next()">
-        Suivant
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
+        @if (step() === 1 && isMariage) {
+          Accéder à l'éditeur Mariage
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        } @else {
+          Suivant
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        }
       </button>
     } @else {
       <button type="button" class="btn-submit" [disabled]="loading()" (click)="onSubmit()">

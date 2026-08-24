@@ -18,32 +18,29 @@ interface TypeOption { key: EventType; label: string; icon: string; }
   styleUrl: 'event-create.component.scss',
 })
 export class EventCreateComponent {
-  private readonly fb     = inject(FormBuilder);
-  private readonly svc    = inject(EventService);
-  private readonly toast  = inject(ToastService);
-  private readonly router = inject(Router);
-
+  private readonly fb        = inject(FormBuilder);
+  private readonly svc       = inject(EventService);
+  private readonly toast     = inject(ToastService);
+  private readonly router    = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
 
-  step    = signal(1);
-  loading = signal(false);
-  cardMode = signal<CardMode>('NONE');
-  uploadFile = signal<File | null>(null);
-  uploadPreview = signal<string | null>(null);
+  step            = signal(1);
+  loading         = signal(false);
+  cardMode        = signal<CardMode>('NONE');
+  uploadFile      = signal<File | null>(null);
+  uploadPreview   = signal<string | null>(null);
   uploadObjectUrl = signal<SafeResourceUrl | null>(null);
 
-  // Photo couple
-  couplePhotoFile   = signal<File | null>(null);
+  couplePhotoFile    = signal<File | null>(null);
   couplePhotoPreview = signal<string | null>(null);
 
   readonly TOTAL_STEPS = 4;
 
   readonly typeOptions: TypeOption[] = [
-    { key: 'MARIAGE',                 label: 'Mariage',                 icon: '💍' },
-    { key: 'FIANCAILLES',             label: 'Fiançailles',             icon: '💒' },
-    { key: 'ANNIVERSAIRE_MARIAGE',    label: 'Anniversaire de mariage', icon: '🥂' },
-    { key: 'ANNIVERSAIRE',            label: 'Anniversaire',            icon: '🎂' },
-    { key: 'EVENEMENT_PROFESSIONNEL', label: 'Événement professionnel', icon: '💼' },
+    { key: 'MARIAGE',    label: 'Mariage',    icon: '💍' },
+    { key: 'GALA',       label: 'Gala',       icon: '🎭' },
+    { key: 'CONFERENCE', label: 'Conférence', icon: '🎤' },
+    { key: 'CEREMONIE',  label: 'Cérémonie',  icon: '🎗️' },
   ];
 
   // ── Step 1 ──
@@ -55,7 +52,7 @@ export class EventCreateComponent {
   step2 = this.fb.group({
     title:          ['', [Validators.required, Validators.minLength(3)]],
     concernedNames: [''],
-    maxGuests:      [50, [Validators.required, Validators.min(1)]],
+    maxGuests:      [50,  [Validators.required, Validators.min(1)]],
     description:    [''],
   });
 
@@ -66,36 +63,28 @@ export class EventCreateComponent {
 
   // ── Step 3 ──
   step3 = this.fb.group({
-    eventDate:         [''],
-    religiousLocation: [''],
-    religiousDateTime: [''],
-    civilLocation:     [''],
-    civilDateTime:     [''],
-    banquetLocation:   [''],
-    banquetDateTime:   [''],
-    showWeddingReligiousLocation: [true],
+    eventDate:       [''],
+    banquetLocation: [''],
+    banquetDateTime: [''],
   });
 
-  // ── Step 4 : card fields ──
+  // ── Step 4 ──
   cardForm = this.fb.group({
-    title:            ["Vous êtes cordialement invités à notre mariage"],
-    mainMessage:      ["C'est avec une immense joie que nous vous invitons à célébrer notre union."],
+    title:            ['Vous êtes cordialement invités'],
+    mainMessage:      ["C'est avec une immense joie que nous vous invitons à célébrer cet événement."],
     mainMessagePart1: ['Votre présence à nos côtés sera pour nous un immense bonheur.'],
-    mainMessagePart2: ["Nous espérons partager avec vous des moments de joie, d'amour et de convivialité."],
-    sousMainMessage:  ['Merci de confirmer votre présence avant le 25 juillet 2026.'],
-    eventTheme:       ['Chic & Glamour'],
-    dressCodeMessage: ['Tenue de soirée élégante souhaitée.'],
-    qrInstructions:   ["Présentez ce QR Code à l'entrée de la réception pour faciliter votre accueil."],
+    mainMessagePart2: ["Nous espérons partager avec vous des moments de joie et de convivialité."],
+    sousMainMessage:  ['Merci de confirmer votre présence.'],
+    eventTheme:       [''],
+    dressCodeMessage: [''],
+    qrInstructions:   ["Présentez ce QR Code à l'entrée pour faciliter votre accueil."],
     thanksMessage1:   ['Merci de partager ce moment unique avec nous.'],
-    closingMessage:   ["Au plaisir de vous accueillir pour célébrer ensemble cette journée inoubliable."],
+    closingMessage:   ['Au plaisir de vous accueillir.'],
   });
 
-  get isMariage(): boolean {
-    const t = this.step1.value.type;
-    return t === 'MARIAGE' || t === 'FIANCAILLES';
-  }
-
-  get progress(): number { return (this.step() / this.TOTAL_STEPS) * 100; }
+  /** MARIAGE → redirige vers le WeddingDetailsComponent dédié */
+  get isMariage(): boolean { return this.step1.value.type === 'MARIAGE'; }
+  get progress(): number   { return (this.step() / this.TOTAL_STEPS) * 100; }
 
   selectType(type: EventType): void { this.step1.patchValue({ type }); }
   setCardMode(mode: CardMode): void { this.cardMode.set(mode); }
@@ -128,6 +117,11 @@ export class EventCreateComponent {
   next(): void {
     const current = this.step();
     if (current === 1 && this.step1.invalid) { this.step1.markAllAsTouched(); return; }
+    // MARIAGE dès l'étape 1 → éditeur dédié directement
+    if (current === 1 && this.isMariage) {
+      this.router.navigate(['/events/wedding/new']);
+      return;
+    }
     if (current === 2 && this.step2.invalid) { this.step2.markAllAsTouched(); return; }
     if (current < this.TOTAL_STEPS) this.step.set(current + 1);
   }
@@ -137,34 +131,24 @@ export class EventCreateComponent {
   onSubmit(): void {
     this.loading.set(true);
     const mode = this.cardMode();
-    const v1 = this.step1.value;
-    const v2 = this.step2.value;
-    const v3 = this.step3.value;
+    const v1   = this.step1.value;
+    const v2   = this.step2.value;
+    const v3   = this.step3.value;
 
     const base: any = {
-      title:          v2.title,
-      type:           v1.type,
-      description:    v2.description    || undefined,
-      concernedNames: v2.concernedNames || undefined,
-      maxGuests:      v2.maxGuests,
-      budget:         this.computedBudget || undefined,
-      eventDate:      this.isMariage ? (v3.civilDateTime || undefined) : (v3.eventDate || undefined),
-      showWeddingReligiousLocation: this.isMariage ? v3.showWeddingReligiousLocation : false,
+      title:             v2.title,
+      type:              v1.type,
+      description:       v2.description    || undefined,
+      concernedNames:    v2.concernedNames || undefined,
+      maxGuests:         v2.maxGuests,
+      budget:            this.computedBudget || undefined,
+      eventDate:         v3.eventDate        || undefined,
+      banquetLocation:   v3.banquetLocation  || undefined,
+      banquetDateTime:   v3.banquetDateTime  || undefined,
+      showWeddingReligiousLocation: false,
       importMyModelCard: mode === 'UPLOAD',
     };
 
-    console.log('Submitting event with data:', base, 'Card mode:', mode, 'Upload file:', this.uploadFile());
-
-    if (this.isMariage) {
-      base.religiousLocation = v3.religiousLocation || undefined;
-      base.religiousDateTime = v3.religiousDateTime || undefined;
-      base.civilLocation     = v3.civilLocation     || undefined;
-      base.civilDateTime     = v3.civilDateTime     || undefined;
-      base.banquetLocation   = v3.banquetLocation   || undefined;
-      base.banquetDateTime   = v3.banquetDateTime   || undefined;
-    }
-
-    // ── Cas 1 : sans carte ──
     if (mode === 'NONE') {
       this.svc.create(base).subscribe({
         next: (res) => this.doneWithPhoto(res.data!.id),
@@ -173,10 +157,9 @@ export class EventCreateComponent {
       return;
     }
 
-    // ── Cas 2 : avec carte personnalisée ──
     if (mode === 'CUSTOM') {
       const cv = this.cardForm.value;
-      const payload = {
+      this.svc.createWithCard({
         event: { ...base, importMyModelCard: false },
         invitationNote: {
           title:            cv.title            || undefined,
@@ -191,22 +174,20 @@ export class EventCreateComponent {
           closingMessage:   cv.closingMessage   || undefined,
           hasInvitationModelCard: false,
         },
-      };
-      this.svc.createWithCard(payload).subscribe({
+      }).subscribe({
         next: (res) => this.doneWithPhoto(res.data!.event.id),
         error: () => this.fail(),
       });
       return;
     }
 
-    // ── Cas 3 : upload PDF ──
+    // UPLOAD
     const file = this.uploadFile();
     if (!file) { this.toast.error('Veuillez sélectionner un fichier PDF'); this.loading.set(false); return; }
-
     this.svc.create(base).pipe(
       switchMap((res) => this.svc.uploadCustomCard(res.data!.id, file))
     ).subscribe({
-      next: (res) => this.doneWithPhoto(undefined as any),
+      next: () => this.doneWithPhoto(undefined as any),
       error: () => this.fail(),
     });
   }
@@ -215,11 +196,9 @@ export class EventCreateComponent {
     if (!dt) return '';
     const d = new Date(dt);
     if (isNaN(d.getTime())) return '';
-    const days = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    const days   = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
     const months = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-    const h = d.getHours().toString().padStart(2,'0');
-    const m = d.getMinutes().toString().padStart(2,'0');
-    return `le ${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} à ${h}:${m}`;
+    return `le ${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} à ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
   }
 
   private done(id?: number): void {
@@ -232,10 +211,7 @@ export class EventCreateComponent {
     const photo = this.couplePhotoFile();
     if (photo && id) {
       this.svc.uploadCouplePhoto(id, photo).subscribe({
-        next: () => {
-          this.openJoinPreview();
-          this.done(id);
-        },
+        next: () => { this.openJoinPreview(); this.done(id); },
         error: () => { this.toast.error('Photo non uploadée'); this.done(id); },
       });
     } else {
@@ -244,34 +220,28 @@ export class EventCreateComponent {
   }
 
   previewJoinPage(): void {
-    const v2 = this.step2.value;
-    const v3 = this.step3.value;
-    sessionStorage.setItem('join_preview', JSON.stringify({
-      eventTitle:      v2.title || '',
-      concernedNames:  v2.concernedNames || '',
-      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
-      couplePhotoUrl:  this.couplePhotoPreview(),
-      banquetLocation: v3.banquetLocation || '',
-    }));
+    sessionStorage.setItem('join_preview', JSON.stringify(this.buildPreview()));
     window.open('/join/preview', '_blank');
   }
 
   private openJoinPreview(): void {
+    sessionStorage.setItem('join_preview', JSON.stringify(this.buildPreview()));
+  }
+
+  private buildPreview() {
     const v2 = this.step2.value;
     const v3 = this.step3.value;
-    const preview = {
-      eventTitle:      v2.title || '',
-      concernedNames:  v2.concernedNames || '',
-      eventDate:       this.isMariage ? (v3.civilDateTime || '') : (v3.eventDate || ''),
+    return {
+      eventTitle:      v2.title           || '',
+      concernedNames:  v2.concernedNames  || '',
+      eventDate:       v3.eventDate       || '',
       couplePhotoUrl:  this.couplePhotoPreview(),
       banquetLocation: v3.banquetLocation || '',
     };
-    sessionStorage.setItem('join_preview', JSON.stringify(preview));
-    window.open('/join/preview', '_blank');
   }
 
   private fail(): void {
     this.loading.set(false);
-    this.toast.error('Erreur lors de la création');
+    this.toast.error('Une erreur est survenue. Veuillez réessayer.');
   }
 }

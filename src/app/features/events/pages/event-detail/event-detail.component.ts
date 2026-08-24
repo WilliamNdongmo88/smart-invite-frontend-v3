@@ -32,7 +32,7 @@ export class EventDetailComponent implements OnInit {
   statusLabel = computed(() => this.event() ? EVENT_STATUS_LABELS[this.event()!.status] : '');
   isMariage   = computed(() => {
     const t = this.event()?.type;
-    return t === 'MARIAGE' || t === 'FIANCAILLES';
+    return t === 'MARIAGE';
   });
   responseRate = computed(() => {
     const s = this.stats();

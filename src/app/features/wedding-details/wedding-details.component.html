@@ -13,14 +13,31 @@
     <li><a href="#rsvp">RSVP</a></li>
   </ul>
 
-  <!-- <div class="nav-actions">
-    <a
-      class="btn-nav-cagnotte"
-      href="https://tribee.fr/participations/mariage-leatitia-christophe"
-      target="_blank" rel="noopener">
-      🎁 CAGNOTTE TRIBEE
-    </a>
-    <a [routerLink]="'/portier'" class="btn-nav-portier">PORTIER</a>
+  <div class="nav-actions">
+    @if (isEditMode()) {
+      <a [routerLink]="['/events', eventId()]" class="btn-nav-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Retour à l'événement
+      </a>
+    } @else {
+      <a [routerLink]="'/events/new'" class="btn-nav-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Annuler
+      </a>
+    }
+
+    @if (saving()) {
+      <span class="nav-saving-indicator">
+        <span class="nav-saving-dot"></span>
+        Sauvegarde...
+      </span>
+    }
 
     @if (isLoggedIn()) {
       <button class="btn-edit-global" (click)="openEdit('hero')" title="Éditer la page">
@@ -32,7 +49,7 @@
         Éditer
       </button>
     }
-  </div> -->
+  </div>
 </nav>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -673,6 +690,36 @@
                      [ngModel]="draft().hero.targetDate"
                      (ngModelChange)="updateDraftHero('targetDate', $event)" />
             </div>
+
+            <div class="edit-divider"><span>Capacité</span></div>
+
+            <div class="edit-field-row">
+              <div class="edit-field">
+                <label class="edit-label">Invités maximum</label>
+                <input class="edit-input" type="number" min="1"
+                       [class.edit-input--error]="!draft().hero.maxGuests || draft().hero.maxGuests < 1"
+                       [ngModel]="draft().hero.maxGuests"
+                       (ngModelChange)="updateDraftMaxGuests($event)" />
+                @if (!draft().hero.maxGuests || draft().hero.maxGuests < 1) {
+                  <p class="edit-field-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Ce champ est requis pour enregistrer.
+                  </p>
+                }
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">Montant à payer <span class="edit-hint">calculé auto.</span></label>
+                <div class="edit-budget-display">
+                  💳 {{ draft().hero.budget || '—' }}
+                  @if (draft().hero.maxGuests > 0) {
+                    <span class="edit-budget-detail">({{ draft().hero.maxGuests }} × 52 XAF)</span>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
         }
 
@@ -1250,7 +1297,7 @@
         <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
         <div class="edit-modal-footer-right">
           <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
-          <button class="edit-btn-save" (click)="saveEdit()">
+          <button class="edit-btn-save" (click)="saveEdit()" [disabled]="!draft().hero.maxGuests || draft().hero.maxGuests < 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>

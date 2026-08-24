@@ -109,6 +109,12 @@ export const routes: Routes = [
           import('./features/events/pages/event-create/event-create.component').then((m) => m.EventCreateComponent),
       },
       {
+        // Création d'un mariage → WeddingDetailsComponent en mode création
+        path: 'events/wedding/new',
+        loadComponent: () =>
+          import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+      },
+      {
         path: 'events/:id',
         loadComponent: () =>
           import('./features/events/pages/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
@@ -117,6 +123,12 @@ export const routes: Routes = [
         path: 'events/:id/edit',
         loadComponent: () =>
           import('./features/events/pages/event-edit/event-edit.component').then((m) => m.EventEditComponent),
+      },
+      {
+        // Édition d'un mariage → WeddingDetailsComponent en mode édition
+        path: 'events/:id/wedding',
+        loadComponent: () =>
+          import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
       },
       {
         path: 'events/:id/card',
