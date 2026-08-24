@@ -2,15 +2,15 @@
      NAVIGATION STICKY
 ══════════════════════════════════════════════════════════════ -->
 <nav class="conf-nav" [class.nav-scrolled]="navScrolled()">
-  <a class="conf-nav-logo" href="#top">{{ hero().title }}</a>
+  <button type="button" class="conf-nav-logo" (click)="scrollTo('top')">{{ hero().title }}</button>
 
   <ul class="conf-nav-links">
-    <li><a href="#about">À PROPOS</a></li>
-    <li><a href="#agenda">PROGRAMME</a></li>
-    <li><a href="#speakers">INTERVENANTS</a></li>
-    <li><a href="#sponsors">SPONSORS</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#rsvp">INSCRIPTION</a></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('about')">À PROPOS</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('agenda')">PROGRAMME</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('speakers')">INTERVENANTS</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('sponsors')">SPONSORS</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('faq')">FAQ</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('rsvp')">INSCRIPTION</button></li>
   </ul>
 
   <div class="conf-nav-actions">
@@ -106,8 +106,8 @@
     </div>
 
     <div class="conf-hero-ctas reveal" style="--d:600ms">
-      <a href="#rsvp" class="conf-btn-primary">S'INSCRIRE</a>
-      <a href="#agenda" class="conf-btn-outline">VOIR LE PROGRAMME</a>
+      <button type="button" class="conf-btn-primary" (click)="scrollTo('rsvp')">S'INSCRIRE</button>
+      <button type="button" class="conf-btn-outline" (click)="scrollTo('agenda')">VOIR LE PROGRAMME</button>
     </div>
 
     <!-- Countdown -->
@@ -443,8 +443,8 @@
     </div>
     <p class="conf-rsvp-sub">{{ rsvp().subtitle }}</p>
     <div class="conf-rsvp-ctas">
-      <a href="#agenda" class="conf-btn-primary">Voir le programme</a>
-      <a href="#speakers" class="conf-btn-outline conf-btn-outline--light">Les intervenants</a>
+      <button type="button" class="conf-btn-primary" (click)="scrollTo('agenda')">Voir le programme</button>
+      <button type="button" class="conf-btn-outline conf-btn-outline--light" (click)="scrollTo('speakers')">Les intervenants</button>
     </div>
   </div>
 </section>

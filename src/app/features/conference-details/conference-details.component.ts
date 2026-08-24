@@ -382,6 +382,15 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     return labels[type] ?? type;
   }
 
+  /** Scroll fluide vers une section par son id */
+  scrollTo(sectionId: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const el = document.getElementById(sectionId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   // ── Edit modal ────────────────────────────────────────────────
   openEdit(section: ConferenceDetailsEditSection = 'hero'): void {
     this.draft.set(deepClone(this.content()));
