@@ -12,6 +12,12 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
+      import('./features/home/home.component').then((m) => m.HomeComponent),
+    pathMatch: 'full',
+  },
+  {
+    path: '',
+    loadComponent: () =>
       import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
     pathMatch: 'full',
   },
