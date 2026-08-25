@@ -669,7 +669,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'gallery');
     const d = deepClone(this.draft());
     d.gallery.items[idx].url = url;
     this.draft.set(d);
@@ -685,7 +685,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   async onBackgroundImageChange(event: Event, key: keyof ConferenceDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'backgrounds');
     this.updateDraftBackground(key, url);
   }
 
@@ -693,7 +693,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   async onSpeakerPortraitChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'speakers');
     const d = deepClone(this.draft());
     d.speakers.speakers[idx].portraitUrl = url;
     this.draft.set(d);
@@ -703,7 +703,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   async onSponsorLogoChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'sponsors');
     const d = deepClone(this.draft());
     d.sponsors.sponsors[idx].logoUrl = url;
     this.draft.set(d);
@@ -716,7 +716,21 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     this.draft.set(d);
   }
 
-  // ── Helpers ───────────────────────────────────────────────────
+  // ── Upload d'images vers Firebase Storage ──────────────────────────
+  private uploadFile(file: File, folder: string = 'conference'): Promise<string> {
+    return new Promise((resolve) => {
+      this.eventSvc.uploadImage(file, folder).subscribe({
+        next: (res) => {
+          this.toast.success('Image uploadée avec succès');
+          resolve(res.data!);
+        },
+        error: () => {
+          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+        }
+      });
+    });
+  }
+
   private readFileAsDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

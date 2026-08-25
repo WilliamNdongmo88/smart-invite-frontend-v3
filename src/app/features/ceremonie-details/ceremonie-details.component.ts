@@ -463,7 +463,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'gallery');
     const d = deepClone(this.draft()); d.gallery.items[idx].url = url; this.draft.set(d);
   }
 
@@ -474,7 +474,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onBackgroundImageChange(event: Event, key: keyof CeremonieDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'backgrounds');
     this.updateDraftBackground(key, url);
   }
 
@@ -482,13 +482,28 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onGuestPortraitChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'guests');
     const d = deepClone(this.draft()); d.keyGuests.guests[idx].portraitUrl = url; this.draft.set(d);
   }
 
   // ── Draft — Footer ────────────────────────────────────────────
   updateDraftFooter(key: keyof CeremonieDetailsFooterContent, value: string): void {
     const d = deepClone(this.draft()); d.footer[key] = value; this.draft.set(d);
+  }
+
+  // ── Upload d'images vers Firebase Storage ──────────────────────────
+  private uploadFile(file: File, folder: string = 'ceremonie'): Promise<string> {
+    return new Promise((resolve) => {
+      this.eventSvc.uploadImage(file, folder).subscribe({
+        next: (res) => {
+          this.toast.success('Image uploadée avec succès');
+          resolve(res.data!);
+        },
+        error: () => {
+          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+        }
+      });
+    });
   }
 
   private readFileAsDataUrl(file: File): Promise<string> {

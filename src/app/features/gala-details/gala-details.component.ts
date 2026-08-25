@@ -525,7 +525,7 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'gallery');
     const d = deepClone(this.draft()); d.gallery.items[idx].url = url; this.draft.set(d);
   }
 
@@ -536,7 +536,7 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   async onBackgroundImageChange(event: Event, key: keyof GalaDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'backgrounds');
     this.updateDraftBackground(key, url);
   }
 
@@ -544,7 +544,7 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   async onPerformerPortraitChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'performers');
     const d = deepClone(this.draft()); d.performers.performers[idx].portraitUrl = url; this.draft.set(d);
   }
 
@@ -553,7 +553,21 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     const d = deepClone(this.draft()); d.footer[key] = value; this.draft.set(d);
   }
 
-  // ── Helpers ───────────────────────────────────────────────────
+  // ── Upload d'images vers Firebase Storage ──────────────────────────
+  private uploadFile(file: File, folder: string = 'gala'): Promise<string> {
+    return new Promise((resolve) => {
+      this.eventSvc.uploadImage(file, folder).subscribe({
+        next: (res) => {
+          this.toast.success('Image uploadée avec succès');
+          resolve(res.data!);
+        },
+        error: () => {
+          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+        }
+      });
+    });
+  }
+
   private readFileAsDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

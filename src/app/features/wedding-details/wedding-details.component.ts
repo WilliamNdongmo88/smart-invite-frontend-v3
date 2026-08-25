@@ -810,7 +810,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'gallery');
     const d = deepClone(this.draft());
     d.gallery.items[idx].url = url;
     this.draft.set(d);
@@ -833,7 +833,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBackgroundImageChange(event: Event, key: keyof WeddingDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'backgrounds');
     this.updateDraftBackground(key, url);
   }
 
@@ -842,13 +842,22 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     return this.draft().story.chapters[idx].paragraphs.join('\n\n');
   }
 
-  // ── Upload d'images (Data URL — prêt pour remplacement HTTP) ──────
+  // ── Upload d'images vers Firebase Storage ──────────────────────────
 
-  /**
-   * Lit un fichier image et retourne une Data URL via FileReader.
-   * Quand le backend sera prêt, remplacer le corps par un appel HTTP
-   * et résoudre la promesse avec l'URL distante retournée.
-   */
+  private uploadFile(file: File, folder: string = 'wedding'): Promise<string> {
+    return new Promise((resolve) => {
+      this.eventSvc.uploadImage(file, folder).subscribe({
+        next: (res) => {
+          this.toast.success('Image uploadée avec succès');
+          resolve(res.data!);
+        },
+        error: () => {
+          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+        }
+      });
+    });
+  }
+
   private readFileAsDataUrl(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -862,7 +871,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBridePortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'portraits');
     this.updateDraftCouple('bridePortraitUrl', url);
   }
 
@@ -870,7 +879,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onGroomPortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'portraits');
     this.updateDraftCouple('groomPortraitUrl', url);
   }
 
@@ -878,7 +887,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onChapterImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.readFileAsDataUrl(file);
+    const url = await this.uploadFile(file, 'story');
     this.updateDraftChapter(idx, 'image', url);
   }
 }
