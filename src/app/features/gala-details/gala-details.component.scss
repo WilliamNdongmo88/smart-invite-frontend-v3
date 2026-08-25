@@ -129,6 +129,23 @@
 .gala-saving-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gala-gold); animation: savingPulse 1s ease-in-out infinite; }
 @keyframes savingPulse { 0%,100% { opacity:.3; transform:scale(.8); } 50% { opacity:1; transform:scale(1.2); } }
 
+.gala-btn-save {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Belleza', sans-serif; font-size: .62rem;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--gala-dark, #0d0d0d); background: var(--gala-gold, #c9a84c);
+  border: 1px solid rgba(255,255,255,.3); padding: .4rem 1rem;
+  border-radius: 7px; cursor: pointer; font-weight: 600;
+  transition: all .2s;
+  box-shadow: 0 2px 10px rgba(201,168,76,.35);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(201,168,76,.5);
+    filter: brightness(1.1);
+  }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
 .gala-btn-edit {
   display: inline-flex; align-items: center; gap: .35rem;
   font-family: 'Belleza', sans-serif; font-size: .62rem;

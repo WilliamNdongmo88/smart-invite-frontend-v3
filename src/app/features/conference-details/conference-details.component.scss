@@ -165,6 +165,34 @@
   50%      { opacity:1;  transform:scale(1.2); }
 }
 
+.conf-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-family: 'Belleza', sans-serif;
+  font-size: .65rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--conf-teal, #00c9a7);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: .4rem 1rem;
+  border-radius: 7px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .2s;
+  box-shadow: 0 2px 10px rgba(0,201,167,.3);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(0,201,167,.45);
+    filter: brightness(1.1);
+  }
+  &:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+}
+
 .conf-btn-edit {
   display: inline-flex;
   align-items: center;

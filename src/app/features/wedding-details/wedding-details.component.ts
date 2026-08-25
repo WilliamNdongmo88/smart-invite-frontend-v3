@@ -321,26 +321,23 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       this.eventSvc.findById(id).subscribe({
         next: (res) => {
           const e = res.data!;
-          // Mettre à jour les champs du content à partir de l'événement backend
-          this.content.update(c => {
-            const updated = deepClone(c);
-            // Hero
-            const names = (e.concernedNames ?? '').split('&').map((s: string) => s.trim());
-            updated.hero.brideFirstName  = names[0] || updated.hero.brideFirstName;
-            updated.hero.groomFirstName  = names[1] || updated.hero.groomFirstName;
-            updated.hero.dateLabel       = e.eventDate
-              ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
-              : updated.hero.dateLabel;
-            updated.hero.targetDate      = e.eventDate ?? updated.hero.targetDate;
-            updated.hero.venueName       = e.banquetLocation ?? updated.hero.venueName;
-            // Footer
-            updated.footer.logoText      = e.concernedNames ?? updated.footer.logoText;
-            updated.footer.subText       = [
-              e.eventDate ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '',
-              e.banquetLocation ?? '',
-            ].filter(Boolean).join(' · ') || updated.footer.subText;
-            return updated;
-          });
+          if (e.detailsContent || e.weddingDetailsContent) {
+            this.content.set(deepClone(e.detailsContent || e.weddingDetailsContent));
+          } else {
+            this.content.update(c => {
+              const updated = deepClone(c);
+              const names = (e.concernedNames ?? '').split('&').map((s: string) => s.trim());
+              updated.hero.brideFirstName  = names[0] || updated.hero.brideFirstName;
+              updated.hero.groomFirstName  = names[1] || updated.hero.groomFirstName;
+              updated.hero.dateLabel       = e.dateLabel || (e.eventDate
+                ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+                : updated.hero.dateLabel);
+              updated.hero.targetDate      = e.eventDate ?? updated.hero.targetDate;
+              updated.hero.venueName       = e.venueName ?? e.banquetLocation ?? updated.hero.venueName;
+              updated.hero.venueCity       = e.venueCity ?? updated.hero.venueCity;
+              return updated;
+            });
+          }
         },
         error: () => {
           this.toast.error("Impossible de charger l'événement");
@@ -579,89 +576,47 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     this.closeEdit();
   }
 
-  /** Mappe le WeddingDetailsContent vers un CreateEventRequest et appelle l'API */
-  private saveToBackend(): void {
+  saveToBackend(): void {
     const c = this.content();
-    const req = this.contentToEventRequest(c);
+    const payload = {
+      eventType: 'MARIAGE' as const,
+      ...c,
+    };
     const id = this.eventId();
 
     this.saving.set(true);
 
     if (id) {
       // Mode édition — PUT /api/events/:id
-      this.eventSvc.update(id, req).subscribe({
+      this.eventSvc.update(id, payload).subscribe({
         next: () => {
           this.saving.set(false);
           this.toast.success('Mariage mis à jour avec succès !');
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.toast.error('Erreur lors de la mise à jour. Les modifications sont sauvegardées localement.');
+          this.toast.error(err?.error?.message || 'Erreur lors de la mise à jour.');
         },
       });
     } else {
       // Mode création — POST /api/events
-      this.eventSvc.create(req).subscribe({
+      this.eventSvc.create(payload).subscribe({
         next: (res) => {
           const newId = res.data!.id;
           this.eventId.set(newId);
           this.saving.set(false);
           this.toast.success('Mariage créé avec succès !');
-          // Migrer la clé localStorage vers la clé propre à l'événement
           if (isPlatformBrowser(this.platformId)) {
-            const content = localStorage.getItem('si_home_content');
-            if (content) {
-              localStorage.setItem(`si_wedding_${newId}`, content);
-            }
+            localStorage.setItem(`si_wedding_${newId}`, JSON.stringify(c));
           }
-          // Mettre à jour l'URL sans recharger la page
           this.router.navigate(['/events', newId, 'wedding'], { replaceUrl: true });
         },
-        error: () => {
+        error: (err) => {
           this.saving.set(false);
-          this.toast.error('Erreur lors de la création. Les modifications sont sauvegardées localement.');
+          this.toast.error(err?.error?.message || 'Erreur lors de la création.');
         },
       });
     }
-  }
-
-  /** Construit le payload API à partir du contenu éditeur */
-  private contentToEventRequest(c: WeddingDetailsContent): any {
-    const h = c.hero;
-    const targetDateStr = h.targetDate.substring(0, 10); // "YYYY-MM-DD"
-
-    // Jour J = le jour dont la date correspond à targetDate (ou le dernier si non trouvé)
-    const jourJ  = c.program.days.find(d => d.date === targetDateStr)
-                ?? c.program.days[c.program.days.length - 1];
-
-    // Veille = le ou les jours avant le Jour J, on prend le dernier avant targetDate
-    const veille = [...c.program.days]
-                     .filter(d => d.date && d.date < targetDateStr)
-                     .sort((a, b) => b.date.localeCompare(a.date))[0];
-
-    // Construire le nom du couple depuis les prénoms héros ou le footer
-    const coupleName = c.footer.logoText
-      || `${h.brideFirstName} & ${h.groomFirstName}`;
-
-    return {
-      title:                       `Mariage ${h.brideFirstName} & ${h.groomFirstName}`,
-      type:                        'MARIAGE',
-      concernedNames:              coupleName,
-      description:                 c.rsvp.subtitle || undefined,
-      maxGuests:                   this.maxGuests(),
-      eventDate:                   h.targetDate  || undefined,
-      // Jour J → banquet (réception principale)
-      banquetLocation:             jourJ?.label   || undefined,
-      banquetDateTime:             jourJ?.date     ? `${jourJ.date}T${h.targetDate.substring(11) || '14:00:00'}` : undefined,
-      // Veille → civil (mariage civil / accueil)
-      civilLocation:               veille?.label  || undefined,
-      civilDateTime:               veille?.date    ? `${veille.date}T14:00:00` : undefined,
-      // Champs religieux non gérés par le WeddingDetailsComponent pour l'instant
-      religiousLocation:           undefined,
-      religiousDateTime:           undefined,
-      showWeddingReligiousLocation: false,
-      importMyModelCard:            false,
-    };
   }
 
   resetToDefault(): void {

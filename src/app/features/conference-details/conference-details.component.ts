@@ -274,20 +274,21 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
       this.eventSvc.findById(id).subscribe({
         next: (res) => {
           const e = res.data!;
-          this.content.update(c => {
-            const d = deepClone(c);
-            d.hero.title       = e.title ?? d.hero.title;
-            d.hero.dateLabel   = e.eventDate
-              ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
-              : d.hero.dateLabel;
-            d.hero.targetDate  = e.eventDate ?? d.hero.targetDate;
-            d.hero.venueName   = e.banquetLocation ?? d.hero.venueName;
-            d.footer.subText   = [
-              e.eventDate ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }) : '',
-              e.banquetLocation ?? '',
-            ].filter(Boolean).join(' · ') || d.footer.subText;
-            return d;
-          });
+          if (e.detailsContent || e.conferenceDetailsContent) {
+            this.content.set(deepClone(e.detailsContent || e.conferenceDetailsContent));
+          } else {
+            this.content.update(c => {
+              const d = deepClone(c);
+              d.hero.title       = e.title ?? d.hero.title;
+              d.hero.dateLabel   = e.dateLabel || (e.eventDate
+                ? new Date(e.eventDate).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
+                : d.hero.dateLabel);
+              d.hero.targetDate  = e.eventDate ?? d.hero.targetDate;
+              d.hero.venueName   = e.venueName ?? e.banquetLocation ?? d.hero.venueName;
+              d.hero.venueCity   = e.venueCity ?? d.hero.venueCity;
+              return d;
+            });
+          }
         },
         error: () => {
           this.toast.error("Impossible de charger l'événement");
@@ -421,6 +422,47 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     console.log('════════════════════════════════════════════════════════════');
 
     this.closeEdit();
+  }
+
+  saveToBackend(): void {
+    const c = this.content();
+    const payload = {
+      eventType: 'CONFERENCE' as const,
+      ...c,
+    };
+    const id = this.eventId();
+
+    this.saving.set(true);
+
+    if (id) {
+      this.eventSvc.update(id, payload).subscribe({
+        next: () => {
+          this.saving.set(false);
+          this.toast.success('Conférence mise à jour avec succès !');
+        },
+        error: (err) => {
+          this.saving.set(false);
+          this.toast.error(err?.error?.message || 'Erreur lors de la mise à jour.');
+        },
+      });
+    } else {
+      this.eventSvc.create(payload).subscribe({
+        next: (res) => {
+          const newId = res.data!.id;
+          this.eventId.set(newId);
+          this.saving.set(false);
+          this.toast.success('Conférence créée avec succès !');
+          if (isPlatformBrowser(this.platformId)) {
+            localStorage.setItem(`si_conference_${newId}`, JSON.stringify(c));
+          }
+          this.router.navigate(['/events', newId, 'conference'], { replaceUrl: true });
+        },
+        error: (err) => {
+          this.saving.set(false);
+          this.toast.error(err?.error?.message || 'Erreur lors de la création.');
+        },
+      });
+    }
   }
 
   resetToDefault(): void {

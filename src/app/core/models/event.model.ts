@@ -10,6 +10,9 @@ export interface Event {
   maxGuests: number;
   concernedNames?: string;
   eventDate?: string;
+  dateLabel?: string;
+  venueName?: string;
+  venueCity?: string;
   religiousLocation?: string;
   religiousDateTime?: string;
   civilLocation?: string;
@@ -17,31 +20,25 @@ export interface Event {
   banquetLocation?: string;
   banquetDateTime?: string;
   couplePhotoUrl?: string;
-  showWeddingReligiousLocation: boolean;
-  importMyModelCard: boolean;
+  showWeddingReligiousLocation?: boolean;
+  importMyModelCard?: boolean;
+  detailsContent?: any;
+  weddingDetailsContent?: any;
+  conferenceDetailsContent?: any;
+  galaDetailsContent?: any;
+  ceremonieDetailsContent?: any;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface CreateEventRequest {
-  title: string;
-  description?: string;
-  type: EventType;
-  budget?: string;
-  maxGuests: number;
-  concernedNames?: string;
-  eventDate?: string;
-  religiousLocation?: string;
-  religiousDateTime?: string;
-  civilLocation?: string;
-  civilDateTime?: string;
-  banquetLocation?: string;
-  banquetDateTime?: string;
-  showWeddingReligiousLocation?: boolean;
-  importMyModelCard?: boolean;
-}
+export type EventPayloadRequest = {
+  eventType: EventType;
+  hero?: any;
+  [key: string]: any;
+};
 
-export type UpdateEventRequest = CreateEventRequest;
+export type CreateEventRequest = EventPayloadRequest | Record<string, any>;
+export type UpdateEventRequest = EventPayloadRequest | Record<string, any>;
 
 export interface EventStats {
   id: number;

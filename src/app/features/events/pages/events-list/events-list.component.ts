@@ -97,7 +97,9 @@ export class EventsListComponent implements OnInit {
   }
 
   location(event: Event): string {
-    return event.banquetLocation ?? event.religiousLocation ?? event.civilLocation ?? '';
+    const loc = event.venueName ?? event.banquetLocation ?? event.religiousLocation ?? event.civilLocation ?? '';
+    const city = event.venueCity ? ` (${event.venueCity})` : '';
+    return loc ? `${loc}${city}` : '';
   }
 
   statusClass(status: string): string {

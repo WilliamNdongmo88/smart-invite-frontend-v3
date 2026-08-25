@@ -98,6 +98,20 @@
 .cere-saving { display: inline-flex; align-items: center; gap: .35rem; font-family: 'Belleza', sans-serif; font-size: .6rem; letter-spacing: .1em; color: var(--cere-sage); }
 .cere-saving-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cere-sage); animation: savingPulse 1s ease-in-out infinite; }
 @keyframes savingPulse { 0%,100% { opacity:.3;transform:scale(.8); } 50% { opacity:1;transform:scale(1.2); } }
+.cere-btn-save {
+  display: inline-flex; align-items: center; gap: .35rem;
+  font-family: 'Belleza', sans-serif; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
+  color: #fff; background: var(--cere-sage, #7a9e7e);
+  border: 1px solid rgba(255,255,255,.3); padding: .4rem 1rem; border-radius: 7px; cursor: pointer; font-weight: 600;
+  transition: all .2s; box-shadow: 0 2px 10px rgba(122,158,126,.35);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(122,158,126,.5);
+    filter: brightness(1.1);
+  }
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
 .cere-btn-edit {
   display: inline-flex; align-items: center; gap: .35rem;
   font-family: 'Belleza', sans-serif; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
