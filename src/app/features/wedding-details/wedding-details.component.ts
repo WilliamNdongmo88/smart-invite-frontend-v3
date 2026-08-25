@@ -224,9 +224,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   readonly maxGuests  = signal<number>(300);
   /** Sauvegarde en cours vers le backend */
   saving = signal(false);
+  /** Mode prévisualisation : depuis event-detail, pas d'outils d'édition */
+  readonly isPreview  = signal(false);
 
   // ── Auth ───────────────────────────────────────────────────────────
-  readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
+  readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
 
   // ── Contenu éditable ──────────────────────────────────────────────
   content = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
@@ -302,6 +304,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     // ── Détecter le mode (création vs édition) ──────────────────────
     const idParam        = this.route.snapshot.paramMap.get('id');
     const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
+    const previewParam   = this.route.snapshot.queryParamMap.get('preview');
+
+    // Mode prévisualisation depuis event-detail
+    if (previewParam === 'true') {
+      this.isPreview.set(true);
+    }
     if (maxGuestsParam) {
       const n = Number(maxGuestsParam);
       if (!isNaN(n) && n > 0) {

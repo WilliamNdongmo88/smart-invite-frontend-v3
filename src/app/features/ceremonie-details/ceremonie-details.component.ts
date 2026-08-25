@@ -153,8 +153,9 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   readonly isEditMode = computed(() => this.eventId() !== null);
   readonly maxGuests  = signal<number>(120);
   saving = signal(false);
+  readonly isPreview  = signal(false);
 
-  readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
+  readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
 
   content = signal<CeremonieDetailsContent>(deepClone(INITIAL_CONTENT));
 
@@ -197,6 +198,11 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
 
     const idParam        = this.route.snapshot.paramMap.get('id');
     const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
+    const previewParam   = this.route.snapshot.queryParamMap.get('preview');
+
+    if (previewParam === 'true') {
+      this.isPreview.set(true);
+    }
 
     if (maxGuestsParam) {
       const n = Number(maxGuestsParam);

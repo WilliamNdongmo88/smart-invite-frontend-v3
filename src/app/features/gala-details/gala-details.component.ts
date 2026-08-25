@@ -162,9 +162,10 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   readonly isEditMode = computed(() => this.eventId() !== null);
   readonly maxGuests  = signal<number>(300);
   saving = signal(false);
+  readonly isPreview  = signal(false);
 
   // ── Auth ───────────────────────────────────────────────────────
-  readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
+  readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
 
   // ── Contenu éditable ──────────────────────────────────────────
   content = signal<GalaDetailsContent>(deepClone(INITIAL_CONTENT));
@@ -209,8 +210,13 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
 
-    const idParam       = this.route.snapshot.paramMap.get('id');
+    const idParam        = this.route.snapshot.paramMap.get('id');
     const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
+    const previewParam   = this.route.snapshot.queryParamMap.get('preview');
+
+    if (previewParam === 'true') {
+      this.isPreview.set(true);
+    }
 
     if (maxGuestsParam) {
       const n = Number(maxGuestsParam);

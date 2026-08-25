@@ -198,9 +198,10 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   readonly isEditMode = computed(() => this.eventId() !== null);
   readonly maxAttendees = signal<number>(500);
   saving = signal(false);
+  readonly isPreview  = signal(false);
 
   // ── Auth ───────────────────────────────────────────────────────
-  readonly isLoggedIn = computed(() => this.authService.isLoggedIn());
+  readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
 
   // ── Contenu éditable ──────────────────────────────────────────
   content = signal<ConferenceDetailsContent>(deepClone(INITIAL_CONTENT));
@@ -255,6 +256,11 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
 
     const idParam           = this.route.snapshot.paramMap.get('id');
     const maxAttendeesParam = this.route.snapshot.queryParamMap.get('maxGuests');
+    const previewParam      = this.route.snapshot.queryParamMap.get('preview');
+
+    if (previewParam === 'true') {
+      this.isPreview.set(true);
+    }
 
     if (maxAttendeesParam) {
       const n = Number(maxAttendeesParam);

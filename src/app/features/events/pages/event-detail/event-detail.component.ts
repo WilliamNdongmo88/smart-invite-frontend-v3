@@ -34,6 +34,19 @@ export class EventDetailComponent implements OnInit {
     const t = this.event()?.type;
     return t === 'MARIAGE';
   });
+
+  /** Route vers la page personnalisée (éditeur dédié) de l'événement */
+  readonly editorRoute = computed(() => {
+    const e = this.event();
+    if (!e) return null;
+    const map: Record<string, string> = {
+      MARIAGE:    'wedding',
+      CONFERENCE: 'conference',
+      GALA:       'gala',
+      CEREMONIE:  'ceremonie',
+    };
+    return map[e.type] ?? null;
+  });
   responseRate = computed(() => {
     const s = this.stats();
     if (!s || s.totalGuests === 0) return 0;
