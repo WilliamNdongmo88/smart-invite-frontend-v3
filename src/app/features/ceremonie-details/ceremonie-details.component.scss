@@ -227,17 +227,46 @@ section:hover > .cere-pencil, section:focus-within > .cere-pencil { opacity: 1; 
 .cere-section-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--cere-text); }
 
 /* ── À PROPOS ────────────────────────────────────────────── */
-.cere-about { background: var(--cere-ivory); overflow: hidden; }
-.cere-about-bg { opacity: .06; }
+.cere-about {
+  position: relative;
+  background: var(--cere-ivory);
+  overflow: hidden;
+
+  .cere-section-inner {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.cere-about-bg {
+  opacity: .55;
+  filter: saturate(1.15) brightness(0.96);
+  transition: opacity .3s;
+}
+
+.cere-about-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(247,243,235,.82) 0%, rgba(247,243,235,.88) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .cere-about-desc { font-family: 'Belleza', sans-serif; font-size: .9rem; color: var(--cere-text); line-height: 1.8; max-width: 700px; margin: 1.25rem auto 2rem; }
+
 .cere-message-card {
   display: inline-flex; align-items: center; gap: 1rem;
-  background: linear-gradient(135deg, rgba(122,158,126,.1), rgba(122,158,126,.05));
-  border: 1px solid rgba(122,158,126,.3); border-radius: 16px;
-  padding: 1.25rem 2rem; max-width: 680px; text-align: left;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(122,158,126,.35);
+  border-radius: 18px;
+  padding: 1.35rem 2.2rem;
+  max-width: 700px;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(122,158,126,.12);
 }
 .cere-message-icon { font-size: 1.8rem; flex-shrink: 0; }
-.cere-message-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--cere-text); line-height: 1.6; }
+.cere-message-text { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: var(--cere-ink); line-height: 1.6; }
 
 /* ── PROGRAMME ────────────────────────────────────────────── */
 .cere-program-section { background: var(--cere-cream); }

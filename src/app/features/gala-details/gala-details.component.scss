@@ -342,8 +342,29 @@ section:focus-within > .gala-pencil { opacity: 1; }
 /* ═══════════════════════════════════════════════════════════════
    À PROPOS
 ═══════════════════════════════════════════════════════════════ */
-.gala-about { background: #fff; overflow: hidden; }
-.gala-about-bg { opacity: .06; }
+.gala-about {
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+
+  .gala-section-inner {
+    position: relative;
+    z-index: 2;
+  }
+}
+
+.gala-about-bg {
+  opacity: .5;
+  filter: saturate(1.15);
+}
+
+.gala-about-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.84) 0%, rgba(249,246,239,.9) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
 
 .gala-about-desc {
   font-family: 'Belleza', sans-serif; font-size: .9rem;

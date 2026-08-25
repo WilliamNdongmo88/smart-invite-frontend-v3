@@ -161,8 +161,9 @@
       </svg>
     </button>
   }
+  <div class="conf-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
+  <div class="conf-about-overlay"></div>
   <div class="conf-section-inner">
-    <div class="conf-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
     <span class="conf-eyebrow-dark reveal" style="--d:0ms">L'ÉVÉNEMENT</span>
     <h2 class="conf-section-title reveal" style="--d:80ms">{{ about().headline }}</h2>
     <p class="conf-about-desc reveal" style="--d:160ms">{{ about().description }}</p>
@@ -444,7 +445,7 @@
       </svg>
     </button>
   }
-  <div class="conf-band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
+  <div class="conf-band-bg band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
   <div class="conf-band-overlay"></div>
 
   <div class="conf-rsvp-card reveal reveal--scale" style="--d:80ms">
