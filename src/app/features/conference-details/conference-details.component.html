@@ -15,29 +15,31 @@
 
   <div class="conf-nav-actions">
     @if (isEditMode()) {
-      <a [routerLink]="['/events', eventId()]" class="conf-btn-back">
+      <a [routerLink]="['/events', eventId()]" class="conf-btn-back" title="Retour à l'événement">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        Retour
+        <span class="btn-label-desktop">Retour à l'événement</span>
+        <span class="btn-label-mobile">Retour</span>
       </a>
     } @else {
-      <a [routerLink]="'/events/new'" class="conf-btn-back">
+      <a [routerLink]="'/events/new'" class="conf-btn-back" title="Annuler">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        Annuler
+        <span>Annuler</span>
       </a>
     }
     @if (saving()) {
       <span class="conf-saving">
-        <span class="conf-saving-dot"></span>Sauvegarde...
+        <span class="conf-saving-dot"></span>
+        <span class="btn-label-desktop">Sauvegarde...</span>
       </span>
     }
     @if (isLoggedIn()) {
-      <button class="conf-btn-save" (click)="saveToBackend()" [disabled]="saving()">
+      <button class="conf-btn-save" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? 'Enregistrer' : 'Créer l\'événement'">
         @if (saving()) {
           <span class="conf-saving-dot"></span>
         } @else {
@@ -48,16 +50,17 @@
             <polyline points="7 3 7 8 15 8"/>
           </svg>
         }
-        {{ isEditMode() ? 'Enregistrer' : 'Créer l\'événement' }}
+        <span class="btn-label-desktop">{{ isEditMode() ? 'Enregistrer' : 'Créer l\'événement' }}</span>
+        <span class="btn-label-mobile">{{ isEditMode() ? 'Enregistrer' : 'Créer' }}</span>
       </button>
 
-      <button class="conf-btn-edit" (click)="openEdit('hero')">
+      <button class="conf-btn-edit" (click)="openEdit('hero')" title="Éditer la page">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
-        Éditer
+        <span>Éditer</span>
       </button>
     }
   </div>

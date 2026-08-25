@@ -86,6 +86,14 @@
   transition: color .2s;
   &:hover { color: var(--cere-sage-light); }
 }
+.btn-label-desktop { display: inline; }
+.btn-label-mobile { display: none; }
+
+@media (max-width: 640px) {
+  .btn-label-desktop { display: none; }
+  .btn-label-mobile { display: inline; }
+}
+
 .cere-nav-actions { display: flex; align-items: center; gap: .75rem; }
 .cere-btn-back {
   display: inline-flex; align-items: center; gap: .3rem;
@@ -93,6 +101,7 @@
   color: rgba(255,255,255,.55); text-decoration: none;
   padding: .4rem .85rem; border: 1px solid rgba(255,255,255,.18); border-radius: 7px;
   background: rgba(255,255,255,.05); transition: color .2s, border-color .2s;
+  white-space: nowrap;
   &:hover { color: var(--cere-sage-light); border-color: rgba(122,158,126,.4); }
 }
 .cere-saving { display: inline-flex; align-items: center; gap: .35rem; font-family: 'Belleza', sans-serif; font-size: .6rem; letter-spacing: .1em; color: var(--cere-sage); }
@@ -104,6 +113,7 @@
   color: #fff; background: var(--cere-sage, #7a9e7e);
   border: 1px solid rgba(255,255,255,.3); padding: .4rem 1rem; border-radius: 7px; cursor: pointer; font-weight: 600;
   transition: all .2s; box-shadow: 0 2px 10px rgba(122,158,126,.35);
+  white-space: nowrap;
   &:hover:not(:disabled) {
     transform: translateY(-1px);
     box-shadow: 0 4px 14px rgba(122,158,126,.5);
@@ -117,9 +127,62 @@
   font-family: 'Belleza', sans-serif; font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
   color: var(--cere-sage); border: 1px solid rgba(122,158,126,.45); background: rgba(122,158,126,.1);
   padding: .4rem .9rem; border-radius: 7px; cursor: pointer;
+  transition: background .2s, color .2s;
+  white-space: nowrap;
   &:hover { background: rgba(122,158,126,.22); color: #fff; }
 }
+
 @media (max-width: 1024px) { .cere-nav-links { display: none; } }
+
+@media (max-width: 768px) {
+  .cere-nav {
+    padding: .65rem .85rem;
+    gap: .4rem;
+  }
+  .cere-nav-actions {
+    gap: .35rem;
+    flex-shrink: 0;
+  }
+  .cere-btn-back, .cere-btn-save, .cere-btn-edit {
+    padding: .38rem .6rem;
+    font-size: .62rem;
+    gap: .25rem;
+    border-radius: 6px;
+    svg { width: 13px; height: 13px; flex-shrink: 0; }
+  }
+}
+
+@media (max-width: 480px) {
+  .cere-nav {
+    padding: .5rem .5rem;
+  }
+  .cere-nav-logo {
+    font-size: 1rem;
+    max-width: 60px;
+  }
+  .cere-nav-actions {
+    gap: .25rem;
+  }
+  .cere-btn-back, .cere-btn-save, .cere-btn-edit {
+    padding: .35rem .45rem;
+    font-size: .58rem;
+    letter-spacing: .06em;
+  }
+}
+
+@media (max-width: 360px) {
+  .cere-nav-logo { display: none; }
+  .cere-nav-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .cere-btn-back, .cere-btn-save, .cere-btn-edit {
+    flex: 1;
+    justify-content: center;
+    padding: .35rem .3rem;
+    font-size: .55rem;
+  }
+}
 
 /* ═══════════════════════════════════════════════════════════════
    CRAYONS

@@ -1557,7 +1557,22 @@
 }
 
 @media (max-width: 768px) {
-  .site-nav { padding: .875rem 1.25rem; }
+  .site-nav {
+    padding: .65rem .85rem;
+    gap: .4rem;
+  }
+  .nav-actions {
+    gap: .35rem;
+    flex-shrink: 0;
+  }
+  .btn-nav-back, .btn-save-event, .btn-edit-global {
+    padding: .38rem .6rem;
+    font-size: .62rem;
+    gap: .25rem;
+    white-space: nowrap;
+    border-radius: 6px;
+    svg { width: 13px; height: 13px; flex-shrink: 0; }
+  }
   .btn-nav-portier { display: none; }
   .hero-ctas { flex-direction: column; width: 100%; }
   .btn-primary, .btn-outline-hero { width: 100%; justify-content: center; }
@@ -1579,6 +1594,23 @@
 }
 
 @media (max-width: 480px) {
+  .site-nav {
+    padding: .5rem .5rem;
+  }
+  .nav-logo {
+    font-size: 1.2rem;
+    max-width: 55px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .nav-actions {
+    gap: .25rem;
+  }
+  .btn-nav-back, .btn-save-event, .btn-edit-global {
+    padding: .35rem .45rem;
+    font-size: .58rem;
+    letter-spacing: .06em;
+  }
   .section-inner { padding: 3.5rem 1rem; }
   .band-content { padding: 2.5rem 1rem; }
   .hero-content { padding: 1.5rem 1rem; }
@@ -1590,6 +1622,20 @@
   .portrait-bio { text-align: center; }
   .palette-swatches { grid-template-columns: repeat(4, 1fr); }
   .swatch-color { width: 48px; height: 48px; }
+}
+
+@media (max-width: 360px) {
+  .nav-logo { display: none; }
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .btn-nav-back, .btn-save-event, .btn-edit-global {
+    flex: 1;
+    justify-content: center;
+    padding: .35rem .3rem;
+    font-size: .55rem;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2650,6 +2696,14 @@ section { position: relative; }
 /* ═══════════════════════════════════════════════════════════════
    NAV — Bouton retour & indicateur de sauvegarde
 ═══════════════════════════════════════════════════════════════ */
+.btn-label-desktop { display: inline; }
+.btn-label-mobile { display: none; }
+
+@media (max-width: 640px) {
+  .btn-label-desktop { display: none; }
+  .btn-label-mobile { display: inline; }
+}
+
 .btn-nav-back {
   display: inline-flex;
   align-items: center;
@@ -2665,6 +2719,7 @@ section { position: relative; }
   border: 1px solid rgba(255,255,255,.15);
   background: rgba(255,255,255,.06);
   transition: color .2s, border-color .2s, background .2s;
+  white-space: nowrap;
 
   &:hover {
     color: #fff;
