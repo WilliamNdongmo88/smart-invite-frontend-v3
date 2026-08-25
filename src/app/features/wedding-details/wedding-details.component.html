@@ -777,6 +777,12 @@
                     </svg>
                     <span>Changer la photo</span>
                   </div>
+                  @if (uploadingImage() === 'bride_portrait') {
+                    <div class="edit-upload-spinner-overlay">
+                      <div class="edit-spinner"></div>
+                      <span>Upload en cours...</span>
+                    </div>
+                  }
                 </div>
                 <input #brideInput type="file" accept="image/*" class="edit-upload-input"
                        (change)="onBridePortraitChange($event)" />
@@ -817,6 +823,12 @@
                     </svg>
                     <span>Changer la photo</span>
                   </div>
+                  @if (uploadingImage() === 'groom_portrait') {
+                    <div class="edit-upload-spinner-overlay">
+                      <div class="edit-spinner"></div>
+                      <span>Upload en cours...</span>
+                    </div>
+                  }
                 </div>
                 <input #groomInput type="file" accept="image/*" class="edit-upload-input"
                        (change)="onGroomPortraitChange($event)" />
@@ -927,6 +939,12 @@
                       </svg>
                       <span>Changer l'image</span>
                     </div>
+                    @if (uploadingImage() === 'chapter_' + $index) {
+                      <div class="edit-upload-spinner-overlay">
+                        <div class="edit-spinner"></div>
+                        <span>Upload en cours...</span>
+                      </div>
+                    }
                   </div>
                   <input #chapterImgInput type="file" accept="image/*" class="edit-upload-input"
                          (change)="onChapterImageChange($event, $index)" />
@@ -1195,6 +1213,12 @@
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                       </svg>
                     </div>
+                    @if (uploadingImage() === 'gallery_' + $index) {
+                      <div class="edit-upload-spinner-overlay">
+                        <div class="edit-spinner"></div>
+                        <span>Upload...</span>
+                      </div>
+                    }
                   </div>
                   <input #galleryFileInput type="file" accept="image/*" class="edit-upload-input"
                          (change)="onGalleryImageChange($event, $index)" />
@@ -1257,6 +1281,12 @@
                     </svg>
                     <span>Changer</span>
                   </div>
+                  @if (uploadingImage() === 'bg_' + bg.key) {
+                    <div class="edit-upload-spinner-overlay">
+                      <div class="edit-spinner"></div>
+                      <span>Upload...</span>
+                    </div>
+                  }
                 </div>
                 <input #bgFileInput type="file" accept="image/*" class="edit-upload-input"
                        (change)="onBackgroundImageChange($event, bg.key)" />

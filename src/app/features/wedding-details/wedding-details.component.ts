@@ -261,6 +261,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   ];
   readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer'];
   draft = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
+  uploadingImage = signal<string | null>(null);
 
   // ── Countdown ─────────────────────────────────────────────────────
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
@@ -810,7 +811,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'gallery');
+    const url = await this.uploadFile(file, 'gallery', `gallery_${idx}`);
     const d = deepClone(this.draft());
     d.gallery.items[idx].url = url;
     this.draft.set(d);
@@ -833,7 +834,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBackgroundImageChange(event: Event, key: keyof WeddingDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'backgrounds');
+    const url = await this.uploadFile(file, 'backgrounds', `bg_${key}`);
     this.updateDraftBackground(key, url);
   }
 
@@ -844,15 +845,23 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   // ── Upload d'images vers Firebase Storage ──────────────────────────
 
-  private uploadFile(file: File, folder: string = 'wedding'): Promise<string> {
+  private uploadFile(file: File, folder: string = 'wedding', uploadKey?: string): Promise<string> {
+    if (uploadKey) this.uploadingImage.set(uploadKey);
     return new Promise((resolve) => {
       this.eventSvc.uploadImage(file, folder).subscribe({
         next: (res) => {
+          if (uploadKey) this.uploadingImage.set(null);
           this.toast.success('Image uploadée avec succès');
           resolve(res.data!);
         },
         error: () => {
-          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+          this.readFileAsDataUrl(file).then((url) => {
+            if (uploadKey) this.uploadingImage.set(null);
+            resolve(url);
+          }).catch(() => {
+            if (uploadKey) this.uploadingImage.set(null);
+            resolve('');
+          });
         }
       });
     });
@@ -871,7 +880,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBridePortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'portraits');
+    const url = await this.uploadFile(file, 'portraits', 'bride_portrait');
     this.updateDraftCouple('bridePortraitUrl', url);
   }
 
@@ -879,7 +888,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onGroomPortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'portraits');
+    const url = await this.uploadFile(file, 'portraits', 'groom_portrait');
     this.updateDraftCouple('groomPortraitUrl', url);
   }
 
@@ -887,7 +896,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onChapterImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'story');
+    const url = await this.uploadFile(file, 'story', `chapter_${idx}`);
     this.updateDraftChapter(idx, 'image', url);
   }
 }

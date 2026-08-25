@@ -618,6 +618,11 @@
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                       </svg>
                     </div>
+                    @if (uploadingImage() === 'performer_' + $index) {
+                      <div class="edit-upload-spinner-overlay">
+                        <div class="edit-spinner"></div>
+                      </div>
+                    }
                   </div>
                   <input #perfInput type="file" accept="image/*" class="edit-upload-input" (change)="onPerformerPortraitChange($event, $index)" />
                 </div>
@@ -733,6 +738,11 @@
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                       </svg>
                     </div>
+                    @if (uploadingImage() === 'gallery_' + $index) {
+                      <div class="edit-upload-spinner-overlay">
+                        <div class="edit-spinner"></div>
+                      </div>
+                    }
                   </div>
                   <input #galleryInput type="file" accept="image/*" class="edit-upload-input" (change)="onGalleryImageChange($event, $index)" />
                   <input class="edit-input edit-gallery-caption" type="text" placeholder="Légende…"
@@ -774,6 +784,12 @@
                     </svg>
                     <span>Changer</span>
                   </div>
+                  @if (uploadingImage() === 'bg_' + bg.key) {
+                    <div class="edit-upload-spinner-overlay">
+                      <div class="edit-spinner"></div>
+                      <span>Upload...</span>
+                    </div>
+                  }
                 </div>
                 <input #bgInput type="file" accept="image/*" class="edit-upload-input" (change)="onBackgroundImageChange($event, bg.key)" />
                 <div class="edit-bg-info">

@@ -738,6 +738,28 @@ section:focus-within > .gala-pencil { opacity: 1; }
 .edit-upload-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .4rem; color: rgba(255,255,255,.25); font-family: 'Belleza', sans-serif; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; }
 .edit-upload-overlay { position: absolute; inset: 0; background: rgba(13,13,9,.72); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35rem; color: var(--gala-gold); opacity: 0; transition: opacity .2s; font-family: 'Belleza', sans-serif; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; span { font-size: .6rem; } }
 
+.edit-upload-spinner-overlay {
+  position: absolute; inset: 0;
+  background: rgba(13, 13, 9, .85);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: .4rem; z-index: 15; border-radius: inherit;
+  color: var(--gala-gold); font-family: 'Belleza', sans-serif; font-size: .6rem;
+  letter-spacing: .1em; text-transform: uppercase; backdrop-filter: blur(3px);
+  span { color: rgba(255,255,255,.9); font-size: .6rem; }
+}
+
+.edit-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid rgba(255, 255, 255, .2);
+  border-top-color: var(--gala-gold, #c9a84c);
+  border-radius: 50%;
+  animation: editSpin .75s linear infinite;
+}
+
+@keyframes editSpin {
+  to { transform: rotate(360deg); }
+}
+
 .edit-gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; @media (max-width:540px) { grid-template-columns: repeat(2, 1fr); } }
 .edit-gallery-item { display: flex; flex-direction: column; gap: .4rem; }
 .edit-gallery-upload { position: relative; width: 100%; aspect-ratio: 1/1; border-radius: 10px; overflow: hidden; cursor: pointer; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); img { width: 100%; height: 100%; object-fit: cover; } &:hover .edit-upload-overlay { opacity: 1; } }

@@ -182,6 +182,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
     { key: 'rsvp',        label: 'Fond RSVP',         hint: 'Image de fond de la section invitation' },
   ];
   draft = signal<CeremonieDetailsContent>(deepClone(INITIAL_CONTENT));
+  uploadingImage = signal<string | null>(null);
 
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
   private countdownInterval: ReturnType<typeof setInterval> | null = null;
@@ -463,7 +464,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'gallery');
+    const url = await this.uploadFile(file, 'gallery', `gallery_${idx}`);
     const d = deepClone(this.draft()); d.gallery.items[idx].url = url; this.draft.set(d);
   }
 
@@ -474,7 +475,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onBackgroundImageChange(event: Event, key: keyof CeremonieDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'backgrounds');
+    const url = await this.uploadFile(file, 'backgrounds', `bg_${key}`);
     this.updateDraftBackground(key, url);
   }
 
@@ -482,7 +483,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   async onGuestPortraitChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'guests');
+    const url = await this.uploadFile(file, 'guests', `guest_${idx}`);
     const d = deepClone(this.draft()); d.keyGuests.guests[idx].portraitUrl = url; this.draft.set(d);
   }
 
@@ -492,15 +493,23 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   }
 
   // ── Upload d'images vers Firebase Storage ──────────────────────────
-  private uploadFile(file: File, folder: string = 'ceremonie'): Promise<string> {
+  private uploadFile(file: File, folder: string = 'ceremonie', uploadKey?: string): Promise<string> {
+    if (uploadKey) this.uploadingImage.set(uploadKey);
     return new Promise((resolve) => {
       this.eventSvc.uploadImage(file, folder).subscribe({
         next: (res) => {
+          if (uploadKey) this.uploadingImage.set(null);
           this.toast.success('Image uploadée avec succès');
           resolve(res.data!);
         },
         error: () => {
-          this.readFileAsDataUrl(file).then(resolve).catch(() => resolve(''));
+          this.readFileAsDataUrl(file).then((url) => {
+            if (uploadKey) this.uploadingImage.set(null);
+            resolve(url);
+          }).catch(() => {
+            if (uploadKey) this.uploadingImage.set(null);
+            resolve('');
+          });
         }
       });
     });

@@ -2330,6 +2330,45 @@ section { position: relative; }
   }
 }
 
+/* Spinner d'upload en cours */
+.edit-upload-spinner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(20, 16, 12, .85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  z-index: 15;
+  border-radius: inherit;
+  color: var(--gold);
+  font-family: 'Belleza', sans-serif;
+  font-size: .62rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  backdrop-filter: blur(3px);
+
+  span {
+    color: rgba(255,255,255,.9);
+    font-size: .62rem;
+    letter-spacing: .08em;
+  }
+}
+
+.edit-spinner {
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 255, 255, .2);
+  border-top-color: var(--gold, #c9a961);
+  border-radius: 50%;
+  animation: editSpin .75s linear infinite;
+}
+
+@keyframes editSpin {
+  to { transform: rotate(360deg); }
+}
+
 /* Ligne portrait : photo à gauche, bio à droite */
 .edit-portrait-row {
   display: flex;
