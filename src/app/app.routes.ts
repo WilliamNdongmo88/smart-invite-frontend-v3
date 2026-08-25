@@ -92,6 +92,56 @@ export const routes: Routes = [
     ],
   },
 
+  // ── Pages immersives & éditables d'événement (sans navbar générique) ──
+  {
+    path: 'events/wedding/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+  },
+  {
+    path: 'events/conference/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
+  },
+  {
+    path: 'events/gala/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
+  },
+  {
+    path: 'events/ceremonie/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
+  },
+  {
+    path: 'events/:id/wedding',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+  },
+  {
+    path: 'events/:id/conference',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
+  },
+  {
+    path: 'events/:id/gala',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
+  },
+  {
+    path: 'events/:id/ceremonie',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
+  },
+
   // ── User (Topbar + Content + Footer, sans sidebar) ────────────────
   {
     path: '',
@@ -115,30 +165,6 @@ export const routes: Routes = [
           import('./features/events/pages/event-create/event-create.component').then((m) => m.EventCreateComponent),
       },
       {
-        // Création d'un mariage → WeddingDetailsComponent en mode création
-        path: 'events/wedding/new',
-        loadComponent: () =>
-          import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
-      },
-      {
-        // Création d'une conférence → ConferenceDetailsComponent en mode création
-        path: 'events/conference/new',
-        loadComponent: () =>
-          import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
-      },
-      {
-        // Création d'un gala → GalaDetailsComponent en mode création
-        path: 'events/gala/new',
-        loadComponent: () =>
-          import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
-      },
-      {
-        // Création d'une cérémonie → CeremonieDetailsComponent en mode création
-        path: 'events/ceremonie/new',
-        loadComponent: () =>
-          import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
-      },
-      {
         path: 'events/:id',
         loadComponent: () =>
           import('./features/events/pages/event-detail/event-detail.component').then((m) => m.EventDetailComponent),
@@ -147,30 +173,6 @@ export const routes: Routes = [
         path: 'events/:id/edit',
         loadComponent: () =>
           import('./features/events/pages/event-edit/event-edit.component').then((m) => m.EventEditComponent),
-      },
-      {
-        // Édition d'un mariage → WeddingDetailsComponent en mode édition
-        path: 'events/:id/wedding',
-        loadComponent: () =>
-          import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
-      },
-      {
-        // Édition d'une conférence → ConferenceDetailsComponent en mode édition
-        path: 'events/:id/conference',
-        loadComponent: () =>
-          import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
-      },
-      {
-        // Édition d'un gala → GalaDetailsComponent en mode édition
-        path: 'events/:id/gala',
-        loadComponent: () =>
-          import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
-      },
-      {
-        // Édition d'une cérémonie → CeremonieDetailsComponent en mode édition
-        path: 'events/:id/ceremonie',
-        loadComponent: () =>
-          import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
       },
       {
         path: 'events/:id/card',
