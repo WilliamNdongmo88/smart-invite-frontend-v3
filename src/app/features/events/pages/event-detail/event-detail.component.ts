@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { EventService } from '../../../../core/services/event.service';
 import { GuestService } from '../../../../core/services/guest.service';
+import { LinkService } from '../../../../core/services/link.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Event } from '../../../../core/models/event.model';
 import { EventStats } from '../../../../core/models/event.model';
@@ -21,9 +22,11 @@ export class EventDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly svc    = inject(EventService);
   private readonly guestSvc = inject(GuestService);
+  private readonly linkSvc  = inject(LinkService);
   private readonly toast  = inject(ToastService);
 
   loading = signal(true);
+  linkLoading = signal(false);
   event   = signal<Event | null>(null);
   stats   = signal<EventStats | null>(null);
   guests  = signal<Guest[]>([]);
@@ -91,5 +94,51 @@ export class EventDetailComponent implements OnInit {
       PENDING: 'En attente', CONFIRMED: 'Confirmé', DECLINED: 'Refusé', PRESENT: 'Présent',
     };
     return map[status] ?? status;
+  }
+
+  goToJoinPage(): void {
+    const e = this.event();
+    if (!e) return;
+    this.linkLoading.set(true);
+    this.linkSvc.getByEvent(e.id).subscribe({
+      next: (res) => {
+        const links = res.data ?? [];
+        if (links.length > 0 && links[0].token) {
+          this.linkLoading.set(false);
+          this.router.navigate(['/join', links[0].token]);
+        } else {
+          this.linkSvc.create({ eventId: e.id }).subscribe({
+            next: (newLink) => {
+              this.linkLoading.set(false);
+              if (newLink.data?.token) {
+                this.router.navigate(['/join', newLink.data.token]);
+              } else {
+                this.openJoinPreview(e);
+              }
+            },
+            error: () => {
+              this.linkLoading.set(false);
+              this.openJoinPreview(e);
+            },
+          });
+        }
+      },
+      error: () => {
+        this.linkLoading.set(false);
+        this.openJoinPreview(e);
+      },
+    });
+  }
+
+  private openJoinPreview(e: Event): void {
+    const preview = {
+      eventTitle: e.title,
+      concernedNames: e.concernedNames || e.title,
+      eventDate: e.eventDate || e.banquetDateTime || '',
+      couplePhotoUrl: e.couplePhotoUrl || null,
+      banquetLocation: e.banquetLocation || null,
+    };
+    sessionStorage.setItem('join_preview', JSON.stringify(preview));
+    this.router.navigate(['/join', 'preview']);
   }
 }
