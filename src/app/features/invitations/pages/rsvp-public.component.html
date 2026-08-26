@@ -1,0 +1,146 @@
+<main class="invitation-page">
+  <div class="paper-card">
+    <span class="wash wash-top"></span>
+    <span class="wash wash-bottom"></span>
+    <span class="leaf leaf-top" aria-hidden="true">⌁</span>
+    <span class="leaf leaf-bottom" aria-hidden="true">⌁</span>
+
+    <!-- État : Chargement -->
+    @if (state() === 'loading') {
+      <section class="state-card">
+        <div class="spinner"></div>
+        <p class="state-text">Chargement de votre invitation…</p>
+      </section>
+    }
+
+    <!-- État : Erreur -->
+    @if (state() === 'error') {
+      <section class="state-card">
+        <div class="state-icon">!</div>
+        <h2>Invitation introuvable</h2>
+        <p>{{ errorMsg() }}</p>
+      </section>
+    }
+
+    <!-- État : Prêt pour réponse RSVP -->
+    @if (state() === 'ready' && inv()) {
+      <section class="invitation-content">
+        <p class="eyebrow">{{ eventTitle() }}</p>
+        <h1>Invitation</h1>
+        <p class="intro">Vous êtes cordialement invité(e) à célébrer ce moment</p>
+
+        <div class="photo-frame simulated-photo">
+          <img [src]="couplePhoto()" alt="Photo de l’événement" />
+          <span class="photo-arch" aria-hidden="true"></span>
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="guest-salutation">
+          <p class="greeting-text">Cher(e) <strong>{{ inv()!.guestName }}</strong>,</p>
+          <p class="event-message">Nous avons le plaisir et l'honneur de vous compter parmi nos invités d'exception.</p>
+          @if (eventLocation()) {
+            <p class="event-location">📍 {{ eventLocation() }}</p>
+          }
+        </div>
+
+        <div class="rsvp-action-box">
+          <p class="rsvp-question">Confirmez-vous votre présence ?</p>
+
+          <div class="action-buttons">
+            <button type="button" class="btn-confirm" [disabled]="submitting() !== null" (click)="respond('CONFIRMED')">
+              @if (submitting() === 'CONFIRMED') {
+                <span class="spinner-sm"></span> Confirmation en cours…
+              } @else {
+                <span>✓</span> Je confirme ma présence
+              }
+            </button>
+
+            <button type="button" class="btn-decline" [disabled]="submitting() !== null" (click)="respond('DECLINED')">
+              @if (submitting() === 'DECLINED') {
+                <span class="spinner-sm"></span> Envoi en cours…
+              } @else {
+                Je ne pourrai pas être présent(e)
+              }
+            </button>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- État : Présence confirmée -->
+    @if (state() === 'confirmed' && inv()) {
+      <section class="invitation-content success-content">
+        <p class="eyebrow">{{ eventTitle() }}</p>
+        <h1>Invitation</h1>
+
+        <div class="photo-frame simulated-photo">
+          <img [src]="couplePhoto()" alt="Photo de l’événement" />
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="success-mark">✓</div>
+        <h3>Présence confirmée !</h3>
+        <p class="success-message">
+          Merci <strong>{{ inv()!.guestName }}</strong>, votre présence a bien été enregistrée.<br />
+          Nous avons hâte de célébrer ce grand moment à vos côtés !
+        </p>
+
+        @if (eventLocation()) {
+          <p class="event-location">📍 {{ eventLocation() }}</p>
+        }
+
+        @if (inv()!.qrCodeUrl) {
+          <div class="qr-block">
+            <p>Votre QR Code d’accès</p>
+            <img [src]="inv()!.qrCodeUrl" alt="QR Code d’accès" />
+            <small class="qr-hint">Présentez ce QR code à l'entrée de l'événement.</small>
+          </div>
+        }
+
+        @if (inv()!.pdfUrl) {
+          <a [href]="inv()!.pdfUrl" target="_blank" rel="noopener" class="download-link">
+            Télécharger la carte d’invitation (PDF)
+          </a>
+        }
+      </section>
+    }
+
+    <!-- État : Décliné -->
+    @if (state() === 'declined' && inv()) {
+      <section class="invitation-content declined-content">
+        <p class="eyebrow">{{ eventTitle() }}</p>
+        <h1>Invitation</h1>
+
+        <div class="photo-frame simulated-photo">
+          <img [src]="couplePhoto()" alt="Photo de l’événement" />
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="declined-mark">—</div>
+        <h3>Absence enregistrée</h3>
+        <p class="declined-message">
+          Merci <strong>{{ inv()!.guestName }}</strong> de nous avoir informés.<br />
+          Nous espérons avoir le plaisir de vous retrouver lors d'un prochain événement.
+        </p>
+
+        <div class="change-response-box">
+          <button type="button" class="btn-change-response" (click)="state.set('ready')">
+            Modifier ma réponse
+          </button>
+        </div>
+      </section>
+    }
+
+    <footer>Smart Invite <span>•</span> Gestion d’invitations</footer>
+  </div>
+</main>

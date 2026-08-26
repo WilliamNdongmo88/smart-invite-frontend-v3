@@ -13,14 +13,23 @@ export interface Invitation {
 }
 
 export interface PublicInvitation {
-  token: string;
+  token?: string;
   guestName: string;
   eventTitle: string;
   eventType: EventType;
+  concernedNames?: string;
   eventDate?: string;
+  banquetLocation?: string;
+  banquetDateTime?: string;
+  religiousLocation?: string;
+  religiousDateTime?: string;
+  civilLocation?: string;
+  civilDateTime?: string;
   qrCodeUrl?: string;
   pdfUrl?: string;
+  status?: InvitationStatus;
   rsvpStatus: RsvpStatus;
+  couplePhotoUrl?: string;
 }
 
 export interface CreateGuestRequest {
