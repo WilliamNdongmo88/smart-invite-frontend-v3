@@ -1,5 +1,5 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LinkService } from '../../../../core/services/link.service';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -44,6 +44,7 @@ type InvitationViewData = Invitation & {
 })
 export class JoinComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly svc = inject(LinkService);
   private readonly authSvc = inject(AuthService);
@@ -71,6 +72,7 @@ export class JoinComponent implements OnInit {
 
   eyebrowText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'CÉLÉBRATION DE MARIAGE';
     if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
     if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
     if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
@@ -79,6 +81,7 @@ export class JoinComponent implements OnInit {
 
   mainTitleText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Invitation';
     if (t === 'CONFERENCE') return 'Accréditation';
     if (t === 'GALA') return 'Invitation VIP';
     if (t === 'CEREMONIE') return 'Célébration';
@@ -87,6 +90,7 @@ export class JoinComponent implements OnInit {
 
   introText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
     if (t === 'CONFERENCE') return 'Inscrivez-vous pour obtenir votre pass de conférence et badge d’accès officiel';
     if (t === 'GALA') return 'Le comité d’honneur a le privilège de vous convier à cette prestigieuse réception';
     if (t === 'CEREMONIE') return 'Nous sommes honorés de vous compter parmi nos invités d’exception';
@@ -95,6 +99,7 @@ export class JoinComponent implements OnInit {
 
   ornamentGlyph = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return '✦ 💍 ✦';
     if (t === 'CONFERENCE') return '⟨ // ⟩';
     if (t === 'GALA') return '✦ ❖ ✦';
     if (t === 'CEREMONIE') return '⚜';
@@ -103,6 +108,7 @@ export class JoinComponent implements OnInit {
 
   submitBtnText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Confirmer mon invitation';
     if (t === 'CONFERENCE') return 'Obtenir mon badge d’accès';
     if (t === 'GALA') return 'Réserver mon invitation VIP';
     if (t === 'CEREMONIE') return 'Valider mon inscription';
@@ -118,8 +124,8 @@ export class JoinComponent implements OnInit {
   });
 
   readonly notifOptions: { key: NotificationMode; label: string; icon: string }[] = [
-    { key: 'EMAIL', label: 'Email', icon: '✉' },
     { key: 'WHATSAPP', label: 'WhatsApp', icon: '◌' },
+    { key: 'EMAIL', label: 'Email', icon: '✉' },
     { key: 'BOTH', label: 'Email & WhatsApp', icon: '✦' },
   ];
 
@@ -127,8 +133,16 @@ export class JoinComponent implements OnInit {
     fullName: ['', [Validators.required, Validators.minLength(2)]],
     email: [''],
     phoneNumber: [''],
-    notificationMode: ['EMAIL' as NotificationMode],
+    notificationMode: ['WHATSAPP' as NotificationMode],
   });
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');

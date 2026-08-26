@@ -1,12 +1,23 @@
 <main class="invitation-page" [class]="'invitation-page ' + themeClass()">
+  <!-- Barre de navigation supérieure avec bouton retour -->
+  <div class="top-nav-bar">
+    <button type="button" class="btn-back" (click)="goBack()" title="Retour à la page précédente">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Retour</span>
+    </button>
+  </div>
+
   <div class="paper-card" [class]="'paper-card ' + themeClass()">
 
     <!-- Ornements supérieurs spécifiques à chaque type -->
     @if (eventType() === 'MARIAGE') {
-      <span class="wash wash-top"></span>
-      <span class="wash wash-bottom"></span>
-      <span class="leaf leaf-top" aria-hidden="true">⌁</span>
-      <span class="leaf leaf-bottom" aria-hidden="true">⌁</span>
+      <div class="mariage-header-badge">
+        <span class="mariage-filigree">✦ 💍 ✦</span>
+        <span class="mariage-badge-pill">CÉLÉBRATION DE MARIAGE • UNION ROYALE</span>
+      </div>
     } @else if (eventType() === 'CONFERENCE') {
       <div class="conf-header-badge">
         <div class="conf-lanyard-slot"></div>
@@ -50,7 +61,11 @@
 
         <!-- Cadre photo avec design et découpe propre à chaque thème -->
         <div class="photo-frame-wrapper" [class]="'frame-' + eventType().toLowerCase()">
-          @if (eventType() === 'CONFERENCE') {
+          @if (eventType() === 'MARIAGE') {
+            <div class="frame-tag mariage-tag">
+              💍 CÉLÉBRATION DE NOTRE UNION 💍
+            </div>
+          } @else if (eventType() === 'CONFERENCE') {
             <div class="frame-tag conf-tag">
               <span class="tag-dot"></span> INTERVENANT & CONFÉRENCE
             </div>
@@ -66,9 +81,13 @@
 
           <div class="photo-frame" [class.editable]="isLoggedIn()">
             <img [src]="couplePhoto()" [alt]="eventTitle()" />
-            <span class="photo-arch" aria-hidden="true"></span>
 
-            @if (eventType() === 'CONFERENCE') {
+            @if (eventType() === 'MARIAGE') {
+              <div class="mariage-sparkle sparkle-tl">✦</div>
+              <div class="mariage-sparkle sparkle-tr">✦</div>
+              <div class="mariage-sparkle sparkle-bl">✦</div>
+              <div class="mariage-sparkle sparkle-br">✦</div>
+            } @else if (eventType() === 'CONFERENCE') {
               <div class="tech-cross cross-tl"></div>
               <div class="tech-cross cross-tr"></div>
               <div class="tech-cross cross-bl"></div>

@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../../core/services/invitation.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { EventService } from '../../../core/services/event.service';
@@ -18,6 +18,7 @@ type PageState = 'loading' | 'ready' | 'confirmed' | 'declined' | 'error';
 })
 export class RsvpPublicComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly svc = inject(InvitationService);
   private readonly authSvc = inject(AuthService);
   private readonly eventSvc = inject(EventService);
@@ -42,6 +43,7 @@ export class RsvpPublicComponent implements OnInit {
 
   eyebrowText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'CÉLÉBRATION DE MARIAGE';
     if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
     if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
     if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
@@ -50,6 +52,7 @@ export class RsvpPublicComponent implements OnInit {
 
   mainTitleText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Invitation';
     if (t === 'CONFERENCE') return 'Accréditation';
     if (t === 'GALA') return 'Invitation VIP';
     if (t === 'CEREMONIE') return 'Célébration';
@@ -58,6 +61,7 @@ export class RsvpPublicComponent implements OnInit {
 
   introText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
     if (t === 'CONFERENCE') return 'Vous êtes convié(e) à participer à cette session de haut niveau';
     if (t === 'GALA') return 'Le comité d’honneur est honoré de vous compter parmi ses invités de marque';
     if (t === 'CEREMONIE') return 'Vous êtes chaleureusement convié(e) à célébrer ce moment marquant';
@@ -66,6 +70,7 @@ export class RsvpPublicComponent implements OnInit {
 
   salutationLead = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return "Nous serions infiniment honorés de vous compter parmi nos invités pour ce jour inoubliable.";
     if (t === 'CONFERENCE') return 'Votre accréditation nominative a été préparée avec soin pour cette conférence.';
     if (t === 'GALA') return 'Une table d’honneur vous est réservée pour cette prestigieuse réception.';
     if (t === 'CEREMONIE') return 'Votre présence rendra cette cérémonie encore plus mémorable.';
@@ -74,6 +79,7 @@ export class RsvpPublicComponent implements OnInit {
 
   ornamentGlyph = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return '✦ 💍 ✦';
     if (t === 'CONFERENCE') return '⟨ // ⟩';
     if (t === 'GALA') return '✦ ❖ ✦';
     if (t === 'CEREMONIE') return '⚜';
@@ -82,6 +88,7 @@ export class RsvpPublicComponent implements OnInit {
 
   confirmBtnText = computed(() => {
     const t = this.eventType();
+    if (t === 'MARIAGE') return 'Je confirme ma présence au Mariage';
     if (t === 'CONFERENCE') return 'Je valide mon accréditation';
     if (t === 'GALA') return 'Je confirme ma venue au Gala';
     if (t === 'CEREMONIE') return 'Je confirme ma participation';
@@ -100,6 +107,14 @@ export class RsvpPublicComponent implements OnInit {
     const t = this.inv()?.eventType;
     return t ? EVENT_TYPE_LABELS[t] : '';
   });
+
+  goBack(): void {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
 
   ngOnInit(): void {
     const token = this.route.snapshot.paramMap.get('token');
