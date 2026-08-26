@@ -97,19 +97,24 @@ export class RsvpPublicComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
+    const token = this.route.snapshot.paramMap.get('token');
+    if (!token) return;
 
     this.uploading.set(true);
-    this.eventSvc.uploadImage(file, 'photos').subscribe({
+    this.svc.uploadPhoto(token, file).subscribe({
       next: (res) => {
         const url = res.data;
         if (url) {
           this.customPhotoUrl.set(url);
-          this.toast.success('Photo mise à jour et enregistrée sur Firebase !');
+          if (this.inv()) {
+            this.inv.update((i) => (i ? { ...i, couplePhotoUrl: url } : null));
+          }
+          this.toast.success("Photo mise à jour et enregistrée sur l'événement !");
         }
         this.uploading.set(false);
       },
       error: () => {
-        this.toast.error("Erreur lors de l'upload de l'image sur Firebase.");
+        this.toast.error("Erreur lors de l'upload de la photo.");
         this.uploading.set(false);
       },
     });

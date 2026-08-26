@@ -43,4 +43,10 @@ export class LinkService {
   join(token: string, req: CreateGuestRequest): Observable<ApiResponse<Invitation>> {
     return this.http.post<ApiResponse<Invitation>>(`${this.base}/join/${token}`, req);
   }
+
+  uploadPhoto(token: string, file: File): Observable<ApiResponse<string>> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<ApiResponse<string>>(`${this.base}/photo/${token}`, form);
+  }
 }

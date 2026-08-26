@@ -155,30 +155,49 @@ export class JoinComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
     const file = input.files[0];
+    const token = this.route.snapshot.paramMap.get('token');
 
     this.uploading.set(true);
-    this.eventSvc.uploadImage(file, 'photos').subscribe({
-      next: (res) => {
-        const url = res.data;
-        if (url) {
-          this.customPhotoUrl.set(url);
-          const raw = sessionStorage.getItem('join_preview');
-          if (raw) {
-            try {
-              const preview = JSON.parse(raw);
-              preview.couplePhotoUrl = url;
-              sessionStorage.setItem('join_preview', JSON.stringify(preview));
-            } catch (e) {}
-          }
-          this.toast.success('Photo mise à jour et enregistrée sur Firebase !');
-        }
-        this.uploading.set(false);
-      },
-      error: () => {
-        this.toast.error("Erreur lors de l'upload de l'image sur Firebase.");
-        this.uploading.set(false);
+
+    const handleSuccess = (url: string) => {
+      this.customPhotoUrl.set(url);
+      if (this.previewData()) {
+        this.previewData.update((p) => (p ? { ...p, couplePhotoUrl: url } : null));
       }
-    });
+      const raw = sessionStorage.getItem('join_preview');
+      if (raw) {
+        try {
+          const preview = JSON.parse(raw);
+          preview.couplePhotoUrl = url;
+          sessionStorage.setItem('join_preview', JSON.stringify(preview));
+        } catch (e) {}
+      }
+      this.toast.success("Photo mise à jour et enregistrée sur l'événement !");
+      this.uploading.set(false);
+    };
+
+    const handleError = () => {
+      this.toast.error("Erreur lors de l'upload de la photo.");
+      this.uploading.set(false);
+    };
+
+    if (token && token !== 'preview') {
+      this.svc.uploadPhoto(token, file).subscribe({
+        next: (res) => {
+          if (res.data) handleSuccess(res.data);
+          else handleError();
+        },
+        error: handleError,
+      });
+    } else {
+      this.eventSvc.uploadImage(file, 'photos').subscribe({
+        next: (res) => {
+          if (res.data) handleSuccess(res.data);
+          else handleError();
+        },
+        error: handleError,
+      });
+    }
   }
 
   submit(): void {

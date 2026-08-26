@@ -101,18 +101,28 @@ h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif;
   position: absolute;
   inset: 0;
   z-index: 15;
-  background: rgba(37, 37, 31, .8);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(30, 28, 22, .6);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  color: #fff;
-  font-size: .65rem;
-  font-weight: 600;
-  letter-spacing: .04em;
+}
+
+.upload-spinner-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #b0904c;
+  border-right-color: #f4ead2;
+  box-shadow: 0 0 16px rgba(176, 144, 76, 0.45);
+  animation: spinCircle 0.85s cubic-bezier(0.4, 0.15, 0.4, 0.95) infinite;
+}
+
+@keyframes spinCircle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .hidden-file-input {
