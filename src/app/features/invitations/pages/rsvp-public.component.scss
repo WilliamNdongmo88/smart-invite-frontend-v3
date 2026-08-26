@@ -343,14 +343,14 @@ footer {
     background: rgba(212, 175, 55, 0.14);
     border: 1px solid rgba(212, 175, 55, 0.6);
     color: #ffd97d;
-    font-family: 'Cinzel', serif;
-    font-size: .56rem;
+    font-family: 'Belleza', sans-serif;
+    font-size: .58rem;
     font-weight: 600;
     letter-spacing: .2em;
     border-radius: 3px;
   }
-  .eyebrow { color: #d4af37; font-family: 'Cinzel', serif; font-size: .68rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
-  h1 { color: #ffffff; font: 600 2.2rem/1.05 'Cinzel', 'Cormorant Garamond', serif; letter-spacing: .12em; text-transform: uppercase; }
+  .eyebrow { color: #d4af37; font-family: 'Belleza', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { color: #ffffff; font: 500 2.2rem/1.05 'Cormorant Garamond', serif; letter-spacing: .04em; }
   .intro { color: #b8ad9e; font-size: .68rem; line-height: 1.5; font-family: 'Montserrat', sans-serif; }
   .couple-names {
     color: #ffd97d;
@@ -359,7 +359,7 @@ footer {
     text-shadow: 0 2px 18px rgba(212, 175, 55, 0.55);
     margin: 4px 0 2px;
   }
-  .event-date { color: #d4af37; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-family: 'Cinzel', serif; }
+  .event-date { color: #d4af37; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-family: 'Belleza', sans-serif; }
   .event-message { color: #e5ded5; font: 400 1.05rem/1.4 'Cormorant Garamond', serif; }
 
   /* Cadre Haute Joaillerie Dôme Romantique avec Or Scintillant */
@@ -395,21 +395,21 @@ footer {
     .event-location { color: #d4af37; font-weight: 600; }
   }
   .rsvp-action-box { border-top: 1px solid rgba(212, 175, 55, 0.3); }
-  .rsvp-question { color: #ffd97d; font-family: 'Cinzel', serif; }
+  .rsvp-question { color: #ffd97d; font-family: 'Cormorant Garamond', serif; }
   .btn-confirm {
     background: linear-gradient(135deg, #ffd97d 0%, #d4af37 50%, #9e7b25 100%);
-    color: #0d0b10; font-weight: 700; letter-spacing: .08em; font-family: 'Cinzel', serif;
+    color: #0d0b10; font-weight: 700; letter-spacing: .08em; font-family: 'Belleza', 'Montserrat', sans-serif;
     box-shadow: 0 4px 22px rgba(212, 175, 55, 0.45);
     &:hover:not(:disabled) { background: #ffd97d; transform: translateY(-1px); }
   }
   .btn-decline { border-color: #3d3428; color: #a89d8d; &:hover:not(:disabled) { border-color: #e07a68; color: #e07a68; background: rgba(224,122,104,0.1); } }
   .success-mark { border: 2px solid #d4af37; color: #ffd97d; background: rgba(212, 175, 55, 0.25); }
-  .success-content h3 { color: #fff; font-family: 'Cinzel', serif; }
+  .success-content h3 { color: #fff; font-family: 'Cormorant Garamond', serif; }
   .success-message { color: #dcd4c8; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
   .qr-block img { border: 2px solid #d4af37; }
   .download-link { background: linear-gradient(135deg, #ffd97d, #d4af37); color: #0d0b10; font-weight: 700; }
   .declined-mark { border-color: #d4af37; color: #d4af37; background: rgba(212, 175, 55, 0.15); }
-  .declined-content h3 { color: #fff; font-family: 'Cinzel', serif; }
+  .declined-content h3 { color: #fff; font-family: 'Cormorant Garamond', serif; }
   .declined-message { color: #a89d8d; font-family: 'Cormorant Garamond', serif; }
   .btn-change-response { background: #18141c; border-color: #362e24; color: #d4af37; &:hover { border-color: #ffd97d; color: #ffd97d; } }
   footer { border-top-color: #362e24; color: #7f7468; span { color: #d4af37; } }
