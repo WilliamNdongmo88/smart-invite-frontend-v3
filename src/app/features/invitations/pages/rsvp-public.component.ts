@@ -34,6 +34,68 @@ export class RsvpPublicComponent implements OnInit {
 
   readonly simulatedCouplePhoto = '/img/photoCouple.avif';
 
+  eventType = computed<import('../../../core/models/enums.model').EventType>(() => {
+    return this.inv()?.eventType || 'MARIAGE';
+  });
+
+  themeClass = computed(() => 'theme-' + this.eventType().toLowerCase());
+
+  eyebrowText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
+    if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
+    if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
+    return this.eventTitle();
+  });
+
+  mainTitleText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Accréditation';
+    if (t === 'GALA') return 'Invitation VIP';
+    if (t === 'CEREMONIE') return 'Célébration';
+    return 'Invitation';
+  });
+
+  introText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Vous êtes convié(e) à participer à cette session de haut niveau';
+    if (t === 'GALA') return 'Le comité d’honneur est honoré de vous compter parmi ses invités de marque';
+    if (t === 'CEREMONIE') return 'Vous êtes chaleureusement convié(e) à célébrer ce moment marquant';
+    return 'Vous êtes cordialement invité(e) à célébrer ce moment';
+  });
+
+  salutationLead = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Votre accréditation nominative a été préparée avec soin pour cette conférence.';
+    if (t === 'GALA') return 'Une table d’honneur vous est réservée pour cette prestigieuse réception.';
+    if (t === 'CEREMONIE') return 'Votre présence rendra cette cérémonie encore plus mémorable.';
+    return "Nous avons le plaisir et l'honneur de vous compter parmi nos invités d'exception.";
+  });
+
+  ornamentGlyph = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return '⟨ // ⟩';
+    if (t === 'GALA') return '✦ ❖ ✦';
+    if (t === 'CEREMONIE') return '⚜';
+    return '✦';
+  });
+
+  confirmBtnText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Je valide mon accréditation';
+    if (t === 'GALA') return 'Je confirme ma venue au Gala';
+    if (t === 'CEREMONIE') return 'Je confirme ma participation';
+    return 'Je confirme ma présence';
+  });
+
+  defaultPhotoForType = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return '/images/background-section-hero.webp';
+    if (t === 'GALA') return '/images/couple_en_fete.webp';
+    if (t === 'CEREMONIE') return '/images/mr-mme-zome.webp';
+    return this.simulatedCouplePhoto;
+  });
+
   typeLabel = computed(() => {
     const t = this.inv()?.eventType;
     return t ? EVENT_TYPE_LABELS[t] : '';
@@ -90,7 +152,7 @@ export class RsvpPublicComponent implements OnInit {
   couplePhoto(): string {
     if (this.customPhotoUrl()) return this.customPhotoUrl()!;
     const i = this.inv();
-    return i?.couplePhotoUrl || this.simulatedCouplePhoto;
+    return i?.couplePhotoUrl || this.defaultPhotoForType();
   }
 
   onPhotoSelected(event: Event): void {

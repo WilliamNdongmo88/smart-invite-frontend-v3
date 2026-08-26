@@ -133,6 +133,7 @@ export class EventDetailComponent implements OnInit {
   private openJoinPreview(e: Event): void {
     const preview = {
       eventTitle: e.title,
+      eventType: e.type,
       concernedNames: e.concernedNames || e.title,
       eventDate: e.eventDate || e.banquetDateTime || '',
       couplePhotoUrl: e.couplePhotoUrl || null,

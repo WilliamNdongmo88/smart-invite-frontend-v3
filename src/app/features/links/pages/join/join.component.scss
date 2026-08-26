@@ -1,7 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Parisienne&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Belleza&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Parisienne&display=swap');
 
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL & BASE CONTAINER
+═══════════════════════════════════════════════════════════════ */
 :host { display: block; min-height: 100vh; }
-
 *, *::before, *::after { box-sizing: border-box; }
 
 .invitation-page {
@@ -9,46 +11,76 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 12px 10px;
+  padding: 18px 12px;
   background: #f5f3ee;
   color: #25251f;
   font-family: 'Montserrat', Arial, sans-serif;
+  transition: background 0.3s ease;
 }
 
 .paper-card {
   position: relative;
   isolation: isolate;
-  width: min(100%, 416px);
-  min-height: 717px;
+  width: min(100%, 420px);
+  min-height: 720px;
   overflow: hidden;
-  padding: 30px 32px 0;
+  padding: 30px 28px 0;
   background: #fffefa;
   box-shadow: 0 14px 38px rgba(50, 48, 37, .14);
+  transition: all 0.3s ease;
 }
 
-.wash { position: absolute; z-index: -1; pointer-events: none; opacity: .75; filter: blur(.2px); }
-.wash-top { width: 210px; height: 78px; top: -26px; left: -48px; background: #f4ead2; border-radius: 50%; transform: rotate(-18deg); }
-.wash-bottom { width: 170px; height: 115px; right: -66px; bottom: -36px; background: #f5ecd6; border-radius: 50%; transform: rotate(28deg); }
-
-.leaf { position: absolute; z-index: 0; color: #647255; font: 110px/1 'Cormorant Garamond', serif; opacity: .68; transform: rotate(42deg); }
-.leaf-top { top: -22px; right: -5px; }
-.leaf-bottom { bottom: -13px; left: -7px; transform: rotate(220deg); }
-
 .invitation-content { position: relative; z-index: 1; text-align: center; }
-.eyebrow { margin: 0 0 2px; color: #a88b4b; font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
-h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif; letter-spacing: .04em; }
-.intro { max-width: 280px; margin: 9px auto 20px; color: #89877e; font-size: .66rem; line-height: 1.6; }
+.eyebrow { margin: 0 0 3px; font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; }
+h1 { margin: 0; font-size: 2.1rem; }
+.intro { max-width: 300px; margin: 8px auto 18px; font-size: .68rem; line-height: 1.55; }
+
+/* ─── Photo Frame Wrapper & Tags ────────────────────────────── */
+.photo-frame-wrapper {
+  position: relative;
+  width: min(100%, 256px);
+  margin: 0 auto 16px;
+}
+
+.frame-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.conf-tag {
+  background: rgba(0, 201, 167, 0.15);
+  border: 1px solid rgba(0, 201, 167, 0.5);
+  color: #00c9a7;
+  font-family: 'Belleza', sans-serif;
+  .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: #00c9a7; box-shadow: 0 0 8px #00c9a7; }
+}
+.gala-tag {
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.6);
+  color: #ffd97d;
+  font-family: 'Cinzel', serif;
+  letter-spacing: .12em;
+}
+.cere-tag {
+  background: rgba(139, 94, 62, 0.12);
+  border: 1px solid rgba(139, 94, 62, 0.35);
+  color: #8b5e3c;
+  font-family: 'Belleza', sans-serif;
+}
 
 .photo-frame {
   position: relative;
-  width: min(100%, 246px);
-  height: 416px;
+  width: 100%;
+  height: 360px;
   margin: 0 auto;
   overflow: hidden;
-  background: #d8d0bd;
-  clip-path: path('M 0 76 L 40 76 A 83 83 0 0 1 206 76 L 246 76 L 246 416 L 0 416 Z');
-  -webkit-clip-path: path('M 0 76 L 40 76 A 83 83 0 0 1 206 76 L 246 76 L 246 416 L 0 416 Z');
-  box-shadow: 0 14px 24px rgba(46,45,34,.2);
 
   &.editable {
     &:hover .photo-edit-btn {
@@ -57,11 +89,9 @@ h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif;
     }
   }
 }
-.photo-frame::before { content: ''; position: absolute; z-index: 2; inset: 0; border: 1px solid rgba(255,255,255,.42); pointer-events: none; }
-.photo-frame::after { content: ''; position: absolute; z-index: 4; left: 50%; top: 76px; width: 168px; height: 1px; transform: translateX(-50%); background: rgba(255,255,255,.26); }
-.photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(.82) contrast(.96); }
-.photo-arch { display: none; }
+.photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; filter: saturate(.95); }
 
+/* Edit button floating */
 .photo-edit-btn {
   position: absolute;
   bottom: 14px;
@@ -71,21 +101,21 @@ h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(37, 37, 31, .88);
+  background: rgba(16, 16, 20, .88);
   color: #fffefa;
-  border: 1px solid rgba(176, 144, 76, .65);
+  border: 1px solid rgba(201, 168, 76, .65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-radius: 20px;
   font-family: 'Montserrat', sans-serif;
-  font-size: .62rem;
+  font-size: .64rem;
   font-weight: 600;
   letter-spacing: .04em;
   cursor: pointer;
-  opacity: 0.88;
+  opacity: 0.92;
   transition: all .2s ease;
-  box-shadow: 0 4px 14px rgba(0,0,0,.3);
+  box-shadow: 0 4px 14px rgba(0,0,0,.4);
   white-space: nowrap;
 
   &:hover {
@@ -101,7 +131,7 @@ h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif;
   position: absolute;
   inset: 0;
   z-index: 15;
-  background: rgba(30, 28, 22, .6);
+  background: rgba(10, 15, 25, .7);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   display: flex;
@@ -114,73 +144,416 @@ h1 { margin: 0; color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif;
   height: 44px;
   border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.18);
-  border-top-color: #b0904c;
-  border-right-color: #f4ead2;
-  box-shadow: 0 0 16px rgba(176, 144, 76, 0.45);
+  border-top-color: #00c9a7;
+  border-right-color: #c9a84c;
   animation: spinCircle 0.85s cubic-bezier(0.4, 0.15, 0.4, 0.95) infinite;
 }
+@keyframes spinCircle { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-@keyframes spinCircle {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+.hidden-file-input { display: none; }
 
-.hidden-file-input {
-  display: none;
-}
+.ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 18px auto 4px; }
+.ornament span { display: block; width: 54px; height: 1px; }
+.couple-names { margin: 0; }
+.event-date { margin: 8px 0 10px; font-size: .68rem; letter-spacing: .18em; }
+.event-message { max-width: 290px; margin: 0 auto 18px; font-size: .95rem; line-height: 1.35; }
 
-.ornament { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px auto 4px; color: #b0904c; }
-.ornament span { display: block; width: 58px; height: 1px; background: #b9b2a2; }
-.ornament b { font-size: 1.1rem; font-weight: 400; }
-.couple-names { margin: 0; color: #15150f; font: 400 2.2rem/1.08 'Parisienne', cursive; }
-.event-date { margin: 9px 0 12px; color: #6d6a5f; font-size: .68rem; letter-spacing: .2em; }
-.event-message { max-width: 290px; margin: 0 auto 21px; color: #888477; font: 400 1.15rem/1.15 'Cormorant Garamond', serif; }
-
-form { width: 100%; margin-top: 4px; padding-top: 18px; border-top: 1px solid #e1dacc; text-align: left; }
-.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px; }
-label { color: #615e54; font-size: .67rem; font-weight: 600; letter-spacing: .03em; }
-label strong { color: #b0904c; }
-input { width: 100%; border: 1px solid #dfd9cc; border-radius: 0; outline: none; padding: 10px 11px; color: #39372f; background: #fffefa; font: .72rem 'Montserrat', sans-serif; transition: border-color .2s, box-shadow .2s; }
-input:focus { border-color: #b0904c; box-shadow: 0 0 0 3px rgba(176,144,76,.10); }
+form { width: 100%; margin-top: 4px; padding-top: 16px; border-top: 1px solid #e1dacc; text-align: left; }
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+label { font-size: .67rem; font-weight: 600; letter-spacing: .03em; }
+input { width: 100%; border: 1px solid #dfd9cc; border-radius: 0; outline: none; padding: 10px 11px; font: .72rem 'Montserrat', sans-serif; transition: all .2s; }
 input.invalid { border-color: #c9796e; }
 .field small { color: #bd7167; font-size: .62rem; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .notification-options { display: flex; flex-wrap: wrap; gap: 6px; }
-.notification-option { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #dfd9cc; padding: 8px 9px; color: #777268; cursor: pointer; font-size: .62rem; font-weight: 500; }
+.notification-option { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #dfd9cc; padding: 7px 8px; cursor: pointer; font-size: .62rem; font-weight: 500; }
 .notification-option input { display: none; }
-.notification-option.selected { border-color: #b0904c; background: #faf5e8; color: #8d7138; }
-.notification-option span { color: #b0904c; font-size: .82rem; }
-.error-banner { margin: 12px 0; padding: 9px 11px; border: 1px solid #e6b9b3; background: #fff4f2; color: #a75d55; font-size: .68rem; }
-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 17px; border: 0; border-radius: 0; padding: 12px 16px; background: #25251f; color: #fffefa; cursor: pointer; font: 600 .7rem 'Montserrat', sans-serif; letter-spacing: .06em; transition: background .2s, transform .2s; }
-button:hover:not(:disabled) { background: #a88b4b; transform: translateY(-1px); }
-button:disabled { cursor: not-allowed; opacity: .6; }
-button span { font-size: 1rem; }
-.spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,.35); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; }
+.error-banner { margin-bottom: 12px; padding: 8px; border: 1px solid #e57373; background: #ffebee; color: #c62828; font-size: .68rem; text-align: center; }
+
+button[type="submit"] {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; border: 0; padding: 13px 18px; font: 600 .74rem 'Montserrat', sans-serif;
+  letter-spacing: .06em; cursor: pointer; transition: all .2s;
+  &:disabled { cursor: not-allowed; opacity: .6; }
+}
+
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid rgba(176,144,76,.25);
+  border-top-color: #b0904c;
+  border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 10px;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 
-footer { position: relative; z-index: 2; margin: 27px -34px 0; padding: 14px; border-top: 1px solid #ded6c7; color: #aaa497; text-align: center; font-size: .58rem; font-style: italic; letter-spacing: .05em; }
-footer span { padding: 0 5px; color: #b0904c; }
+footer {
+  position: relative; z-index: 2; margin: 26px -28px 0; padding: 14px;
+  border-top: 1px solid #ded6c7; text-align: center; font-size: .58rem;
+  font-style: italic; letter-spacing: .05em;
+  span { padding: 0 4px; }
+}
 
-.success-content { padding-bottom: 8px; }
-.success-content .photo-frame { height: 270px; }
-.success-mark { display: grid; place-items: center; width: 38px; height: 38px; margin: 18px auto 8px; border: 1px solid #b0904c; border-radius: 50%; color: #b0904c; font-size: 1.2rem; }
-.success-content h3 { margin: 0; color: #29281f; font: 600 1.25rem 'Cormorant Garamond', serif; }
-.success-message { margin: 9px auto; color: #777267; font: 1rem/1.35 'Cormorant Garamond', serif; }
-.event-location { margin: 0; color: #a88b4b; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; }
-.qr-block { margin: 15px auto 10px; }
-.qr-block p { margin: 0 0 6px; color: #8c805f; font-size: .62rem; text-transform: uppercase; letter-spacing: .12em; }
-.qr-block img { width: 105px; height: 105px; border: 1px solid #b0904c; padding: 5px; object-fit: contain; }
-.download-link { display: inline-block; margin-top: 6px; color: #91743e; font-size: .65rem; text-decoration: underline; }
+/* Success state */
+.success-content { padding-bottom: 14px; }
+.success-content .photo-frame { height: 250px; }
+.success-mark {
+  display: grid; place-items: center; width: 44px; height: 44px;
+  margin: 18px auto 8px; border-radius: 50%; font-size: 1.3rem;
+}
+.qr-block {
+  margin: 14px auto 10px;
+  p { margin: 0 0 6px; font-size: .62rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 600; }
+  img { width: 120px; height: 120px; padding: 6px; background: #fff; object-fit: contain; }
+}
+.download-link {
+  display: inline-block; margin-top: 10px; padding: 10px 18px;
+  font-size: .68rem; font-weight: 600; letter-spacing: .05em; text-decoration: none; transition: background .2s;
+}
 
-.state-card { display: grid; place-items: center; min-height: 610px; text-align: center; }
-.state-icon { display: grid; place-items: center; width: 45px; height: 45px; border: 1px solid #b0904c; border-radius: 50%; color: #b0904c; font: 1.4rem 'Cormorant Garamond', serif; }
-.state-card h2 { margin: 13px 0 4px; font: 600 1.35rem 'Cormorant Garamond', serif; }
-.state-card p { max-width: 250px; margin: 0; color: #898477; font-size: .7rem; line-height: 1.6; }
+/* State card */
+.state-card {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 560px; text-align: center; padding: 2rem 1rem;
+}
+.state-icon {
+  display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+  font: 1.4rem serif; margin-bottom: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   1. 💍 THÈME MARIAGE
+═══════════════════════════════════════════════════════════════ */
+.theme-mariage {
+  &.invitation-page { background: #f5f3ee; color: #25251f; }
+  &.paper-card { background: #fffefa; border: 1px solid rgba(220, 212, 195, 0.4); box-shadow: 0 14px 38px rgba(50, 48, 37, .14); }
+  .wash { position: absolute; z-index: -1; pointer-events: none; opacity: .75; filter: blur(.2px); }
+  .wash-top { width: 210px; height: 78px; top: -26px; left: -48px; background: #f4ead2; border-radius: 50%; transform: rotate(-18deg); }
+  .wash-bottom { width: 170px; height: 115px; right: -66px; bottom: -36px; background: #f5ecd6; border-radius: 50%; transform: rotate(28deg); }
+  .leaf { position: absolute; z-index: 0; color: #647255; font: 110px/1 'Cormorant Garamond', serif; opacity: .68; transform: rotate(42deg); }
+  .leaf-top { top: -22px; right: -5px; }
+  .leaf-bottom { bottom: -13px; left: -7px; transform: rotate(220deg); }
+  .eyebrow { color: #a88b4b; font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: .18em; }
+  h1 { color: #25251f; font: 500 2.15rem/1 'Cormorant Garamond', serif; }
+  .intro { color: #89877e; font-size: .66rem; line-height: 1.6; }
+  .couple-names { color: #15150f; font: 400 2.2rem/1.08 'Parisienne', cursive; }
+  
+  /* Cadre en arche romantique */
+  .frame-mariage .photo-frame {
+    clip-path: path('M 0 76 L 40 76 A 83 83 0 0 1 206 76 L 246 76 L 246 360 L 0 360 Z');
+    -webkit-clip-path: path('M 0 76 L 40 76 A 83 83 0 0 1 206 76 L 246 76 L 246 360 L 0 360 Z');
+    background: #d8d0bd;
+    box-shadow: 0 14px 24px rgba(46,45,34,.2);
+  }
+  .ornament { color: #b0904c; span { background: #b9b2a2; } b { font-size: 1.1rem; font-weight: 400; } }
+  button[type="submit"] {
+    background: #25251f; color: #fffefa;
+    &:hover:not(:disabled) { background: #a88b4b; }
+  }
+  .success-mark { border: 1px solid #b0904c; color: #b0904c; background: rgba(244, 234, 210, .4); }
+  .download-link { background: #25251f; color: #fffefa; &:hover { background: #a88b4b; } }
+  footer { span { color: #b0904c; } }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. 🎙️ THÈME CONFÉRENCE (Tech Summit & Cyber Slate)
+═══════════════════════════════════════════════════════════════ */
+.theme-conference {
+  &.invitation-page {
+    background: #060c18;
+    color: #e2e8f0;
+    background-image:
+      radial-gradient(circle at 50% 0%, rgba(0, 201, 167, 0.2) 0%, transparent 65%),
+      linear-gradient(rgba(0, 201, 167, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 201, 167, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 24px 24px, 24px 24px;
+  }
+  &.paper-card {
+    background: linear-gradient(165deg, #0d1e38 0%, #081222 100%);
+    border: 1px solid rgba(0, 201, 167, 0.45);
+    box-shadow: 0 25px 55px rgba(0, 8, 20, 0.8), 0 0 30px rgba(0, 201, 167, 0.2);
+    color: #e2e8f0;
+  }
+  .conf-header-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: -10px 0 16px;
+  }
+  .conf-lanyard-slot {
+    width: 60px;
+    height: 6px;
+    border-radius: 6px;
+    background: #060c18;
+    border: 1px solid rgba(0, 201, 167, 0.4);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+  }
+  .conf-badge-pill {
+    display: inline-block;
+    padding: 3px 12px;
+    background: rgba(0, 201, 167, 0.12);
+    border: 1px solid #00c9a7;
+    border-radius: 4px;
+    color: #00c9a7;
+    font-family: 'Belleza', sans-serif;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+  }
+  .eyebrow { color: #00c9a7; font-family: 'Belleza', 'Montserrat', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { color: #ffffff; font: 700 2rem/1.1 'Belleza', 'Montserrat', sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+  .intro { color: #94a3b8; font-size: .68rem; line-height: 1.5; font-family: 'Montserrat', sans-serif; }
+  .couple-names {
+    color: #ffffff;
+    font: 700 1.7rem/1.2 'Belleza', 'Montserrat', sans-serif;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #ffffff 40%, #00c9a7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .event-date { color: #38bdf8; font-size: .72rem; letter-spacing: .15em; font-weight: 600; font-family: 'Montserrat', sans-serif; }
+  .event-message { color: #cbd5e1; font: 400 .92rem/1.4 'Montserrat', sans-serif; }
+
+  /* Cadre biseauté high-tech avec lueur néon teal */
+  .frame-conference .photo-frame {
+    width: 100%;
+    height: 350px;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+    -webkit-clip-path: polygon(0 0, 100% 0, 100% calc(100% - 24px), calc(100% - 24px) 100%, 0 100%);
+    border: 2px solid #00c9a7;
+    box-shadow: 0 0 25px rgba(0, 201, 167, 0.35);
+    background: #091322;
+  }
+  .tech-cross {
+    position: absolute; width: 10px; height: 10px; z-index: 5; pointer-events: none;
+    &::before, &::after { content: ''; position: absolute; background: #00c9a7; }
+    &::before { top: 4px; left: 0; width: 10px; height: 2px; }
+    &::after { top: 0; left: 4px; width: 2px; height: 10px; }
+  }
+  .cross-tl { top: 8px; left: 8px; }
+  .cross-tr { top: 8px; right: 8px; }
+  .cross-bl { bottom: 8px; left: 8px; }
+  .cross-br { bottom: 28px; right: 8px; }
+
+  .ornament {
+    color: #00c9a7;
+    span { background: rgba(0, 201, 167, 0.4); }
+    b { font-family: monospace; font-size: .92rem; letter-spacing: .1em; font-weight: 700; }
+  }
+  form { border-top: 1px solid rgba(0, 201, 167, 0.25); }
+  label { color: #94a3b8; strong { color: #00c9a7; } }
+  input {
+    background: #091322; border: 1px solid #1e2e4a; color: #f8fafc;
+    &:focus { border-color: #00c9a7; box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.25); }
+  }
+  .notification-option {
+    border-color: #1e2e4a; color: #94a3b8; background: #091322;
+    &.selected { border-color: #00c9a7; color: #00c9a7; background: rgba(0, 201, 167, 0.16); font-weight: 600; }
+  }
+  button[type="submit"] {
+    background: linear-gradient(135deg, #00c9a7 0%, #009e84 100%);
+    color: #060c18; font-weight: 700; font-family: 'Belleza', 'Montserrat', sans-serif;
+    letter-spacing: .08em; text-transform: uppercase;
+    box-shadow: 0 4px 20px rgba(0, 201, 167, 0.45);
+    &:hover:not(:disabled) { background: #38bdf8; color: #060c18; transform: translateY(-1px); }
+  }
+  .success-mark { border: 2px solid #00c9a7; color: #00c9a7; background: rgba(0, 201, 167, 0.18); }
+  .success-content h3 { color: #f8fafc; font-family: 'Belleza', 'Montserrat', sans-serif; font-weight: 700; }
+  .success-message { color: #cbd5e1; font-family: 'Montserrat', sans-serif; }
+  .qr-block img { border: 2px solid #00c9a7; }
+  .download-link { background: linear-gradient(135deg, #00c9a7, #009e84); color: #060c18; font-weight: 700; }
+  footer { border-top-color: #1e2e4a; color: #64748b; span { color: #00c9a7; } }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. 🍾 THÈME GALA (Black Tie Prestige & Gilded Gold)
+═══════════════════════════════════════════════════════════════ */
+.theme-gala {
+  &.invitation-page {
+    background: #08080a;
+    color: #f9f6ef;
+    background-image: radial-gradient(ellipse 65% 55% at 50% 0%, rgba(201, 168, 76, 0.2) 0%, transparent 80%);
+  }
+  &.paper-card {
+    background: linear-gradient(160deg, #181614 0%, #0a0a0c 100%);
+    border: 2px solid #c9a84c;
+    outline: 1px solid rgba(255, 217, 125, 0.25);
+    outline-offset: -6px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(201, 168, 76, 0.25);
+    color: #f9f6ef;
+  }
+  .gala-header-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: -10px 0 16px;
+  }
+  .gala-filigree {
+    color: #ffd97d;
+    font-size: 1.1rem;
+    letter-spacing: .2em;
+    text-shadow: 0 0 12px rgba(201, 168, 76, 0.6);
+  }
+  .gala-badge-pill {
+    display: inline-block;
+    padding: 3px 12px;
+    background: rgba(201, 168, 76, 0.12);
+    border: 1px solid rgba(201, 168, 76, 0.5);
+    color: #ffd97d;
+    font-family: 'Cinzel', serif;
+    font-size: .58rem;
+    font-weight: 600;
+    letter-spacing: .2em;
+  }
+  .eyebrow { color: #c9a84c; font-family: 'Cinzel', 'Belleza', serif; font-size: .68rem; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
+  h1 { color: #ffffff; font: 600 2.2rem/1.05 'Cinzel', 'Cormorant Garamond', serif; letter-spacing: .12em; text-transform: uppercase; }
+  .intro { color: #a39988; font-size: .68rem; line-height: 1.5; font-family: 'Montserrat', sans-serif; }
+  .couple-names {
+    color: #ffd97d;
+    font: 600 1.95rem/1.2 'Cinzel', 'Belleza', serif;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 16px rgba(201, 168, 76, 0.5);
+  }
+  .event-date { color: #c9a84c; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-family: 'Cinzel', serif; }
+  .event-message { color: #d4ccbd; font: 400 1.05rem/1.4 'Cormorant Garamond', serif; }
+
+  /* Cadre Art Déco ciselé */
+  .frame-gala .photo-frame {
+    width: 100%;
+    height: 360px;
+    clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
+    -webkit-clip-path: polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px);
+    border: 2px solid #c9a84c;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), 0 0 25px rgba(201, 168, 76, 0.3);
+    background: #141312;
+  }
+  .gala-bracket {
+    position: absolute; width: 14px; height: 14px; z-index: 5; pointer-events: none;
+    border-color: #ffd97d; border-style: solid;
+  }
+  .bracket-tl { top: 6px; left: 6px; border-width: 2px 0 0 2px; }
+  .bracket-tr { top: 6px; right: 6px; border-width: 2px 2px 0 0; }
+  .bracket-bl { bottom: 6px; left: 6px; border-width: 0 0 2px 2px; }
+  .bracket-br { bottom: 6px; right: 6px; border-width: 0 2px 2px 0; }
+
+  .ornament {
+    color: #ffd97d;
+    span { background: rgba(201, 168, 76, 0.5); }
+    b { font-size: 1.15rem; font-weight: 600; letter-spacing: .1em; }
+  }
+  form { border-top: 1px solid rgba(201, 168, 76, 0.3); }
+  label { color: #b8ad9b; strong { color: #c9a84c; } }
+  input {
+    background: #141312; border: 1px solid #332d22; color: #fff;
+    &:focus { border-color: #c9a84c; box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.25); }
+  }
+  .notification-option {
+    border-color: #332d22; color: #b8ad9b; background: #141312;
+    &.selected { border-color: #c9a84c; color: #ffd97d; background: rgba(201, 168, 76, 0.18); }
+  }
+  button[type="submit"] {
+    background: linear-gradient(135deg, #ffd97d 0%, #d4af37 50%, #a07d2e 100%);
+    color: #111; font-weight: 700; letter-spacing: .1em; font-family: 'Cinzel', serif;
+    box-shadow: 0 4px 22px rgba(201, 168, 76, 0.45);
+    &:hover:not(:disabled) { background: #ffd97d; transform: translateY(-1px); }
+  }
+  .success-mark { border: 2px solid #c9a84c; color: #ffd97d; background: rgba(201, 168, 76, 0.25); }
+  .success-content h3 { color: #fff; font-family: 'Cinzel', 'Belleza', serif; }
+  .success-message { color: #d4ccbd; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+  .qr-block img { border: 2px solid #c9a84c; }
+  .download-link { background: linear-gradient(135deg, #d4af37, #a07d2e); color: #111; font-weight: 700; }
+  footer { border-top-color: #332d22; color: #7a7060; span { color: #c9a84c; } }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. ⚜️ THÈME CÉRÉMONIE (Royal Champagne & Terracotta Sienna)
+═══════════════════════════════════════════════════════════════ */
+.theme-ceremonie {
+  &.invitation-page {
+    background: #fdf8f0;
+    color: #3a2510;
+    background-image:
+      radial-gradient(ellipse 50% 50% at 0% 0%, rgba(139, 94, 62, 0.12) 0%, transparent 100%),
+      radial-gradient(ellipse 50% 50% at 100% 100%, rgba(122, 158, 126, 0.14) 0%, transparent 100%);
+  }
+  &.paper-card {
+    background: #fffaf3;
+    border: 2px solid rgba(139, 94, 62, 0.35);
+    box-shadow: 0 18px 45px rgba(58, 37, 16, 0.14);
+    color: #3a2510;
+  }
+  .cere-header-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin: -10px 0 16px;
+  }
+  .cere-filigree {
+    color: #8b5e3c;
+    font-size: 1.3rem;
+  }
+  .cere-badge-pill {
+    display: inline-block;
+    padding: 3px 12px;
+    background: rgba(139, 94, 62, 0.1);
+    border: 1px solid rgba(139, 94, 62, 0.4);
+    color: #8b5e3c;
+    font-family: 'Belleza', sans-serif;
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+  }
+  .eyebrow { color: #8b5e3c; font-family: 'Belleza', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  h1 { color: #3a2510; font: 600 2.2rem/1.05 'Belleza', 'Cormorant Garamond', serif; letter-spacing: .06em; }
+  .intro { color: #8a6a4e; font-size: .68rem; line-height: 1.6; }
+  .couple-names { color: #3a2510; font: 600 2.1rem/1.15 'Belleza', 'Cormorant Garamond', serif; letter-spacing: .04em; }
+  .event-date { color: #8b5e3c; font-size: .7rem; letter-spacing: .18em; }
+  .event-message { color: #5a3d24; font: 400 1.05rem/1.4 'Cormorant Garamond', serif; }
+
+  /* Cadre médaillon royal couronné */
+  .frame-ceremonie .photo-frame {
+    width: 100%;
+    height: 360px;
+    border-radius: 130px 130px 20px 20px;
+    border: 3px solid #8b5e3c;
+    box-shadow: 0 12px 30px rgba(58, 37, 16, 0.2);
+    background: #f7ede1;
+  }
+  .ornament {
+    color: #8b5e3c;
+    span { background: #d9c7b4; }
+    b { font-size: 1.35rem; font-weight: 400; }
+  }
+  form { border-top: 1px solid #e8d8c4; }
+  label { color: #6b4526; strong { color: #8b5e3c; } }
+  input {
+    background: #fff; border: 1px solid #e2d2c1; color: #3a2510;
+    &:focus { border-color: #8b5e3c; box-shadow: 0 0 0 3px rgba(139, 94, 62, 0.16); }
+  }
+  .notification-option {
+    border-color: #e2d2c1; color: #6b4526; background: #fff;
+    &.selected { border-color: #8b5e3c; color: #8b5e3c; background: rgba(139, 94, 62, 0.1); }
+  }
+  button[type="submit"] {
+    background: linear-gradient(135deg, #8b5e3c 0%, #6b4526 100%);
+    color: #fff; font-weight: 600; font-family: 'Belleza', sans-serif;
+    letter-spacing: .06em;
+    box-shadow: 0 4px 18px rgba(139, 94, 62, 0.3);
+    &:hover:not(:disabled) { background: #a8744f; }
+  }
+  .success-mark { border: 2px solid #8b5e3c; color: #8b5e3c; background: rgba(139, 94, 62, 0.15); }
+  .success-content h3 { color: #3a2510; font-family: 'Belleza', serif; }
+  .success-message { color: #6b4526; font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; }
+  .qr-block img { border: 2px solid #8b5e3c; }
+  .download-link { background: #8b5e3c; color: #fff; font-weight: 600; &:hover { background: #6b4526; } }
+  footer { border-top-color: #e8d8c4; color: #9c826b; span { color: #8b5e3c; } }
+}
 
 @media (max-width: 480px) {
   .invitation-page { padding: 0; }
-  .paper-card { min-height: 100vh; padding: 30px 22px 0; }
-  .form-grid { grid-template-columns: 1fr; gap: 0; }
-  footer { margin-left: -22px; margin-right: -22px; }
-  .leaf { opacity: .5; }
+  .paper-card { min-height: 100vh; padding: 28px 20px 0; border-radius: 0; }
+  footer { margin-left: -20px; margin-right: -20px; }
 }

@@ -32,10 +32,12 @@ export class LinkService {
   // Public — sans auth
   preview(token: string): Observable<ApiResponse<{
     eventTitle: string;
+    eventType: import('../models/enums.model').EventType;
     concernedNames: string;
     eventDate: string;
     couplePhotoUrl: string | null;
     banquetLocation: string | null;
+    description: string | null;
   }>> {
     return this.http.get<ApiResponse<any>>(`${this.base}/preview/${token}`);
   }

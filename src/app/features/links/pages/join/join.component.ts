@@ -12,14 +12,17 @@ type PageState = 'loading' | 'form' | 'success' | 'error';
 
 type LinkPreview = {
   eventTitle: string;
+  eventType?: import('../../../../core/models/enums.model').EventType;
   concernedNames: string;
   eventDate: string;
   couplePhotoUrl: string | null;
   banquetLocation: string | null;
+  description?: string | null;
 };
 
 type InvitationViewData = Invitation & {
   eventTitle?: string;
+  eventType?: import('../../../../core/models/enums.model').EventType;
   eventName?: string;
   coupleNames?: string;
   brideName?: string;
@@ -59,6 +62,60 @@ export class JoinComponent implements OnInit {
   isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
   readonly simulatedCouplePhoto = '/img/photoCouple.avif';
+
+  eventType = computed<import('../../../../core/models/enums.model').EventType>(() => {
+    return this.previewData()?.eventType || this.data()?.eventType || 'MARIAGE';
+  });
+
+  themeClass = computed(() => 'theme-' + this.eventType().toLowerCase());
+
+  eyebrowText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
+    if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
+    if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
+    return this.eventTitle();
+  });
+
+  mainTitleText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Accréditation';
+    if (t === 'GALA') return 'Invitation VIP';
+    if (t === 'CEREMONIE') return 'Célébration';
+    return 'Invitation';
+  });
+
+  introText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Inscrivez-vous pour obtenir votre pass de conférence et badge d’accès officiel';
+    if (t === 'GALA') return 'Le comité d’honneur a le privilège de vous convier à cette prestigieuse réception';
+    if (t === 'CEREMONIE') return 'Nous sommes honorés de vous compter parmi nos invités d’exception';
+    return 'Inscrivez-vous pour recevoir votre invitation personnalisée';
+  });
+
+  ornamentGlyph = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return '⟨ // ⟩';
+    if (t === 'GALA') return '✦ ❖ ✦';
+    if (t === 'CEREMONIE') return '⚜';
+    return '✦';
+  });
+
+  submitBtnText = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return 'Obtenir mon badge d’accès';
+    if (t === 'GALA') return 'Réserver mon invitation VIP';
+    if (t === 'CEREMONIE') return 'Valider mon inscription';
+    return 'Confirmer mon inscription';
+  });
+
+  defaultPhotoForType = computed(() => {
+    const t = this.eventType();
+    if (t === 'CONFERENCE') return '/images/background-section-hero.webp';
+    if (t === 'GALA') return '/images/couple_en_fete.webp';
+    if (t === 'CEREMONIE') return '/images/mr-mme-zome.webp';
+    return this.simulatedCouplePhoto;
+  });
 
   readonly notifOptions: { key: NotificationMode; label: string; icon: string }[] = [
     { key: 'EMAIL', label: 'Email', icon: '✉' },
@@ -148,7 +205,7 @@ export class JoinComponent implements OnInit {
     const p = this.previewData();
     if (p?.couplePhotoUrl) return p.couplePhotoUrl;
     const data = this.data();
-    return data?.couplePhotoUrl || data?.photoUrl || this.simulatedCouplePhoto;
+    return data?.couplePhotoUrl || data?.photoUrl || this.defaultPhotoForType();
   }
 
   onPhotoSelected(event: Event): void {
