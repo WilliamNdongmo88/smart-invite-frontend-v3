@@ -29,9 +29,27 @@
         <h1>Invitation</h1>
         <p class="intro">Vous êtes cordialement invité(e) à célébrer ce moment</p>
 
-        <div class="photo-frame simulated-photo">
+        <div class="photo-frame simulated-photo" [class.editable]="isLoggedIn()">
           <img [src]="couplePhoto()" alt="Photo de l’événement" />
           <span class="photo-arch" aria-hidden="true"></span>
+
+          @if (uploading()) {
+            <div class="photo-upload-spinner-overlay">
+              <div class="spinner-sm"></div>
+              <span>Upload vers Firebase...</span>
+            </div>
+          }
+
+          @if (isLoggedIn() && !uploading()) {
+            <button type="button" class="photo-edit-btn" (click)="photoInputReady.click()" title="Changer la photo sur Firebase">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Changer la photo</span>
+            </button>
+            <input #photoInputReady type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+          }
         </div>
 
         <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
@@ -77,8 +95,26 @@
         <p class="eyebrow">{{ eventTitle() }}</p>
         <h1>Invitation</h1>
 
-        <div class="photo-frame simulated-photo">
+        <div class="photo-frame simulated-photo" [class.editable]="isLoggedIn()">
           <img [src]="couplePhoto()" alt="Photo de l’événement" />
+
+          @if (uploading()) {
+            <div class="photo-upload-spinner-overlay">
+              <div class="spinner-sm"></div>
+              <span>Upload vers Firebase...</span>
+            </div>
+          }
+
+          @if (isLoggedIn() && !uploading()) {
+            <button type="button" class="photo-edit-btn" (click)="photoInputConfirmed.click()" title="Changer la photo sur Firebase">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Changer la photo</span>
+            </button>
+            <input #photoInputConfirmed type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+          }
         </div>
 
         <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>
@@ -118,8 +154,26 @@
         <p class="eyebrow">{{ eventTitle() }}</p>
         <h1>Invitation</h1>
 
-        <div class="photo-frame simulated-photo">
+        <div class="photo-frame simulated-photo" [class.editable]="isLoggedIn()">
           <img [src]="couplePhoto()" alt="Photo de l’événement" />
+
+          @if (uploading()) {
+            <div class="photo-upload-spinner-overlay">
+              <div class="spinner-sm"></div>
+              <span>Upload vers Firebase...</span>
+            </div>
+          }
+
+          @if (isLoggedIn() && !uploading()) {
+            <button type="button" class="photo-edit-btn" (click)="photoInputDeclined.click()" title="Changer la photo sur Firebase">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                <circle cx="12" cy="13" r="4"/>
+              </svg>
+              <span>Changer la photo</span>
+            </button>
+            <input #photoInputDeclined type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+          }
         </div>
 
         <div class="ornament" aria-hidden="true"><span></span><b>✦</b><span></span></div>

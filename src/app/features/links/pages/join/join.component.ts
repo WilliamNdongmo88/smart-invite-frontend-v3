@@ -1,7 +1,10 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LinkService } from '../../../../core/services/link.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { EventService } from '../../../../core/services/event.service';
+import { ToastService } from '../../../../core/services/toast.service';
 import { Invitation } from '../../../../core/models/invitation.model';
 import { NotificationMode } from '../../../../core/models/enums.model';
 
@@ -40,13 +43,20 @@ export class JoinComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly svc = inject(LinkService);
+  private readonly authSvc = inject(AuthService);
+  private readonly eventSvc = inject(EventService);
+  private readonly toast = inject(ToastService);
 
   state = signal<PageState>('loading');
   submitting = signal(false);
+  uploading = signal(false);
   result = signal<Invitation | null>(null);
   previewData = signal<LinkPreview | null>(null);
+  customPhotoUrl = signal<string | null>(null);
   errorMsg = signal('Ce lien est invalide ou a expiré.');
   submitError = signal<string | null>(null);
+
+  isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
   readonly simulatedCouplePhoto = '/img/photoCouple.avif';
 
@@ -134,10 +144,41 @@ export class JoinComponent implements OnInit {
   }
 
   couplePhoto(): string {
+    if (this.customPhotoUrl()) return this.customPhotoUrl()!;
     const p = this.previewData();
     if (p?.couplePhotoUrl) return p.couplePhotoUrl;
     const data = this.data();
     return data?.couplePhotoUrl || data?.photoUrl || this.simulatedCouplePhoto;
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    this.uploading.set(true);
+    this.eventSvc.uploadImage(file, 'photos').subscribe({
+      next: (res) => {
+        const url = res.data;
+        if (url) {
+          this.customPhotoUrl.set(url);
+          const raw = sessionStorage.getItem('join_preview');
+          if (raw) {
+            try {
+              const preview = JSON.parse(raw);
+              preview.couplePhotoUrl = url;
+              sessionStorage.setItem('join_preview', JSON.stringify(preview));
+            } catch (e) {}
+          }
+          this.toast.success('Photo mise à jour et enregistrée sur Firebase !');
+        }
+        this.uploading.set(false);
+      },
+      error: () => {
+        this.toast.error("Erreur lors de l'upload de l'image sur Firebase.");
+        this.uploading.set(false);
+      }
+    });
   }
 
   submit(): void {

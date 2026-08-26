@@ -1,6 +1,9 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InvitationService } from '../../../core/services/invitation.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { EventService } from '../../../core/services/event.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { PublicInvitation } from '../../../core/models/invitation.model';
 import { EVENT_TYPE_LABELS } from '../../../core/models/enums.model';
 
@@ -16,11 +19,18 @@ type PageState = 'loading' | 'ready' | 'confirmed' | 'declined' | 'error';
 export class RsvpPublicComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly svc = inject(InvitationService);
+  private readonly authSvc = inject(AuthService);
+  private readonly eventSvc = inject(EventService);
+  private readonly toast = inject(ToastService);
 
   state = signal<PageState>('loading');
   inv = signal<PublicInvitation | null>(null);
   submitting = signal<'CONFIRMED' | 'DECLINED' | null>(null);
+  uploading = signal(false);
+  customPhotoUrl = signal<string | null>(null);
   errorMsg = signal('Ce lien est invalide ou a expiré.');
+
+  isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
   readonly simulatedCouplePhoto = '/img/photoCouple.avif';
 
@@ -78,8 +88,31 @@ export class RsvpPublicComponent implements OnInit {
   }
 
   couplePhoto(): string {
+    if (this.customPhotoUrl()) return this.customPhotoUrl()!;
     const i = this.inv();
     return i?.couplePhotoUrl || this.simulatedCouplePhoto;
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+    const file = input.files[0];
+
+    this.uploading.set(true);
+    this.eventSvc.uploadImage(file, 'photos').subscribe({
+      next: (res) => {
+        const url = res.data;
+        if (url) {
+          this.customPhotoUrl.set(url);
+          this.toast.success('Photo mise à jour et enregistrée sur Firebase !');
+        }
+        this.uploading.set(false);
+      },
+      error: () => {
+        this.toast.error("Erreur lors de l'upload de l'image sur Firebase.");
+        this.uploading.set(false);
+      },
+    });
   }
 
   respond(status: 'CONFIRMED' | 'DECLINED'): void {
