@@ -480,10 +480,48 @@
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
       </svg>
     </button>
+    <!-- Bouton dédié thème -->
+    <button class="edit-pencil edit-pencil--theme" (click)="openEdit('theme')" title="Changer le thème de la page">
+      🎨
+    </button>
   }
   <div class="section-inner">
     <span class="eyebrow-gold reveal" style="--d:0ms">✦ Thème de la soirée</span>
     <h2 class="section-title reveal" style="--d:80ms">{{ dressCode().title }}</h2>
+
+    <!-- Sélecteur rapide de palette (visible uniquement si connecté) -->
+    @if (isLoggedIn()) {
+      <div class="theme-quick-bar reveal" style="--d:80ms">
+        <span class="theme-quick-label">Ambiance visuelle :</span>
+        <div class="theme-quick-presets">
+          @for (preset of THEME_PRESETS; track preset.id) {
+            <button
+              type="button"
+              class="theme-quick-btn"
+              [class.active]="theme().preset === preset.id"
+              (click)="applyThemePresetDirect(preset.id)"
+              (mouseenter)="hoveredPresetId.set(preset.id)"
+              (mouseleave)="hoveredPresetId.set(null)"
+              [title]="preset.name + ' — ' + preset.description"
+            >
+              <span class="theme-dot" [style.background]="preset.primaryColor"></span>
+              <span class="theme-dot-sec" [style.background]="preset.secondaryColor"></span>
+              <span class="theme-btn-label">{{ preset.badge }} {{ preset.name }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Swatches de la palette du thème actif -->
+    <div class="theme-active-swatches reveal" style="--d:120ms">
+      @for (sw of activeThemeSwatches(); track sw.color) {
+        <div class="swatch">
+          <div class="swatch-color" [style.background]="sw.color"></div>
+          <span class="swatch-label">{{ sw.label }}</span>
+        </div>
+      }
+    </div>
 
     <div class="palette-board reveal" style="--d:160ms">
       <p class="palette-desc">{{ dressCode().description }}</p>
@@ -1341,6 +1379,123 @@
               <div class="edit-footer-preview-logo">{{ draft().footer.logoText }}</div>
               <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
               <p class="edit-footer-preview-love">{{ draft().footer.loveText }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- ── THÈME ── -->
+        @if (activeSection() === 'theme') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">🎨 Thème visuel du mariage</h3>
+            <p class="edit-hint" style="margin-bottom:1.5rem">
+              Choisissez une palette prédéfinie ou ajustez les couleurs manuellement.
+              L'aperçu s'applique <strong>en temps réel</strong> en survolant une palette.
+            </p>
+
+            <!-- Palettes prédéfinies -->
+            <div class="theme-presets-grid">
+              @for (preset of THEME_PRESETS; track preset.id) {
+                <button
+                  type="button"
+                  class="theme-preset-card"
+                  [class.active]="draft().theme.preset === preset.id"
+                  (click)="applyThemePreset(preset.id)"
+                  (mouseenter)="hoveredPresetId.set(preset.id)"
+                  (mouseleave)="hoveredPresetId.set(null)"
+                >
+                  <div class="preset-badge-lg">{{ preset.badge }}</div>
+                  <div class="preset-info">
+                    <span class="preset-name">{{ preset.name }}</span>
+                    <span class="preset-desc">{{ preset.description }}</span>
+                  </div>
+                  <div class="preset-swatches-row">
+                    @for (sw of preset.swatches; track sw.color) {
+                      <span class="preset-swatch-dot" [style.background]="sw.color" [title]="sw.label"></span>
+                    }
+                  </div>
+                  @if (draft().theme.preset === preset.id) {
+                    <span class="preset-check">✓</span>
+                  }
+                </button>
+              }
+            </div>
+
+            <!-- Séparateur -->
+            <div class="edit-divider" style="margin:1.5rem 0"><span>Personnalisation avancée</span></div>
+
+            <!-- Color pickers -->
+            <div class="theme-color-grid">
+
+              <div class="theme-color-item">
+                <label class="edit-label">Fond de page</label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorBackground"
+                         (input)="updateDraftThemeColor('colorBackground', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorBackground }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Accent principal <em>(or, titres)</em></label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorAccent"
+                         (input)="updateDraftThemeColor('colorAccent', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorAccent }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Accent secondaire <em>(boutons)</em></label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorAccentSecondary"
+                         (input)="updateDraftThemeColor('colorAccentSecondary', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorAccentSecondary }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Accent profond <em>(hover)</em></label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorAccentDeep"
+                         (input)="updateDraftThemeColor('colorAccentDeep', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorAccentDeep }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Texte principal</label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorText"
+                         (input)="updateDraftThemeColor('colorText', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorText }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Texte secondaire</label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorTextSecondary"
+                         (input)="updateDraftThemeColor('colorTextSecondary', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorTextSecondary }}</span>
+                </div>
+              </div>
+
+              <div class="theme-color-item">
+                <label class="edit-label">Fond des cartes</label>
+                <div class="theme-color-row">
+                  <input type="color" class="edit-input edit-input--color"
+                         [value]="draft().theme.colorCardBg"
+                         (input)="updateDraftThemeColor('colorCardBg', $any($event.target).value)" />
+                  <span class="theme-hex">{{ draft().theme.colorCardBg }}</span>
+                </div>
+              </div>
+
             </div>
           </div>
         }

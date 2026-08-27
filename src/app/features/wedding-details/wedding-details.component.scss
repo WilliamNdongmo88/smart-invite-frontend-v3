@@ -2285,6 +2285,214 @@ section { position: relative; }
   &:hover { filter: brightness(1.1); transform: translateY(-1px); }
 }
 
+/* ── Thème — Quick Bar (section visible dans la page) ────────── */
+.edit-pencil--theme {
+  position: absolute;
+  top: 1.2rem;
+  right: 3.2rem; // à côté du crayon existant
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.18);
+  border: 1px solid var(--border-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background .2s, transform .15s;
+  z-index: 10;
+
+  &:hover {
+    background: rgba(212, 175, 55, 0.35);
+    transform: scale(1.1);
+  }
+}
+
+.theme-quick-bar {
+  margin: 1.2rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+
+.theme-quick-label {
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .8;
+}
+
+.theme-quick-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.theme-quick-btn {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .85rem .4rem .5rem;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  background: rgba(255,255,255,.04);
+  cursor: pointer;
+  transition: border-color .2s, background .2s, transform .15s;
+  font-size: .78rem;
+  color: var(--text-secondary);
+
+  &:hover {
+    border-color: var(--gold);
+    background: rgba(212,175,55,.08);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  &.active {
+    border-color: var(--gold);
+    background: rgba(212,175,55,.14);
+    color: var(--ink);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+}
+
+.theme-dot, .theme-dot-sec {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,.15);
+}
+
+.theme-dot-sec { margin-left: -6px; }
+
+.theme-btn-label { white-space: nowrap; }
+
+.theme-active-swatches {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Thème — Onglet Modal ──────────────────────────────────────── */
+.theme-presets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: .875rem;
+  margin-bottom: .5rem;
+}
+
+.theme-preset-card {
+  position: relative;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: border-color .2s, transform .18s, box-shadow .2s;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  text-align: left;
+  width: 100%;
+
+  &:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  &.active {
+    border-color: var(--gold);
+    background: rgba(212,175,55,.08);
+    box-shadow: 0 0 0 2px var(--gold);
+  }
+}
+
+.preset-badge-lg { font-size: 1.75rem; line-height: 1; }
+
+.preset-info {
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+}
+
+.preset-name {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.preset-desc {
+  font-size: .75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.preset-swatches-row {
+  display: flex;
+  gap: .35rem;
+}
+
+.preset-swatch-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,.1);
+  flex-shrink: 0;
+}
+
+.preset-check {
+  position: absolute;
+  top: .6rem;
+  right: .75rem;
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--gold);
+  background: rgba(212,175,55,.15);
+  border: 1px solid var(--gold);
+  border-radius: 20px;
+  padding: .1rem .45rem;
+  letter-spacing: .05em;
+}
+
+.theme-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.1rem;
+}
+
+.theme-color-item {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+.theme-color-row {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .3rem .6rem .3rem .3rem;
+  transition: border-color .2s;
+
+  &:hover, &:focus-within { border-color: var(--gold); }
+}
+
+.theme-hex {
+  font-size: .72rem;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
 /* ── Responsive modal ────────────────────────────────────────────── */
 @media (max-width: 600px) {
   .edit-modal-backdrop { padding: 0; align-items: flex-end; }

@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy, AfterViewInit,
-  signal, computed, inject, PLATFORM_ID, ElementRef
+  signal, computed, inject, PLATFORM_ID, ElementRef, HostBinding
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -19,6 +19,10 @@ import {
   WeddingDetailsGalleryItem,
   WeddingDetailsBackgroundsContent,
   WeddingDetailsFooterContent,
+  WeddingDetailsTheme,
+  WeddingThemePreset,
+  WEDDING_THEME_PRESETS,
+  DEFAULT_WEDDING_THEME,
 } from './wedding-details-edit.model';
 
 interface CountdownValue { days: string; hours: string; minutes: string; seconds: string; }
@@ -193,11 +197,23 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     subText:  '08 Août 2026 · Ma Cabane Au Canada · Rennes',
     loveText: 'AVEC TOUT NOTRE AMOUR ❤',
   },
+  theme: { ...DEFAULT_WEDDING_THEME },
 };
 
 // Deep-clone helper
 function deepClone<T>(val: T): T {
   return JSON.parse(JSON.stringify(val));
+}
+
+// Détecte si une couleur hex est claire (pour adapter texte/nav)
+function isColorLight(hex: string): boolean {
+  if (!hex || !hex.startsWith('#')) return false;
+  let c = hex.substring(1);
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const r = parseInt(c.substring(0, 2), 16) || 0;
+  const g = parseInt(c.substring(2, 4), 16) || 0;
+  const b = parseInt(c.substring(4, 6), 16) || 0;
+  return (r * 299 + g * 587 + b * 114) / 1000 > 128;
 }
 
 @Component({
@@ -261,7 +277,35 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
     { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
   ];
-  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer'];
+  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer', 'theme'];
+  readonly THEME_PRESETS = WEDDING_THEME_PRESETS;
+
+  /** Signal pour la prévisualisation au survol d'un preset */
+  hoveredPresetId = signal<string | null>(null);
+
+  /** CSS vars appliquées sur le host en temps réel */
+  @HostBinding('style')
+  get themeStyles(): Record<string, string> {
+    const hovered = this.hoveredPresetId();
+    if (hovered) {
+      const p = WEDDING_THEME_PRESETS.find(x => x.id === hovered);
+      if (p) return this.presetToCssVars(p);
+    }
+    if (this.editOpen() && this.activeSection() === 'theme') {
+      return this.themeToCssVars(this.draft().theme ?? DEFAULT_WEDDING_THEME);
+    }
+    return this.themeToCssVars(this.content().theme ?? DEFAULT_WEDDING_THEME);
+  }
+
+  /** Computed exposant le theme courant */
+  readonly theme = computed(() => this.content().theme ?? DEFAULT_WEDDING_THEME);
+
+  /** Swatches de la palette active (pour affichage dans la section dress-code) */
+  readonly activeThemeSwatches = computed(() => {
+    const t = this.theme();
+    const preset = WEDDING_THEME_PRESETS.find(p => p.id === t.preset);
+    return preset?.swatches ?? [];
+  });
   draft = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
   uploadingImage = signal<string | null>(null);
 
@@ -331,7 +375,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         next: (res) => {
           const e = res.data!;
           if (e.detailsContent || e.weddingDetailsContent) {
-            this.content.set(deepClone(e.detailsContent || e.weddingDetailsContent));
+            const loaded = deepClone(e.detailsContent || e.weddingDetailsContent) as WeddingDetailsContent;
+            if (!loaded.theme)       loaded.theme       = deepClone(INITIAL_CONTENT.theme);
+            if (!loaded.gallery)     loaded.gallery     = deepClone(INITIAL_CONTENT.gallery);
+            if (!loaded.backgrounds) loaded.backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
+            if (!loaded.footer)      loaded.footer      = deepClone(INITIAL_CONTENT.footer);
+            this.content.set(loaded);
           } else {
             this.content.update(c => {
               const updated = deepClone(c);
@@ -400,6 +449,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (!(parsed as WeddingDetailsContent).footer) {
           (parsed as WeddingDetailsContent).footer = deepClone(INITIAL_CONTENT.footer);
+        }
+        if (!(parsed as WeddingDetailsContent).theme) {
+          (parsed as WeddingDetailsContent).theme = deepClone(INITIAL_CONTENT.theme);
         }
 
         this.content.set(parsed as WeddingDetailsContent);
@@ -560,6 +612,118 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   closeEdit(): void {
     this.editOpen.set(false);
     if (isPlatformBrowser(this.platformId)) document.body.style.overflow = '';
+  }
+
+  // ── Thème visuel ───────────────────────────────────────────────────
+
+  /** Convertit un WeddingDetailsTheme en CSS custom properties */
+  private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {
+    const isLight = isColorLight(t.colorBackground);
+    return {
+      '--ivory':           t.colorBackground,
+      '--gold':            t.colorAccent,
+      '--terracotta':      t.colorAccentSecondary,
+      '--terracotta-deep': t.colorAccentDeep,
+      '--ink':             t.colorText,
+      '--text-secondary':  t.colorTextSecondary,
+      '--card-bg':         t.colorCardBg,
+      '--nav-bg':          `rgba(${this.hexToRgb(t.colorBackground)}, 0.96)`,
+      '--border':          `${t.colorAccent}4d`,
+      '--border-gold':     t.colorAccent,
+      '--text-light':      isLight ? '#7a6a52' : '#8e8477',
+    };
+  }
+
+  /** Convertit un preset en CSS custom properties */
+  private presetToCssVars(p: WeddingThemePreset): Record<string, string> {
+    const isLight = isColorLight(p.backgroundColor);
+    return {
+      '--ivory':           p.backgroundColor,
+      '--gold':            p.primaryColor,
+      '--terracotta':      p.secondaryColor,
+      '--terracotta-deep': p.secondaryDeep,
+      '--ink':             p.textColor,
+      '--text-secondary':  p.textSecondary,
+      '--card-bg':         p.cardBackground,
+      '--nav-bg':          `rgba(${this.hexToRgb(p.backgroundColor)}, 0.96)`,
+      '--border':          `${p.primaryColor}4d`,
+      '--border-gold':     p.primaryColor,
+      '--text-light':      isLight ? '#7a6a52' : '#8e8477',
+    };
+  }
+
+  /** Hex → "r, g, b" pour rgba() */
+  private hexToRgb(hex: string): string {
+    if (!hex?.startsWith('#')) return '13, 11, 16';
+    let c = hex.substring(1);
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const r = parseInt(c.substring(0, 2), 16) || 13;
+    const g = parseInt(c.substring(2, 4), 16) || 11;
+    const b = parseInt(c.substring(4, 6), 16) || 16;
+    return `${r}, ${g}, ${b}`;
+  }
+
+  /** Applique un preset au draft.theme */
+  applyThemePreset(presetId: string): void {
+    const p = WEDDING_THEME_PRESETS.find(x => x.id === presetId);
+    if (!p) return;
+    this.draft.update(d => {
+      const copy = deepClone(d);
+      copy.theme = {
+        preset:               p.id,
+        colorBackground:      p.backgroundColor,
+        colorAccent:          p.primaryColor,
+        colorAccentSecondary: p.secondaryColor,
+        colorAccentDeep:      p.secondaryDeep,
+        colorText:            p.textColor,
+        colorTextSecondary:   p.textSecondary,
+        colorCardBg:          p.cardBackground,
+      };
+      return copy;
+    });
+  }
+
+  /** Applique un preset directement au content (depuis la page, hors modal) */
+  applyThemePresetDirect(presetId: string): void {
+    const p = WEDDING_THEME_PRESETS.find(x => x.id === presetId);
+    if (!p) return;
+    this.content.update(c => {
+      const copy = deepClone(c);
+      copy.theme = {
+        preset:               p.id,
+        colorBackground:      p.backgroundColor,
+        colorAccent:          p.primaryColor,
+        colorAccentSecondary: p.secondaryColor,
+        colorAccentDeep:      p.secondaryDeep,
+        colorText:            p.textColor,
+        colorTextSecondary:   p.textSecondary,
+        colorCardBg:          p.cardBackground,
+      };
+      return copy;
+    });
+    this.saveToLocalStorage();
+    this.toast.success('Thème appliqué !');
+  }
+
+  /** Met à jour une couleur individuelle dans draft.theme */
+  updateDraftThemeColor(
+    key: keyof Omit<WeddingDetailsTheme, 'preset'>,
+    value: string
+  ): void {
+    this.draft.update(d => {
+      const copy = deepClone(d);
+      copy.theme[key] = value;
+      copy.theme.preset = 'custom';
+      return copy;
+    });
+  }
+
+  /** Persiste content en localStorage */
+  saveToLocalStorage(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const key = this.eventId() ? `si_wedding_${this.eventId()}` : 'si_home_content';
+      localStorage.setItem(key, JSON.stringify(this.content()));
+    }
   }
 
   saveEdit(): void {
