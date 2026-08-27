@@ -514,6 +514,24 @@
     }
 
     <!-- Swatches de la palette du thème actif -->
+    <!-- <div class="theme-active-swatches reveal" style="--d:120ms">
+      @for (sw of activeThemeSwatches(); track sw.color) {
+        <div class="swatch">
+          <div class="swatch-color" [style.background]="sw.color"></div>
+          <span class="swatch-label">{{ sw.label }}</span>
+        </div>
+      }
+    </div> -->
+
+    <div class="palette-board reveal" style="--d:160ms">
+      <p class="palette-desc">{{ dressCode().description }}</p>
+
+      <div class="palette-tabs">
+        <button class="pal-tab" [class.active]="activePalette() === 'terracotta'" (click)="activePalette.set('terracotta')">Terracotta</button>
+        <!-- <button class="pal-tab" [class.active]="activePalette() === 'champagne'" (click)="activePalette.set('champagne')">Champagne</button> -->
+      </div>
+
+    <!-- Swatches de la palette du thème actif -->
     <div class="theme-active-swatches reveal" style="--d:120ms">
       @for (sw of activeThemeSwatches(); track sw.color) {
         <div class="swatch">
@@ -523,22 +541,14 @@
       }
     </div>
 
-    <div class="palette-board reveal" style="--d:160ms">
-      <p class="palette-desc">{{ dressCode().description }}</p>
-
-      <div class="palette-tabs">
-        <button class="pal-tab" [class.active]="activePalette() === 'terracotta'" (click)="activePalette.set('terracotta')">Terracotta</button>
-        <button class="pal-tab" [class.active]="activePalette() === 'champagne'" (click)="activePalette.set('champagne')">Champagne</button>
-      </div>
-
-      <div class="palette-swatches">
+      <!-- <div class="palette-swatches">
         @for (swatch of palettes()[activePalette()]; track $index) {
           <div class="swatch">
-            <div class="swatch-color" [style.background]="swatch.color"></div>
-            <span class="swatch-label">{{ swatch.label }}</span>
+            <div class="swatch-color" [style.background]="sw.color"></div>
+            <span class="swatch-label">{{ sw.label }}</span>
           </div>
         }
-      </div>
+      </div> -->
 
       <p class="palette-advice">{{ dressCode().advice }}</p>
     </div>

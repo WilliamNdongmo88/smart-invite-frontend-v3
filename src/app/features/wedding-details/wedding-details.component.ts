@@ -620,6 +620,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {
     const isLight = isColorLight(t.colorBackground);
     const ov = t.overlayColor ?? this.hexToRgb(t.colorBackground);
+    const cardRgb = this.hexToRgb(t.colorCardBg);
+    const secRgb  = this.hexToRgb(t.colorSectionBg ?? t.colorBackground);
     return {
       '--ivory':           t.colorBackground,
       '--gold':            t.colorAccent,
@@ -631,6 +633,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       '--section-bg':      t.colorSectionBg  ?? t.colorBackground,
       '--surface':         t.colorSurface    ?? t.colorCardBg,
       '--overlay-color':   ov,
+      '--card-bg-rgb':     cardRgb,
+      '--section-bg-rgb':  secRgb,
+      '--gold-rgb':        this.hexToRgb(t.colorAccent),
+      '--gradient-btn':    `linear-gradient(135deg, ${t.colorAccentSecondary} 0%, ${t.colorAccent} 50%, ${t.colorAccentDeep} 100%)`,
       '--nav-bg':          `rgba(${ov}, 0.96)`,
       '--border':          `${t.colorAccent}4d`,
       '--border-gold':     t.colorAccent,
@@ -642,6 +648,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   private presetToCssVars(p: WeddingThemePreset): Record<string, string> {
     const isLight = isColorLight(p.backgroundColor);
     const ov = this.hexToRgb(p.backgroundColor);
+    const cardRgb = this.hexToRgb(p.cardBackground);
+    const secRgb  = this.hexToRgb(p.sectionBg ?? p.backgroundColor);
     return {
       '--ivory':           p.backgroundColor,
       '--gold':            p.primaryColor,
@@ -653,6 +661,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       '--section-bg':      p.sectionBg  ?? p.backgroundColor,
       '--surface':         p.surfaceBg  ?? p.cardBackground,
       '--overlay-color':   ov,
+      '--card-bg-rgb':     cardRgb,
+      '--section-bg-rgb':  secRgb,
+      '--gold-rgb':        this.hexToRgb(p.primaryColor),
+      '--gradient-btn':    `linear-gradient(135deg, ${p.secondaryColor} 0%, ${p.primaryColor} 50%, ${p.secondaryDeep} 100%)`,
       '--nav-bg':          `rgba(${ov}, 0.96)`,
       '--border':          `${p.primaryColor}4d`,
       '--border-gold':     p.primaryColor,
