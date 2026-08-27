@@ -619,6 +619,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   /** Convertit un WeddingDetailsTheme en CSS custom properties */
   private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {
     const isLight = isColorLight(t.colorBackground);
+    const ov = t.overlayColor ?? this.hexToRgb(t.colorBackground);
     return {
       '--ivory':           t.colorBackground,
       '--gold':            t.colorAccent,
@@ -627,7 +628,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       '--ink':             t.colorText,
       '--text-secondary':  t.colorTextSecondary,
       '--card-bg':         t.colorCardBg,
-      '--nav-bg':          `rgba(${this.hexToRgb(t.colorBackground)}, 0.96)`,
+      '--section-bg':      t.colorSectionBg  ?? t.colorBackground,
+      '--surface':         t.colorSurface    ?? t.colorCardBg,
+      '--overlay-color':   ov,
+      '--nav-bg':          `rgba(${ov}, 0.96)`,
       '--border':          `${t.colorAccent}4d`,
       '--border-gold':     t.colorAccent,
       '--text-light':      isLight ? '#7a6a52' : '#8e8477',
@@ -637,6 +641,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   /** Convertit un preset en CSS custom properties */
   private presetToCssVars(p: WeddingThemePreset): Record<string, string> {
     const isLight = isColorLight(p.backgroundColor);
+    const ov = this.hexToRgb(p.backgroundColor);
     return {
       '--ivory':           p.backgroundColor,
       '--gold':            p.primaryColor,
@@ -645,7 +650,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       '--ink':             p.textColor,
       '--text-secondary':  p.textSecondary,
       '--card-bg':         p.cardBackground,
-      '--nav-bg':          `rgba(${this.hexToRgb(p.backgroundColor)}, 0.96)`,
+      '--section-bg':      p.sectionBg  ?? p.backgroundColor,
+      '--surface':         p.surfaceBg  ?? p.cardBackground,
+      '--overlay-color':   ov,
+      '--nav-bg':          `rgba(${ov}, 0.96)`,
       '--border':          `${p.primaryColor}4d`,
       '--border-gold':     p.primaryColor,
       '--text-light':      isLight ? '#7a6a52' : '#8e8477',
@@ -678,6 +686,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         colorText:            p.textColor,
         colorTextSecondary:   p.textSecondary,
         colorCardBg:          p.cardBackground,
+        colorSectionBg:       p.sectionBg,
+        colorSurface:         p.surfaceBg,
+        overlayColor:         this.hexToRgb(p.backgroundColor),
       };
       return copy;
     });
@@ -698,6 +709,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         colorText:            p.textColor,
         colorTextSecondary:   p.textSecondary,
         colorCardBg:          p.cardBackground,
+        colorSectionBg:       p.sectionBg,
+        colorSurface:         p.surfaceBg,
+        overlayColor:         this.hexToRgb(p.backgroundColor),
       };
       return copy;
     });

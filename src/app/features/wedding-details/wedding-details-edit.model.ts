@@ -42,13 +42,16 @@ export interface WeddingDetailsPaletteItem {
 export interface WeddingDetailsTheme {
   /** Identifiant de la palette prédéfinie, ou 'custom' */
   preset:               string;
-  colorBackground:      string;
-  colorAccent:          string;
-  colorAccentSecondary: string;
-  colorAccentDeep:      string;
-  colorText:            string;
-  colorTextSecondary:   string;
-  colorCardBg:          string;
+  colorBackground:      string;  // --ivory
+  colorAccent:          string;  // --gold
+  colorAccentSecondary: string;  // --terracotta
+  colorAccentDeep:      string;  // --terracotta-deep
+  colorText:            string;  // --ink
+  colorTextSecondary:   string;  // --text-secondary
+  colorCardBg:          string;  // --card-bg
+  colorSectionBg:       string;  // --section-bg  (sections alternées)
+  colorSurface:         string;  // --surface      (cartes, FAQ, inputs)
+  overlayColor:         string;  // --overlay-color (RGB pour rgba())
 }
 
 export interface WeddingThemePreset {
@@ -61,6 +64,8 @@ export interface WeddingThemePreset {
   secondaryDeep:   string;   // → colorAccentDeep
   backgroundColor: string;   // → colorBackground
   cardBackground:  string;   // → colorCardBg
+  sectionBg:       string;   // → colorSectionBg
+  surfaceBg:       string;   // → colorSurface
   textColor:       string;   // → colorText
   textSecondary:   string;   // → colorTextSecondary
   swatches: { color: string; label: string }[];
@@ -77,6 +82,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#9e7b25',
     backgroundColor: '#0d0b10',
     cardBackground:  '#18141c',
+    sectionBg:       '#120e17',
+    surfaceBg:       '#18141c',
     textColor:       '#fdfaf6',
     textSecondary:   '#c8beaf',
     swatches: [
@@ -96,6 +103,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#8d6128',
     backgroundColor: '#fdfaf2',
     cardBackground:  '#fff8f0',
+    sectionBg:       '#f5efe2',
+    surfaceBg:       '#fff8f0',
     textColor:       '#2d241b',
     textSecondary:   '#6d5a4a',
     swatches: [
@@ -115,6 +124,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#8b3a52',
     backgroundColor: '#1a0d12',
     cardBackground:  '#2b1520',
+    sectionBg:       '#200f18',
+    surfaceBg:       '#2b1520',
     textColor:       '#fdf6f8',
     textSecondary:   '#c8a8b0',
     swatches: [
@@ -134,6 +145,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#1a8a4a',
     backgroundColor: '#061a14',
     cardBackground:  '#0b2b22',
+    sectionBg:       '#07201a',
+    surfaceBg:       '#0b2b22',
     textColor:       '#f0fdf4',
     textSecondary:   '#a7c5b5',
     swatches: [
@@ -153,6 +166,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#b85c3f',
     backgroundColor: '#18090f',
     cardBackground:  '#28101a',
+    sectionBg:       '#1e0c14',
+    surfaceBg:       '#28101a',
     textColor:       '#fff0ec',
     textSecondary:   '#c8a090',
     swatches: [
@@ -172,6 +187,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#1d6fad',
     backgroundColor: '#060d1e',
     cardBackground:  '#0c1734',
+    sectionBg:       '#08102a',
+    surfaceBg:       '#0c1734',
     textColor:       '#f0f8ff',
     textSecondary:   '#94b8d4',
     swatches: [
@@ -191,6 +208,8 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryDeep:   '#8b4fc5',
     backgroundColor: '#120d1c',
     cardBackground:  '#1f162e',
+    sectionBg:       '#170f24',
+    surfaceBg:       '#1f162e',
     textColor:       '#faf5ff',
     textSecondary:   '#c4a8d8',
     swatches: [
@@ -209,7 +228,9 @@ export const WEDDING_THEME_PRESETS: WeddingThemePreset[] = [
     secondaryColor:  '#b65a3a',
     secondaryDeep:   '#8d4128',
     backgroundColor: '#fffaf2',
-    cardBackground:  '#fff8f0',
+    cardBackground:  '#fff4e6',
+    sectionBg:       '#f5ede0',
+    surfaceBg:       '#fff4e6',
     textColor:       '#2d241b',
     textSecondary:   '#6d5a4a',
     swatches: [
@@ -231,6 +252,9 @@ export const DEFAULT_WEDDING_THEME: WeddingDetailsTheme = {
   colorText:            '#fdfaf6',
   colorTextSecondary:   '#c8beaf',
   colorCardBg:          '#18141c',
+  colorSectionBg:       '#120e17',
+  colorSurface:         '#18141c',
+  overlayColor:         '13, 11, 16',
 };
 
 // ── Sections de contenu ───────────────────────────────────────────
