@@ -65,6 +65,13 @@ export class EventService {
     return this.http.post<ApiResponse<string>>(`${this.base}/${id}/photo`, form);
   }
 
+  uploadImage(file: File, folder: string = 'content'): Observable<ApiResponse<string>> {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('folder', folder);
+    return this.http.post<ApiResponse<string>>(`${this.base}/upload-image`, form);
+  }
+
   uploadCustomCard(id: number, file: File): Observable<ApiResponse<any>> {
     const form = new FormData();
     form.append('file', file);

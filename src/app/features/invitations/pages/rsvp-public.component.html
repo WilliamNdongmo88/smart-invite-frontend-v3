@@ -1,0 +1,268 @@
+<main class="invitation-page" [class]="'invitation-page ' + themeClass()">
+  <!-- Barre de navigation supérieure avec bouton retour -->
+  <div class="top-nav-bar">
+    <button type="button" class="btn-back" (click)="goBack()" title="Retour à la page précédente">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Retour</span>
+    </button>
+  </div>
+
+  <div class="paper-card" [class]="'paper-card ' + themeClass()">
+
+    <!-- Ornements supérieurs spécifiques à chaque type -->
+    @if (eventType() === 'MARIAGE') {
+      <div class="mariage-header-badge">
+        <span class="mariage-filigree">✦ 💍 ✦</span>
+        <span class="mariage-badge-pill">CÉLÉBRATION DE MARIAGE • UNION ROYALE</span>
+      </div>
+    } @else if (eventType() === 'CONFERENCE') {
+      <div class="conf-header-badge">
+        <div class="conf-lanyard-slot"></div>
+        <span class="conf-badge-pill">ACCRÉDITATION & PASS OFFICIEL</span>
+      </div>
+    } @else if (eventType() === 'GALA') {
+      <div class="gala-header-badge">
+        <span class="gala-filigree">✦ ❖ ✦</span>
+        <span class="gala-badge-pill">INVITATION EXCLUSIVE • BLACK TIE</span>
+      </div>
+    } @else if (eventType() === 'CEREMONIE') {
+      <div class="cere-header-badge">
+        <span class="cere-filigree">⚜</span>
+        <span class="cere-badge-pill">CÉLÉBRATION DE PRESTIGE</span>
+      </div>
+    }
+
+    <!-- État : Chargement -->
+    @if (state() === 'loading') {
+      <section class="state-card">
+        <div class="spinner"></div>
+        <p class="state-text">Chargement de votre invitation…</p>
+      </section>
+    }
+
+    <!-- État : Erreur -->
+    @if (state() === 'error') {
+      <section class="state-card">
+        <div class="state-icon">!</div>
+        <h2>Invitation introuvable</h2>
+        <p>{{ errorMsg() }}</p>
+      </section>
+    }
+
+    <!-- État : Prêt pour réponse RSVP -->
+    @if (state() === 'ready' && inv()) {
+      <section class="invitation-content">
+        <p class="eyebrow">{{ eyebrowText() }}</p>
+        <h1>{{ mainTitleText() }}</h1>
+        <p class="intro">{{ introText() }}</p>
+
+        <!-- Cadre photo avec design et découpe propre à chaque thème -->
+        <div class="photo-frame-wrapper" [class]="'frame-' + eventType().toLowerCase()">
+          @if (eventType() === 'MARIAGE') {
+            <div class="frame-tag mariage-tag">
+              💍 CÉLÉBRATION DE NOTRE UNION 💍
+            </div>
+          } @else if (eventType() === 'CONFERENCE') {
+            <div class="frame-tag conf-tag">
+              <span class="tag-dot"></span> INTERVENANT & CONFÉRENCE
+            </div>
+          } @else if (eventType() === 'GALA') {
+            <div class="frame-tag gala-tag">
+              ✦ TABLE D'HONNEUR & VIP ✦
+            </div>
+          } @else if (eventType() === 'CEREMONIE') {
+            <div class="frame-tag cere-tag">
+              ⚜ CÉLÉBRATION OFFICIELLE ⚜
+            </div>
+          }
+
+          <div class="photo-frame" [class.editable]="isLoggedIn()">
+            <img [src]="couplePhoto()" [alt]="eventTitle()" />
+
+            @if (eventType() === 'MARIAGE') {
+              <div class="mariage-sparkle sparkle-tl">✦</div>
+              <div class="mariage-sparkle sparkle-tr">✦</div>
+              <div class="mariage-sparkle sparkle-bl">✦</div>
+              <div class="mariage-sparkle sparkle-br">✦</div>
+            } @else if (eventType() === 'CONFERENCE') {
+              <div class="tech-cross cross-tl"></div>
+              <div class="tech-cross cross-tr"></div>
+              <div class="tech-cross cross-bl"></div>
+              <div class="tech-cross cross-br"></div>
+            } @else if (eventType() === 'GALA') {
+              <div class="gala-bracket bracket-tl"></div>
+              <div class="gala-bracket bracket-tr"></div>
+              <div class="gala-bracket bracket-bl"></div>
+              <div class="gala-bracket bracket-br"></div>
+            }
+
+            @if (uploading()) {
+              <div class="photo-upload-spinner-overlay">
+                <div class="upload-spinner-circle" aria-label="Upload en cours..."></div>
+              </div>
+            }
+
+            @if (isLoggedIn() && !uploading()) {
+              <button type="button" class="photo-edit-btn" (click)="photoInputReady.click()" title="Changer la photo sur Firebase">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span>Changer la photo</span>
+              </button>
+              <input #photoInputReady type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+            }
+          </div>
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>{{ ornamentGlyph() }}</b><span></span></div>
+
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="guest-salutation">
+          <p class="greeting-text">Cher(e) <strong>{{ inv()!.guestName }}</strong>,</p>
+          <p class="event-message">{{ salutationLead() }}</p>
+          @if (eventLocation()) {
+            <p class="event-location">📍 {{ eventLocation() }}</p>
+          }
+        </div>
+
+        <div class="rsvp-action-box">
+          <p class="rsvp-question">Confirmez-vous votre présence ?</p>
+
+          <div class="action-buttons">
+            <button type="button" class="btn-confirm" [disabled]="submitting() !== null" (click)="respond('CONFIRMED')">
+              @if (submitting() === 'CONFIRMED') {
+                <span class="spinner-sm"></span> Confirmation en cours…
+              } @else {
+                <span>✓</span> {{ confirmBtnText() }}
+              }
+            </button>
+
+            <button type="button" class="btn-decline" [disabled]="submitting() !== null" (click)="respond('DECLINED')">
+              @if (submitting() === 'DECLINED') {
+                <span class="spinner-sm"></span> Envoi en cours…
+              } @else {
+                Je ne pourrai pas être présent(e)
+              }
+            </button>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- État : Présence confirmée -->
+    @if (state() === 'confirmed' && inv()) {
+      <section class="invitation-content success-content">
+        <p class="eyebrow">{{ eyebrowText() }}</p>
+        <h1>{{ mainTitleText() }}</h1>
+
+        <div class="photo-frame-wrapper" [class]="'frame-' + eventType().toLowerCase()">
+          <div class="photo-frame" [class.editable]="isLoggedIn()">
+            <img [src]="couplePhoto()" [alt]="eventTitle()" />
+
+            @if (uploading()) {
+              <div class="photo-upload-spinner-overlay">
+                <div class="upload-spinner-circle" aria-label="Upload en cours..."></div>
+              </div>
+            }
+
+            @if (isLoggedIn() && !uploading()) {
+              <button type="button" class="photo-edit-btn" (click)="photoInputConfirmed.click()" title="Changer la photo sur Firebase">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span>Changer la photo</span>
+              </button>
+              <input #photoInputConfirmed type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+            }
+          </div>
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>{{ ornamentGlyph() }}</b><span></span></div>
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="success-mark">✓</div>
+        <h3>Présence confirmée !</h3>
+        <p class="success-message">
+          Merci <strong>{{ inv()!.guestName }}</strong>, votre confirmation a bien été enregistrée.<br />
+          Nous avons hâte de vous compter parmi nous !
+        </p>
+
+        @if (eventLocation()) {
+          <p class="event-location">📍 {{ eventLocation() }}</p>
+        }
+
+        @if (inv()!.qrCodeUrl) {
+          <div class="qr-block">
+            <p>Votre QR Code d’accès</p>
+            <img [src]="inv()!.qrCodeUrl" alt="QR Code d’accès" />
+            <small class="qr-hint">Présentez ce QR code à l'entrée de l'événement.</small>
+          </div>
+        }
+
+        @if (inv()!.pdfUrl) {
+          <a [href]="inv()!.pdfUrl" target="_blank" rel="noopener" class="download-link">
+            Télécharger le pass / carte d’invitation (PDF)
+          </a>
+        }
+      </section>
+    }
+
+    <!-- État : Décliné -->
+    @if (state() === 'declined' && inv()) {
+      <section class="invitation-content declined-content">
+        <p class="eyebrow">{{ eyebrowText() }}</p>
+        <h1>{{ mainTitleText() }}</h1>
+
+        <div class="photo-frame-wrapper" [class]="'frame-' + eventType().toLowerCase()">
+          <div class="photo-frame" [class.editable]="isLoggedIn()">
+            <img [src]="couplePhoto()" [alt]="eventTitle()" />
+
+            @if (uploading()) {
+              <div class="photo-upload-spinner-overlay">
+                <div class="upload-spinner-circle" aria-label="Upload en cours..."></div>
+              </div>
+            }
+
+            @if (isLoggedIn() && !uploading()) {
+              <button type="button" class="photo-edit-btn" (click)="photoInputDeclined.click()" title="Changer la photo sur Firebase">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span>Changer la photo</span>
+              </button>
+              <input #photoInputDeclined type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
+            }
+          </div>
+        </div>
+
+        <div class="ornament" aria-hidden="true"><span></span><b>{{ ornamentGlyph() }}</b><span></span></div>
+        <h2 class="couple-names">{{ coupleNames() }}</h2>
+        <p class="event-date">{{ eventDate() }}</p>
+
+        <div class="declined-mark">—</div>
+        <h3>Absence enregistrée</h3>
+        <p class="declined-message">
+          Merci <strong>{{ inv()!.guestName }}</strong> de nous avoir informés.<br />
+          Nous espérons avoir le plaisir de vous retrouver lors d'un prochain événement.
+        </p>
+
+        <div class="change-response-box">
+          <button type="button" class="btn-change-response" (click)="state.set('ready')">
+            Modifier ma réponse
+          </button>
+        </div>
+      </section>
+    }
+
+    <footer>Smart Invite <span>•</span> Gestion d’invitations</footer>
+  </div>
+</main>

@@ -1,4 +1,4 @@
-<div class="edit-page" [class.step4-active]="step() === 4">
+<div class="edit-page">
 
   <!-- Header -->
   <div class="page-header">
@@ -15,467 +15,80 @@
     <div class="loader-wrap"><div class="spinner-loader"></div></div>
   } @else {
 
-    <!-- Stepper -->
-    <div class="stepper">
-      @for (s of [1,2,3,4]; track s) {
-        <div class="step-item" [class.active]="step() === s" [class.done]="step() > s">
-          <div class="step-circle">
-            @if (step() > s) {
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-                <polyline points="20 6 9 17 4 12"/>
-              </svg>
-            } @else { {{ s }} }
+    <!-- Sélection du type -->
+    <div class="wizard-card">
+      <div class="wizard-head">
+        <h2 class="wizard-title">Type d'événement</h2>
+        <p class="wizard-sub">Confirmez ou modifiez le type pour accéder à l'éditeur dédié.</p>
+      </div>
+
+      <!-- Bannière contextuelle -->
+      @if (isMariage) {
+        <div class="recommendation-banner recommendation-banner--wedding">
+          <span class="rec-icon">💍</span>
+          <div class="rec-text">
+            <strong>Mariage</strong>
+            <span>Page personnalisée avec portraits, histoire du couple, programme multi-jours, galerie, dress code et RSVP.</span>
           </div>
-          <span class="step-label">
-            @switch (s) {
-              @case (1) { Type }
-              @case (2) { Infos }
-              @case (3) { Dates }
-              @case (4) { Carte }
-            }
-          </span>
         </div>
-        @if (s < 4) { <div class="step-line" [class.done]="step() > s"></div> }
       }
-    </div>
-
-    <!-- Progress bar -->
-    <div class="progress-track">
-      <div class="progress-fill" [style.width.%]="progress"></div>
-    </div>
-
-    <!-- ════ STEP 1 : Type ════ -->
-    @if (step() === 1) {
-      <div class="wizard-card">
-        <div class="wizard-head">
-          <h2 class="wizard-title">Quel type d'événement organisez-vous ?</h2>
-          <p class="wizard-sub">Modifiez le type si nécessaire</p>
-        </div>
-        <form [formGroup]="step1">
-          <div class="type-grid">
-            @for (opt of typeOptions; track opt.key) {
-              <button type="button" class="type-card" [class.selected]="step1.value.type === opt.key" (click)="selectType(opt.key)">
-                <span class="type-icon">{{ opt.icon }}</span>
-                <span class="type-label">{{ opt.label }}</span>
-              </button>
-            }
+      @if (isGala) {
+        <div class="recommendation-banner recommendation-banner--gala">
+          <span class="rec-icon">🎭</span>
+          <div class="rec-text">
+            <strong>Gala</strong>
+            <span>Page soirée avec programme, artistes, dress code, galerie et section réservation.</span>
           </div>
-          @if (step1.get('type')?.invalid && step1.get('type')?.touched) {
-            <p class="field-error">Veuillez sélectionner un type</p>
+        </div>
+      }
+      @if (isConference) {
+        <div class="recommendation-banner recommendation-banner--conference">
+          <span class="rec-icon">🎤</span>
+          <div class="rec-text">
+            <strong>Conférence</strong>
+            <span>Page professionnelle avec agenda multi-jours, intervenants, sponsors, galerie et inscription.</span>
+          </div>
+        </div>
+      }
+      @if (isCeremonie) {
+        <div class="recommendation-banner recommendation-banner--ceremonie">
+          <span class="rec-icon">🎗️</span>
+          <div class="rec-text">
+            <strong>Cérémonie</strong>
+            <span>Page intime avec programme, personnes clés, tenue, galerie et invitation.</span>
+          </div>
+        </div>
+      }
+
+      <form [formGroup]="form">
+        <div class="type-grid">
+          @for (opt of typeOptions; track opt.key) {
+            <button type="button" class="type-card" [class.selected]="selectedType === opt.key" (click)="selectType(opt.key)">
+              <span class="type-icon">{{ opt.icon }}</span>
+              <span class="type-label">{{ opt.label }}</span>
+              <span class="type-badge">Éditeur dédié</span>
+            </button>
           }
-        </form>
-      </div>
-    }
-
-    <!-- ════ STEP 2 : Infos générales ════ -->
-    @if (step() === 2) {
-      <div class="wizard-card">
-        <div class="wizard-head">
-          <h2 class="wizard-title">Informations générales</h2>
-          <p class="wizard-sub">Modifiez les détails principaux de votre événement</p>
         </div>
-        <form [formGroup]="step2">
-          <div class="fields-grid">
-
-            <div class="field full">
-              <label class="label">Titre <span class="req">*</span></label>
-              <input formControlName="title" type="text" class="input" [class.error]="isInvalid(step2,'title')"
-                placeholder="Ex : Mariage de Sophie & Thomas" />
-              @if (isInvalid(step2,'title')) { <p class="field-error">Requis, minimum 3 caractères</p> }
-            </div>
-
-            @if (isMariage) {
-              <div class="field full">
-                <label class="label">Noms des mariés / fiancés</label>
-                <input formControlName="concernedNames" type="text" class="input" placeholder="Sophie & Thomas" />
-              </div>
-            }
-
-            <div class="field">
-              <label class="label">Invités maximum <span class="req">*</span></label>
-              <input formControlName="maxGuests" type="number" class="input" [class.error]="isInvalid(step2,'maxGuests')" min="1" />
-              @if (isInvalid(step2,'maxGuests')) { <p class="field-error">Minimum 1 invité</p> }
-            </div>
-
-            <div class="field">
-              <label class="label">Montant à payer</label>
-              <div class="budget-display">
-                💳 {{ computedBudget || '—' }}
-                @if (step2.value.maxGuests && step2.value.maxGuests > 0) {
-                  <span class="budget-detail">({{ step2.value.maxGuests }} invités × 52 XAF)</span>
-                }
-              </div>
-            </div>
-
-            <div class="field full">
-              <label class="label">Description</label>
-              <textarea formControlName="description" class="input textarea" rows="3"
-                placeholder="Décrivez votre événement..."></textarea>
-            </div>
-
-            <!-- Photo du couple / événement -->
-            <div class="field full">
-              <label class="label">Photo du couple / événement <span class="label-hint">(affichée sur la page d'inscription)</span></label>
-              <div class="photo-upload-zone" [class.has-photo]="couplePhotoPreview() || existingPhotoUrl()">
-                <input type="file" accept="image/*" id="couple-photo" class="upload-input" (change)="onCouplePhotoChange($event)" />
-                @if (couplePhotoPreview()) {
-                  <img [src]="couplePhotoPreview()" class="photo-preview" alt="Prévisualisation" />
-                  <label for="couple-photo" class="photo-change-btn">Changer la photo</label>
-                } @else if (existingPhotoUrl()) {
-                  <img [src]="existingPhotoUrl()" class="photo-preview" alt="Photo actuelle" />
-                  <label for="couple-photo" class="photo-change-btn">Changer la photo</label>
-                } @else {
-                  <label for="couple-photo" class="photo-upload-label">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
-                      <rect x="3" y="3" width="18" height="18" rx="2"/>
-                      <circle cx="8.5" cy="8.5" r="1.5"/>
-                      <polyline points="21 15 16 10 5 21"/>
-                    </svg>
-                    <span>Cliquer pour ajouter une photo</span>
-                    <span class="upload-hint">JPG, PNG, WEBP — recommandé : 600×800px</span>
-                  </label>
-                }
-              </div>
-            </div>
-
-          </div>
-        </form>
-      </div>
-    }
-
-    <!-- ════ STEP 3 : Dates & Lieux ════ -->
-    @if (step() === 3) {
-      <div class="wizard-card">
-        <div class="wizard-head">
-          <h2 class="wizard-title">{{ isMariage ? 'Lieux & dates' : 'Date & lieu' }}</h2>
-          <p class="wizard-sub">{{ isMariage ? 'Modifiez les différentes cérémonies' : "Quand et où se déroule l'événement ?" }}</p>
-        </div>
-        <form [formGroup]="step3">
-
-          @if (!isMariage) {
-            <div class="fields-grid">
-              <div class="field">
-                <label class="label">Date & heure</label>
-                <input formControlName="eventDate" type="datetime-local" class="input" />
-              </div>
-            </div>
-          } @else {
-            <div class="wedding-sections">
-
-              <div class="wedding-block">
-                <div class="wedding-block-header">
-                  <span class="wb-icon">⛪</span>
-                  <h3 class="wb-title">Cérémonie religieuse</h3>
-                  <label class="toggle-label">
-                    <input type="checkbox" formControlName="showWeddingReligiousLocation" class="toggle-input" />
-                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
-                    <span class="toggle-text">Sur l'invitation</span>
-                  </label>
-                </div>
-                <div class="fields-grid">
-                  <div class="field">
-                    <label class="label">Lieu</label>
-                    <input formControlName="religiousLocation" type="text" class="input" placeholder="Église Saint-Pierre" />
-                  </div>
-                  <div class="field">
-                    <label class="label">Date & heure</label>
-                    <input formControlName="religiousDateTime" type="datetime-local" class="input" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="wedding-block">
-                <div class="wedding-block-header">
-                  <span class="wb-icon">🏛️</span>
-                  <h3 class="wb-title">Cérémonie civile</h3>
-                </div>
-                <div class="fields-grid">
-                  <div class="field">
-                    <label class="label">Lieu</label>
-                    <input formControlName="civilLocation" type="text" class="input" placeholder="Mairie centrale" />
-                  </div>
-                  <div class="field">
-                    <label class="label">Date & heure</label>
-                    <input formControlName="civilDateTime" type="datetime-local" class="input" />
-                  </div>
-                </div>
-              </div>
-
-              <div class="wedding-block">
-                <div class="wedding-block-header">
-                  <span class="wb-icon">🥂</span>
-                  <h3 class="wb-title">Réception / Banquet</h3>
-                </div>
-                <div class="fields-grid">
-                  <div class="field">
-                    <label class="label">Lieu</label>
-                    <input formControlName="banquetLocation" type="text" class="input" placeholder="Palais des fêtes" />
-                  </div>
-                  <div class="field">
-                    <label class="label">Date & heure</label>
-                    <input formControlName="banquetDateTime" type="datetime-local" class="input" />
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          }
-        </form>
-      </div>
-    }
-
-    <!-- ════ STEP 4 : Carte d'invitation ════ -->
-    @if (step() === 4) {
-      <div class="step4-layout">
-
-        <!-- Colonne gauche : formulaire -->
-        <div class="step4-form-col">
-          <div class="wizard-card">
-            <div class="wizard-head">
-              <h2 class="wizard-title">Carte d'invitation</h2>
-              <p class="wizard-sub">Modifiez ou remplacez votre carte d'invitation</p>
-            </div>
-
-            <!-- Recommandation banner -->
-            <div class="recommendation-banner">
-              <span class="rec-icon">💡</span>
-              <div class="rec-text">
-                <strong>Conseil Smart Invite</strong>
-                <span>Pour un rendu professionnel et personnalisé, nous vous recommandons d'importer votre propre modèle de carte au format PDF.</span>
-              </div>
-            </div>
-
-            <!-- Mode selector -->
-            <div class="card-modes">
-              <button type="button" class="mode-card" [class.selected]="cardMode() === 'NONE'" (click)="setCardMode('NONE')">
-                <span class="mode-icon">⏭️</span>
-                <span class="mode-title">Sans carte</span>
-                <span class="mode-desc">Conserver l'événement sans carte d'invitation</span>
-              </button>
-              <button type="button" class="mode-card" [class.selected]="cardMode() === 'CUSTOM'" (click)="setCardMode('CUSTOM')">
-                <span class="mode-icon">✏️</span>
-                <span class="mode-title">Modifier la carte</span>
-                <span class="mode-desc">Personnalisez les textes de votre carte d'invitation</span>
-              </button>
-              <button type="button" class="mode-card" [class.selected]="cardMode() === 'UPLOAD'" (click)="setCardMode('UPLOAD')">
-                <span class="mode-icon">📄</span>
-                <span class="mode-title">Importer un PDF</span>
-                <span class="mode-desc">Remplacez avec votre propre modèle PDF</span>
-              </button>
-            </div>
-
-            <!-- CUSTOM card form -->
-            @if (cardMode() === 'CUSTOM') {
-              <form [formGroup]="cardForm" class="card-form">
-                <div class="fields-grid">
-                  <div class="field full">
-                    <label class="label">Titre de l'invitation</label>
-                    <input formControlName="title" type="text" class="input" placeholder="Vous êtes cordialement invités..." />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Message principal</label>
-                    <textarea formControlName="mainMessage" class="input textarea" rows="2"
-                      placeholder="C'est avec une immense joie que nous vous invitons..."></textarea>
-                  </div>
-                  <div class="field full">
-                    <label class="label">Message partie 1</label>
-                    <input formControlName="mainMessagePart1" type="text" class="input"
-                      placeholder="Votre présence sera pour nous un immense bonheur." />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Message partie 2</label>
-                    <input formControlName="mainMessagePart2" type="text" class="input"
-                      placeholder="Nous espérons partager avec vous des moments de joie." />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Sous-message</label>
-                    <input formControlName="sousMainMessage" type="text" class="input"
-                      placeholder="Merci de confirmer votre présence avant le..." />
-                  </div>
-                  <div class="field">
-                    <label class="label">Thème / ambiance</label>
-                    <input formControlName="eventTheme" type="text" class="input" placeholder="Chic & Glamour" />
-                  </div>
-                  <div class="field">
-                    <label class="label">Code vestimentaire</label>
-                    <input formControlName="dressCodeMessage" type="text" class="input" placeholder="Tenue de soirée élégante" />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Instructions QR code</label>
-                    <input formControlName="qrInstructions" type="text" class="input"
-                      placeholder="Présentez ce QR code à l'entrée" />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Message de remerciement</label>
-                    <input formControlName="thanksMessage1" type="text" class="input"
-                      placeholder="Merci de partager ce moment unique avec nous." />
-                  </div>
-                  <div class="field full">
-                    <label class="label">Message de clôture</label>
-                    <input formControlName="closingMessage" type="text" class="input"
-                      placeholder="Au plaisir de vous accueillir" />
-                  </div>
-                </div>
-              </form>
-            }
-
-            <!-- UPLOAD PDF -->
-            @if (cardMode() === 'UPLOAD') {
-              <div class="upload-zone" [class.has-file]="uploadFile()">
-                <input type="file" accept="application/pdf" id="pdf-upload" class="upload-input" (change)="onFileChange($event)" />
-                <label for="pdf-upload" class="upload-label">
-                  @if (uploadPreview()) {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    <span class="upload-filename">{{ uploadPreview() }}</span>
-                    <span class="upload-hint">Cliquer pour changer</span>
-                  } @else {
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                      <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                    </svg>
-                    <span class="upload-text">Cliquer pour sélectionner un PDF</span>
-                    <span class="upload-hint">Format PDF uniquement</span>
-                  }
-                </label>
-              </div>
-            }
-
-          </div>
-        </div>
-
-        <!-- Colonne droite : prévisualisation PDF importé -->
-        @if (cardMode() === 'UPLOAD' && uploadObjectUrl()) {
-          <div class="preview-col">
-            <iframe [src]="uploadObjectUrl()" class="pdf-iframe" title="Prévisualisation PDF"></iframe>
-          </div>
+        @if (form.get('type')?.invalid && form.get('type')?.touched) {
+          <p class="field-error">Veuillez sélectionner un type d'événement.</p>
         }
-
-        <!-- Colonne droite : prévisualisation CUSTOM -->
-        @if (cardMode() === 'CUSTOM') {
-          <div class="preview-col">
-            <div class="preview-wrapper">
-
-              <div class="preview-top-band">
-                <img src="/img/logo.png" class="preview-logo" alt="Smart Invite" />
-                <p class="preview-title">{{ cardForm.value.title || "Titre de l'invitation" }}</p>
-              </div>
-
-              <div class="preview-body">
-                <p class="preview-salutation">Cher/Chère {{ step2.value.concernedNames || 'Invité(e)' }},</p>
-                <div class="preview-messages">
-                  <span>{{ cardForm.value.mainMessage }}</span>
-                  <span>{{ cardForm.value.mainMessagePart1 }}</span>
-                  <span>{{ cardForm.value.mainMessagePart2 }}</span>
-                </div>
-
-                <hr class="preview-divider" />
-                <p class="preview-programme-title">PROGRAMME</p>
-
-                @if (isMariage) {
-                  <div class="preview-programme">
-                    @if (step3.value.civilLocation || step3.value.civilDateTime) {
-                      <div class="preview-ceremony">
-                        <span class="preview-ceremony-title">MARIAGE CIVIL {{ formatPreviewDate(step3.value.civilDateTime) }}</span>
-                        <span class="preview-ceremony-loc">{{ step3.value.civilLocation }}</span>
-                      </div>
-                    }
-                    @if (step3.value.showWeddingReligiousLocation && (step3.value.religiousLocation || step3.value.religiousDateTime)) {
-                      <div class="preview-ceremony">
-                        <span class="preview-ceremony-title">CÉRÉMONIE RELIGIEUSE {{ formatPreviewDate(step3.value.religiousDateTime) }}</span>
-                        <span class="preview-ceremony-loc">{{ step3.value.religiousLocation }}</span>
-                      </div>
-                    }
-                    @if (step3.value.banquetLocation || step3.value.banquetDateTime) {
-                      <div class="preview-ceremony">
-                        <span class="preview-ceremony-title">RÉCEPTION NUPTIALE {{ formatPreviewDate(step3.value.banquetDateTime) }}</span>
-                        <span class="preview-ceremony-loc">{{ step3.value.banquetLocation }}</span>
-                      </div>
-                    }
-                  </div>
-                } @else {
-                  <div class="preview-programme">
-                    <div class="preview-ceremony">
-                      <span class="preview-ceremony-title">{{ step2.value.title }}</span>
-                      <span class="preview-ceremony-loc">{{ formatPreviewDate(step3.value.eventDate) }}</span>
-                    </div>
-                  </div>
-                }
-
-                <hr class="preview-divider" />
-
-                @if (cardForm.value.eventTheme) {
-                  <p class="preview-theme">THÈME DE LA SOIRÉE : {{ cardForm.value.eventTheme }}</p>
-                }
-
-                <div class="preview-qr-zone">
-                  <img src="/img/qrcode.png" class="preview-logo" alt="Smart Invite" />
-                  @if (cardForm.value.qrInstructions) { <p class="preview-qr-text">{{ cardForm.value.qrInstructions }}</p> }
-                  @if (cardForm.value.dressCodeMessage) { <p class="preview-qr-text">{{ cardForm.value.dressCodeMessage }}</p> }
-                  @if (cardForm.value.sousMainMessage) { <p class="preview-qr-text">{{ cardForm.value.sousMainMessage }}</p> }
-                </div>
-
-                @if (cardForm.value.thanksMessage1) { <p class="preview-thanks">{{ cardForm.value.thanksMessage1 }}</p> }
-                @if (cardForm.value.closingMessage)  { <p class="preview-closing">{{ cardForm.value.closingMessage }}</p> }
-              </div>
-
-              <div class="preview-bottom-band">
-                <p class="preview-names">{{ step2.value.concernedNames || step2.value.title }}</p>
-              </div>
-
-            </div>
-          </div>
-        }
-
-      </div>
-    }
-
-    <!-- Bouton aperçu (étape 4 uniquement) -->
-    @if (step() === 4) {
-      <div class="preview-bar">
-        <button type="button" class="btn-preview-full" (click)="previewJoinPage()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          Aperçu de la page d'inscription
-        </button>
-      </div>
-    }
+      </form>
+    </div>
 
     <!-- Navigation -->
     <div class="wizard-nav">
-      @if (step() > 1) {
-        <button type="button" class="btn-prev" (click)="prev()">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          Précédent
-        </button>
-      } @else {
-        <a [routerLink]="['/events', eventId()]" class="btn-prev">Annuler</a>
-      }
-
-      @if (step() < 4) {
-        <button type="button" class="btn-next" (click)="next()">
-          Suivant
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
-        </button>
-      } @else {
-        <button type="button" class="btn-submit" [disabled]="loading()" (click)="onSubmit()">
-          @if (loading()) {
-            <span class="spinner"></span> Enregistrement...
-          } @else {
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="20 6 9 17 4 12"/>
-            </svg>
-            Enregistrer les modifications
-          }
-        </button>
-      }
+      <a [routerLink]="['/events', eventId()]" class="btn-prev">Annuler</a>
+      <button type="button" class="btn-next" [disabled]="!hasSelection" (click)="proceed()">
+        @if (isMariage)         { Accéder à l'éditeur Mariage }
+        @else if (isGala)       { Accéder à l'éditeur Gala }
+        @else if (isConference) { Accéder à l'éditeur Conférence }
+        @else if (isCeremonie)  { Accéder à l'éditeur Cérémonie }
+        @else                   { Sélectionnez un type }
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
     </div>
 
   }

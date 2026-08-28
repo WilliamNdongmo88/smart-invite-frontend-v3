@@ -1,9 +1,8 @@
 export type EventType =
   | 'MARIAGE'
-  | 'FIANCAILLES'
-  | 'ANNIVERSAIRE_MARIAGE'
-  | 'ANNIVERSAIRE'
-  | 'EVENEMENT_PROFESSIONNEL';
+  | 'GALA'
+  | 'CONFERENCE'
+  | 'CEREMONIE';
 
 export type EventStatus = 'PLANNED' | 'ACTIVE' | 'COMPLETED' | 'CANCELLED';
 
@@ -20,11 +19,10 @@ export type NotificationMode = 'EMAIL' | 'WHATSAPP' | 'BOTH';
 export type UserRole = 'ADMIN' | 'USER' | 'AGENT';
 
 export const EVENT_TYPE_LABELS: Record<EventType, string> = {
-  MARIAGE: 'Mariage',
-  FIANCAILLES: 'Fiançailles',
-  ANNIVERSAIRE_MARIAGE: 'Anniversaire de mariage',
-  ANNIVERSAIRE: 'Anniversaire',
-  EVENEMENT_PROFESSIONNEL: 'Événement professionnel',
+  MARIAGE:    'Mariage',
+  GALA:       'Gala',
+  CONFERENCE: 'Conférence',
+  CEREMONIE:  'Cérémonie',
 };
 
 export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {

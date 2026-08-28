@@ -15,6 +15,12 @@ export const routes: Routes = [
       import('./features/home/home.component').then((m) => m.HomeComponent),
     pathMatch: 'full',
   },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+    pathMatch: 'full',
+  },
 
   // ── Pages publiques (sans auth) ──────────────────────────────────
   {
@@ -84,6 +90,56 @@ export const routes: Routes = [
           import('./features/profile/pages/profile.component').then((m) => m.ProfileComponent),
       },
     ],
+  },
+
+  // ── Pages immersives & éditables d'événement (sans navbar générique) ──
+  {
+    path: 'events/wedding/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+  },
+  {
+    path: 'events/conference/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
+  },
+  {
+    path: 'events/gala/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
+  },
+  {
+    path: 'events/ceremonie/new',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
+  },
+  {
+    path: 'events/:id/wedding',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/wedding-details/wedding-details.component').then((m) => m.WeddingDetailsComponent),
+  },
+  {
+    path: 'events/:id/conference',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/conference-details/conference-details.component').then((m) => m.ConferenceDetailsComponent),
+  },
+  {
+    path: 'events/:id/gala',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/gala-details/gala-details.component').then((m) => m.GalaDetailsComponent),
+  },
+  {
+    path: 'events/:id/ceremonie',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/ceremonie-details/ceremonie-details.component').then((m) => m.CeremonieDetailsComponent),
   },
 
   // ── User (Topbar + Content + Footer, sans sidebar) ────────────────

@@ -1,4 +1,5 @@
 import { EventType, InvitationStatus, NotificationMode, RsvpStatus } from './enums.model';
+import { WeddingDetailsTheme } from '../../features/wedding-details/wedding-details-edit.model';
 
 export interface Invitation {
   id: number;
@@ -13,14 +14,25 @@ export interface Invitation {
 }
 
 export interface PublicInvitation {
-  token: string;
+  token?: string;
   guestName: string;
   eventTitle: string;
   eventType: EventType;
+  concernedNames?: string;
   eventDate?: string;
+  banquetLocation?: string;
+  banquetDateTime?: string;
+  religiousLocation?: string;
+  religiousDateTime?: string;
+  civilLocation?: string;
+  civilDateTime?: string;
   qrCodeUrl?: string;
   pdfUrl?: string;
+  status?: InvitationStatus;
   rsvpStatus: RsvpStatus;
+  couplePhotoUrl?: string;
+  /** Thème visuel — présent uniquement pour eventType === 'MARIAGE' */
+  theme?: WeddingDetailsTheme | null;
 }
 
 export interface CreateGuestRequest {

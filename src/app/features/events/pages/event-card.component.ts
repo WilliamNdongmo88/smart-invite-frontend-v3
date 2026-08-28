@@ -285,7 +285,7 @@ export class EventCardComponent implements OnInit {
   isUpload  = computed(() => this.event()?.importMyModelCard === true);
   isMariage = computed(() => {
     const t = this.event()?.type;
-    return t === 'MARIAGE' || t === 'FIANCAILLES';
+    return t === 'MARIAGE';
   });
 
   pdfSafeUrl = computed((): SafeResourceUrl | null => {

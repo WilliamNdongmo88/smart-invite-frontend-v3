@@ -49,4 +49,12 @@ export class InvitationService {
       `${this.base}/invitations/${token}/rsvp`, req
     );
   }
+
+  uploadPhoto(token: string, file: File): Observable<ApiResponse<string>> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<ApiResponse<string>>(
+      `${this.base}/invitations/${token}/photo`, form
+    );
+  }
 }
