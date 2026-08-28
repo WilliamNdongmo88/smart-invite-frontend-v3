@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal, HostBinding, PLATFORM_ID } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, ElementRef, PLATFORM_ID, effect } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -49,6 +49,7 @@ export class JoinComponent implements OnInit {
   private readonly authSvc    = inject(AuthService);
   private readonly eventSvc   = inject(EventService);
   private readonly toast      = inject(ToastService);
+  private readonly el         = inject(ElementRef);
 
   state          = signal<PageState>('loading');
   submitting     = signal(false);
@@ -76,11 +77,15 @@ export class JoinComponent implements OnInit {
     return this.previewData()?.theme ?? DEFAULT_WEDDING_THEME;
   });
 
-  /** CSS vars injectées sur le host pour le thème mariage */
-  @HostBinding('style')
-  get themeStyles(): Record<string, string> {
-    if (this.eventType() !== 'MARIAGE') return {};
-    return this.themeToCssVars(this.weddingTheme());
+  /** Applique les CSS vars sur le host via ElementRef (compatible toutes versions Angular) */
+  constructor() {
+    effect(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
+      if (this.eventType() !== 'MARIAGE') return;
+      const vars = this.themeToCssVars(this.weddingTheme());
+      const el = this.el.nativeElement as HTMLElement;
+      Object.entries(vars).forEach(([prop, val]) => el.style.setProperty(prop, val));
+    });
   }
 
   private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {

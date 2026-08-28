@@ -111,9 +111,9 @@ h1 { margin: 0; font-size: 2.1rem; }
   font-family: 'Belleza', sans-serif;
 }
 .mariage-tag {
-  background: rgba(212, 175, 55, 0.15);
-  border: 1px solid rgba(212, 175, 55, 0.65);
-  color: #ffd97d;
+  background: rgba(var(--gold-rgb, 212, 175, 55), 0.15);
+  border: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.65);
+  color: var(--terracotta, #ffd97d);
   font-family: 'Cinzel', serif;
   letter-spacing: .14em;
 }
