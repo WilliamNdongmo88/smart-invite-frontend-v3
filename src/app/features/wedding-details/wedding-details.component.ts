@@ -283,6 +283,16 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   /** Signal pour la prévisualisation au survol d'un preset */
   hoveredPresetId = signal<string | null>(null);
 
+  /** Contrôle l'affichage complet des presets (6 par défaut) */
+  presetsExpanded = signal(false);
+
+  /** 6 premiers presets ou tous selon presetsExpanded */
+  readonly visiblePresets = computed(() =>
+    this.presetsExpanded()
+      ? WEDDING_THEME_PRESETS
+      : WEDDING_THEME_PRESETS.slice(0, 6)
+  );
+
   /** CSS vars appliquées sur le host en temps réel */
   @HostBinding('style')
   get themeStyles(): Record<string, string> {

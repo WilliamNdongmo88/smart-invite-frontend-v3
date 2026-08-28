@@ -1,4 +1,5 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal, HostBinding, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LinkService } from '../../../../core/services/link.service';
@@ -7,6 +8,11 @@ import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Invitation } from '../../../../core/models/invitation.model';
 import { NotificationMode } from '../../../../core/models/enums.model';
+import {
+  WeddingDetailsTheme,
+  DEFAULT_WEDDING_THEME,
+  WEDDING_THEME_PRESETS,
+} from '../../../wedding-details/wedding-details-edit.model';
 
 type PageState = 'loading' | 'form' | 'success' | 'error';
 
@@ -18,6 +24,8 @@ type LinkPreview = {
   couplePhotoUrl: string | null;
   banquetLocation: string | null;
   description?: string | null;
+  /** Thème visuel du mariage — présent uniquement pour eventType === 'MARIAGE' */
+  theme?: WeddingDetailsTheme | null;
 };
 
 type InvitationViewData = Invitation & {
@@ -43,22 +51,23 @@ type InvitationViewData = Invitation & {
   styleUrls: ['./join.component.scss'],
 })
 export class JoinComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly fb = inject(FormBuilder);
-  private readonly svc = inject(LinkService);
-  private readonly authSvc = inject(AuthService);
-  private readonly eventSvc = inject(EventService);
-  private readonly toast = inject(ToastService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly route      = inject(ActivatedRoute);
+  private readonly router     = inject(Router);
+  private readonly fb         = inject(FormBuilder);
+  private readonly svc        = inject(LinkService);
+  private readonly authSvc    = inject(AuthService);
+  private readonly eventSvc   = inject(EventService);
+  private readonly toast      = inject(ToastService);
 
-  state = signal<PageState>('loading');
-  submitting = signal(false);
-  uploading = signal(false);
-  result = signal<Invitation | null>(null);
-  previewData = signal<LinkPreview | null>(null);
+  state          = signal<PageState>('loading');
+  submitting     = signal(false);
+  uploading      = signal(false);
+  result         = signal<Invitation | null>(null);
+  previewData    = signal<LinkPreview | null>(null);
   customPhotoUrl = signal<string | null>(null);
-  errorMsg = signal('Ce lien est invalide ou a expiré.');
-  submitError = signal<string | null>(null);
+  errorMsg       = signal('Ce lien est invalide ou a expiré.');
+  submitError    = signal<string | null>(null);
 
   isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
@@ -70,69 +79,132 @@ export class JoinComponent implements OnInit {
 
   themeClass = computed(() => 'theme-' + this.eventType().toLowerCase());
 
+  // ── Thème visuel (mariage uniquement) ────────────────────────────
+  /** Thème actif — depuis previewData ou DEFAULT */
+  private readonly weddingTheme = computed<WeddingDetailsTheme>(() => {
+    if (this.eventType() !== 'MARIAGE') return DEFAULT_WEDDING_THEME;
+    return this.previewData()?.theme ?? DEFAULT_WEDDING_THEME;
+  });
+
+  /** CSS vars injectées sur le host pour le thème mariage */
+  @HostBinding('style')
+  get themeStyles(): Record<string, string> {
+    if (this.eventType() !== 'MARIAGE') return {};
+    return this.themeToCssVars(this.weddingTheme());
+  }
+
+  private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {
+    const isLight = this.isColorLight(t.colorBackground);
+    const ov      = t.overlayColor ?? this.hexToRgb(t.colorBackground);
+    const goldRgb = this.hexToRgb(t.colorAccent);
+    const cardRgb = this.hexToRgb(t.colorCardBg);
+    const secRgb  = this.hexToRgb(t.colorSectionBg ?? t.colorBackground);
+    return {
+      '--ivory':           t.colorBackground,
+      '--gold':            t.colorAccent,
+      '--terracotta':      t.colorAccentSecondary,
+      '--terracotta-deep': t.colorAccentDeep,
+      '--ink':             t.colorText,
+      '--text-secondary':  t.colorTextSecondary,
+      '--card-bg':         t.colorCardBg,
+      '--section-bg':      t.colorSectionBg  ?? t.colorBackground,
+      '--surface':         t.colorSurface    ?? t.colorCardBg,
+      '--overlay-color':   ov,
+      '--gold-rgb':        goldRgb,
+      '--card-bg-rgb':     cardRgb,
+      '--section-bg-rgb':  secRgb,
+      '--gradient-btn':    `linear-gradient(135deg, ${t.colorAccentSecondary} 0%, ${t.colorAccent} 50%, ${t.colorAccentDeep} 100%)`,
+      '--nav-bg':          `rgba(${ov}, 0.96)`,
+      '--border':          `${t.colorAccent}4d`,
+      '--border-gold':     t.colorAccent,
+      '--text-light':      isLight ? '#7a6a52' : '#8e8477',
+    };
+  }
+
+  private isColorLight(hex: string): boolean {
+    if (!hex?.startsWith('#')) return false;
+    let c = hex.substring(1);
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const r = parseInt(c.substring(0, 2), 16) || 0;
+    const g = parseInt(c.substring(2, 4), 16) || 0;
+    const b = parseInt(c.substring(4, 6), 16) || 0;
+    return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+  }
+
+  private hexToRgb(hex: string): string {
+    if (!hex?.startsWith('#')) return '13, 11, 16';
+    let c = hex.substring(1);
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const r = parseInt(c.substring(0, 2), 16) || 13;
+    const g = parseInt(c.substring(2, 4), 16) || 11;
+    const b = parseInt(c.substring(4, 6), 16) || 16;
+    return `${r}, ${g}, ${b}`;
+  }
+
+  // ── Textes dynamiques ────────────────────────────────────────────
   eyebrowText = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'CÉLÉBRATION DE MARIAGE';
+    if (t === 'MARIAGE')    return 'CÉLÉBRATION DE MARIAGE';
     if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
-    if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
-    if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
+    if (t === 'GALA')       return 'SOIRÉE DE GALA & PRESTIGE';
+    if (t === 'CEREMONIE')  return 'CÉRÉMONIE OFFICIELLE';
     return this.eventTitle();
   });
 
   mainTitleText = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Invitation';
+    if (t === 'MARIAGE')    return 'Invitation';
     if (t === 'CONFERENCE') return 'Accréditation';
-    if (t === 'GALA') return 'Invitation VIP';
-    if (t === 'CEREMONIE') return 'Célébration';
+    if (t === 'GALA')       return 'Invitation VIP';
+    if (t === 'CEREMONIE')  return 'Célébration';
     return 'Invitation';
   });
 
   introText = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
-    if (t === 'CONFERENCE') return 'Inscrivez-vous pour obtenir votre pass de conférence et badge d’accès officiel';
-    if (t === 'GALA') return 'Le comité d’honneur a le privilège de vous convier à cette prestigieuse réception';
-    if (t === 'CEREMONIE') return 'Nous sommes honorés de vous compter parmi nos invités d’exception';
+    if (t === 'MARIAGE')    return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
+    if (t === 'CONFERENCE') return 'Inscrivez-vous pour obtenir votre pass de conférence et badge d\u2019accès officiel';
+    if (t === 'GALA')       return 'Le comité d\u2019honneur a le privilège de vous convier à cette prestigieuse réception';
+    if (t === 'CEREMONIE')  return 'Nous sommes honorés de vous compter parmi nos invités d\u2019exception';
     return 'Inscrivez-vous pour recevoir votre invitation personnalisée';
   });
 
   ornamentGlyph = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return '✦ 💍 ✦';
+    if (t === 'MARIAGE')    return '✦ 💍 ✦';
     if (t === 'CONFERENCE') return '⟨ // ⟩';
-    if (t === 'GALA') return '✦ ❖ ✦';
-    if (t === 'CEREMONIE') return '⚜';
+    if (t === 'GALA')       return '✦ ❖ ✦';
+    if (t === 'CEREMONIE')  return '⚜';
     return '✦';
   });
 
   submitBtnText = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Confirmer mon invitation';
-    if (t === 'CONFERENCE') return 'Obtenir mon badge d’accès';
-    if (t === 'GALA') return 'Réserver mon invitation VIP';
-    if (t === 'CEREMONIE') return 'Valider mon inscription';
+    if (t === 'MARIAGE')    return 'Confirmer mon invitation';
+    if (t === 'CONFERENCE') return 'Obtenir mon badge d\u2019accès';
+    if (t === 'GALA')       return 'Réserver mon invitation VIP';
+    if (t === 'CEREMONIE')  return 'Valider mon inscription';
     return 'Confirmer mon inscription';
   });
 
   defaultPhotoForType = computed(() => {
     const t = this.eventType();
     if (t === 'CONFERENCE') return '/images/background-section-hero.webp';
-    if (t === 'GALA') return '/images/couple_en_fete.webp';
-    if (t === 'CEREMONIE') return '/images/mr-mme-zome.webp';
+    if (t === 'GALA')       return '/images/couple_en_fete.webp';
+    if (t === 'CEREMONIE')  return '/images/mr-mme-zome.webp';
     return this.simulatedCouplePhoto;
   });
 
   readonly notifOptions: { key: NotificationMode; label: string; icon: string }[] = [
-    { key: 'WHATSAPP', label: 'WhatsApp', icon: '◌' },
-    { key: 'EMAIL', label: 'Email', icon: '✉' },
-    { key: 'BOTH', label: 'Email & WhatsApp', icon: '✦' },
+    { key: 'WHATSAPP', label: 'WhatsApp',        icon: '◌' },
+    { key: 'EMAIL',    label: 'Email',           icon: '✉' },
+    { key: 'BOTH',     label: 'Email & WhatsApp', icon: '✦' },
   ];
 
   form = this.fb.group({
-    fullName: ['', [Validators.required, Validators.minLength(2)]],
-    email: [''],
-    phoneNumber: [''],
+    fullName:         ['', [Validators.required, Validators.minLength(2)]],
+    email:            [''],
+    phoneNumber:      [''],
     notificationMode: ['WHATSAPP' as NotificationMode],
   });
 
@@ -145,6 +217,8 @@ export class JoinComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const token = this.route.snapshot.paramMap.get('token');
     if (!token) {
       this.state.set('error');
@@ -155,17 +229,36 @@ export class JoinComponent implements OnInit {
     if (token === 'preview') {
       const raw = sessionStorage.getItem('join_preview');
       if (raw) {
-        this.previewData.set(JSON.parse(raw));
-        this.state.set('form');
+        try {
+          const parsed = JSON.parse(raw) as LinkPreview;
+          // Si le thème n'est pas dans join_preview, on tente de le lire
+          // depuis si_wedding_<id> stocké dans sessionStorage par event-detail
+          if (!parsed.theme) {
+            const themeRaw = sessionStorage.getItem('join_preview_theme');
+            if (themeRaw) {
+              try { parsed.theme = JSON.parse(themeRaw); } catch { /* ignore */ }
+            }
+          }
+          this.previewData.set(parsed);
+          this.state.set('form');
+        } catch {
+          this.state.set('error');
+        }
       } else {
         this.state.set('error');
       }
       return;
     }
 
+    // Mode réel — token valide
     this.svc.preview(token).subscribe({
       next: (res) => {
-        this.previewData.set(res.data!);
+        const data = res.data! as LinkPreview & { detailsContent?: { theme?: WeddingDetailsTheme } };
+        // Le backend peut renvoyer detailsContent.theme dans la réponse preview
+        if (!data.theme && data.detailsContent?.theme) {
+          data.theme = data.detailsContent.theme;
+        }
+        this.previewData.set(data);
         this.state.set('form');
       },
       error: () => this.state.set('error'),
@@ -225,7 +318,7 @@ export class JoinComponent implements OnInit {
   onPhotoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) return;
-    const file = input.files[0];
+    const file  = input.files[0];
     const token = this.route.snapshot.paramMap.get('token');
 
     this.uploading.set(true);
@@ -241,7 +334,7 @@ export class JoinComponent implements OnInit {
           const preview = JSON.parse(raw);
           preview.couplePhotoUrl = url;
           sessionStorage.setItem('join_preview', JSON.stringify(preview));
-        } catch (e) {}
+        } catch { /* ignore */ }
       }
       this.toast.success("Photo mise à jour et enregistrée sur l'événement !");
       this.uploading.set(false);
@@ -254,18 +347,12 @@ export class JoinComponent implements OnInit {
 
     if (token && token !== 'preview') {
       this.svc.uploadPhoto(token, file).subscribe({
-        next: (res) => {
-          if (res.data) handleSuccess(res.data);
-          else handleError();
-        },
+        next:  (res) => { if (res.data) handleSuccess(res.data); else handleError(); },
         error: handleError,
       });
     } else {
       this.eventSvc.uploadImage(file, 'photos').subscribe({
-        next: (res) => {
-          if (res.data) handleSuccess(res.data);
-          else handleError();
-        },
+        next:  (res) => { if (res.data) handleSuccess(res.data); else handleError(); },
         error: handleError,
       });
     }
@@ -288,10 +375,10 @@ export class JoinComponent implements OnInit {
     const value = this.form.value;
 
     this.svc.join(token, {
-      fullName: value.fullName!,
-      email: value.email || undefined,
-      phoneNumber: value.phoneNumber || undefined,
-      notificationMode: value.notificationMode as NotificationMode,
+      fullName:         value.fullName!,
+      email:            value.email            || undefined,
+      phoneNumber:      value.phoneNumber       || undefined,
+      notificationMode: value.notificationMode  as NotificationMode,
     }).subscribe({
       next: (response) => {
         this.result.set(response.data!);
@@ -299,7 +386,7 @@ export class JoinComponent implements OnInit {
         this.submitting.set(false);
       },
       error: (error) => {
-        const message = error?.error?.message;
+        const message    = error?.error?.message;
         const normalized = message?.toLowerCase() || '';
 
         if (normalized.includes('expiré') || normalized.includes('invalide') || normalized.includes('introuvable')) {

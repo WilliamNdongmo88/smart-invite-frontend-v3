@@ -131,14 +131,23 @@ export class EventDetailComponent implements OnInit {
   }
 
   private openJoinPreview(e: Event): void {
-    const preview = {
-      eventTitle: e.title,
-      eventType: e.type,
-      concernedNames: e.concernedNames || e.title,
-      eventDate: e.eventDate || e.banquetDateTime || '',
-      couplePhotoUrl: e.couplePhotoUrl || null,
+    const preview: Record<string, unknown> = {
+      eventTitle:      e.title,
+      eventType:       e.type,
+      concernedNames:  e.concernedNames || e.title,
+      eventDate:       e.eventDate || e.banquetDateTime || '',
+      couplePhotoUrl:  e.couplePhotoUrl || null,
       banquetLocation: e.banquetLocation || null,
     };
+
+    // Inclure le thème visuel pour les mariages
+    if (e.type === 'MARIAGE') {
+      const content = e.detailsContent || e.weddingDetailsContent;
+      if (content?.theme) {
+        preview['theme'] = content.theme;
+      }
+    }
+
     sessionStorage.setItem('join_preview', JSON.stringify(preview));
     this.router.navigate(['/join', 'preview']);
   }

@@ -267,25 +267,25 @@ footer {
 ═══════════════════════════════════════════════════════════════ */
 .theme-mariage {
   &.invitation-page {
-    background: #0d0b10;
-    color: #fdfaf6;
+    background: var(--ivory, #0d0b10);
+    color: var(--ink, #fdfaf6);
     background-image:
-      radial-gradient(ellipse 65% 55% at 50% 0%, rgba(212, 175, 55, 0.22) 0%, transparent 80%),
-      linear-gradient(180deg, #100d14 0%, #08060a 100%);
+      radial-gradient(ellipse 65% 55% at 50% 0%, rgba(var(--gold-rgb, 212, 175, 55), 0.22) 0%, transparent 80%),
+      linear-gradient(180deg, color-mix(in srgb, var(--ivory, #0d0b10) 80%, white 20%) 0%, var(--ivory, #0d0b10) 100%);
     .btn-back {
-      background: rgba(212, 175, 55, 0.12);
-      border-color: rgba(212, 175, 55, 0.4);
-      color: #ffd97d;
-      &:hover { background: rgba(212, 175, 55, 0.25); border-color: #ffd97d; color: #fff; }
+      background: rgba(var(--gold-rgb, 212, 175, 55), 0.12);
+      border-color: rgba(var(--gold-rgb, 212, 175, 55), 0.4);
+      color: var(--terracotta, #ffd97d);
+      &:hover { background: rgba(var(--gold-rgb, 212, 175, 55), 0.25); border-color: var(--terracotta, #ffd97d); color: var(--ink, #fff); }
     }
   }
   &.paper-card {
-    background: linear-gradient(160deg, #18141c 0%, #0c0a0e 100%);
-    border: 2px solid #d4af37;
-    outline: 1px solid rgba(255, 217, 125, 0.35);
+    background: linear-gradient(160deg, var(--surface, #18141c) 0%, var(--section-bg, #0c0a0e) 100%);
+    border: 2px solid var(--gold, #d4af37);
+    outline: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.35);
     outline-offset: -6px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(212, 175, 55, 0.25);
-    color: #fdfaf6;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 35px rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+    color: var(--ink, #fdfaf6);
   }
   .mariage-header-badge {
     display: flex;
@@ -295,50 +295,50 @@ footer {
     margin: -10px 0 16px;
   }
   .mariage-filigree {
-    color: #ffd97d;
+    color: var(--terracotta, #ffd97d);
     font-size: 1.2rem;
     letter-spacing: .2em;
-    text-shadow: 0 0 14px rgba(212, 175, 55, 0.7);
+    text-shadow: 0 0 14px rgba(var(--gold-rgb, 212, 175, 55), 0.7);
   }
   .mariage-badge-pill {
     display: inline-block;
     padding: 3px 14px;
-    background: rgba(212, 175, 55, 0.14);
-    border: 1px solid rgba(212, 175, 55, 0.6);
-    color: #ffd97d;
+    background: rgba(var(--gold-rgb, 212, 175, 55), 0.14);
+    border: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.6);
+    color: var(--terracotta, #ffd97d);
     font-family: 'Belleza', sans-serif;
     font-size: .58rem;
     font-weight: 600;
     letter-spacing: .2em;
     border-radius: 3px;
   }
-  .eyebrow { color: #d4af37; font-family: 'Belleza', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
-  h1 { color: #ffffff; font: 500 2.2rem/1.05 'Cormorant Garamond', serif; letter-spacing: .04em; }
-  .intro { color: #b8ad9e; font-size: .68rem; line-height: 1.5; font-family: 'Montserrat', sans-serif; }
+  .eyebrow { color: var(--gold, #d4af37); font-family: 'Belleza', sans-serif; font-size: .68rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { color: var(--ink, #ffffff); font: 500 2.2rem/1.05 'Cormorant Garamond', serif; letter-spacing: .04em; }
+  .intro { color: var(--text-secondary, #b8ad9e); font-size: .68rem; line-height: 1.5; font-family: 'Montserrat', sans-serif; }
   .couple-names {
-    color: #ffd97d;
+    color: var(--terracotta, #ffd97d);
     font: 400 2.35rem/1.1 'Parisienne', cursive;
     letter-spacing: .02em;
-    text-shadow: 0 2px 18px rgba(212, 175, 55, 0.55);
+    text-shadow: 0 2px 18px rgba(var(--gold-rgb, 212, 175, 55), 0.55);
     margin: 4px 0 2px;
   }
-  .event-date { color: #d4af37; font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-family: 'Belleza', sans-serif; }
-  .event-message { color: #e5ded5; font: 400 1.05rem/1.4 'Cormorant Garamond', serif; }
+  .event-date { color: var(--gold, #d4af37); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; font-family: 'Belleza', sans-serif; }
+  .event-message { color: var(--text-secondary, #e5ded5); font: 400 1.05rem/1.4 'Cormorant Garamond', serif; }
 
-  /* Cadre Haute Joaillerie Dôme Romantique avec Or Scintillant */
+  /* Cadre Haute Joaillerie Dôme Romantique */
   .frame-mariage .photo-frame {
     width: 100%;
     height: 360px;
     border-radius: 120px 120px 16px 16px;
-    border: 2px solid #d4af37;
-    outline: 1px solid rgba(255, 217, 125, 0.35);
+    border: 2px solid var(--gold, #d4af37);
+    outline: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.35);
     outline-offset: -5px;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(212, 175, 55, 0.35);
-    background: #141018;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75), 0 0 28px rgba(var(--gold-rgb, 212, 175, 55), 0.35);
+    background: var(--surface, #141018);
   }
   .mariage-sparkle {
     position: absolute; z-index: 5; pointer-events: none;
-    color: #ffd97d; font-size: .85rem; text-shadow: 0 0 8px #d4af37;
+    color: var(--terracotta, #ffd97d); font-size: .85rem; text-shadow: 0 0 8px var(--gold, #d4af37);
   }
   .sparkle-tl { top: 12px; left: 18px; }
   .sparkle-tr { top: 12px; right: 18px; }
@@ -346,32 +346,41 @@ footer {
   .sparkle-br { bottom: 12px; right: 18px; }
 
   .ornament {
-    color: #ffd97d;
-    span { background: rgba(212, 175, 55, 0.5); }
+    color: var(--terracotta, #ffd97d);
+    span { background: rgba(var(--gold-rgb, 212, 175, 55), 0.5); }
     b { font-size: 1.15rem; font-weight: 600; letter-spacing: .1em; }
   }
-  form { border-top: 1px solid rgba(212, 175, 55, 0.3); }
-  label { color: #bfaea0; strong { color: #d4af37; } }
+  form { border-top: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.3); }
+  label { color: var(--text-secondary, #bfaea0); strong { color: var(--gold, #d4af37); } }
   input {
-    background: #141018; border: 1px solid #362e24; color: #fff;
-    &:focus { border-color: #d4af37; box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.25); }
+    background: var(--surface, #141018);
+    border: 1px solid rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+    color: var(--ink, #fff);
+    &:focus { border-color: var(--gold, #d4af37); box-shadow: 0 0 0 3px rgba(var(--gold-rgb, 212, 175, 55), 0.25); }
   }
   .notification-option {
-    border-color: #362e24; color: #bfaea0; background: #141018;
-    &.selected { border-color: #d4af37; color: #ffd97d; background: rgba(212, 175, 55, 0.18); font-weight: 600; }
+    border-color: rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+    color: var(--text-secondary, #bfaea0);
+    background: var(--surface, #141018);
+    &.selected {
+      border-color: var(--gold, #d4af37);
+      color: var(--terracotta, #ffd97d);
+      background: rgba(var(--gold-rgb, 212, 175, 55), 0.18);
+      font-weight: 600;
+    }
   }
   button[type="submit"] {
-    background: linear-gradient(135deg, #ffd97d 0%, #d4af37 50%, #9e7b25 100%);
-    color: #0d0b10; font-weight: 700; letter-spacing: .08em; font-family: 'Belleza', 'Montserrat', sans-serif;
-    box-shadow: 0 4px 22px rgba(212, 175, 55, 0.45);
-    &:hover:not(:disabled) { background: #ffd97d; transform: translateY(-1px); }
+    background: var(--gradient-btn, linear-gradient(135deg, #ffd97d 0%, #d4af37 50%, #9e7b25 100%));
+    color: var(--ivory, #0d0b10); font-weight: 700; letter-spacing: .08em; font-family: 'Belleza', 'Montserrat', sans-serif;
+    box-shadow: 0 4px 22px rgba(var(--gold-rgb, 212, 175, 55), 0.45);
+    &:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
   }
-  .success-mark { border: 2px solid #d4af37; color: #ffd97d; background: rgba(212, 175, 55, 0.25); }
-  .success-content h3 { color: #fff; font-family: 'Cormorant Garamond', serif; }
-  .success-message { color: #dcd4c8; font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
-  .qr-block img { border: 2px solid #d4af37; }
-  .download-link { background: linear-gradient(135deg, #ffd97d, #d4af37); color: #0d0b10; font-weight: 700; }
-  footer { border-top-color: #362e24; color: #7f7468; span { color: #d4af37; } }
+  .success-mark { border: 2px solid var(--gold, #d4af37); color: var(--terracotta, #ffd97d); background: rgba(var(--gold-rgb, 212, 175, 55), 0.25); }
+  .success-content h3 { color: var(--ink, #fff); font-family: 'Cormorant Garamond', serif; }
+  .success-message { color: var(--text-secondary, #dcd4c8); font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; }
+  .qr-block img { border: 2px solid var(--gold, #d4af37); }
+  .download-link { background: var(--gradient-btn, linear-gradient(135deg, #ffd97d, #d4af37)); color: var(--ivory, #0d0b10); font-weight: 700; }
+  footer { border-top-color: rgba(var(--gold-rgb, 212, 175, 55), 0.2); color: var(--text-light, #7f7468); span { color: var(--gold, #d4af37); } }
 }
 
 /* ═══════════════════════════════════════════════════════════════

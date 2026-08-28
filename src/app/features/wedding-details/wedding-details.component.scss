@@ -1652,7 +1652,7 @@
   .count-sep { display: none; }
   .hero-title { font-size: clamp(2.2rem, 12vw, 3.5rem); }
   .timeline-shell { padding: 1.75rem 1.25rem 1.75rem 2.75rem; }
-  .timeline-dot { left: -2.8rem; }
+  .timeline-dot { left: -2.3rem; }
   .portrait-bio { text-align: center; }
   .palette-swatches { grid-template-columns: repeat(4, 1fr); }
   .swatch-color { width: 48px; height: 48px; }
@@ -2395,6 +2395,55 @@ section { position: relative; }
   gap: .75rem;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
+}
+
+/* Bouton dérouler les presets (section page + modal) */
+.theme-expand-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  align-self: center;
+  border-radius: 50%;
+  border: 1px dashed rgba(var(--gold-rgb), .5);
+  background: rgba(var(--card-bg-rgb), .5);
+  color: var(--gold);
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .15s;
+
+  &:hover {
+    background: rgba(var(--gold-rgb), .15);
+    border-color: var(--gold);
+    transform: scale(1.1);
+  }
+}
+
+.theme-expand-modal-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  align-self: center;
+  margin-top: .5rem;
+  padding: .4rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--gold-rgb), .3);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Belleza', sans-serif;
+  font-size: .72rem;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s;
+
+  &:hover {
+    background: rgba(var(--gold-rgb), .1);
+    border-color: var(--gold);
+    color: var(--gold);
+  }
 }
 
 /* ── Thème — Onglet Modal ──────────────────────────────────────── */
