@@ -728,7 +728,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       return copy;
     });
     this.saveToLocalStorage();
-    this.toast.success('Thème appliqué !');
+    // Persister en base si l'événement existe déjà (mode édition)
+    if (this.eventId()) {
+      this.saveToBackend('Thème appliqué et sauvegardé !');
+    } else {
+      this.toast.success('Thème appliqué !');
+    }
   }
 
   /** Met à jour une couleur individuelle dans draft.theme */
@@ -767,15 +772,15 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       localStorage.setItem(key, JSON.stringify(this.content()));
     }
 
-    // ── Console.log du JSON complet pour validation (appel API désactivé) ──
-    console.log('══════════ WeddingDetailsContent — JSON complet ══════════');
-    console.log(JSON.stringify({ eventType: 'MARIAGE', ...this.content() }, null, 2));
-    console.log('══════════════════════════════════════════════════════════');
+    // ── Persister en base si l'événement existe (mode édition) ──
+    if (this.eventId()) {
+      this.saveToBackend();
+    }
 
     this.closeEdit();
   }
 
-  saveToBackend(): void {
+  saveToBackend(successMessage?: string): void {
     const c = this.content();
     const payload = {
       eventType: 'MARIAGE' as const,
@@ -790,7 +795,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       this.eventSvc.update(id, payload).subscribe({
         next: () => {
           this.saving.set(false);
-          this.toast.success('Mariage mis à jour avec succès !');
+          this.toast.success(successMessage ?? 'Mariage mis à jour avec succès !');
         },
         error: (err) => {
           this.saving.set(false);
