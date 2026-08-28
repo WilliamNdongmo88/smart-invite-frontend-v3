@@ -2,7 +2,7 @@ import { Component, computed, inject, OnInit, signal, HostBinding, PLATFORM_ID }
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LinkService } from '../../../../core/services/link.service';
+import { LinkService, LinkPreviewData } from '../../../../core/services/link.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -11,22 +11,12 @@ import { NotificationMode } from '../../../../core/models/enums.model';
 import {
   WeddingDetailsTheme,
   DEFAULT_WEDDING_THEME,
-  WEDDING_THEME_PRESETS,
 } from '../../../wedding-details/wedding-details-edit.model';
 
 type PageState = 'loading' | 'form' | 'success' | 'error';
 
-type LinkPreview = {
-  eventTitle: string;
-  eventType?: import('../../../../core/models/enums.model').EventType;
-  concernedNames: string;
-  eventDate: string;
-  couplePhotoUrl: string | null;
-  banquetLocation: string | null;
-  description?: string | null;
-  /** Thème visuel du mariage — présent uniquement pour eventType === 'MARIAGE' */
-  theme?: WeddingDetailsTheme | null;
-};
+// Alias local — identique à LinkPreviewData pour la compatibilité sessionStorage
+type LinkPreview = LinkPreviewData;
 
 type InvitationViewData = Invitation & {
   eventTitle?: string;
@@ -250,15 +240,10 @@ export class JoinComponent implements OnInit {
       return;
     }
 
-    // Mode réel — token valide
+    // Mode réel — token valide, theme inclus directement dans la réponse
     this.svc.preview(token).subscribe({
       next: (res) => {
-        const data = res.data! as LinkPreview & { detailsContent?: { theme?: WeddingDetailsTheme } };
-        // Le backend peut renvoyer detailsContent.theme dans la réponse preview
-        if (!data.theme && data.detailsContent?.theme) {
-          data.theme = data.detailsContent.theme;
-        }
-        this.previewData.set(data);
+        this.previewData.set(res.data!);
         this.state.set('form');
       },
       error: () => this.state.set('error'),

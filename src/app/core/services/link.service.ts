@@ -5,6 +5,20 @@ import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 import { CreateLinkRequest, Link, UpdateLinkRequest } from '../models/checkin.model';
 import { CreateGuestRequest, Invitation } from '../models/invitation.model';
+import { WeddingDetailsTheme } from '../../features/wedding-details/wedding-details-edit.model';
+
+/** Réponse de GET /api/link/preview/:token */
+export interface LinkPreviewData {
+  eventTitle:      string;
+  eventType:       import('../models/enums.model').EventType;
+  concernedNames:  string;
+  eventDate:       string;
+  couplePhotoUrl:  string | null;
+  banquetLocation: string | null;
+  description:     string | null;
+  /** Thème visuel — présent uniquement pour eventType === 'MARIAGE' */
+  theme?:          WeddingDetailsTheme | null;
+}
 
 @Injectable({ providedIn: 'root' })
 export class LinkService {
@@ -30,16 +44,8 @@ export class LinkService {
   }
 
   // Public — sans auth
-  preview(token: string): Observable<ApiResponse<{
-    eventTitle: string;
-    eventType: import('../models/enums.model').EventType;
-    concernedNames: string;
-    eventDate: string;
-    couplePhotoUrl: string | null;
-    banquetLocation: string | null;
-    description: string | null;
-  }>> {
-    return this.http.get<ApiResponse<any>>(`${this.base}/preview/${token}`);
+  preview(token: string): Observable<ApiResponse<LinkPreviewData>> {
+    return this.http.get<ApiResponse<LinkPreviewData>>(`${this.base}/preview/${token}`);
   }
 
   join(token: string, req: CreateGuestRequest): Observable<ApiResponse<Invitation>> {
