@@ -1,4 +1,5 @@
 import { EventType, InvitationStatus, NotificationMode, RsvpStatus } from './enums.model';
+import { WeddingDetailsTheme } from '../../features/wedding-details/wedding-details-edit.model';
 
 export interface Invitation {
   id: number;
@@ -30,6 +31,8 @@ export interface PublicInvitation {
   status?: InvitationStatus;
   rsvpStatus: RsvpStatus;
   couplePhotoUrl?: string;
+  /** Thème visuel — présent uniquement pour eventType === 'MARIAGE' */
+  theme?: WeddingDetailsTheme | null;
 }
 
 export interface CreateGuestRequest {

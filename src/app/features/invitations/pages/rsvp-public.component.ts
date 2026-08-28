@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, ElementRef, effect, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../../core/services/invitation.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -6,6 +7,10 @@ import { EventService } from '../../../core/services/event.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { PublicInvitation } from '../../../core/models/invitation.model';
 import { EVENT_TYPE_LABELS } from '../../../core/models/enums.model';
+import {
+  WeddingDetailsTheme,
+  DEFAULT_WEDDING_THEME,
+} from '../../wedding-details/wedding-details-edit.model';
 
 type PageState = 'loading' | 'ready' | 'confirmed' | 'declined' | 'error';
 
@@ -17,19 +22,21 @@ type PageState = 'loading' | 'ready' | 'confirmed' | 'declined' | 'error';
   styleUrls: ['./rsvp-public.component.scss'],
 })
 export class RsvpPublicComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly svc = inject(InvitationService);
-  private readonly authSvc = inject(AuthService);
-  private readonly eventSvc = inject(EventService);
-  private readonly toast = inject(ToastService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly route      = inject(ActivatedRoute);
+  private readonly router     = inject(Router);
+  private readonly svc        = inject(InvitationService);
+  private readonly authSvc    = inject(AuthService);
+  private readonly eventSvc   = inject(EventService);
+  private readonly toast      = inject(ToastService);
+  private readonly el         = inject(ElementRef);
 
-  state = signal<PageState>('loading');
-  inv = signal<PublicInvitation | null>(null);
-  submitting = signal<'CONFIRMED' | 'DECLINED' | null>(null);
-  uploading = signal(false);
+  state          = signal<PageState>('loading');
+  inv            = signal<PublicInvitation | null>(null);
+  submitting     = signal<'CONFIRMED' | 'DECLINED' | null>(null);
+  uploading      = signal(false);
   customPhotoUrl = signal<string | null>(null);
-  errorMsg = signal('Ce lien est invalide ou a expiré.');
+  errorMsg       = signal('Ce lien est invalide ou a expiré.');
 
   isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
@@ -40,6 +47,70 @@ export class RsvpPublicComponent implements OnInit {
   });
 
   themeClass = computed(() => 'theme-' + this.eventType().toLowerCase());
+
+  // ── Thème visuel (mariage uniquement) ────────────────────────────
+  private readonly weddingTheme = computed<WeddingDetailsTheme>(() => {
+    if (this.eventType() !== 'MARIAGE') return DEFAULT_WEDDING_THEME;
+    return this.inv()?.theme ?? DEFAULT_WEDDING_THEME;
+  });
+
+  constructor() {
+    effect(() => {
+      if (!isPlatformBrowser(this.platformId)) return;
+      if (this.eventType() !== 'MARIAGE') return;
+      const vars = this.themeToCssVars(this.weddingTheme());
+      const host = this.el.nativeElement as HTMLElement;
+      Object.entries(vars).forEach(([prop, val]) => host.style.setProperty(prop, val));
+    });
+  }
+
+  private themeToCssVars(t: WeddingDetailsTheme): Record<string, string> {
+    const isLight = this.isColorLight(t.colorBackground);
+    const ov      = t.overlayColor ?? this.hexToRgb(t.colorBackground);
+    const goldRgb = this.hexToRgb(t.colorAccent);
+    const cardRgb = this.hexToRgb(t.colorCardBg);
+    const secRgb  = this.hexToRgb(t.colorSectionBg ?? t.colorBackground);
+    return {
+      '--ivory':           t.colorBackground,
+      '--gold':            t.colorAccent,
+      '--terracotta':      t.colorAccentSecondary,
+      '--terracotta-deep': t.colorAccentDeep,
+      '--ink':             t.colorText,
+      '--text-secondary':  t.colorTextSecondary,
+      '--card-bg':         t.colorCardBg,
+      '--section-bg':      t.colorSectionBg  ?? t.colorBackground,
+      '--surface':         t.colorSurface    ?? t.colorCardBg,
+      '--overlay-color':   ov,
+      '--gold-rgb':        goldRgb,
+      '--card-bg-rgb':     cardRgb,
+      '--section-bg-rgb':  secRgb,
+      '--gradient-btn':    `linear-gradient(135deg, ${t.colorAccentSecondary} 0%, ${t.colorAccent} 50%, ${t.colorAccentDeep} 100%)`,
+      '--nav-bg':          `rgba(${ov}, 0.96)`,
+      '--border':          `${t.colorAccent}4d`,
+      '--border-gold':     t.colorAccent,
+      '--text-light':      isLight ? '#7a6a52' : '#8e8477',
+    };
+  }
+
+  private isColorLight(hex: string): boolean {
+    if (!hex?.startsWith('#')) return false;
+    let c = hex.substring(1);
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const r = parseInt(c.substring(0, 2), 16) || 0;
+    const g = parseInt(c.substring(2, 4), 16) || 0;
+    const b = parseInt(c.substring(4, 6), 16) || 0;
+    return (r * 299 + g * 587 + b * 114) / 1000 > 128;
+  }
+
+  private hexToRgb(hex: string): string {
+    if (!hex?.startsWith('#')) return '13, 11, 16';
+    let c = hex.substring(1);
+    if (c.length === 3) c = c.split('').map(x => x + x).join('');
+    const r = parseInt(c.substring(0, 2), 16) || 13;
+    const g = parseInt(c.substring(2, 4), 16) || 11;
+    const b = parseInt(c.substring(4, 6), 16) || 16;
+    return `${r}, ${g}, ${b}`;
+  }
 
   eyebrowText = computed(() => {
     const t = this.eventType();
