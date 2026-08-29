@@ -265,7 +265,8 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     const storageKey = idParam ? `si_gala_${idParam}` : 'si_gala_content';
-    const saved = localStorage.getItem(storageKey);
+    const isPreviewMode = previewParam === 'true' || previewDetailsParam === 'true';
+    const saved = isPreviewMode ? null : localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as GalaDetailsContent;

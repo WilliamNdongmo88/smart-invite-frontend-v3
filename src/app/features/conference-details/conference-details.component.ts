@@ -308,9 +308,10 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
       });
     }
 
-    // Charger depuis localStorage
+    // Charger depuis localStorage (ignoré en mode preview — on utilise uniquement l'API)
     const storageKey = idParam ? `si_conference_${idParam}` : 'si_conference_content';
-    const saved = localStorage.getItem(storageKey);
+    const isPreviewMode = previewParam === 'true' || previewDetailsParam === 'true';
+    const saved = isPreviewMode ? null : localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as ConferenceDetailsContent;

@@ -248,7 +248,8 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     const storageKey = idParam ? `si_ceremonie_${idParam}` : 'si_ceremonie_content';
-    const saved = localStorage.getItem(storageKey);
+    const isPreviewMode = previewParam === 'true' || previewDetailsParam === 'true';
+    const saved = isPreviewMode ? null : localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as CeremonieDetailsContent;

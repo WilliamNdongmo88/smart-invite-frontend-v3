@@ -420,8 +420,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     }
 
     // ── Charger le contenu sauvegardé en localStorage ───────────────
+    // En mode preview, on utilise exclusivement les données de l'API (pas du localStorage)
+    // pour garantir que les modifications sauvegardées sont bien reflétées.
     const storageKey = idParam ? `si_wedding_${idParam}` : 'si_home_content';
-    const saved = localStorage.getItem(storageKey);
+    const isPreviewMode = previewParam === 'true' || previewDetailsParam === 'true';
+    const saved = isPreviewMode ? null : localStorage.getItem(storageKey);
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as WeddingDetailsContent & {
