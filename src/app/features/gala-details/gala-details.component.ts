@@ -213,8 +213,9 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     const idParam        = this.route.snapshot.paramMap.get('id');
     const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
     const previewParam   = this.route.snapshot.queryParamMap.get('preview');
+    const previewDetailsParam = this.route.snapshot.queryParamMap.get('preview_details');
 
-    if (previewParam === 'true') {
+    if (previewParam === 'true' || previewDetailsParam === 'true') {
       this.isPreview.set(true);
     }
 
@@ -234,7 +235,10 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
     if (idParam) {
       const id = Number(idParam);
       this.eventId.set(id);
-      this.eventSvc.findById(id).subscribe({
+      const loader$ = (previewDetailsParam === 'true' || this.isPreview())
+        ? this.eventSvc.findByIdPublic(id)
+        : this.eventSvc.findById(id);
+      loader$.subscribe({
         next: (res) => {
           const e = res.data!;
           if (e.detailsContent || e.galaDetailsContent) {

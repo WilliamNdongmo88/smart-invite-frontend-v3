@@ -356,12 +356,14 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     if (!isPlatformBrowser(this.platformId)) return;
 
     // ── Détecter le mode (création vs édition) ──────────────────────
-    const idParam        = this.route.snapshot.paramMap.get('id');
-    const maxGuestsParam = this.route.snapshot.queryParamMap.get('maxGuests');
-    const previewParam   = this.route.snapshot.queryParamMap.get('preview');
+    const idParam             = this.route.snapshot.paramMap.get('id');
+    const maxGuestsParam      = this.route.snapshot.queryParamMap.get('maxGuests');
+    const previewParam        = this.route.snapshot.queryParamMap.get('preview');
+    const previewDetailsParam = this.route.snapshot.queryParamMap.get('preview_details');
 
-    // Mode prévisualisation depuis event-detail
-    if (previewParam === 'true') {
+    // preview=true      → organisateur via bouton "Carte" (connecté)
+    // preview_details=true → invité via lien mail (non connecté, endpoint public)
+    if (previewParam === 'true' || previewDetailsParam === 'true') {
       this.isPreview.set(true);
     }
     if (maxGuestsParam) {
@@ -380,8 +382,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     if (idParam) {
       const id = Number(idParam);
       this.eventId.set(id);
-      // Charger l'événement existant pour pré-remplir les données
-      this.eventSvc.findById(id).subscribe({
+      // Endpoint public si invité (preview_details) ou preview organisateur, authentifié sinon
+      const loader$ = (previewDetailsParam === 'true' || this.isPreview())
+        ? this.eventSvc.findByIdPublic(id)
+        : this.eventSvc.findById(id);
+      loader$.subscribe({
         next: (res) => {
           const e = res.data!;
           if (e.detailsContent || e.weddingDetailsContent) {

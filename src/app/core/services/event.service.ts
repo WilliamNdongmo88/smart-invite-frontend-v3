@@ -35,6 +35,11 @@ export class EventService {
     return this.http.get<ApiResponse<Event>>(`${this.base}/${id}`);
   }
 
+  /** Endpoint public — sans authentification, pour mode preview invité */
+  findByIdPublic(id: number): Observable<ApiResponse<Event>> {
+    return this.http.get<ApiResponse<Event>>(`${this.base}/${id}/public`);
+  }
+
   update(id: number, req: UpdateEventRequest): Observable<ApiResponse<Event>> {
     return this.http.put<ApiResponse<Event>>(`${this.base}/${id}`, req);
   }
