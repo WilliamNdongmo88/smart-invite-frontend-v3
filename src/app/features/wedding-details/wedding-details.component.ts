@@ -738,12 +738,54 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       return copy;
     });
     this.saveToLocalStorage();
-    // Persister en base si l'événement existe déjà (mode édition)
+    // Persister uniquement le thème en base — sans toucher aux photos ni au reste du contenu
     if (this.eventId()) {
-      this.saveToBackend('Thème appliqué et sauvegardé !');
+      this.saveThemeOnly('Thème appliqué et sauvegardé !');
     } else {
       this.toast.success('Thème appliqué !');
     }
+  }
+
+  /** Sauvegarde uniquement le thème en base (évite d'écraser couplePhotoUrl) */
+  private saveThemeOnly(successMessage?: string): void {
+    const c = this.content();
+    const id = this.eventId();
+    if (!id) return;
+
+    // On inclut couple mais on vide les URLs de portraits pour ne pas
+    // risquer d'écraser couplePhotoUrl (colonne SQL) via extractCoverPhotoUrl()
+    const coupleWithoutPhotos = {
+      ...c.couple,
+      bridePortraitUrl: null,
+      groomPortraitUrl: null,
+    };
+
+    const payload = {
+      eventType:   'MARIAGE' as const,
+      hero:        c.hero,
+      couple:      coupleWithoutPhotos,
+      story:       c.story,
+      program:     c.program,
+      dressCode:   c.dressCode,
+      faq:         c.faq,
+      rsvp:        c.rsvp,
+      gallery:     c.gallery,
+      backgrounds: c.backgrounds,
+      footer:      c.footer,
+      theme:       c.theme,
+    };
+
+    this.saving.set(true);
+    this.eventSvc.update(id, payload).subscribe({
+      next: () => {
+        this.saving.set(false);
+        this.toast.success(successMessage ?? 'Thème mis à jour !');
+      },
+      error: (err) => {
+        this.saving.set(false);
+        this.toast.error(err?.error?.message || 'Erreur lors de la mise à jour.');
+      },
+    });
   }
 
   /** Met à jour une couleur individuelle dans draft.theme */
