@@ -8,18 +8,18 @@
       {{ hero().brideFirstName ? hero().brideFirstName[0] : 'G' }}<span class="amp-logo">&amp;</span>{{ hero().groomFirstName ? hero().groomFirstName[0] : 'W' }}
     </button>
   } @else {
-    <a class="nav-logo" href="#top">
+    <a class="nav-logo" (click)="scrollTo('top')" style="cursor:pointer">
       {{ hero().brideFirstName ? hero().brideFirstName[0] : 'G' }}<span class="amp-logo">&amp;</span>{{ hero().groomFirstName ? hero().groomFirstName[0] : 'W' }}
     </a>
   }
 
   <ul class="nav-links">
-    <li><a href="#couple">LE COUPLE</a></li>
-    <li><a href="#histoire">NOTRE HISTOIRE</a></li>
-    <li><a href="#evenements">ÉVÉNEMENTS</a></li>
-    <li><a href="#photos">PHOTOS</a></li>
-    <li><a href="#infos">INFOS</a></li>
-    <li><a href="#rsvp">RSVP</a></li>
+    <li><a (click)="scrollTo('couple')" style="cursor:pointer">LE COUPLE</a></li>
+    <li><a (click)="scrollTo('histoire')" style="cursor:pointer">NOTRE HISTOIRE</a></li>
+    <li><a (click)="scrollTo('evenements')" style="cursor:pointer">ÉVÉNEMENTS</a></li>
+    <li><a (click)="scrollTo('photos')" style="cursor:pointer">PHOTOS</a></li>
+    <li><a (click)="scrollTo('infos')" style="cursor:pointer">INFOS</a></li>
+    <li><a (click)="scrollTo('rsvp')" style="cursor:pointer">RSVP</a></li>
   </ul>
 
   <div class="nav-actions">
@@ -150,8 +150,8 @@
     </div>
 
     <div class="hero-ctas reveal" style="--d:600ms">
-      <a href="#evenements" class="btn-primary">DÉCOUVRIR LE PROGRAMME</a>
-      <a href="#infos" class="btn-outline-hero">INFOS PRATIQUES</a>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">DÉCOUVRIR LE PROGRAMME</button>
+      <button type="button" (click)="scrollTo('infos')" class="btn-outline-hero">INFOS PRATIQUES</button>
     </div>
 
     <!-- Compte à rebours -->
@@ -392,7 +392,7 @@
     <div class="band-content">
       <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">ET CE N'EST PAS TOUT</span>
       <h2 class="band-title reveal" style="--d:100ms">Notre histoire continue — Le temps de la célébrer ensemble</h2>
-      <a href="#evenements" class="btn-primary reveal reveal--scale" style="--d:200ms">Voir le programme</a>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary reveal reveal--scale" style="--d:200ms">Voir le programme</button>
     </div>
   </div>
 </section>
@@ -639,8 +639,8 @@
     </div>
     <p class="rsvp-sub">{{ rsvp().subtitle }}</p>
     <div class="rsvp-ctas">
-      <a href="#evenements" class="btn-primary">Voir le programme</a>
-      <a href="#histoire" class="btn-outline-hero">Notre histoire</a>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">Voir le programme</button>
+      <button type="button" (click)="scrollTo('histoire')" class="btn-outline-hero">Notre histoire</button>
     </div>
   </div>
 </section>

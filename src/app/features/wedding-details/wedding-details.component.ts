@@ -47,7 +47,7 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     venueName:       'MA CABANE AU CANADA',
     venueCity:       'GOSNÉ',
     heroCatchphrase: 'Une célébration pensée comme un souvenir éternel.',
-    targetDate:      '2026-08-08T14:00:00',
+    targetDate:      '2026-09-09T14:00:00',
     maxGuests:       300,
     budget:          '15 600 XAF',
   },
@@ -903,6 +903,14 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   onBackdropClick(event: MouseEvent): void {
     if ((event.target as HTMLElement).classList.contains('edit-modal-backdrop')) this.closeEdit();
+  }
+
+  /** Scroll fluide vers une section par son id */
+  scrollTo(sectionId: string): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+    const el = document.getElementById(sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ── Draft — Hero ──────────────────────────────────────────────────
