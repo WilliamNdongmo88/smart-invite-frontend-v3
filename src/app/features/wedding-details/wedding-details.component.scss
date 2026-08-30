@@ -295,6 +295,11 @@
   color: var(--gold);
   text-decoration: none;
   flex-shrink: 0;
+  /* Compatible button et a */
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 .amp-logo { font-family: 'Great Vibes', cursive; color: var(--gold); }
 

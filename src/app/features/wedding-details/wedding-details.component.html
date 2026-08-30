@@ -2,7 +2,16 @@
      NAVIGATION STICKY
 ══════════════════════════════════════════════════════════════ -->
 <nav class="site-nav" [class.nav-scrolled]="navScrolled()">
-  <a class="nav-logo" href="#top">L<span class="amp-logo">&amp;</span>C</a>
+  <!-- Logo dynamique : initiales des mariés, cliquable pour éditer si connecté -->
+  @if (isLoggedIn()) {
+    <button type="button" class="nav-logo" (click)="openEdit('hero')" title="Éditer le héro">
+      {{ hero().brideFirstName ? hero().brideFirstName[0] : 'G' }}<span class="amp-logo">&amp;</span>{{ hero().groomFirstName ? hero().groomFirstName[0] : 'W' }}
+    </button>
+  } @else {
+    <a class="nav-logo" href="#top">
+      {{ hero().brideFirstName ? hero().brideFirstName[0] : 'G' }}<span class="amp-logo">&amp;</span>{{ hero().groomFirstName ? hero().groomFirstName[0] : 'W' }}
+    </a>
+  }
 
   <ul class="nav-links">
     <li><a href="#couple">LE COUPLE</a></li>
@@ -14,8 +23,10 @@
   </ul>
 
   <div class="nav-actions">
-    @if (isPreview()) {
-      <!-- Mode visualisation depuis event-detail -->
+    @if (isGuestPreview()) {
+      <!-- Mode invité (preview_details) : aucun bouton de navigation -->
+    } @else if (isPreview()) {
+      <!-- Mode aperçu organisateur : bouton Fermer l'aperçu -->
       <a [routerLink]="['/events', eventId()]" class="btn-nav-back">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

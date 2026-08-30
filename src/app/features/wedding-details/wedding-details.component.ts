@@ -240,8 +240,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   readonly maxGuests  = signal<number>(300);
   /** Sauvegarde en cours vers le backend */
   saving = signal(false);
-  /** Mode prévisualisation : depuis event-detail, pas d'outils d'édition */
-  readonly isPreview  = signal(false);
+  /** Mode prévisualisation organisateur : depuis le bouton "Carte" */
+  readonly isPreview       = signal(false);
+  /** Mode prévisualisation invité : depuis le lien mail (non connecté) */
+  readonly isGuestPreview  = signal(false);
 
   // ── Auth ───────────────────────────────────────────────────────────
   readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
@@ -363,8 +365,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
     // preview=true      → organisateur via bouton "Carte" (connecté)
     // preview_details=true → invité via lien mail (non connecté, endpoint public)
-    if (previewParam === 'true' || previewDetailsParam === 'true') {
+    if (previewParam === 'true') {
       this.isPreview.set(true);
+    }
+    if (previewDetailsParam === 'true') {
+      this.isPreview.set(true);     // les deux désactivent les outils d'édition
+      this.isGuestPreview.set(true); // celui-ci masque aussi les boutons nav
     }
     if (maxGuestsParam) {
       const n = Number(maxGuestsParam);
