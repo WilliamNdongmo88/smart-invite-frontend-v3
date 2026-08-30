@@ -5,8 +5,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 
-declare const google: any;
-
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -33,15 +31,40 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    google.accounts.id.initialize({
-      client_id: '89754196271-qo6ib1886v6klb4ki1kb9c3sc4h9j8sq.apps.googleusercontent.com',
-      callback: (response: any) => this.handleGoogleCallback(response),
-    });
+    this.initGoogle();
   }
 
   ngAfterViewInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    google.accounts.id.renderButton(this.googleBtnRef.nativeElement, {
+    this.renderGoogleButton();
+  }
+
+  private initGoogle(): void {
+    const g = (window as any)['google'];
+    if (g) {
+      g.accounts.id.initialize({
+        client_id: '89754196271-qo6ib1886v6klb4ki1kb9c3sc4h9j8sq.apps.googleusercontent.com',
+        callback: (response: any) => this.handleGoogleCallback(response),
+      });
+    } else {
+      // Le script est chargé async — on attend qu'il soit disponible
+      window.addEventListener('load', () => {
+        const gLoaded = (window as any)['google'];
+        if (gLoaded) {
+          gLoaded.accounts.id.initialize({
+            client_id: '89754196271-qo6ib1886v6klb4ki1kb9c3sc4h9j8sq.apps.googleusercontent.com',
+            callback: (response: any) => this.handleGoogleCallback(response),
+          });
+          this.renderGoogleButton();
+        }
+      }, { once: true });
+    }
+  }
+
+  private renderGoogleButton(): void {
+    const g = (window as any)['google'];
+    if (!g || !this.googleBtnRef?.nativeElement) return;
+    g.accounts.id.renderButton(this.googleBtnRef.nativeElement, {
       theme: 'filled_black',
       size: 'large',
       width: this.googleBtnRef.nativeElement.offsetWidth || 360,
