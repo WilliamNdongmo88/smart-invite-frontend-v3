@@ -17,6 +17,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         if (req.url.includes('/api/auth/')) {
           return throwError(() => error);
         }
+
+        // Si pas de refresh token, déconnecter directement sans tenter le refresh
+        const refreshToken = authService.getRefreshToken();
+        if (!refreshToken) {
+          authService.clearTokens();
+          router.navigate(['/login']);
+          return throwError(() => error);
+        }
+
         // Tenter le refresh
         return authService.refresh().pipe(
           switchMap(() => {
@@ -24,15 +33,25 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             return next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));
           }),
           catchError((refreshError) => {
-            authService.clearTokens();
-            router.navigate(['/login']);
+            // Ne déconnecter que si le refresh retourne 401 ou 403
+            // (token expiré/invalide) — pas pour les autres erreurs réseau
+            if (
+              refreshError.status === HttpStatusCode.Unauthorized ||
+              refreshError.status === HttpStatusCode.Forbidden
+            ) {
+              authService.clearTokens();
+              router.navigate(['/login']);
+            }
             return throwError(() => refreshError);
           })
         );
       }
 
       if (error.status === HttpStatusCode.Forbidden) {
-        toast.error('Accès refusé');
+        // Ne pas déconnecter sur 403 — afficher le message backend si disponible
+        const msg = error?.error?.message;
+        if (msg) toast.error(msg);
+        else toast.error('Accès refusé');
       }
 
       if (error.status >= 500) {

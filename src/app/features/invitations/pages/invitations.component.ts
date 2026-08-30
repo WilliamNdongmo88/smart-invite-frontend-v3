@@ -149,7 +149,7 @@ export class InvitationsComponent implements OnInit {
         this.toast.success(`${d.generated} invitation(s) générée(s)`);
         this.load();
       },
-      error: () => { this.toast.error('Erreur lors de la génération'); this.bulkLoading.set(false); },
+      error: (err) => { this.toast.error(err?.error?.message || 'Erreur lors de la génération'); this.bulkLoading.set(false); },
     });
   }
 
