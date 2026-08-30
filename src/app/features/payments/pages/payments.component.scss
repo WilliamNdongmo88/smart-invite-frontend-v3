@@ -8,6 +8,13 @@
 /* ── Header ── */
 .page-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
 .page-title  { font-size: clamp(1.1rem,4vw,1.5rem); font-weight: 800; color: #fff; margin: 0 0 0.2rem; }
+
+.back-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  color: #666; font-size: 0.78rem; text-decoration: none; width: fit-content;
+  transition: color 0.2s; margin-bottom: 0.35rem;
+  &:hover { color: #c9a84c; }
+}
 .page-sub    { font-size: 0.78rem; color: #666; margin: 0; }
 
 /* ── Tabs ── */

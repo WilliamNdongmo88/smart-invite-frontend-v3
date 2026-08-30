@@ -6,6 +6,13 @@
   margin: 0 auto;
 }
 
+.back-btn {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  color: #666; font-size: 0.78rem; text-decoration: none; width: fit-content;
+  transition: color 0.2s; margin-bottom: 0.35rem;
+  &:hover { color: #c9a84c; }
+}
+
 // Header
 .lk-header {
   display: flex; align-items: flex-start; justify-content: space-between;

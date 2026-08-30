@@ -3,6 +3,12 @@
   <!-- Header -->
   <div class="lk-header">
     <div>
+      <a [routerLink]="['/events', eventId]" class="back-btn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        Retour à l'événement
+      </a>
       <h1 class="lk-title">Liens d'inscription</h1>
       <p class="lk-sub">Partagez ces liens pour permettre aux invités de s'inscrire eux-mêmes</p>
     </div>

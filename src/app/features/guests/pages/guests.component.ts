@@ -115,7 +115,7 @@ export class GuestsComponent implements OnInit {
         this.selected.set(new Set());
         this.loading.set(false);
       },
-      error: () => { this.toast.error('Erreur de chargement'); this.loading.set(false); },
+      error: (err) => { this.toast.error(err?.error?.message || 'Erreur de chargement'); this.loading.set(false); },
     });
   }
 
@@ -217,7 +217,7 @@ export class GuestsComponent implements OnInit {
     this.confirmDeleteId.set(null);
     this.svc.delete(id).subscribe({
       next: () => { this.toast.success('Invité supprimé'); this.load(); },
-      error: () => this.toast.error('Erreur lors de la suppression'),
+      error: (err) => this.toast.error(err?.error?.message || 'Erreur lors de la suppression'),
     });
   }
 
@@ -230,7 +230,7 @@ export class GuestsComponent implements OnInit {
     this.confirmBulkDelete.set(false);
     this.svc.bulkDelete({ guestIds: ids }).subscribe({
       next: () => { this.toast.success(`${ids.length} invité(s) supprimé(s)`); this.load(); },
-      error: () => this.toast.error('Erreur lors de la suppression'),
+      error: (err) => this.toast.error(err?.error?.message || 'Erreur lors de la suppression'),
     });
   }
 
@@ -245,7 +245,7 @@ export class GuestsComponent implements OnInit {
     this.reminderLoading.set(id);
     this.svc.sendReminder(id).subscribe({
       next: () => { this.toast.success('Rappel envoyé'); this.reminderLoading.set(null); },
-      error: () => { this.toast.error('Erreur lors de l\'envoi'); this.reminderLoading.set(null); },
+      error: (err) => { this.toast.error(err?.error?.message || 'Erreur lors de l\'envoi du rappel'); this.reminderLoading.set(null); },
     });
   }
 

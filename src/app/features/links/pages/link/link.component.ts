@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LinkService } from '../../../../core/services/link.service';
 import { ToastService } from '../../../../core/services/toast.service';
@@ -8,7 +8,7 @@ import { Link, CreateLinkRequest, UpdateLinkRequest } from '../../../../core/mod
 @Component({
   selector: 'app-links',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: 'link.component.html',
   styleUrl: 'link.component.scss',
 })
