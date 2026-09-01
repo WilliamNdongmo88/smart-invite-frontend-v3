@@ -116,14 +116,104 @@
             </div>
 
             <div class="payment-info">
-              <p class="info-title">📱 Comment payer ?</p>
+              <p class="info-title">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                Comment effectuer le paiement ?
+              </p>
+
+              <!-- Coordonnées de paiement -->
+              <div class="payment-methods">
+
+                <!-- Mobile Money -->
+                <div class="pay-method">
+                  <div class="pay-method-header">
+                    <span class="pay-badge mobile">📱 Mobile Money</span>
+                  </div>
+                  <div class="pay-coords">
+                    <!-- <div class="pay-coord-row">
+                      <span class="pay-coord-label">MTN MoMo</span>
+                      <span class="pay-coord-val">+237 655 001 122</span>
+                      <button class="btn-copy" (click)="copy('+237655001122')" title="Copier">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div> -->
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Orange Money</span>
+                      <span class="pay-coord-val">+237 655 00 23 18</span>
+                      <button class="btn-copy" (click)="copy(omNumber)" title="Copier">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div>
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Nom du compte</span>
+                      <span class="pay-coord-val">TCHINDA NDONGMO WILLIAM BERTHOLT</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Carte Visa -->
+                <div class="pay-method">
+                  <div class="pay-method-header">
+                    <span class="pay-badge card">💳 Carte bancaire</span>
+                  </div>
+                  <div class="pay-coords">
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">N° de carte</span>
+                      <span class="pay-coord-val card-number">10005 00059 00000108383 95</span>
+                      <button class="btn-copy" (click)="copy(cardNumber)" title="Copier">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div>
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Titulaire</span>
+                      <span class="pay-coord-val">TCHINDA NDONGMO WILLIAM BERTHOLT</span>
+                    </div>
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Banque</span>
+                      <span class="pay-coord-val">Afriland First Bank</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Virement bancaire -->
+                <!-- <div class="pay-method">
+                  <div class="pay-method-header">
+                    <span class="pay-badge bank">🏦 Virement bancaire</span>
+                  </div>
+                  <div class="pay-coords">
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">IBAN</span>
+                      <span class="pay-coord-val">CM21 1000 2000 0012 3456 7890 123</span>
+                      <button class="btn-copy" (click)="copy('CM2110002000001234567890123')" title="Copier">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div>
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Code Swift</span>
+                      <span class="pay-coord-val">AFRIBICM</span>
+                    </div>
+                    <div class="pay-coord-row">
+                      <span class="pay-coord-label">Référence</span>
+                      <span class="pay-coord-val ref">SMART-INVITE-{{ plan()?.quota ?? '' }}</span>
+                    </div>
+                  </div>
+                </div> -->
+                </div>
+
+              <!-- Étapes -->
               <ol class="info-steps">
-                <li>Cliquez sur <strong>Souscrire</strong> pour initier le paiement</li>
-                <li>Effectuez le virement via <strong>Mobile Money</strong> ou <strong>virement bancaire</strong></li>
+                <li>Choisissez votre moyen de paiement ci-dessus et effectuez le virement</li>
+                <li>Cliquez sur <strong>Souscrire</strong> pour initier la souscription</li>
                 <li>Uploadez la <strong>preuve de paiement</strong> (capture d'écran ou reçu)</li>
                 <li>Notre équipe validera votre paiement sous <strong>24h</strong></li>
               </ol>
-            </div>
+
+              @if (copied()) {
+                <div class="copy-toast">✓ Copié dans le presse-papiers</div>
+              }
+              </div>
           }
         </div>
 

@@ -37,6 +37,11 @@ export class PaymentsComponent implements OnInit {
   loadingPlan  = signal(false);
   private quotaSubject = new Subject<number>();
 
+   //── Coordonnées ──
+  omNumber = '+237655002318';
+  momoNumber = '+237682933424';
+  cardNumber = '10005 00059 00000108383 95';
+
   // ── Subscribe form ──
   form = this.fb.group({
     eventId: [null as number | null, Validators.required],
@@ -208,5 +213,17 @@ export class PaymentsComponent implements OnInit {
   isInvalid(field: string): boolean {
     const c = this.form.get(field);
     return !!(c?.invalid && c?.touched);
+  }
+
+  // ── Copie dans le presse-papiers ──
+  copied = signal(false);
+  private copyTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  copy(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.copied.set(true);
+      if (this.copyTimeout) clearTimeout(this.copyTimeout);
+      this.copyTimeout = setTimeout(() => this.copied.set(false), 2000);
+    }).catch(() => {});
   }
 }

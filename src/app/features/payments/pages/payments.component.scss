@@ -99,7 +99,71 @@
   background: #141414; border: 1px solid #2a2a2a; border-radius: 10px;
   padding: 1rem;
 }
-.info-title { font-size: 0.82rem; font-weight: 700; color: #e5e5e5; margin: 0 0 0.6rem; }
+.info-title {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-size: 0.82rem; font-weight: 700; color: #e5e5e5; margin: 0 0 0.85rem;
+  svg { color: #c9a84c; flex-shrink: 0; }
+}
+
+/* ── Méthodes de paiement ── */
+.payment-methods {
+  display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 0.85rem;
+}
+
+.pay-method {
+  background: #0e0e0e;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pay-method-header {
+  padding: 0.5rem 0.85rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.pay-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  &.mobile { background: rgba(74,222,128,.12); color: #4ade80; border: 1px solid rgba(74,222,128,.25); }
+  &.card   { background: rgba(56,189,248,.12); color: #38bdf8; border: 1px solid rgba(56,189,248,.25); }
+  &.bank   { background: rgba(201,168,76,.12); color: #c9a84c; border: 1px solid rgba(201,168,76,.25); }
+}
+
+.pay-coords {
+  padding: 0.65rem 0.85rem;
+  display: flex; flex-direction: column; gap: 0.45rem;
+}
+
+.pay-coord-row {
+  display: flex; align-items: center; gap: 0.5rem; font-size: 0.79rem;
+}
+.pay-coord-label { color: #666; min-width: 120px; flex-shrink: 0; }
+.pay-coord-val   {
+  color: #e0e0e0; font-weight: 600; flex: 1;
+  &.card-number { font-family: 'Courier New', monospace; letter-spacing: .12em; }
+  &.ref         { color: #c9a84c; font-family: 'Courier New', monospace; }
+}
+
+.btn-copy {
+  background: #1a1a1a; border: 1px solid #333; border-radius: 5px;
+  color: #666; padding: 0.2rem 0.4rem; cursor: pointer;
+  display: flex; align-items: center; transition: color .15s, border-color .15s;
+  &:hover { color: #c9a84c; border-color: rgba(201,168,76,.4); }
+}
+
+.copy-toast {
+  margin-top: 0.5rem;
+  background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.3);
+  color: #4ade80; font-size: 0.75rem; font-weight: 600;
+  padding: 0.4rem 0.75rem; border-radius: 6px;
+  text-align: center; animation: fadeIn .2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
 .info-steps {
   margin: 0; padding-left: 1.25rem;
   display: flex; flex-direction: column; gap: 0.35rem;

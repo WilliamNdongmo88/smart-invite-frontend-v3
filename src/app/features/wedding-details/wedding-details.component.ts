@@ -173,7 +173,7 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
   },
   rsvp: {
     title:    'Nous avons hâte de vous retrouver !',
-    subtitle: 'Surveillez WhatsApp : votre invitation personnelle contient votre lien RSVP unique et toutes les informations logistiques pour cette journée inoubliable.',
+    subtitle: 'N’oubliez surtout pas votre QR code ! Il constitue votre clé d’accès personnelle au banquet et sera indispensable lors de votre arrivée.',
   },
   gallery: {
     items: [

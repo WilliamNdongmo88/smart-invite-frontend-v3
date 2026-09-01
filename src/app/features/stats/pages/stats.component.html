@@ -1,0 +1,195 @@
+<div class="stats-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Statistiques</h1>
+      <p class="page-sub">Vue d'ensemble de vos paiements et quotas d'invitations</p>
+    </div>
+    <a routerLink="/payments" class="btn-link">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+      </svg>
+      Gérer les paiements
+    </a>
+  </div>
+
+  @if (loading()) {
+    <div class="loading-wrap">
+      @for (i of [1,2,3,4]; track i) { <div class="skeleton-card"></div> }
+    </div>
+  } @else {
+
+    <!-- ══ KPI CARDS ══ -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap gold">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Revenus totaux</span>
+          <span class="kpi-value gold">{{ fmtXAF(paymentStats().totalRevenue) }}</span>
+          <span class="kpi-sub">{{ paymentStats().approved }} paiement(s) approuvé(s)</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap blue">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Quota total accordé</span>
+          <span class="kpi-value blue">{{ fmt(paymentStats().totalQuota) }}</span>
+          <span class="kpi-sub">invitations disponibles</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap green">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Invitations envoyées</span>
+          <span class="kpi-value green">{{ fmt(paymentStats().totalSent) }}</span>
+          <span class="kpi-sub">{{ fmt(paymentStats().remaining) }} restante(s)</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap" [class.orange]="paymentStats().usageRate >= 80" [class.green]="paymentStats().usageRate < 80">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+            <polyline points="17 6 23 6 23 12"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <span class="kpi-label">Taux d'utilisation</span>
+          <span class="kpi-value" [class.orange]="paymentStats().usageRate >= 80" [class.green]="paymentStats().usageRate < 80">
+            {{ paymentStats().usageRate }} %
+          </span>
+          <span class="kpi-sub">du quota utilisé</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ROW : usage bar + résumé statuts ══ -->
+    <div class="row-2col">
+
+      <!-- Barre d'utilisation du quota -->
+      <div class="section-card">
+        <h2 class="section-title">Utilisation du quota</h2>
+        <div class="usage-labels">
+          <span>{{ fmt(paymentStats().totalSent) }} envoyées</span>
+          <span class="usage-total">/ {{ fmt(paymentStats().totalQuota) }} allouées</span>
+        </div>
+        <div class="usage-track">
+          <div class="usage-fill"
+               [style.width.%]="paymentStats().usageRate"
+               [class.fill-green]="paymentStats().usageRate < 60"
+               [class.fill-orange]="paymentStats().usageRate >= 60 && paymentStats().usageRate < 85"
+               [class.fill-red]="paymentStats().usageRate >= 85">
+          </div>
+        </div>
+        <p class="usage-legend">{{ paymentStats().remaining }} invitation(s) disponible(s)</p>
+
+        <div class="usage-breakdown">
+          <div class="ub-item">
+            <span class="ub-dot green"></span>
+            <span class="ub-label">Approuvés</span>
+            <span class="ub-val">{{ paymentStats().approved }}</span>
+          </div>
+          <div class="ub-item">
+            <span class="ub-dot orange"></span>
+            <span class="ub-label">En attente</span>
+            <span class="ub-val">{{ paymentStats().pending }}</span>
+          </div>
+          <div class="ub-item">
+            <span class="ub-dot red"></span>
+            <span class="ub-label">Rejetés</span>
+            <span class="ub-val">{{ paymentStats().rejected }}</span>
+          </div>
+          <div class="ub-item">
+            <span class="ub-dot gray"></span>
+            <span class="ub-label">Total</span>
+            <span class="ub-val">{{ paymentStats().total }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Montant moyen par paiement -->
+      <div class="section-card">
+        <h2 class="section-title">Récapitulatif financier</h2>
+        <div class="fin-rows">
+          <div class="fin-row">
+            <span class="fin-label">Montant total versé</span>
+            <span class="fin-val gold">{{ fmtXAF(paymentStats().totalRevenue) }}</span>
+          </div>
+          <div class="fin-row">
+            <span class="fin-label">Montant moyen / paiement</span>
+            <span class="fin-val">{{ fmtXAF(paymentStats().avgAmount) }}</span>
+          </div>
+          <div class="fin-row">
+            <span class="fin-label">Quota moyen accordé</span>
+            <span class="fin-val">
+              {{ paymentStats().approved > 0 ? fmt(Math.round(paymentStats().totalQuota / paymentStats().approved)) : 0 }}
+              invitations
+            </span>
+          </div>
+          <div class="fin-row">
+            <span class="fin-label">Coût moyen / invitation</span>
+            <span class="fin-val">
+              {{ paymentStats().totalSent > 0 ? fmtXAF(Math.round(paymentStats().totalRevenue / paymentStats().totalSent)) : '—' }}
+            </span>
+          </div>
+        </div>
+
+        @if (paymentStats().approved === 0) {
+          <div class="no-data">
+            <p>Aucun paiement approuvé pour l'instant.</p>
+            <a routerLink="/payments" class="btn-link-sm">Faire un paiement →</a>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ══ Graphe : activité des 6 derniers mois ══ -->
+    <div class="section-card">
+      <h2 class="section-title">Activité — 6 derniers mois</h2>
+      @if (paymentStats().totalRevenue === 0) {
+        <p class="chart-empty">Aucune donnée de paiement approuvé disponible.</p>
+      } @else {
+        <div class="chart-bars">
+          @for (m of paymentStats().months; track m.label) {
+            <div class="bar-col">
+              <span class="bar-val">
+                @if (m.revenue > 0) { {{ fmt(m.revenue / 1000) }}k }
+              </span>
+              <div class="bar-track">
+                <div class="bar-fill"
+                     [style.height.%]="barH(m.revenue, paymentStats().maxRevenue)"
+                     [class.has-value]="m.revenue > 0">
+                </div>
+              </div>
+              <span class="bar-label">{{ m.label }}</span>
+              @if (m.count > 0) {
+                <span class="bar-count">{{ m.count }} pmt</span>
+              }
+            </div>
+          }
+        </div>
+        <p class="chart-legend">Revenus en XAF (×1000) par mois — paiements approuvés uniquement</p>
+      }
+    </div>
+
+  }
+
+</div>
