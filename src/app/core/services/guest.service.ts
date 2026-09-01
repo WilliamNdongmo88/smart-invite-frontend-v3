@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse, PageResponse } from '../models/api-response.model';
-import { AddGuestRequest, BulkDeleteRequest, Guest, UpdateGuestRequest } from '../models/guest.model';
+import { AddGuestRequest, BulkDeleteRequest, Guest, ImportGuestResult, UpdateGuestRequest } from '../models/guest.model';
 import { RsvpStatus } from '../models/enums.model';
 
 export interface GuestListParams {
@@ -47,6 +47,14 @@ export class GuestService {
 
   sendReminder(guestId: number): Observable<ApiResponse<void>> {
     return this.http.post<ApiResponse<void>>(`${this.base}/guests/${guestId}/reminder`, {});
+  }
+
+  importFromExcel(eventId: number, file: File): Observable<ApiResponse<ImportGuestResult>> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http.post<ApiResponse<ImportGuestResult>>(
+      `${this.base}/events/${eventId}/guests/import`, form
+    );
   }
 
   /** Récupère TOUS les invités filtrés d'un événement (sans pagination) pour l'export CSV. */

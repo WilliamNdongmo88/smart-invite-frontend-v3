@@ -34,6 +34,11 @@
           Supprimer ({{ selectedCount() }})
         </button>
       }
+      <!-- Bouton importer Excel -->
+      <button class="btn-import" (click)="openImport()" title="Importer depuis un fichier Excel">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importer Excel
+      </button>
       <!-- Menu export Excel / PDF -->
       <div class="export-wrap">
         <button class="btn-export" (click)="toggleExportMenu()" [disabled]="exportLoading()" title="Exporter la liste filtrée">
@@ -295,6 +300,79 @@
         <button class="btn-cancel" (click)="cancelReminder()">Annuler</button>
         <button class="btn-gold" (click)="confirmReminder()">Envoyer</button>
       </div>
+    </div>
+  </div>
+}
+
+<!-- ══ MODAL : Import Excel ══ -->
+@if (showImportModal()) {
+  <div class="modal-overlay" (click)="closeImport()">
+    <div class="modal modal-import" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Importer depuis Excel</h2>
+        <button class="modal-close" (click)="closeImport()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      @if (!importResult()) {
+        <!-- Zone de sélection du fichier -->
+        <div class="import-body">
+          <div class="import-info">
+            <p class="import-desc">Le fichier Excel doit contenir les colonnes dans cet ordre :</p>
+            <div class="import-columns">
+              <span class="col-tag">Nom *</span>
+              <span class="col-tag">Email</span>
+              <span class="col-tag">Téléphone</span>
+              <span class="col-tag">Notification</span>
+              <span class="col-tag">Table</span>
+            </div>
+            <p class="import-hint">* Requis. Notification : EMAIL, WHATSAPP ou BOTH. La 1ère ligne est ignorée (en-têtes).</p>
+          </div>
+
+          <label class="import-dropzone" [class.loading]="importLoading()">
+            @if (importLoading()) {
+              <span class="spinner-sm" style="border-top-color: #c9a84c; border-color: rgba(201,168,76,0.3);"></span>
+              <span>Import en cours...</span>
+            } @else {
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Cliquez pour sélectionner un fichier .xlsx</span>
+            }
+            <input type="file" accept=".xlsx,.xls" [disabled]="importLoading()"
+              (change)="onExcelFileSelected($event)" style="display:none" />
+          </label>
+        </div>
+      } @else {
+        <!-- Résultat de l'import -->
+        <div class="import-result">
+          <div class="result-stats">
+            <div class="stat-card stat-success">
+              <span class="stat-num">{{ importResult()!.imported }}</span>
+              <span class="stat-label">importé(s)</span>
+            </div>
+            <div class="stat-card stat-warn">
+              <span class="stat-num">{{ importResult()!.skipped }}</span>
+              <span class="stat-label">ignoré(s)</span>
+            </div>
+          </div>
+          @if (importResult()!.errors.length > 0) {
+            <div class="import-errors">
+              <p class="errors-title">Détails :</p>
+              <ul class="errors-list">
+                @for (err of importResult()!.errors; track err) {
+                  <li>{{ err }}</li>
+                }
+              </ul>
+            </div>
+          }
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeImport()">Fermer</button>
+            <button class="btn-gold btn-sm" (click)="importResult.set(null)">
+              Importer un autre fichier
+            </button>
+          </div>
+        </div>
+      }
     </div>
   </div>
 }

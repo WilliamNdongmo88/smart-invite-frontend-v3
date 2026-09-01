@@ -54,6 +54,11 @@ export class GuestsComponent implements OnInit {
   exportLoading = signal(false);
   showExportMenu = signal(false);
 
+  // ── Import Excel ──
+  importLoading  = signal(false);
+  showImportModal = signal(false);
+  importResult   = signal<{ imported: number; skipped: number; errors: string[] } | null>(null);
+
   // ── Modals ──
   showForm       = signal(false);
   editingGuest   = signal<Guest | null>(null);
@@ -453,6 +458,37 @@ export class GuestsComponent implements OnInit {
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       }));
+  }
+
+  // ── Import Excel ──
+  openImport(): void {
+    this.importResult.set(null);
+    this.showImportModal.set(true);
+  }
+  closeImport(): void { this.showImportModal.set(false); }
+
+  onExcelFileSelected(event: globalThis.Event): void {
+    const input = event.target as HTMLInputElement;
+    const file  = input?.files?.[0];
+    if (!file) return;
+    if (!file.name.endsWith('.xlsx') && !file.name.endsWith('.xls')) {
+      this.toast.error('Veuillez sélectionner un fichier Excel (.xlsx ou .xls)');
+      return;
+    }
+    this.importLoading.set(true);
+    this.svc.importFromExcel(this.eventId, file).subscribe({
+      next: (res) => {
+        this.importResult.set(res.data!);
+        this.importLoading.set(false);
+        if (res.data!.imported > 0) { this.load(); }
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de l\'import');
+        this.importLoading.set(false);
+      },
+    });
+    // reset input pour permettre de re-sélectionner le même fichier
+    input.value = '';
   }
 
   // ── Helpers ──

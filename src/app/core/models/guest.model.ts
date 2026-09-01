@@ -25,3 +25,9 @@ export type UpdateGuestRequest = AddGuestRequest;
 export interface BulkDeleteRequest {
   guestIds: number[];
 }
+
+export interface ImportGuestResult {
+  imported: number;
+  skipped: number;
+  errors: string[];
+}
