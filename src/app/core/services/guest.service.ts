@@ -48,4 +48,16 @@ export class GuestService {
   sendReminder(guestId: number): Observable<ApiResponse<void>> {
     return this.http.post<ApiResponse<void>>(`${this.base}/guests/${guestId}/reminder`, {});
   }
+
+  /** Récupère TOUS les invités filtrés d'un événement (sans pagination) pour l'export CSV. */
+  exportAll(eventId: number, params: Omit<GuestListParams, 'page' | 'size'> = {}): Observable<ApiResponse<PageResponse<Guest>>> {
+    let httpParams = new HttpParams()
+      .set('page', 0)
+      .set('size', 10000); // taille max pour tout récupérer en une requête
+    if (params.search) httpParams = httpParams.set('search', params.search);
+    if (params.rsvp)   httpParams = httpParams.set('rsvp', params.rsvp);
+    return this.http.get<ApiResponse<PageResponse<Guest>>>(
+      `${this.base}/events/${eventId}/guests`, { params: httpParams }
+    );
+  }
 }

@@ -7,6 +7,9 @@ import { ToastService } from '../../../core/services/toast.service';
 import { Guest } from '../../../core/models/guest.model';
 import { Event } from '../../../core/models/event.model';
 import { RsvpStatus, NotificationMode, RSVP_STATUS_LABELS, NOTIFICATION_MODE_LABELS } from '../../../core/models/enums.model';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 type RsvpTab = 'ALL' | RsvpStatus;
 
@@ -46,6 +49,10 @@ export class GuestsComponent implements OnInit {
 
   // ── Selection ──
   selected = signal<Set<number>>(new Set());
+
+  // ── Export ──
+  exportLoading = signal(false);
+  showExportMenu = signal(false);
 
   // ── Modals ──
   showForm       = signal(false);
@@ -247,6 +254,205 @@ export class GuestsComponent implements OnInit {
       next: () => { this.toast.success('Rappel envoyé'); this.reminderLoading.set(null); },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur lors de l\'envoi du rappel'); this.reminderLoading.set(null); },
     });
+  }
+
+  // ── Export Excel / PDF ──
+  toggleExportMenu(): void { this.showExportMenu.update(v => !v); }
+  closeExportMenu(): void  { this.showExportMenu.set(false); }
+
+  private getExportParams() {
+    const tab = this.activeTab();
+    return {
+      search: this.searchTerm() || undefined,
+      rsvp:   tab !== 'ALL' ? tab : undefined,
+    };
+  }
+
+  private buildFileName(ext: string): string {
+    const tab        = this.activeTab();
+    const filterPart = tab !== 'ALL' ? `_${tab.toLowerCase()}` : '';
+    const eventTitle = (this.event()?.title ?? 'invites').replace(/\s+/g, '_');
+    return `${eventTitle}${filterPart}_invites.${ext}`;
+  }
+
+  private buildRows(guests: Guest[]): string[][] {
+    return guests.map(g => [
+      g.fullName,
+      g.email        ?? '',
+      g.phoneNumber  ?? '',
+      g.notificationMode ? this.notifLabels[g.notificationMode] : '',
+      g.tableNumber  ? String(g.tableNumber) : '',
+      this.rsvpLabels[g.rsvpStatus],
+      this.formatDate(g.createdAt),
+    ]);
+  }
+
+  exportExcel(): void {
+    if (this.exportLoading()) return;
+    this.exportLoading.set(true);
+    this.showExportMenu.set(false);
+    this.svc.exportAll(this.eventId, this.getExportParams()).subscribe({
+      next: (res) => {
+        const guests = res.data!.content;
+        if (!guests.length) {
+          this.toast.error('Aucun invité à exporter pour ce filtre.');
+          this.exportLoading.set(false);
+          return;
+        }
+        const headers = ['Nom', 'Email', 'Téléphone', 'Notification', 'Table', 'Statut RSVP', 'Ajouté le'];
+        const wsData  = [headers, ...this.buildRows(guests)];
+        const ws      = XLSX.utils.aoa_to_sheet(wsData);
+
+        // Largeurs de colonnes automatiques
+        ws['!cols'] = [20, 28, 18, 18, 8, 14, 14].map(wch => ({ wch }));
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Invités');
+        XLSX.writeFile(wb, this.buildFileName('xlsx'));
+        this.exportLoading.set(false);
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de l\'export Excel');
+        this.exportLoading.set(false);
+      },
+    });
+  }
+
+  exportPdf(): void {
+    if (this.exportLoading()) return;
+    this.exportLoading.set(true);
+    this.showExportMenu.set(false);
+    this.svc.exportAll(this.eventId, this.getExportParams()).subscribe({
+      next: async (res) => {
+        const guests = res.data!.content;
+        if (!guests.length) {
+          this.toast.error('Aucun invité à exporter pour ce filtre.');
+          this.exportLoading.set(false);
+          return;
+        }
+
+        const doc        = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        const pageW      = doc.internal.pageSize.getWidth();   // 297 mm
+        const gold       = [193, 156, 58]  as [number, number, number];
+        const darkText   = [30,  30,  30]  as [number, number, number];
+        const grayText   = [130, 130, 130] as [number, number, number];
+        const eventTitle = this.event()?.title ?? 'Liste des invités';
+        const tab        = this.activeTab();
+        const filterLabel = tab !== 'ALL' ? ` — ${this.tabs.find(t => t.key === tab)?.label ?? ''}` : '';
+        const dateStr    = new Date().toLocaleDateString('fr-FR');
+
+        // ── 1. Logo centré ──
+        const logoW  = 50;   // largeur mm  — logo quasi carré, on lui donne de la place
+        const logoH  = 40;   // hauteur mm
+        const logoX  = (pageW - logoW) / 2;
+        const logoY  = 6;    // petite marge depuis le haut
+
+        try {
+          const logoBase64 = await this.loadImageAsBase64('/img/logo.png');
+          doc.addImage(logoBase64, 'PNG', logoX, logoY, logoW, logoH);
+        } catch { /* logo optionnel */ }
+
+        // ── 2. Ligne séparatrice dorée ──
+        const lineY = logoY + logoH + 5;  // 5mm sous le logo
+        doc.setDrawColor(...gold);
+        doc.setLineWidth(0.4);
+        doc.line(14, lineY, pageW - 14, lineY);
+
+        // ── 3. Titre événement (grand, doré, serif) ──
+        doc.setFont('times', 'italic');
+        doc.setFontSize(28);
+        doc.setTextColor(...gold);
+        doc.text(`${eventTitle}${filterLabel}`, 14, lineY + 14);
+
+        // ── 4. Sous-titre gris ──
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.setTextColor(...grayText);
+        doc.text(`${guests.length} invité(s)  —  Exporté le ${dateStr}`, 14, lineY + 22);
+
+        // ── 5. Tableau ──
+        // Largeur utile = pageW - marges (14mm de chaque côté)
+        const margin   = 14;
+        const tableW   = pageW - margin * 2; // 269 mm en A4 paysage
+
+        // Proportions relatives : Nom(16) Email(20) Tel(13) Notif(11) Table(6) RSVP(11) Date(11) → total 88
+        const ratios   = [16, 20, 13, 11, 6, 11, 11];
+        const total    = ratios.reduce((a, b) => a + b, 0);
+        const colW     = ratios.map(r => parseFloat(((r / total) * tableW).toFixed(2)));
+
+        autoTable(doc, {
+          startY: lineY + 30,
+          margin: { left: margin, right: margin },
+          tableWidth: tableW,
+          head: [['Nom', 'Email', 'Téléphone', 'Notification', 'Table', 'Statut RSVP', 'Ajouté le']],
+          body: this.buildRows(guests),
+          styles: {
+            fontSize: 9,
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
+            textColor: darkText,
+            lineColor: [220, 220, 220],
+            lineWidth: 0.3,
+            font: 'helvetica',
+            overflow: 'ellipsize',
+          },
+          headStyles: {
+            fillColor: [160, 120, 40] as [number, number, number],
+            textColor: [255, 255, 255] as [number, number, number],
+            fontStyle: 'bold',
+            fontSize: 9,
+            cellPadding: { top: 5, right: 4, bottom: 5, left: 4 },
+          },
+          alternateRowStyles: {
+            fillColor: [248, 248, 248] as [number, number, number],
+          },
+          bodyStyles: {
+            fillColor: [255, 255, 255] as [number, number, number],
+          },
+          columnStyles: {
+            0: { cellWidth: colW[0] },
+            1: { cellWidth: colW[1] },
+            2: { cellWidth: colW[2] },
+            3: { cellWidth: colW[3] },
+            4: { cellWidth: colW[4], halign: 'center' },
+            5: { cellWidth: colW[5] },
+            6: { cellWidth: colW[6] },
+          },
+          tableLineColor: [220, 220, 220],
+          tableLineWidth: 0.3,
+          // Numéro de page en pied
+          didDrawPage: (data) => {
+            const pageCount = (doc.internal as any).getNumberOfPages();
+            doc.setFontSize(8);
+            doc.setTextColor(...grayText);
+            doc.text(
+              `Page ${data.pageNumber} / ${pageCount}`,
+              pageW / 2,
+              doc.internal.pageSize.getHeight() - 8,
+              { align: 'center' }
+            );
+          },
+        });
+
+        doc.save(this.buildFileName('pdf'));
+        this.exportLoading.set(false);
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de l\'export PDF');
+        this.exportLoading.set(false);
+      },
+    });
+  }
+
+  /** Charge une image depuis les assets publics et retourne son data URL base64. */
+  private loadImageAsBase64(path: string): Promise<string> {
+    return fetch(path)
+      .then(r => r.blob())
+      .then(blob => new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload  = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      }));
   }
 
   // ── Helpers ──
