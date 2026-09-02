@@ -93,6 +93,9 @@ export class GuestsComponent implements OnInit {
     tableNumber:      [null as number | null],
   });
 
+  // ── Alert : confirmés sans numéro de table ──
+  confirmedWithoutTable = signal(0);
+
   // ── Computed ──
   allSelected = computed(() => {
     const g = this.guests();
@@ -108,6 +111,17 @@ export class GuestsComponent implements OnInit {
       next: (res) => this.event.set(res.data!),
     });
     this.load();
+    this.loadConfirmedWithoutTable();
+  }
+
+  private loadConfirmedWithoutTable(): void {
+    this.svc.exportAll(this.eventId, { rsvp: 'CONFIRMED' }).subscribe({
+      next: (res) => {
+        const count = (res.data?.content ?? []).filter(g => !g.tableNumber).length;
+        this.confirmedWithoutTable.set(count);
+      },
+      error: () => {},
+    });
   }
 
   load(): void {
@@ -210,6 +224,7 @@ export class GuestsComponent implements OnInit {
         this.saving.set(false);
         this.showForm.set(false);
         this.load();
+        this.loadConfirmedWithoutTable();
       },
       error: (err) => {
         const msg = err?.error?.message || (editing ? 'Erreur lors de la modification' : 'Erreur lors de l\'ajout');
@@ -228,7 +243,7 @@ export class GuestsComponent implements OnInit {
     if (!id) return;
     this.confirmDeleteId.set(null);
     this.svc.delete(id).subscribe({
-      next: () => { this.toast.success('Invité supprimé'); this.load(); },
+      next: () => { this.toast.success('Invité supprimé'); this.load(); this.loadConfirmedWithoutTable(); },
       error: (err) => this.toast.error(err?.error?.message || 'Erreur lors de la suppression'),
     });
   }
@@ -241,7 +256,7 @@ export class GuestsComponent implements OnInit {
     const ids = Array.from(this.selected());
     this.confirmBulkDelete.set(false);
     this.svc.bulkDelete({ guestIds: ids }).subscribe({
-      next: () => { this.toast.success(`${ids.length} invité(s) supprimé(s)`); this.load(); },
+      next: () => { this.toast.success(`${ids.length} invité(s) supprimé(s)`); this.load(); this.loadConfirmedWithoutTable(); },
       error: (err) => this.toast.error(err?.error?.message || 'Erreur lors de la suppression'),
     });
   }

@@ -95,6 +95,69 @@
   &:hover { background: rgba(248,113,113,0.1); }
 }
 
+/* ── Alerte table manquante ── */
+.table-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .85rem 1rem;
+  background: rgba(251,191,36,.07);
+  border: 1px solid rgba(251,191,36,.28);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.table-alert-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: rgba(251,191,36,.12);
+  color: #fbbf24;
+  margin-top: .05rem;
+}
+
+.table-alert-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+
+.table-alert-title {
+  font-size: .83rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.table-alert-text {
+  font-size: .78rem;
+  color: #a38020;
+  line-height: 1.5;
+}
+
+.table-alert-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  flex-shrink: 0;
+  align-self: center;
+  background: rgba(251,191,36,.12);
+  border: 1px solid rgba(251,191,36,.35);
+  border-radius: 7px;
+  color: #fbbf24;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .35rem .75rem;
+  cursor: pointer;
+  transition: background .15s;
+  white-space: nowrap;
+  &:hover { background: rgba(251,191,36,.22); }
+}
+
 /* ── Toolbar ── */
 .toolbar {
   display: flex; align-items: center;
