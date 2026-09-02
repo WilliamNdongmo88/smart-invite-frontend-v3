@@ -1006,20 +1006,34 @@
           <div class="edit-form-section">
             <h3 class="edit-form-heading">Footer</h3>
             <div class="edit-field">
-              <label class="edit-label">Nom / Logo texte</label>
-              <input class="edit-input" type="text" [ngModel]="draft().footer.logoText" (ngModelChange)="updateDraftFooter('logoText', $event)" />
+              <label class="edit-label">Nom / Logo texte <span class="edit-hint">synchronisé avec le titre du hero</span></label>
+              <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre <span class="edit-hint">date · lieu · ville</span></label>
-              <input class="edit-input" type="text" [ngModel]="draft().footer.subText" (ngModelChange)="updateDraftFooter('subText', $event)" />
+              <label class="edit-label">
+                Sous-titre
+                <span class="edit-hint">date · lieu · ville</span>
+                @if (subtitleEdited()) {
+                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" title="Remettre la valeur automatique">
+                    ↺ Sync auto
+                  </button>
+                }
+              </label>
+              <input class="edit-input" type="text"
+                     [ngModel]="subtitleEdited() ? draft().footer.subText : autoSubtitle()"
+                     (ngModelChange)="updateDraftFooter('subText', $event)"
+                     [placeholder]="autoSubtitle()" />
+              @if (!subtitleEdited()) {
+                <p class="edit-field-hint">Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.</p>
+              }
             </div>
             <div class="edit-field">
               <label class="edit-label">Tagline</label>
               <input class="edit-input" type="text" [ngModel]="draft().footer.tagline" (ngModelChange)="updateDraftFooter('tagline', $event)" />
             </div>
             <div class="edit-footer-preview">
-              <div class="edit-footer-preview-logo" style="font-family:'Belleza',sans-serif;font-size:1.5rem">{{ draft().footer.logoText }}</div>
-              <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
+              <div class="edit-footer-preview-logo" style="font-family:'Belleza',sans-serif;font-size:1.5rem">{{ draft().hero.title }}</div>
+              <p class="edit-footer-preview-sub">{{ subtitleEdited() ? draft().footer.subText : autoSubtitle() }}</p>
               <p class="edit-footer-preview-love" style="font-size:.6rem;letter-spacing:.2em">{{ draft().footer.tagline }}</p>
             </div>
           </div>

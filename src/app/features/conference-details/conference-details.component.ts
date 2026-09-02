@@ -2,7 +2,7 @@ import {
   Component, OnInit, OnDestroy, AfterViewInit,
   signal, computed, inject, PLATFORM_ID, ElementRef,
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, LowerCasePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
@@ -237,6 +237,10 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   ];
   draft = signal<ConferenceDetailsContent>(deepClone(INITIAL_CONTENT));
   uploadingImage = signal<string | null>(null);
+  /** Sous-titre auto généré depuis hero (dateLabel · venueName · venueCity). */
+  autoSubtitle   = signal<string>('');
+  /** true = l'utilisateur a saisi manuellement un sous-titre footer → on n'écrase plus. */
+  subtitleEdited = signal<boolean>(false);
 
   // ── Countdown ──────────────────────────────────────────────────
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
@@ -328,6 +332,9 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     this.startCountdown();
     this.scrollListener = () => this.onScroll();
     window.addEventListener('scroll', this.scrollListener, { passive: true });
+    // Initialiser le sous-titre auto depuis le contenu chargé
+    const h = this.content().hero;
+    this.autoSubtitle.set(this.buildAutoSubtitle(h.dateLabel, h.venueName, h.venueCity));
   }
 
   ngAfterViewInit(): void {
@@ -406,7 +413,13 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
 
   // ── Edit modal ────────────────────────────────────────────────
   openEdit(section: ConferenceDetailsEditSection = 'hero'): void {
-    this.draft.set(deepClone(this.content()));
+    const c = deepClone(this.content());
+    this.draft.set(c);
+    // Recalcule le sous-titre auto depuis le contenu actuel
+    this.autoSubtitle.set(this.buildAutoSubtitle(c.hero.dateLabel, c.hero.venueName, c.hero.venueCity));
+    // Si le sous-titre footer est différent de l'auto, l'utilisateur l'a personnalisé
+    const auto = this.buildAutoSubtitle(c.hero.dateLabel, c.hero.venueName, c.hero.venueCity);
+    this.subtitleEdited.set(c.footer.subText !== '' && c.footer.subText !== auto);
     this.activeSection.set(section);
     this.editOpen.set(true);
     if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
@@ -498,6 +511,20 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
     const d = deepClone(this.draft());
     (d.hero as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
+    // Recalcule le sous-titre auto si l'utilisateur n'a pas encore édité le footer manuellement
+    if (!this.subtitleEdited()) {
+      this.autoSubtitle.set(this.buildAutoSubtitle(d.hero.dateLabel, d.hero.venueName, d.hero.venueCity));
+    }
+  }
+
+  /** Construit le sous-titre automatique footer depuis les champs hero. */
+  private buildAutoSubtitle(dateLabel?: string, venueName?: string, venueCity?: string): string {
+    const parts = [
+      dateLabel  ?? '',
+      (venueName ?? '').toLowerCase(),
+      (venueCity ?? '').toLowerCase(),
+    ].filter(p => p.trim() !== '');
+    return parts.join(' · ');
   }
 
   updateDraftMaxAttendees(value: number): void {
@@ -725,6 +752,24 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   updateDraftFooter(key: keyof ConferenceDetailsFooterContent, value: string): void {
     const d = deepClone(this.draft());
     d.footer[key] = value;
+    this.draft.set(d);
+    // Dès que l'utilisateur tape dans le sous-titre, on arrête de l'écraser avec l'auto
+    if (key === 'subText') {
+      this.subtitleEdited.set(true);
+    }
+  }
+
+  /** Réinitialise le sous-titre footer sur la valeur auto (bouton "Sync" dans le template). */
+  resetSubtitleToAuto(): void {
+    const auto = this.buildAutoSubtitle(
+      this.draft().hero.dateLabel,
+      this.draft().hero.venueName,
+      this.draft().hero.venueCity,
+    );
+    this.autoSubtitle.set(auto);
+    this.subtitleEdited.set(false);
+    const d = deepClone(this.draft());
+    d.footer.subText = auto;
     this.draft.set(d);
   }
 
