@@ -422,8 +422,111 @@
 @media (max-width: 900px) {
   .section-grid { grid-template-columns: 1fr; }
 }
+
 @media (max-width: 640px) {
+
+  /* Page padding */
+  .payments-page { gap: 1rem; }
+
+  /* Header */
+  .page-title { font-size: 1.2rem; }
+
+  /* Tabs : pleine largeur */
+  .tabs { width: 100%; }
+  .tab  { flex: 1; justify-content: center; font-size: 0.78rem; padding: 0.4rem 0.5rem; }
+
+  /* Cards */
+  .card { padding: 1rem; gap: 1rem; }
+  .card-title { font-size: 0.88rem; }
+
+  /* Form : bouton pleine largeur */
+  .form-body .btn-gold { width: 100%; }
+
+  /* Coordonnées de paiement : passage en colonne */
+  .pay-coord-row {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.5rem;
+  }
+  .pay-coord-label {
+    min-width: unset;
+    width: 100%;
+    font-size: 0.72rem;
+  }
+  .pay-coord-val {
+    font-size: 0.78rem;
+    word-break: break-all;
+    &.card-number { letter-spacing: 0.05em; }
+  }
+
+  /* Section proof */
+  .proof-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  .proof-card { padding: 1rem; gap: 1.25rem; }
+
+  /* Steps : réduire */
   .proof-steps { gap: 0; }
-  .proof-step  { min-width: 60px; font-size: 0.65rem; }
-  .proof-actions {display: contents;}
+  .proof-step  {
+    min-width: 0;
+    flex: 1;
+    font-size: 0.62rem;
+  }
+  .step-circle { width: 28px; height: 28px; font-size: 0.7rem; }
+
+  /* Upload */
+  .upload-label { padding: 1.75rem 0.75rem; }
+  .upload-text  { font-size: 0.8rem; }
+  .upload-error-text { font-size: 0.78rem; }
+
+  /* Boutons proof : pleine largeur, empilés */
+  .proof-actions {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.6rem;
+  }
+  .proof-actions .btn-gold,
+  .proof-actions .btn-cancel { width: 100%; justify-content: center; }
+
+  /* Bannière pending alert */
+  .pending-alert {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem;
+  }
+  .pending-alert-cta { width: 100%; justify-content: center; }
+
+  /* History tabs : scroll horizontal si nécessaire */
+  .history-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .history-tabs::-webkit-scrollbar { display: none; }
+  .htab { flex-shrink: 0; }
+
+  /* Table : cards empilées sur mobile */
+  .table-wrap {
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+  .table { min-width: 560px; }
+  .table th, .table td { padding: 0.6rem 0.75rem; font-size: 0.78rem; }
+
+  /* Empty state */
+  .empty-state { padding: 2.5rem 1rem; }
+  .empty-state .btn-gold { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 400px) {
+  .card { padding: 0.85rem; }
+  .proof-card { padding: 0.85rem; }
+  .tab { font-size: 0.72rem; padding: 0.35rem 0.4rem; gap: 0.25rem; }
+  .tab svg { display: none; }
+  .step-circle { width: 24px; height: 24px; font-size: 0.65rem; }
+  .proof-step  { font-size: 0.58rem; }
 }
