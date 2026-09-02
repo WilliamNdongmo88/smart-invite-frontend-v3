@@ -27,6 +27,7 @@ export interface ScanResponse {
   eventTitle?: string;
   tableNumber?: number;
   message: string;
+  eventId?: number;
 }
 
 export interface CheckinParameters {
@@ -47,4 +48,13 @@ export interface AgentResponse {
   id: number;
   userName: string;
   whatsapp: string;
+}
+
+export interface EventSummary {
+  id: number;
+  title: string;
+  type: string;
+  dateLabel?: string;
+  venueName?: string;
+  venueCity?: string;
 }

@@ -1,127 +1,211 @@
 <div class="scan-page">
 
-  <!-- Header stats -->
-  <div class="scan-stats">
-    <div class="stat"><span class="stat-n valid">{{ counts().valid }}</span><span class="stat-l">Valides</span></div>
-    <div class="stat"><span class="stat-n dup">{{ counts().duplicate }}</span><span class="stat-l">Doublons</span></div>
-    <div class="stat"><span class="stat-n inv">{{ counts().invalid }}</span><span class="stat-l">Invalides</span></div>
-    <div class="stat"><span class="stat-n tot">{{ counts().total }}</span><span class="stat-l">Total</span></div>
-  </div>
-
-  <!-- Camera zone -->
-  <div class="camera-wrap" [class]="'state-' + state()">
-
-    <!-- Feedback overlay -->
-    @if (state() !== 'idle' && state() !== 'scanning') {
-      <div class="feedback-overlay" [class]="'fb-' + state()">
-        <div class="fb-icon">{{ feedbackIcon() }}</div>
-        <div class="fb-title">{{ feedbackTitle() }}</div>
-        @if (lastResult()?.guestName) {
-          <div class="fb-guest">{{ lastResult()!.guestName }}</div>
-        }
-        @if (lastResult()?.eventTitle) {
-          <div class="fb-event">{{ lastResult()!.eventTitle }}</div>
-        }
-        @if (lastResult()?.tableNumber) {
-          <div class="fb-table">
-            <span class="fb-table-icon">📋</span>
-            Table n° {{ lastResult()!.tableNumber }}
-          </div>
-        }
-        <div class="fb-msg">{{ lastResult()?.message }}</div>
-        @if (state() === 'VALID' || state() === 'DUPLICATE') {
-          <button class="fb-next" (click)="resetForNext()">
-            Scanner le suivant
-          </button>
-        }
-      </div>
-    }
-
-    <!-- Video + canvas -->
-    <video #videoEl autoplay playsinline muted class="camera-video"
-            [class.hidden]="!cameraActive()"></video>
-    <canvas #canvasEl class="camera-canvas"></canvas>
-
-    <!-- Viewfinder -->
-    @if (cameraActive() && state() === 'scanning') {
-      <div class="viewfinder">
-        <div class="vf-corner tl"></div>
-        <div class="vf-corner tr"></div>
-        <div class="vf-corner bl"></div>
-        <div class="vf-corner br"></div>
-        <div class="vf-line"></div>
-      </div>
-    }
-
-    <!-- Camera off placeholder -->
-    @if (!cameraActive() && state() === 'idle') {
-      <div class="camera-off">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
-          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-          <circle cx="12" cy="13" r="4"/>
+  <!-- ── Sélecteur d'événement ── -->
+  @if (!selectedEventId()) {
+    <div class="event-selector">
+      <div class="event-selector-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
-        <p>Caméra inactive</p>
+        <span>Sélectionnez un événement</span>
       </div>
-    }
-  </div>
 
-  <!-- Camera controls -->
-  <div class="cam-controls">
-    @if (!cameraActive()) {
-      <button class="btn-cam start" (click)="startCamera()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+      @if (eventsLoading()) {
+        <div class="event-selector-loading">
+          <span class="spinner"></span>
+          Chargement des événements…
+        </div>
+      } @else if (eventsError()) {
+        <div class="event-selector-error">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ eventsError() }}
+          <button class="btn-retry" (click)="loadEvents()">Réessayer</button>
+        </div>
+      } @else if (events().length === 0) {
+        <div class="event-selector-empty">
+          Aucun événement disponible pour votre compte.
+        </div>
+      } @else {
+        <div class="event-list">
+          @for (ev of events(); track ev.id) {
+            <button class="event-item" (click)="selectEvent(ev)">
+              <div class="event-item-title">{{ ev.title }}</div>
+              <div class="event-item-meta">
+                @if (ev.dateLabel) {
+                  <span class="event-meta-chip">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    {{ ev.dateLabel }}
+                  </span>
+                }
+                @if (ev.venueCity) {
+                  <span class="event-meta-chip">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    {{ ev.venueCity }}
+                  </span>
+                }
+              </div>
+              <svg class="event-item-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <!-- ── Événement sélectionné → mode scan ── -->
+
+    <!-- Contexte événement (avec bouton changer) -->
+    <div class="event-context">
+      <div class="event-context-info">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
-        Démarrer la caméra
-      </button>
-    } @else {
-      <button class="btn-cam stop" (click)="stopCamera()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="6" y="6" width="12" height="12"/>
+        <span class="event-context-label">Événement :</span>
+        <span class="event-context-title">{{ selectedEventTitle() }}</span>
+      </div>
+      <button class="btn-change-event" (click)="clearEventSelection()" title="Changer d'événement">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
         </svg>
-        Arrêter
-      </button>
-    }
-    @if (cameraError()) {
-      <span class="cam-error">{{ cameraError() }}</span>
-    }
-  </div>
-
-  <!-- Sound toggle -->
-  <div class="sound-row">
-    <span class="sound-label">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-        @if (soundEnabled()) {
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-        } @else {
-          <line x1="23" y1="9" x2="17" y2="15"/>
-          <line x1="17" y1="9" x2="23" y2="15"/>
-        }
-      </svg>
-      Son de notification
-    </span>
-    <button class="sound-toggle" [class.on]="soundEnabled()" (click)="toggleSound()">
-      <span class="toggle-knob"></span>
-    </button>
-  </div>
-
-  <!-- Manual input -->
-  <div class="manual-section">
-    <p class="manual-label">Saisie manuelle du token</p>
-    <div class="manual-row">
-      <input
-        class="manual-input"
-        type="text"
-        placeholder="Collez ou tapez le token ici…"
-        [(ngModel)]="manualToken"
-        (keydown.enter)="submitManual()"
-      />
-      <button class="btn-submit" [disabled]="!manualToken.trim() || state() === 'scanning'" (click)="submitManual()">
-        Scanner
+        Changer
       </button>
     </div>
-  </div>
+
+    <!-- Header stats -->
+    <div class="scan-stats">
+      <div class="stat"><span class="stat-n valid">{{ counts().valid }}</span><span class="stat-l">Valides</span></div>
+      <div class="stat"><span class="stat-n dup">{{ counts().duplicate }}</span><span class="stat-l">Doublons</span></div>
+      <div class="stat"><span class="stat-n inv">{{ counts().invalid }}</span><span class="stat-l">Invalides</span></div>
+      <div class="stat"><span class="stat-n tot">{{ counts().total }}</span><span class="stat-l">Total</span></div>
+    </div>
+
+    <!-- Camera zone -->
+    <div class="camera-wrap" [class]="'state-' + state()">
+
+      <!-- Feedback overlay -->
+      @if (state() !== 'idle' && state() !== 'scanning') {
+        <div class="feedback-overlay" [class]="'fb-' + state()">
+          <div class="fb-icon">{{ feedbackIcon() }}</div>
+          <div class="fb-title">{{ feedbackTitle() }}</div>
+          @if (lastResult()?.guestName) {
+            <div class="fb-guest">{{ lastResult()!.guestName }}</div>
+          }
+          @if (lastResult()?.eventTitle) {
+            <div class="fb-event">{{ lastResult()!.eventTitle }}</div>
+          }
+          @if (lastResult()?.tableNumber) {
+            <div class="fb-table">
+              <span class="fb-table-icon">📋</span>
+              Table n° {{ lastResult()!.tableNumber }}
+            </div>
+          }
+          <div class="fb-msg">{{ lastResult()?.message }}</div>
+          @if (state() === 'VALID' || state() === 'DUPLICATE') {
+            <button class="fb-next" (click)="resetForNext()">
+              Scanner le suivant
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Video + canvas -->
+      <video #videoEl autoplay playsinline muted class="camera-video"
+              [class.hidden]="!cameraActive()"></video>
+      <canvas #canvasEl class="camera-canvas"></canvas>
+
+      <!-- Viewfinder -->
+      @if (cameraActive() && state() === 'scanning') {
+        <div class="viewfinder">
+          <div class="vf-corner tl"></div>
+          <div class="vf-corner tr"></div>
+          <div class="vf-corner bl"></div>
+          <div class="vf-corner br"></div>
+          <div class="vf-line"></div>
+        </div>
+      }
+
+      <!-- Camera off placeholder -->
+      @if (!cameraActive() && state() === 'idle') {
+        <div class="camera-off">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          <p>Caméra inactive</p>
+        </div>
+      }
+    </div>
+
+    <!-- Camera controls -->
+    <div class="cam-controls">
+      @if (!cameraActive()) {
+        <button class="btn-cam start" (click)="startCamera()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+          </svg>
+          Démarrer la caméra
+        </button>
+      } @else {
+        <button class="btn-cam stop" (click)="stopCamera()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="6" width="12" height="12"/>
+          </svg>
+          Arrêter
+        </button>
+      }
+      @if (cameraError()) {
+        <span class="cam-error">{{ cameraError() }}</span>
+      }
+    </div>
+
+    <!-- Sound toggle -->
+    <div class="sound-row">
+      <span class="sound-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+          @if (soundEnabled()) {
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+          } @else {
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          }
+        </svg>
+        Son de notification
+      </span>
+      <button class="sound-toggle" [class.on]="soundEnabled()" (click)="toggleSound()">
+        <span class="toggle-knob"></span>
+      </button>
+    </div>
+
+    <!-- Manual input -->
+    <div class="manual-section">
+      <p class="manual-label">Saisie manuelle du token</p>
+      <div class="manual-row">
+        <input
+          class="manual-input"
+          type="text"
+          placeholder="Collez ou tapez le token ici…"
+          [(ngModel)]="manualToken"
+          (keydown.enter)="submitManual()"
+        />
+        <button class="btn-submit" [disabled]="!manualToken.trim() || state() === 'scanning'" (click)="submitManual()">
+          Scanner
+        </button>
+      </div>
+    </div>
+
+  }
 
 </div>

@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { AgentResponse, CheckinParameters, CreateAgentRequest, ScanResponse } from '../models/checkin.model';
+import { AgentResponse, CheckinParameters, CreateAgentRequest, EventSummary, ScanResponse } from '../models/checkin.model';
 
 @Injectable({ providedIn: 'root' })
 export class CheckinService {
@@ -30,8 +30,13 @@ export class CheckinService {
     return this.http.get<ApiResponse<CheckinParameters>>(`${this.base}/parameters/${eventId}`);
   }
 
-  getStats(): Observable<ApiResponse<CheckinParameters>> {
-    return this.http.get<ApiResponse<CheckinParameters>>(`${this.base}/stats`);
+  getStats(eventId?: number): Observable<ApiResponse<CheckinParameters>> {
+    const params = eventId ? { params: { eventId: eventId.toString() } } : {};
+    return this.http.get<ApiResponse<CheckinParameters>>(`${this.base}/stats`, params);
+  }
+
+  getAgentEvents(): Observable<ApiResponse<EventSummary[]>> {
+    return this.http.get<ApiResponse<EventSummary[]>>(`${this.base}/events`);
   }
 
   updateSound(eventId: number, confirmationSound: boolean): Observable<ApiResponse<CheckinParameters>> {

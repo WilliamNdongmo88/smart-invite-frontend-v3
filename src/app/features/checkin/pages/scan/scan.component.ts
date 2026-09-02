@@ -5,7 +5,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CheckinService } from '../../../../core/services/checkin.service';
-import { ScanResponse } from '../../../../core/models/checkin.model';
+import { EventSummary, ScanResponse } from '../../../../core/models/checkin.model';
 
 type FeedbackState = 'idle' | 'scanning' | 'VALID' | 'DUPLICATE' | 'EXPIRED' | 'INVALID' | 'error';
 
@@ -32,6 +32,21 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   counts        = signal({ valid: 0, duplicate: 0, invalid: 0, total: 0 });
   soundEnabled  = signal(true);
 
+  /** Liste des événements de l'organisateur (chargée au init). */
+  events        = signal<EventSummary[]>([]);
+  eventsLoading = signal(false);
+  eventsError   = signal<string | null>(null);
+
+  /** ID de l'événement sélectionné dans le sélecteur. */
+  selectedEventId    = signal<number | null>(null);
+  /** Titre de l'événement sélectionné. */
+  selectedEventTitle = signal<string | null>(null);
+
+  /** ID de l'événement en cours de scan (déduit du dernier QR valide). */
+  currentEventId    = signal<number | null>(null);
+  /** Titre de l'événement en cours de scan. */
+  currentEventTitle = signal<string | null>(null);
+
   manualToken = '';
 
   private stream: MediaStream | null = null;
@@ -44,12 +59,54 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       import('jsqr').then(m => { this.jsqr = m.default; });
-      this.loadParameters();
+      this.loadEvents();
     }
   }
 
+  /** Charge la liste des événements disponibles pour cet agent. */
+  loadEvents(): void {
+    this.eventsLoading.set(true);
+    this.eventsError.set(null);
+    this.svc.getAgentEvents().subscribe({
+      next: (res) => {
+        this.events.set(res.data ?? []);
+        this.eventsLoading.set(false);
+        // Si un seul événement, le pré-sélectionner automatiquement
+        if (res.data && res.data.length === 1) {
+          this.selectEvent(res.data[0]);
+        }
+      },
+      error: () => {
+        this.eventsError.set('Impossible de charger les événements.');
+        this.eventsLoading.set(false);
+      },
+    });
+  }
+
+  /** Sélectionne un événement et charge ses stats. */
+  selectEvent(event: EventSummary): void {
+    this.selectedEventId.set(event.id);
+    this.selectedEventTitle.set(event.title);
+    this.currentEventId.set(event.id);
+    this.currentEventTitle.set(event.title);
+    this.loadParameters();
+  }
+
+  /** Désélectionne l'événement (retour au sélecteur). */
+  clearEventSelection(): void {
+    this.stopCamera();
+    this.selectedEventId.set(null);
+    this.selectedEventTitle.set(null);
+    this.currentEventId.set(null);
+    this.currentEventTitle.set(null);
+    this.counts.set({ valid: 0, duplicate: 0, invalid: 0, total: 0 });
+    this.state.set('idle');
+    this.lastResult.set(null);
+  }
+
   private loadParameters(): void {
-    this.svc.getStats().subscribe({
+    const eid = this.currentEventId();
+    this.svc.getStats(eid ?? undefined).subscribe({
       next: (res) => {
         const p = res.data!;
         this.soundEnabled.set(p.confirmationSound);
@@ -67,14 +124,17 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   toggleSound(): void {
     const next = !this.soundEnabled();
     this.soundEnabled.set(next);
-    if (this.eventId) {
-      this.svc.updateSound(this.eventId, next).subscribe();
+    const eid = this.selectedEventId() ?? this.eventId;
+    if (eid) {
+      this.svc.updateSound(eid, next).subscribe();
     }
   }
 
   ngOnDestroy(): void { this.stopCamera(); }
 
   async startCamera(): Promise<void> {
+    // Bloquer le démarrage si aucun événement sélectionné
+    if (!this.selectedEventId()) return;
     if (!isPlatformBrowser(this.platformId)) return;
     this.cameraError.set(null);
     try {
@@ -97,7 +157,6 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
     this.stream = null;
     if (this.rafId !== null) { cancelAnimationFrame(this.rafId); this.rafId = null; }
     this.cameraActive.set(false);
-    // Ne pas écraser l'état si un résultat est affiché
     const s = this.state();
     if (s === 'idle' || s === 'scanning') this.state.set('idle');
   }
@@ -127,7 +186,6 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   }
 
   private extractToken(raw: string): string {
-    // QR contient une URL complète → extraire le token (dernier segment de path)
     try {
       const url = new URL(raw);
       const segments = url.pathname.split('/').filter(Boolean);
@@ -154,12 +212,17 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
   private showResult(res: ScanResponse): void {
     this.lastResult.set(res);
     this.state.set(res.result as FeedbackState);
-    this.counts.update(c => ({
-      total:     c.total + 1,
-      valid:     res.result === 'VALID'     ? c.valid + 1     : c.valid,
-      duplicate: res.result === 'DUPLICATE' ? c.duplicate + 1 : c.duplicate,
-      invalid:   (res.result === 'INVALID' || res.result === 'EXPIRED') ? c.invalid + 1 : c.invalid,
-    }));
+
+    // Mettre à jour l'événement si le QR scanné apporte une info
+    if (res.eventId && res.eventId > 0) {
+      this.currentEventId.set(res.eventId);
+    }
+    if (res.eventTitle) {
+      this.currentEventTitle.set(res.eventTitle);
+    }
+
+    this.loadParameters();
+
     if (this.soundEnabled()) this.playSound(res.result);
     if (res.result === 'VALID' || res.result === 'DUPLICATE') {
       this.stopCamera();
@@ -177,7 +240,6 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
       osc.connect(gain);
       gain.connect(ctx.destination);
       if (result === 'VALID') {
-        // Deux bips montants courts
         osc.frequency.setValueAtTime(880, ctx.currentTime);
         osc.frequency.setValueAtTime(1100, ctx.currentTime + 0.12);
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
@@ -185,7 +247,6 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
         osc.start(ctx.currentTime);
         osc.stop(ctx.currentTime + 0.3);
       } else {
-        // Bip grave descendant
         osc.frequency.setValueAtTime(300, ctx.currentTime);
         osc.frequency.setValueAtTime(150, ctx.currentTime + 0.2);
         gain.gain.setValueAtTime(0.3, ctx.currentTime);
@@ -234,5 +295,13 @@ export class ScanComponent implements AfterViewInit, OnDestroy {
       EXPIRED: 'Invitation expirée', INVALID: 'QR invalide', error: 'Erreur',
     };
     return map[this.state()] ?? '';
+  }
+
+  /** Retourne un label lisible pour un événement dans le sélecteur. */
+  eventLabel(ev: EventSummary): string {
+    const parts: string[] = [ev.title];
+    if (ev.dateLabel) parts.push(ev.dateLabel);
+    if (ev.venueCity) parts.push(ev.venueCity);
+    return parts.join(' · ');
   }
 }
