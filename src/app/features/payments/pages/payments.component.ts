@@ -76,6 +76,11 @@ export class PaymentsComponent implements OnInit {
     return tab === 'ALL' ? this.history() : this.history().filter(p => p.status === tab);
   });
 
+  /** Paiements nécessitant une action de l'utilisateur (preuve à soumettre ou resoumettre). */
+  pendingProofPayments = computed(() =>
+    this.history().filter(p => p.status === 'PENDING' || p.status === 'REJECTED')
+  );
+
   readonly UNIT_PRICE = 52;
 
   computedTotal = computed(() => {
@@ -151,14 +156,43 @@ export class PaymentsComponent implements OnInit {
   }
 
   // ── Proof ──
+  proofError = signal<string | null>(null);
+
   onProofChange(event: globalThis.Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    // Toujours effacer l'erreur précédente
+    this.proofError.set(null);
+
     if (!file) return;
+
     const allowed = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
-    if (!allowed.includes(file.type)) {
-      this.toast.error('Format accepté : JPG, PNG, WEBP ou PDF');
+    const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.pdf'];
+    const ext = file.name.toLowerCase().slice(file.name.lastIndexOf('.'));
+
+    // Vérification : type MIME ou extension (certains navigateurs renvoient type vide)
+    const validType = allowed.includes(file.type);
+    const validExt  = allowedExts.includes(ext);
+
+    if (!validType && !validExt) {
+      const msg = `Format "${file.name}" non accepté. Utilisez JPG, PNG, WEBP ou PDF.`;
+      this.proofError.set(msg);
+      this.toast.error(msg);
+      // Reset l'input pour permettre une nouvelle sélection du même fichier
+      input.value = '';
       return;
     }
+
+    const maxSize = 10 * 1024 * 1024; // 10 Mo
+    if (file.size > maxSize) {
+      const msg = `Fichier trop volumineux (${(file.size / 1024 / 1024).toFixed(1)} Mo). Maximum : 10 Mo.`;
+      this.proofError.set(msg);
+      this.toast.error(msg);
+      input.value = '';
+      return;
+    }
+
     this.proofFile.set(file);
     this.proofPreview.set(file.name);
   }
@@ -189,6 +223,21 @@ export class PaymentsComponent implements OnInit {
     this.pendingPayment.set(null);
     this.proofFile.set(null);
     this.proofPreview.set(null);
+    this.proofError.set(null);
+  }
+
+  /**
+   * Reprend le processus de soumission de preuve pour un paiement existant.
+   * Disponible pour les statuts PENDING (jamais soumis) et REJECTED (rejeté).
+   */
+  resumePayment(payment: Payment): void {
+    this.pendingPayment.set(payment);
+    this.proofFile.set(null);
+    this.proofPreview.set(null);
+    this.proofError.set(null);
+    this.activeTab.set('subscribe');
+    // Scroll vers le haut pour afficher le formulaire d'upload
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // ── Helpers ──

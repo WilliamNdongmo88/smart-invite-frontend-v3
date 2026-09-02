@@ -255,7 +255,7 @@
             </div>
           </div>
 
-          <div class="upload-zone" [class.has-file]="proofFile()">
+          <div class="upload-zone" [class.has-file]="proofFile()" [class.has-error]="proofError()">
             <input type="file" id="proof-upload" class="upload-input"
               accept="image/jpeg,image/png,image/webp,application/pdf"
               (change)="onProofChange($any($event))" />
@@ -264,6 +264,10 @@
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
                 <span class="upload-filename">{{ proofPreview() }}</span>
                 <span class="upload-hint">Cliquer pour changer</span>
+              } @else if (proofError()) {
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                <span class="upload-error-text">{{ proofError() }}</span>
+                <span class="upload-hint">Cliquer pour sélectionner un autre fichier</span>
               } @else {
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 <span class="upload-text">Cliquer pour sélectionner votre preuve</span>
@@ -290,6 +294,40 @@
 
   <!-- ══ TAB : HISTORIQUE ══ -->
   @if (activeTab() === 'history') {
+
+    <!-- Bannière : paiements en attente de preuve -->
+    @if (pendingProofPayments().length > 0) {
+      <div class="pending-alert">
+        <div class="pending-alert-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <div class="pending-alert-body">
+          <p class="pending-alert-title">
+            @if (pendingProofPayments().length === 1) {
+              Vous avez un paiement en attente de finalisation
+            } @else {
+              Vous avez {{ pendingProofPayments().length }} paiements en attente de finalisation
+            }
+          </p>
+          <p class="pending-alert-sub">
+            @for (p of pendingProofPayments(); track p.id; let last = $last) {
+              <span>
+                <strong>{{ p.eventTitle || 'Événement #' + p.eventId }}</strong>
+                — {{ formatAmount(p.amount) }}
+                @if (p.status === 'REJECTED') { <span class="alert-rejected-tag">rejeté</span> }
+              </span>
+              @if (!last) { <span class="alert-sep">·</span> }
+            }
+          </p>
+        </div>
+        <button class="pending-alert-cta" (click)="resumePayment(pendingProofPayments()[0])">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Finaliser
+        </button>
+      </div>
+    }
 
     <div class="history-tabs">
       @for (t of historyTabs; track t.key) {
@@ -329,6 +367,7 @@
               <th>Preuve</th>
               <th>Date</th>
               <th>Motif refus</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -360,6 +399,21 @@
                 <td>
                   @if (p.rejectionReason) {
                     <span class="rejection-reason">{{ p.rejectionReason }}</span>
+                  } @else {
+                    <span class="muted">—</span>
+                  }
+                </td>
+                <td>
+                  @if (p.status === 'PENDING') {
+                    <button class="btn-action btn-action--submit" (click)="resumePayment(p)" title="Soumettre la preuve de paiement">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      Soumettre
+                    </button>
+                  } @else if (p.status === 'REJECTED') {
+                    <button class="btn-action btn-action--retry" (click)="resumePayment(p)" title="Resoumettre une nouvelle preuve">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+                      Resoumettre
+                    </button>
                   } @else {
                     <span class="muted">—</span>
                   }

@@ -327,6 +327,97 @@
 
 .rejection-reason { font-size: 0.75rem; color: #f87171; font-style: italic; max-width: 200px; display: block; }
 
+/* ── Boutons action tableau ── */
+.btn-action {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  font-size: 0.75rem; font-weight: 700; padding: 0.3rem 0.65rem;
+  border-radius: 6px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap; transition: background 0.18s, border-color 0.18s, color 0.18s;
+
+  &--submit {
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.3);
+    color: #c9a84c;
+    &:hover { background: rgba(201,168,76,0.2); border-color: rgba(201,168,76,0.55); }
+  }
+
+  &--retry {
+    background: rgba(248,113,113,0.08);
+    border-color: rgba(248,113,113,0.25);
+    color: #f87171;
+    &:hover { background: rgba(248,113,113,0.18); border-color: rgba(248,113,113,0.5); }
+  }
+}
+
+/* ── Bannière paiements en attente ── */
+.pending-alert {
+  display: flex; align-items: center; gap: 1rem;
+  background: rgba(201,168,76,0.07);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-left: 3px solid #c9a84c;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  flex-wrap: wrap;
+}
+
+.pending-alert-icon {
+  flex-shrink: 0;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: #c9a84c;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.pending-alert-body {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column; gap: 0.2rem;
+}
+
+.pending-alert-title {
+  font-size: 0.85rem; font-weight: 700; color: #e5e5e5; margin: 0;
+}
+
+.pending-alert-sub {
+  font-size: 0.78rem; color: #888; margin: 0;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.3rem;
+  strong { color: #ccc; }
+}
+
+.alert-rejected-tag {
+  display: inline-block;
+  font-size: 0.68rem; font-weight: 700;
+  background: rgba(248,113,113,0.1);
+  border: 1px solid rgba(248,113,113,0.25);
+  color: #f87171;
+  padding: 0.1rem 0.4rem; border-radius: 4px;
+}
+
+.alert-sep { color: #444; }
+
+.pending-alert-cta {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  background: #c9a84c; color: #111;
+  font-size: 0.78rem; font-weight: 700;
+  padding: 0.45rem 0.9rem; border-radius: 7px; border: none;
+  cursor: pointer; white-space: nowrap; flex-shrink: 0;
+  transition: background 0.18s;
+  &:hover { background: #b8943e; }
+}
+
+/* ── Upload zone : état erreur ── */
+.upload-zone {
+  &.has-error {
+    border-color: #f87171;
+    background: rgba(248,113,113,0.03);
+  }
+}
+
+.upload-error-text {
+  font-size: 0.83rem; color: #f87171; font-weight: 600;
+  max-width: 360px; text-align: center; line-height: 1.45;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .section-grid { grid-template-columns: 1fr; }
