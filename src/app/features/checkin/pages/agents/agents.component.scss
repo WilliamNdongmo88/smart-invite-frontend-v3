@@ -72,6 +72,78 @@
 .agent-name  { font-weight: 600; color: #fff; font-size: .9rem; }
 .agent-phone { font-size: .78rem; color: #888; }
 
+// ── Credentials bloc ──
+.agent-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  margin-top: .45rem;
+  padding: .55rem .75rem;
+  background: #141414;
+  border: 1px solid #252525;
+  border-radius: 8px;
+}
+
+.cred-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  min-width: 0;
+}
+
+.cred-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  font-size: .68rem;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+  min-width: 88px;
+  svg { color: #555; }
+}
+
+.cred-value {
+  flex: 1;
+  min-width: 0;
+  font-size: .76rem;
+  color: #ccc;
+  font-family: 'Courier New', monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cred-password { color: #c9a84c; letter-spacing: .04em; }
+
+.btn-copy-cred {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: #666;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+
+  &:hover {
+    color: #c9a84c;
+    border-color: rgba(201,168,76,.4);
+    background: rgba(201,168,76,.06);
+  }
+
+  &.copied {
+    color: #4ade80;
+    border-color: rgba(74,222,128,.4);
+    background: rgba(74,222,128,.08);
+  }
+}
+
 .agent-actions { display: flex; gap: .4rem; }
 
 .btn-delete {

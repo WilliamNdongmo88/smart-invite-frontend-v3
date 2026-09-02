@@ -88,4 +88,26 @@ export class AgentsComponent implements OnInit {
   initials(name: string): string {
     return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   }
+
+  /** Email de connexion de l'agent (format identique au backend). */
+  agentEmail(userName: string): string {
+    return userName.toLowerCase() + '@agent.smartinvite.local';
+  }
+
+  /** Mot de passe de l'agent = numéro WhatsApp sans le '+'. */
+  agentPassword(whatsapp: string): string {
+    return whatsapp.replace(/^\+/, '');
+  }
+
+  // ── Copie presse-papiers ──
+  copiedId = signal<string | null>(null);
+  private copyTimer: ReturnType<typeof setTimeout> | null = null;
+
+  copy(text: string, key: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.copiedId.set(key);
+      if (this.copyTimer) clearTimeout(this.copyTimer);
+      this.copyTimer = setTimeout(() => this.copiedId.set(null), 2000);
+    }).catch(() => {});
+  }
 }

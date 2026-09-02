@@ -41,10 +41,57 @@
         @for (agent of agents(); track agent.id) {
           <div class="agent-row">
             <div class="agent-avatar">{{ initials(agent.userName) }}</div>
+
             <div class="agent-info">
               <span class="agent-name">{{ agent.userName }}</span>
               <span class="agent-phone">{{ agent.whatsapp }}</span>
+
+              <!-- Identifiants de connexion -->
+              <div class="agent-credentials">
+                <div class="cred-row">
+                  <span class="cred-label">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Email
+                  </span>
+                  <span class="cred-value">{{ agentEmail(agent.userName) }}</span>
+                  <button class="btn-copy-cred"
+                          [class.copied]="copiedId() === 'email_' + agent.id"
+                          (click)="copy(agentEmail(agent.userName), 'email_' + agent.id)"
+                          title="Copier l'email">
+                    @if (copiedId() === 'email_' + agent.id) {
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    } @else {
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    }
+                  </button>
+                </div>
+
+                <div class="cred-row">
+                  <span class="cred-label">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Mot de passe
+                  </span>
+                  <span class="cred-value cred-password">{{ agentPassword(agent.whatsapp) }}</span>
+                  <button class="btn-copy-cred"
+                          [class.copied]="copiedId() === 'pwd_' + agent.id"
+                          (click)="copy(agentPassword(agent.whatsapp), 'pwd_' + agent.id)"
+                          title="Copier le mot de passe">
+                    @if (copiedId() === 'pwd_' + agent.id) {
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    } @else {
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    }
+                  </button>
+                </div>
+              </div>
             </div>
+
             <div class="agent-actions">
               <button class="btn-delete" (click)="confirmDelete(agent.id)" title="Supprimer">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
