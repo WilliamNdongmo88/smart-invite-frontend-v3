@@ -320,6 +320,10 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   });
   draft = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
   uploadingImage = signal<string | null>(null);
+  /** Sous-titre auto généré depuis hero (dateLabel · venueName · venueCity). */
+  autoSubtitle   = signal<string>('');
+  /** true = l'utilisateur a saisi manuellement un sous-titre footer → on n'écrase plus. */
+  subtitleEdited = signal<boolean>(false);
 
   // ── Countdown ─────────────────────────────────────────────────────
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
@@ -489,6 +493,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     this.startCountdown();
     this.scrollListener = () => this.onScroll();
     window.addEventListener('scroll', this.scrollListener, { passive: true });
+    const h = this.content().hero;
+    this.autoSubtitle.set(this.buildAutoSubtitle(h.dateLabel, h.venueName, h.venueCity));
   }
 
   ngAfterViewInit(): void {
@@ -627,7 +633,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   // ── Edit modal ────────────────────────────────────────────────────
   openEdit(section: WeddingDetailsEditSection = 'hero'): void {
-    this.draft.set(deepClone(this.content()));
+    const c = deepClone(this.content());
+    this.draft.set(c);
+    const auto = this.buildAutoSubtitle(c.hero.dateLabel, c.hero.venueName, c.hero.venueCity);
+    this.autoSubtitle.set(auto);
+    this.subtitleEdited.set(c.footer.subText !== '' && c.footer.subText !== auto);
     this.activeSection.set(section);
     this.editOpen.set(true);
     if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
@@ -918,6 +928,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const d = deepClone(this.draft());
     (d.hero as unknown as Record<string, string>)[key] = value;
     this.draft.set(d);
+    if (!this.subtitleEdited()) {
+      this.autoSubtitle.set(this.buildAutoSubtitle(d.hero.dateLabel, d.hero.venueName, d.hero.venueCity));
+    }
   }
 
   /** Met à jour maxGuests et recalcule budget automatiquement */
@@ -1099,6 +1112,22 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const d = deepClone(this.draft());
     d.footer[key] = value;
     this.draft.set(d);
+    if (key === 'subText') { this.subtitleEdited.set(true); }
+  }
+
+  /** Construit le sous-titre automatique footer depuis les champs hero. */
+  private buildAutoSubtitle(dateLabel?: string, venueName?: string, venueCity?: string): string {
+    const parts = [dateLabel ?? '', (venueName ?? '').toLowerCase(), (venueCity ?? '').toLowerCase()]
+      .filter(p => p.trim() !== '');
+    return parts.join(' · ');
+  }
+
+  /** Remet le sous-titre footer sur la valeur auto. */
+  resetSubtitleToAuto(): void {
+    const auto = this.buildAutoSubtitle(this.draft().hero.dateLabel, this.draft().hero.venueName, this.draft().hero.venueCity);
+    this.autoSubtitle.set(auto);
+    this.subtitleEdited.set(false);
+    const d = deepClone(this.draft()); d.footer.subText = auto; this.draft.set(d);
   }
 
   // ── Draft — Backgrounds ──────────────────────────────────────────

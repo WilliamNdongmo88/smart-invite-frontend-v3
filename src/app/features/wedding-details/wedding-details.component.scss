@@ -57,17 +57,17 @@
 
 /* ═══════════════════════════════════════════════════════════════
    SCROLL STORYTELLING — Système de révélation universel
-   
+
    Usage HTML :
      <el class="reveal">                     fade-up simple
      <el class="reveal reveal--left">        glisse depuis la gauche
      <el class="reveal reveal--right">       glisse depuis la droite
      <el class="reveal reveal--scale">       zoom léger
      <el class="reveal" style="--d:150ms">   délai personnalisé (stagger)
-   
+
    L'IntersectionObserver existant ajoute .visible quand l'élément
    entre dans le viewport.
-   
+
    .fade-up est conservé comme alias pour la rétrocompatibilité.
 ═══════════════════════════════════════════════════════════════ */
 
@@ -1679,7 +1679,7 @@
 
 /* ═══════════════════════════════════════════════════════════════
    SCROLL STORYTELLING — RESPONSIVE (tablette & mobile)
-   
+
    Adaptations :
    - Distance de reveal réduite pour éviter les débordements
    - Translations horizontales (--left/--right) converties en
@@ -2063,6 +2063,19 @@ section { position: relative; }
   letter-spacing: .04em;
   text-transform: none;
   color: var(--text-light);
+}
+.edit-hint-btn {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  background: rgba(201,168,76,0.12); color: #c9a84c;
+  border: 1px solid rgba(201,168,76,0.25); border-radius: 4px;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.04em;
+  padding: 0.1rem 0.45rem; cursor: pointer; margin-left: 0.4rem;
+  transition: background 0.15s;
+  &:hover { background: rgba(201,168,76,0.22); }
+}
+.edit-field-hint {
+  font-size: 0.7rem; color: rgba(255,255,255,0.3);
+  margin: 0.25rem 0 0; font-style: italic;
 }
 
 .edit-input {

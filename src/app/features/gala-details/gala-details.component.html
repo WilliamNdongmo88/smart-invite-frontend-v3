@@ -824,8 +824,22 @@
               <input class="edit-input" type="text" [ngModel]="draft().footer.logoText" (ngModelChange)="updateDraftFooter('logoText', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre <span class="edit-hint">date · lieu · ville</span></label>
-              <input class="edit-input" type="text" [ngModel]="draft().footer.subText" (ngModelChange)="updateDraftFooter('subText', $event)" />
+              <label class="edit-label">
+                Sous-titre
+                <span class="edit-hint">date · lieu · ville</span>
+                @if (subtitleEdited()) {
+                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" title="Remettre la valeur automatique">
+                    ↺ Sync auto
+                  </button>
+                }
+              </label>
+              <input class="edit-input" type="text"
+                     [ngModel]="subtitleEdited() ? draft().footer.subText : autoSubtitle()"
+                     (ngModelChange)="updateDraftFooter('subText', $event)"
+                     [placeholder]="autoSubtitle()" />
+              @if (!subtitleEdited()) {
+                <p class="edit-field-hint">Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.</p>
+              }
             </div>
             <div class="edit-field">
               <label class="edit-label">Tagline</label>
@@ -833,7 +847,7 @@
             </div>
             <div class="edit-footer-preview">
               <div class="edit-footer-preview-logo" style="font-family:'Cormorant Garamond',serif;font-size:1.4rem">{{ draft().footer.logoText }}</div>
-              <p class="edit-footer-preview-sub">{{ draft().footer.subText }}</p>
+              <p class="edit-footer-preview-sub">{{ subtitleEdited() ? draft().footer.subText : autoSubtitle() }}</p>
               <p class="edit-footer-preview-love">{{ draft().footer.tagline }}</p>
             </div>
           </div>
