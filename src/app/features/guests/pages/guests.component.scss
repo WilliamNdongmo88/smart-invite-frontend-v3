@@ -98,13 +98,18 @@
 /* ── Alerte table manquante ── */
 .table-alert {
   display: flex;
-  align-items: flex-start;
-  gap: .85rem;
+  flex-direction: column;
+  gap: .6rem;
   padding: .85rem 1rem;
   background: rgba(251,191,36,.07);
   border: 1px solid rgba(251,191,36,.28);
   border-radius: 10px;
-  flex-wrap: wrap;
+}
+
+.table-alert-top {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
 }
 
 .table-alert-icon {
@@ -116,7 +121,6 @@
   border-radius: 8px;
   background: rgba(251,191,36,.12);
   color: #fbbf24;
-  margin-top: .05rem;
 }
 
 .table-alert-body {
@@ -143,19 +147,40 @@
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  flex-shrink: 0;
-  align-self: center;
   background: rgba(251,191,36,.12);
   border: 1px solid rgba(251,191,36,.35);
   border-radius: 7px;
   color: #fbbf24;
-  font-size: .75rem;
   font-weight: 700;
-  padding: .35rem .75rem;
   cursor: pointer;
   transition: background .15s;
   white-space: nowrap;
   &:hover { background: rgba(251,191,36,.22); }
+}
+
+/* Desktop : bouton compact dans la ligne du haut, mobile caché */
+.table-alert-filter--desktop {
+  flex-shrink: 0;
+  font-size: .75rem;
+  padding: .35rem .75rem;
+}
+
+/* Mobile : bouton pleine largeur en bas, desktop caché */
+.table-alert-filter--mobile {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .table-alert-filter--desktop { display: none; }
+
+  .table-alert-filter--mobile {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-size: .82rem;
+    padding: .6rem 1rem;
+    border-radius: 8px;
+  }
 }
 
 /* ── Toolbar ── */

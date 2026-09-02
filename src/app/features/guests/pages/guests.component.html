@@ -21,22 +21,32 @@
   <!-- Alerte : invités confirmés sans numéro de table -->
   @if (confirmedWithoutTable() > 0) {
     <div class="table-alert">
-      <div class="table-alert-icon">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
-          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-        </svg>
+      <div class="table-alert-top">
+        <div class="table-alert-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div class="table-alert-body">
+          <span class="table-alert-title">Numéros de table manquants</span>
+          <span class="table-alert-text">
+            {{ confirmedWithoutTable() }} invité{{ confirmedWithoutTable() > 1 ? 's' : '' }} confirmé{{ confirmedWithoutTable() > 1 ? 's' : '' }}
+            {{ confirmedWithoutTable() > 1 ? "n'ont" : "n'a" }} pas encore de numéro de table assigné.
+            Pensez à les mettre à jour avant l'événement.
+          </span>
+        </div>
+        <!-- Bouton visible sur desktop uniquement -->
+        <button class="table-alert-filter table-alert-filter--desktop" (click)="setTab('CONFIRMED')" title="Voir les confirmés">
+          Voir les confirmés
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"/>
+          </svg>
+        </button>
       </div>
-      <div class="table-alert-body">
-        <span class="table-alert-title">Numéros de table manquants</span>
-        <span class="table-alert-text">
-          {{ confirmedWithoutTable() }} invité{{ confirmedWithoutTable() > 1 ? 's' : '' }} confirmé{{ confirmedWithoutTable() > 1 ? 's' : '' }}
-          {{ confirmedWithoutTable() > 1 ? "n'ont" : "n'a" }} pas encore de numéro de table assigné.
-          Pensez à les mettre à jour avant l'événement.
-        </span>
-      </div>
-      <button class="table-alert-filter" (click)="setTab('CONFIRMED')" title="Voir les confirmés">
-        Voir les confirmés
+      <!-- Bouton pleine largeur sur mobile -->
+      <button class="table-alert-filter table-alert-filter--mobile" (click)="setTab('CONFIRMED')">
+        Voir les invités confirmés
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="9 18 15 12 9 6"/>
         </svg>
