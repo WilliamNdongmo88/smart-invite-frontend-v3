@@ -11,6 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { NotificationMode } from '../../../../core/models/enums.model';
+import { DIAL_CODES } from '../../../../core/data/dial-codes';
 
 function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null {
   const pw = ctrl.get('password')?.value;
@@ -38,11 +39,14 @@ export class RegisterComponent implements OnInit {
   showConfirm = signal(false);
   fromGoogle = signal(false);
 
+  readonly dialCodes = DIAL_CODES;
+
   form = this.fb.group(
     {
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
+      phoneDialCode: ['+237'],
+      phone: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
     },
@@ -75,12 +79,17 @@ export class RegisterComponent implements OnInit {
       return;
     }
     this.loading.set(true);
-    const { name, email, phone, password } = this.form.value;
+    const { name, email, phoneDialCode, phone, password } = this.form.value;
+
+    // Compose le numéro complet : indicatif + numéro local (sans zéros en tête)
+    const local = phone!.trim().replace(/^0+/, '');
+    const fullPhone = `${phoneDialCode}${local}`;
+
     this.auth
       .register({
         name: name!,
         email: email!,
-        phone: phone || undefined,
+        phone: fullPhone,
         password: password!,
         notificationMode: 'EMAIL' as NotificationMode,
       })

@@ -150,6 +150,8 @@ label {
   font-size: 0.75rem;
 }
 
+.req { color: #e05252; }
+
 input {
   width: 100%;
   background: #111;
@@ -164,6 +166,62 @@ input {
   &::placeholder { color: #555; }
   &:focus { border-color: #c9a84c; }
   &.invalid { border-color: #e05252; }
+}
+
+/* ── Champ téléphone avec indicatif pays ── */
+.phone-wrap {
+  display: flex;
+  align-items: stretch;
+  background: #111;
+  border: 1.5px solid #333;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  &:focus-within { border-color: #c9a84c; }
+  &.invalid { border-color: #e05252; }
+
+  /* Neutraliser la bordure individuelle de l'input à l'intérieur */
+  input { border: none !important; box-shadow: none !important; border-radius: 0; background: transparent !important; }
+}
+
+.dial-select {
+  flex-shrink: 0;
+  min-width: 90px;
+  max-width: 108px;
+  background: #1a1a1a;
+  border: none;
+  border-right: 1.5px solid #333;
+  border-radius: 0;
+  color: #c9a84c;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0 22px 0 10px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  transition: background-color 0.2s;
+  option { background: #1a1a1a; color: #e5e5e5; }
+  &:focus { background-color: #222; }
+}
+
+.phone-local {
+  flex: 1;
+  min-width: 0;
+  /* Hérite des styles de `input` via la règle ci-dessus */
+}
+
+.field-hint {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: #555;
+  margin-top: 0.3rem;
+  line-height: 1.4;
 }
 
 .input-wrap { position: relative; }
