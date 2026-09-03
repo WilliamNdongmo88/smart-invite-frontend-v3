@@ -8,6 +8,7 @@ import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Invitation } from '../../../../core/models/invitation.model';
 import { NotificationMode } from '../../../../core/models/enums.model';
+import { DIAL_CODES } from '../../../../core/data/dial-codes';
 import {
   WeddingDetailsTheme,
   DEFAULT_WEDDING_THEME,
@@ -196,9 +197,15 @@ export class JoinComponent implements OnInit {
     { key: 'BOTH',     label: 'Email & WhatsApp', icon: '✦' },
   ];
 
+  readonly dialCodes = DIAL_CODES;
+
+  // Signal : le mode sélectionné nécessite-t-il WhatsApp ?
+  needsWhatsApp = signal(true); // WHATSAPP par défaut
+
   form = this.fb.group({
     fullName:         ['', [Validators.required, Validators.minLength(2)]],
     email:            [''],
+    phoneDialCode:    ['+237'],
     phoneNumber:      [''],
     notificationMode: ['WHATSAPP' as NotificationMode],
   });
@@ -219,6 +226,11 @@ export class JoinComponent implements OnInit {
       this.state.set('error');
       return;
     }
+
+    // Met à jour needsWhatsApp à chaque changement de mode de notification
+    this.form.get('notificationMode')!.valueChanges.subscribe(mode => {
+      this.needsWhatsApp.set(mode === 'WHATSAPP' || mode === 'BOTH');
+    });
 
     // Mode prévisualisation locale (depuis sessionStorage)
     if (token === 'preview') {
@@ -349,6 +361,19 @@ export class JoinComponent implements OnInit {
   }
 
   submit(): void {
+    const mode = this.form.get('notificationMode')?.value as NotificationMode;
+    const requiresWhatsApp = mode === 'WHATSAPP' || mode === 'BOTH';
+
+    // Validation manuelle : numéro WhatsApp obligatoire si le mode le nécessite
+    if (requiresWhatsApp) {
+      const localNumber = (this.form.get('phoneNumber')?.value ?? '').toString().trim();
+      if (!localNumber) {
+        this.form.get('phoneNumber')?.setErrors({ required: true });
+        this.form.markAllAsTouched();
+        return;
+      }
+    }
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -364,10 +389,19 @@ export class JoinComponent implements OnInit {
     this.submitError.set(null);
     const value = this.form.value;
 
+    // Composition du numéro complet : indicatif + numéro local (sans zéros en tête)
+    let fullPhone: string | undefined;
+    if (requiresWhatsApp && value.phoneNumber) {
+      const local = value.phoneNumber.toString().trim().replace(/^0+/, '');
+      fullPhone = `${value.phoneDialCode}${local}`;
+    } else {
+      fullPhone = value.phoneNumber || undefined;
+    }
+
     this.svc.join(token, {
       fullName:         value.fullName!,
       email:            value.email            || undefined,
-      phoneNumber:      value.phoneNumber       || undefined,
+      phoneNumber:      fullPhone,
       notificationMode: value.notificationMode  as NotificationMode,
     }).subscribe({
       next: (response) => {

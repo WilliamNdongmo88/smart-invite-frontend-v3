@@ -208,6 +208,136 @@ input { width: 100%; border: 1px solid #dfd9cc; border-radius: 0; outline: none;
 input.invalid { border-color: #c9796e; }
 .field small { color: #bd7167; font-size: .62rem; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ── Champ téléphone avec indicatif pays ── */
+
+/*
+ * Le wrapper reprend exactement les styles de base de l'input (bordure, padding, fond)
+ * pour former un seul bloc visuel. Les thèmes héritent via leurs règles `input`
+ * appliquées au .phone-local et via .phone-field-wrap qui copie les règles nécessaires.
+ */
+.phone-field-wrap {
+  display: flex;
+  align-items: stretch;
+  /* Reprend le style de base des inputs */
+  border: 1px solid #dfd9cc;
+  border-radius: 0;
+  overflow: hidden;
+  transition: border-color .2s;
+
+  &:focus-within { border-color: #a08060; }
+  &.invalid { border-color: #c9796e; }
+
+  /* Annuler la bordure individuelle que les rules globales input appliquent */
+  input { border: none !important; box-shadow: none !important; padding: 10px 11px; width: 100%; }
+}
+
+.dial-select {
+  flex-shrink: 0;
+  min-width: 85px;
+  max-width: 105px;
+  border: none;
+  border-right: 1px solid #dfd9cc;
+  outline: none;
+  background: #ede8df;
+  color: #4a3f33;
+  font: 600 .68rem 'Montserrat', sans-serif;
+  padding: 0 20px 0 8px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 5px center;
+  transition: background-color .2s;
+
+  option { background: #fffefa; color: #25251f; }
+  &:focus { outline: none; }
+}
+
+.phone-local {
+  flex: 1;
+  min-width: 0;
+  /* Le style vient de la règle globale `input` — on ne redéfinit que le strict nécessaire */
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none;
+}
+
+/* ── Surcharges par thème ── */
+
+/* Mariage */
+.theme-mariage {
+  .phone-field-wrap {
+    border-color: rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+    background: var(--surface, #141018);
+    &:focus-within { border-color: var(--gold, #d4af37); box-shadow: 0 0 0 3px rgba(var(--gold-rgb, 212, 175, 55), 0.25); }
+    &.invalid { border-color: #c9796e; }
+    input { background: transparent !important; color: var(--ink, #fff) !important; }
+    input::placeholder { color: rgba(255,255,255,.3); }
+  }
+  .dial-select {
+    background: rgba(var(--gold-rgb, 212, 175, 55), 0.08);
+    border-right-color: rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+    color: var(--gold, #d4af37);
+    option { background: #18141c; color: #fdfaf6; }
+  }
+}
+
+/* Conférence */
+.theme-conference {
+  .phone-field-wrap {
+    border-color: #1e2e4a;
+    background: #091322;
+    &:focus-within { border-color: #00c9a7; box-shadow: 0 0 0 3px rgba(0, 201, 167, 0.25); }
+    &.invalid { border-color: #f87171; }
+    input { background: transparent !important; color: #f8fafc !important; }
+    input::placeholder { color: rgba(148,163,184,.5); }
+  }
+  .dial-select {
+    background: rgba(0, 201, 167, 0.08);
+    border-right-color: #1e2e4a;
+    color: #00c9a7;
+    option { background: #0d1e38; color: #e2e8f0; }
+  }
+}
+
+/* Gala */
+.theme-gala {
+  .phone-field-wrap {
+    border-color: #332d22;
+    background: #141312;
+    &:focus-within { border-color: #c9a84c; box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.25); }
+    &.invalid { border-color: #f87171; }
+    input { background: transparent !important; color: #fff !important; }
+    input::placeholder { color: rgba(255,255,255,.28); }
+  }
+  .dial-select {
+    background: rgba(201, 168, 76, 0.08);
+    border-right-color: #332d22;
+    color: #ffd97d;
+    option { background: #181614; color: #f9f6ef; }
+  }
+}
+
+/* Cérémonie */
+.theme-ceremonie {
+  .phone-field-wrap {
+    border-color: #e2d2c1;
+    background: #fff;
+    &:focus-within { border-color: #8b5e3c; box-shadow: 0 0 0 3px rgba(139, 94, 62, 0.16); }
+    &.invalid { border-color: #c9796e; }
+    input { background: transparent !important; color: #3a2510 !important; }
+    input::placeholder { color: #c0a88a; }
+  }
+  .dial-select {
+    background: rgba(139, 94, 62, 0.07);
+    border-right-color: #e2d2c1;
+    color: #8b5e3c;
+    option { background: #fffaf3; color: #3a2510; }
+  }
+}
 .notification-options { display: flex; flex-wrap: wrap; gap: 6px; }
 .notification-option { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #dfd9cc; padding: 7px 8px; cursor: pointer; font-size: .62rem; font-weight: 500; }
 .notification-option input { display: none; }

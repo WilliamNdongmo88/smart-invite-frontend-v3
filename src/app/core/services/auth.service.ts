@@ -50,7 +50,14 @@ export class AuthService {
     const refreshToken = this.getRefreshToken();
     return this.http
       .post<ApiResponse<RefreshTokenResponse>>(`${this.base}/refresh`, { refreshToken })
-      .pipe(tap((res) => { if (res.data) this.setAccessToken(res.data.accessToken); }));
+      .pipe(
+        tap((res) => {
+          if (res.data) {
+            // Stocker le nouveau access token ET le nouveau refresh token (rotation)
+            this.setTokens(res.data.accessToken, res.data.refreshToken);
+          }
+        })
+      );
   }
 
   logout(): Observable<ApiResponse<void>> {
