@@ -148,7 +148,7 @@ const INITIAL_CONTENT: ConferenceDetailsContent = {
 
   rsvp: {
     title:    'Réservez votre place !',
-    subtitle: 'Les inscriptions sont ouvertes. Votre lien personnel d\'inscription vous sera transmis par email après confirmation de votre candidature.',
+    subtitle: 'N’oubliez surtout pas votre QR code ! Il constitue votre clé d’accès personnelle à l\'événement et sera indispensable lors de votre arrivée..',
   },
 
   gallery: {
@@ -163,10 +163,10 @@ const INITIAL_CONTENT: ConferenceDetailsContent = {
   },
 
   backgrounds: {
-    hero:        '',
-    about:       '',
-    agendaBand:  '',
-    rsvp:        '',
+    hero:        '/images/conf/conf.avif',
+    about:       '/images/conf/conf2.avif',
+    agendaBand:  '/images/conf/conf2.avif',
+    rsvp:        '/images/conf/conf4.jpg',
   },
 
   footer: {

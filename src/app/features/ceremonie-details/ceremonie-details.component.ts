@@ -109,7 +109,7 @@ const INITIAL_CONTENT: CeremonieDetailsContent = {
 
   rsvp: {
     title:    'Votre présence nous touche',
-    subtitle: 'Votre invitation personnelle vous a été transmise. Merci de confirmer votre présence dès que possible afin que nous puissions vous accueillir dans les meilleures conditions.',
+    subtitle: 'Votre présence est confirmée. N\'oubliez pas de présenter votre QR code à l\'entrée.',
   },
 
   gallery: {

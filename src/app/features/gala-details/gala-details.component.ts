@@ -111,8 +111,8 @@ const INITIAL_CONTENT: GalaDetailsContent = {
   },
 
   rsvp: {
-    title:    'Réservez votre table',
-    subtitle: 'Les places sont limitées. Votre invitation personnelle vous sera transmise après confirmation de votre réservation. Contactez-nous rapidement.',
+    title:    'Table reservée pour vous !',
+    subtitle: 'Votre place est confirmée. N\'oubliez pas de présenter votre QR code à l\'entrée.',
   },
 
   gallery: {
@@ -127,10 +127,10 @@ const INITIAL_CONTENT: GalaDetailsContent = {
   },
 
   backgrounds: {
-    hero:       '',
-    about:      '',
-    programBand:'',
-    rsvp:       '',
+    hero:       '/images/gala/gala.jfif',
+    about:      '',///images/gala/gala5.jpg
+    programBand:'/images/gala/gala4.jpg',
+    rsvp:       '/images/gala/gala3.jpg',
   },
 
   footer: {
@@ -277,8 +277,20 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
         if (!parsed.backgrounds) parsed.backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
         if (!parsed.performers)  parsed.performers  = deepClone(INITIAL_CONTENT.performers);
         if (!parsed.dressCode)   parsed.dressCode   = deepClone(INITIAL_CONTENT.dressCode);
+        // Migrate : compléter les backgrounds vides avec les valeurs par défaut
+        const bgKeys: (keyof GalaDetailsBackgroundsContent)[] = ['hero', 'about', 'programBand', 'rsvp'];
+        for (const key of bgKeys) {
+          if (!parsed.backgrounds[key] && INITIAL_CONTENT.backgrounds[key]) {
+            parsed.backgrounds[key] = INITIAL_CONTENT.backgrounds[key];
+          }
+        }
         this.content.set(parsed);
-      } catch { /* ignore */ }
+        // Réécrire le localStorage avec les valeurs migrées
+        localStorage.setItem(storageKey, JSON.stringify(this.content()));
+      } catch {
+        // localStorage corrompu → supprimer et repartir de INITIAL_CONTENT
+        localStorage.removeItem(storageKey);
+      }
     }
 
     this.startCountdown();

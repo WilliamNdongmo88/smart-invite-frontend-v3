@@ -77,7 +77,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      HERO
 ══════════════════════════════════════════════════════════════ -->
-<section id="top" class="gala-hero">
+<section id="top" class="gala-hero"
+  [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="gala-pencil gala-pencil--hero" (click)="openEdit('hero')" title="Éditer le Hero">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -95,7 +96,6 @@
     </button>
   }
 
-  <div class="gala-hero-bg band-bg" [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'"></div>
   <div class="gala-hero-overlay"></div>
 
   <div class="gala-hero-content">
@@ -153,7 +153,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      À PROPOS
 ══════════════════════════════════════════════════════════════ -->
-<section id="about" class="gala-section gala-about section-entrance">
+<section id="about" class="gala-section gala-about section-entrance"
+  [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="gala-pencil gala-pencil--section" (click)="openEdit('about')" title="Éditer À Propos">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -162,7 +163,6 @@
       </svg>
     </button>
   }
-  <div class="gala-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
   <div class="gala-about-overlay"></div>
   <div class="gala-section-inner">
     <span class="gala-eyebrow-dark reveal" style="--d:0ms">LA SOIRÉE</span>
@@ -211,7 +211,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX
 ══════════════════════════════════════════════════════════════ -->
-<div class="gala-band">
+<div class="gala-band" [style.backgroundImage]="bgs().programBand ? 'url(' + bgs().programBand + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="gala-pencil gala-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -220,7 +220,6 @@
       </svg>
     </button>
   }
-  <div class="gala-band-bg band-bg" [style.backgroundImage]="bgs().programBand ? 'url(' + bgs().programBand + ')' : 'none'"></div>
   <div class="gala-band-overlay"></div>
   <div class="gala-band-content">
     <p class="gala-band-quote reveal reveal--scale" style="--d:0ms">
@@ -367,7 +366,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      RSVP
 ══════════════════════════════════════════════════════════════ -->
-<section id="rsvp" class="gala-rsvp-section">
+<section id="rsvp" class="gala-rsvp-section"
+  [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="gala-pencil gala-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -384,7 +384,6 @@
       </svg>
     </button>
   }
-  <div class="band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
   <div class="gala-rsvp-overlay"></div>
 
   <div class="gala-rsvp-card reveal reveal--scale" style="--d:80ms">

@@ -62,7 +62,7 @@
 /* ─── Band BG ─────────────────────────────────────────────────── */
 .band-bg {
   position: absolute;
-  inset: -15% 0;
+  inset: 0;
   background-size: cover;
   background-position: center;
   will-change: transform;
@@ -273,7 +273,9 @@ section:focus-within > .gala-pencil { opacity: 1; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--gala-dark);
+  background-color: var(--gala-dark);
+  background-size: cover;
+  background-position: center;
 }
 
 .gala-hero-overlay {
@@ -421,18 +423,15 @@ section:focus-within > .gala-pencil { opacity: 1; }
 ═══════════════════════════════════════════════════════════════ */
 .gala-about {
   position: relative;
-  background: #111115;
+  background-color: #111115;
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
 
   .gala-section-inner {
     position: relative;
     z-index: 2;
   }
-}
-
-.gala-about-bg {
-  opacity: .35;
-  filter: saturate(1.15);
 }
 
 .gala-about-overlay {
@@ -522,9 +521,11 @@ section:focus-within > .gala-pencil { opacity: 1; }
 .gala-band {
   position: relative; min-height: 36vh;
   display: flex; align-items: center; justify-content: center;
-  overflow: hidden; background: #111115;
+  overflow: hidden; background-color: #111115;
+  background-size: cover;
+  background-position: center;
 }
-.gala-band-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,10,.72), rgba(8,8,10,.85)); z-index: 1; }
+.gala-band-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,10,.29), rgba(8,8,10,.26)); z-index: 1; }
 .gala-band-bg { opacity: .45; }
 .gala-band-content { position: relative; z-index: 2; padding: 3rem 1.5rem; text-align: center; }
 .gala-band-quote {
@@ -681,7 +682,9 @@ section:focus-within > .gala-pencil { opacity: 1; }
 ═══════════════════════════════════════════════════════════════ */
 .gala-rsvp-section {
   position: relative; overflow: hidden;
-  background: var(--gala-dark);
+  background-color: var(--gala-dark);
+  background-size: cover;
+  background-position: center;
   padding: 6rem 1.5rem;
   display: flex; flex-direction: column; align-items: center; gap: 3rem;
 }
