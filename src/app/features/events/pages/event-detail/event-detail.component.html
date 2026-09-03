@@ -240,11 +240,6 @@
 
     <!-- Quick links -->
     <div class="quick-links">
-      <a (click)="goToJoinPage()" class="quick-link clickable" role="button" tabindex="0" title="Accéder à la page d'inscription pour voir et modifier la photo">
-        <span class="ql-icon">✨</span>
-        <span class="ql-label">Page d'inscription (Join & Photo)</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
       <a [routerLink]="['/events', event()!.id, 'links']" class="quick-link">
         <span class="ql-icon">🔗</span>
         <span class="ql-label">Liens d'invitation</span>
@@ -253,6 +248,11 @@
       <a [routerLink]="['/events', event()!.id, 'invitations']" class="quick-link">
         <span class="ql-icon">✉️</span>
         <span class="ql-label">Gérer les invitations</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+      <a (click)="goToJoinPage()" class="quick-link clickable" role="button" tabindex="0" title="Accéder à la page d'inscription pour voir et modifier la photo">
+        <span class="ql-icon">✨</span>
+        <span class="ql-label">Page d'inscription (Join & Photo)</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
       <a [routerLink]="editorRoute() ? ['/events', event()!.id, editorRoute()] : ['/events', event()!.id, 'card']"

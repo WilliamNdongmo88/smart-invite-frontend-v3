@@ -11,6 +11,109 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
+export interface DialCodeEntry {
+  name: string;
+  flag: string;
+  code: string;   // e.g. "+237"
+}
+
+export const DIAL_CODES: DialCodeEntry[] = [
+  { name: 'Afghanistan',              flag: '🇦🇫', code: '+93'   },
+  { name: 'Afrique du Sud',           flag: '🇿🇦', code: '+27'   },
+  { name: 'Albanie',                  flag: '🇦🇱', code: '+355'  },
+  { name: 'Algérie',                  flag: '🇩🇿', code: '+213'  },
+  { name: 'Allemagne',                flag: '🇩🇪', code: '+49'   },
+  { name: 'Angola',                   flag: '🇦🇴', code: '+244'  },
+  { name: 'Arabie Saoudite',          flag: '🇸🇦', code: '+966'  },
+  { name: 'Argentine',                flag: '🇦🇷', code: '+54'   },
+  { name: 'Australie',                flag: '🇦🇺', code: '+61'   },
+  { name: 'Autriche',                 flag: '🇦🇹', code: '+43'   },
+  { name: 'Bénin',                    flag: '🇧🇯', code: '+229'  },
+  { name: 'Belgique',                 flag: '🇧🇪', code: '+32'   },
+  { name: 'Brésil',                   flag: '🇧🇷', code: '+55'   },
+  { name: 'Burkina Faso',             flag: '🇧🇫', code: '+226'  },
+  { name: 'Burundi',                  flag: '🇧🇮', code: '+257'  },
+  { name: 'Cameroun',                 flag: '🇨🇲', code: '+237'  },
+  { name: 'Canada',                   flag: '🇨🇦', code: '+1'    },
+  { name: 'Cap-Vert',                 flag: '🇨🇻', code: '+238'  },
+  { name: 'Centrafrique',             flag: '🇨🇫', code: '+236'  },
+  { name: 'Chili',                    flag: '🇨🇱', code: '+56'   },
+  { name: 'Chine',                    flag: '🇨🇳', code: '+86'   },
+  { name: 'Colombie',                 flag: '🇨🇴', code: '+57'   },
+  { name: 'Comores',                  flag: '🇰🇲', code: '+269'  },
+  { name: 'Congo (Brazzaville)',       flag: '🇨🇬', code: '+242'  },
+  { name: 'Congo (Kinshasa)',          flag: '🇨🇩', code: '+243'  },
+  { name: "Côte d'Ivoire",            flag: '🇨🇮', code: '+225'  },
+  { name: 'Danemark',                 flag: '🇩🇰', code: '+45'   },
+  { name: 'Djibouti',                 flag: '🇩🇯', code: '+253'  },
+  { name: 'Égypte',                   flag: '🇪🇬', code: '+20'   },
+  { name: 'Espagne',                  flag: '🇪🇸', code: '+34'   },
+  { name: 'Éthiopie',                 flag: '🇪🇹', code: '+251'  },
+  { name: 'États-Unis',               flag: '🇺🇸', code: '+1'    },
+  { name: 'Finlande',                 flag: '🇫🇮', code: '+358'  },
+  { name: 'France',                   flag: '🇫🇷', code: '+33'   },
+  { name: 'Gabon',                    flag: '🇬🇦', code: '+241'  },
+  { name: 'Ghana',                    flag: '🇬🇭', code: '+233'  },
+  { name: 'Grèce',                    flag: '🇬🇷', code: '+30'   },
+  { name: 'Guinée',                   flag: '🇬🇳', code: '+224'  },
+  { name: 'Guinée équatoriale',       flag: '🇬🇶', code: '+240'  },
+  { name: 'Guinée-Bissau',            flag: '🇬🇼', code: '+245'  },
+  { name: 'Haïti',                    flag: '🇭🇹', code: '+509'  },
+  { name: 'Inde',                     flag: '🇮🇳', code: '+91'   },
+  { name: 'Indonésie',                flag: '🇮🇩', code: '+62'   },
+  { name: 'Irak',                     flag: '🇮🇶', code: '+964'  },
+  { name: 'Iran',                     flag: '🇮🇷', code: '+98'   },
+  { name: 'Irlande',                  flag: '🇮🇪', code: '+353'  },
+  { name: 'Israël',                   flag: '🇮🇱', code: '+972'  },
+  { name: 'Italie',                   flag: '🇮🇹', code: '+39'   },
+  { name: 'Jamaïque',                 flag: '🇯🇲', code: '+1876' },
+  { name: 'Japon',                    flag: '🇯🇵', code: '+81'   },
+  { name: 'Kenya',                    flag: '🇰🇪', code: '+254'  },
+  { name: 'Liban',                    flag: '🇱🇧', code: '+961'  },
+  { name: 'Libéria',                  flag: '🇱🇷', code: '+231'  },
+  { name: 'Libye',                    flag: '🇱🇾', code: '+218'  },
+  { name: 'Madagascar',               flag: '🇲🇬', code: '+261'  },
+  { name: 'Malawi',                   flag: '🇲🇼', code: '+265'  },
+  { name: 'Mali',                     flag: '🇲🇱', code: '+223'  },
+  { name: 'Maroc',                    flag: '🇲🇦', code: '+212'  },
+  { name: 'Maurice',                  flag: '🇲🇺', code: '+230'  },
+  { name: 'Mauritanie',               flag: '🇲🇷', code: '+222'  },
+  { name: 'Mexique',                  flag: '🇲🇽', code: '+52'   },
+  { name: 'Mozambique',               flag: '🇲🇿', code: '+258'  },
+  { name: 'Namibie',                  flag: '🇳🇦', code: '+264'  },
+  { name: 'Niger',                    flag: '🇳🇪', code: '+227'  },
+  { name: 'Nigéria',                  flag: '🇳🇬', code: '+234'  },
+  { name: 'Norvège',                  flag: '🇳🇴', code: '+47'   },
+  { name: 'Nouvelle-Zélande',         flag: '🇳🇿', code: '+64'   },
+  { name: 'Ouganda',                  flag: '🇺🇬', code: '+256'  },
+  { name: 'Pakistan',                 flag: '🇵🇰', code: '+92'   },
+  { name: 'Pays-Bas',                 flag: '🇳🇱', code: '+31'   },
+  { name: 'Philippines',              flag: '🇵🇭', code: '+63'   },
+  { name: 'Pologne',                  flag: '🇵🇱', code: '+48'   },
+  { name: 'Portugal',                 flag: '🇵🇹', code: '+351'  },
+  { name: 'République dominicaine',   flag: '🇩🇴', code: '+1809' },
+  { name: 'Roumanie',                 flag: '🇷🇴', code: '+40'   },
+  { name: 'Royaume-Uni',              flag: '🇬🇧', code: '+44'   },
+  { name: 'Russie',                   flag: '🇷🇺', code: '+7'    },
+  { name: 'Rwanda',                   flag: '🇷🇼', code: '+250'  },
+  { name: 'São Tomé-et-Príncipe',     flag: '🇸🇹', code: '+239'  },
+  { name: 'Sénégal',                  flag: '🇸🇳', code: '+221'  },
+  { name: 'Sierra Leone',             flag: '🇸🇱', code: '+232'  },
+  { name: 'Somalie',                  flag: '🇸🇴', code: '+252'  },
+  { name: 'Soudan',                   flag: '🇸🇩', code: '+249'  },
+  { name: 'Suède',                    flag: '🇸🇪', code: '+46'   },
+  { name: 'Suisse',                   flag: '🇨🇭', code: '+41'   },
+  { name: 'Tanzanie',                 flag: '🇹🇿', code: '+255'  },
+  { name: 'Tchad',                    flag: '🇹🇩', code: '+235'  },
+  { name: 'Togo',                     flag: '🇹🇬', code: '+228'  },
+  { name: 'Tunisie',                  flag: '🇹🇳', code: '+216'  },
+  { name: 'Turquie',                  flag: '🇹🇷', code: '+90'   },
+  { name: 'Ukraine',                  flag: '🇺🇦', code: '+380'  },
+  { name: 'Venezuela',                flag: '🇻🇪', code: '+58'   },
+  { name: 'Zambie',                   flag: '🇿🇲', code: '+260'  },
+  { name: 'Zimbabwe',                 flag: '🇿🇼', code: '+263'  },
+];
+
 type RsvpTab = 'ALL' | RsvpStatus;
 
 @Component({
@@ -84,14 +187,21 @@ export class GuestsComponent implements OnInit {
     { key: 'BOTH',     label: 'Email & WhatsApp' },
   ];
 
+  // ── Dial codes ──
+  readonly dialCodes = DIAL_CODES;
+
   // ── Form ──
   form = this.fb.group({
     fullName:         ['', [Validators.required, Validators.minLength(2)]],
     email:            [''],
-    phoneNumber:      [''],
+    phoneDialCode:    ['+237'],          // indicatif pays (obligatoire si WhatsApp)
+    phoneNumber:      [''],              // numéro local (sans indicatif)
     notificationMode: ['EMAIL' as NotificationMode],
     tableNumber:      [null as number | null],
   });
+
+  // ── Signal : le mode choisi nécessite WhatsApp ──
+  needsWhatsApp = signal(false);
 
   // ── Alert : confirmés sans numéro de table ──
   confirmedWithoutTable = signal(0);
@@ -112,6 +222,11 @@ export class GuestsComponent implements OnInit {
     });
     this.load();
     this.loadConfirmedWithoutTable();
+
+    // Met à jour le signal needsWhatsApp à chaque changement du mode de notification
+    this.form.get('notificationMode')!.valueChanges.subscribe(mode => {
+      this.needsWhatsApp.set(mode === 'WHATSAPP' || mode === 'BOTH');
+    });
   }
 
   private loadConfirmedWithoutTable(): void {
@@ -183,16 +298,29 @@ export class GuestsComponent implements OnInit {
   // ── Add / Edit ──
   openAdd(): void {
     this.editingGuest.set(null);
-    this.form.reset({ notificationMode: 'EMAIL' });
+    this.form.reset({ notificationMode: 'EMAIL', phoneDialCode: '+237' });
     this.showForm.set(true);
   }
 
   openEdit(g: Guest): void {
     this.editingGuest.set(g);
+
+    // Décompose le numéro existant : si il commence par un indicatif connu, on le sépare
+    let dialCode = '+237';
+    let localNumber = g.phoneNumber ?? '';
+    if (localNumber) {
+      const matched = DIAL_CODES.find(d => localNumber.startsWith(d.code));
+      if (matched) {
+        dialCode    = matched.code;
+        localNumber = localNumber.slice(matched.code.length).trim();
+      }
+    }
+
     this.form.patchValue({
       fullName:         g.fullName,
       email:            g.email ?? '',
-      phoneNumber:      g.phoneNumber ?? '',
+      phoneDialCode:    dialCode,
+      phoneNumber:      localNumber,
       notificationMode: g.notificationMode ?? 'EMAIL',
       tableNumber:      g.tableNumber ?? null,
     });
@@ -202,13 +330,42 @@ export class GuestsComponent implements OnInit {
   closeForm(): void { this.showForm.set(false); }
 
   saveGuest(): void {
+    const mode = this.form.get('notificationMode')?.value as NotificationMode;
+    const requiresWhatsApp = mode === 'WHATSAPP' || mode === 'BOTH';
+
+    // Validation manuelle : indicatif + numéro obligatoires si WhatsApp
+    if (requiresWhatsApp) {
+      const dialCode    = (this.form.get('phoneDialCode')?.value ?? '').toString().trim();
+      const localNumber = (this.form.get('phoneNumber')?.value ?? '').toString().trim();
+      if (!dialCode) {
+        this.form.get('phoneDialCode')?.markAsTouched();
+        this.form.markAllAsTouched();
+        return;
+      }
+      if (!localNumber) {
+        this.form.get('phoneNumber')?.setErrors({ required: true });
+        this.form.markAllAsTouched();
+        return;
+      }
+    }
+
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
     const v = this.form.value;
+
+    // Compose le numéro complet : indicatif + numéro local (seulement si whatsapp nécessaire)
+    let fullPhone: string | undefined;
+    if (requiresWhatsApp && v.phoneNumber) {
+      const local = v.phoneNumber.toString().trim().replace(/^0+/, ''); // retire les zéros en tête
+      fullPhone = `${v.phoneDialCode}${local}`;
+    } else {
+      fullPhone = v.phoneNumber || undefined;
+    }
+
     const req: any = {
       fullName:         v.fullName!,
       email:            v.email      || undefined,
-      phoneNumber:      v.phoneNumber || undefined,
+      phoneNumber:      fullPhone,
       notificationMode: v.notificationMode ?? 'EMAIL',
       tableNumber:      v.tableNumber ?? undefined,
     };
