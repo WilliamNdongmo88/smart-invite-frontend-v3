@@ -341,13 +341,15 @@ section:focus-within > .conf-pencil { opacity: 1; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--conf-dark);
+  background-color: var(--conf-dark);
+  background-size: cover;
+  background-position: center;
 }
 
 .conf-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(6,12,24,.65) 0%, rgba(6,12,24,.88) 100%);
+  background: linear-gradient(180deg, rgba(6,12,24,.60) 0%, rgba(6,12,24,.35) 100%);
   z-index: 1;
 }
 
@@ -538,7 +540,9 @@ section:focus-within > .conf-pencil { opacity: 1; }
 ═══════════════════════════════════════════════════════════════ */
 .conf-about {
   position: relative;
-  background: #091322;
+  background-color: #091322;
+  background-size: cover;
+  background-position: center;
   overflow: hidden;
 
   .conf-section-inner {
@@ -547,15 +551,10 @@ section:focus-within > .conf-pencil { opacity: 1; }
   }
 }
 
-.conf-about-bg {
-  opacity: .35;
-  filter: saturate(1.15);
-}
-
 .conf-about-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(9,19,34,.85) 0%, rgba(8,16,30,.95) 100%);
+  background: linear-gradient(180deg, rgba(9,19,34,.60) 0%, rgba(8,16,30,.80) 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -714,7 +713,9 @@ section:focus-within > .conf-pencil { opacity: 1; }
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--conf-dark-2);
+  background-color: var(--conf-dark-2);
+  background-size: cover;
+  background-position: center;
 }
 
 .conf-band-overlay {
@@ -949,24 +950,22 @@ section:focus-within > .conf-pencil { opacity: 1; }
 .conf-rsvp-section {
   position: relative;
   overflow: hidden;
-  background: var(--conf-dark);
+  background-color: var(--conf-dark);
+  background-size: cover;
+  background-position: center;
   padding: 6rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3rem;
+}
 
-  .conf-band-bg {
-    opacity: .45;
-  }
-
-  .conf-band-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(6,12,24,.65) 0%, rgba(6,12,24,.88) 100%);
-    z-index: 1;
-    pointer-events: none;
-  }
+.conf-rsvp-section .conf-band-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6,12,24,.50) 0%, rgba(6,12,24,.30) 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .conf-rsvp-card {

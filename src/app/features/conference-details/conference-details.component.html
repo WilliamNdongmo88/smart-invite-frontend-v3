@@ -77,7 +77,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      HERO
 ══════════════════════════════════════════════════════════════ -->
-<section id="top" class="conf-hero">
+<section id="top" class="conf-hero"
+  [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="conf-pencil conf-pencil--hero" (click)="openEdit('hero')" title="Éditer le Hero">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -95,7 +96,6 @@
     </button>
   }
 
-  <div class="conf-hero-bg band-bg" [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'"></div>
   <div class="conf-hero-overlay"></div>
 
   <div class="conf-hero-content">
@@ -163,7 +163,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      À PROPOS
 ══════════════════════════════════════════════════════════════ -->
-<section id="about" class="conf-section conf-about section-entrance">
+<section id="about" class="conf-section conf-about section-entrance"
+  [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="conf-pencil conf-pencil--section" (click)="openEdit('about')" title="Éditer À Propos">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -172,7 +173,6 @@
       </svg>
     </button>
   }
-  <div class="conf-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
   <div class="conf-about-overlay"></div>
   <div class="conf-section-inner">
     <span class="conf-eyebrow-dark reveal" style="--d:0ms">L'ÉVÉNEMENT</span>
@@ -254,7 +254,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX — AGENDA BAND
 ══════════════════════════════════════════════════════════════ -->
-<div class="conf-band">
+<div class="conf-band" [style.backgroundImage]="bgs().agendaBand ? 'url(' + bgs().agendaBand + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="conf-pencil conf-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -263,7 +263,6 @@
       </svg>
     </button>
   }
-  <div class="conf-band-bg band-bg" [style.backgroundImage]="bgs().agendaBand ? 'url(' + bgs().agendaBand + ')' : 'none'"></div>
   <div class="conf-band-overlay"></div>
   <div class="conf-band-content">
     <p class="conf-band-quote reveal reveal--scale" style="--d:0ms">
@@ -439,7 +438,8 @@
 <!-- ══════════════════════════════════════════════════════════════
      RSVP / INSCRIPTION
 ══════════════════════════════════════════════════════════════ -->
-<section id="rsvp" class="conf-rsvp-section">
+<section id="rsvp" class="conf-rsvp-section"
+  [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'">
   @if (isLoggedIn()) {
     <button class="conf-pencil conf-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -456,7 +456,6 @@
       </svg>
     </button>
   }
-  <div class="conf-band-bg band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
   <div class="conf-band-overlay"></div>
 
   <div class="conf-rsvp-card reveal reveal--scale" style="--d:80ms">
