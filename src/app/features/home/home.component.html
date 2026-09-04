@@ -406,17 +406,30 @@
       <div class="contact-form">
         <input class="contact-input" type="text" placeholder="Votre nom"
                [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
+        <div class="contact-phone-wrap">
+          <select class="contact-dial-select"
+                  [value]="contactDialCode()"
+                  (change)="contactDialCode.set($any($event.target).value)">
+            @for (d of dialCodes; track d.code) {
+              <option [value]="d.code">{{ d.flag }} {{ d.name }} ({{ d.code }})</option>
+            }
+          </select>
+          <input class="contact-input contact-input--phone" type="tel"
+                 placeholder="XXXXXXXXX"
+                 [value]="contactPhone()"
+                 (input)="contactPhone.set($any($event.target).value)" />
+        </div>
         <textarea class="contact-input contact-textarea" placeholder="Écrivez votre question ici…" rows="4"
                   [value]="contactMsg()" (input)="contactMsg.set($any($event.target).value)"></textarea>
-        <button class="btn-primary" (click)="sendContact()" [disabled]="contactSending()">
+        <button class="btn-primary" (click)="sendContact()" [disabled]="contactSending() || !contactName() || !contactPhone() || !contactMsg()">
           @if (contactSending()) { <span class="spinner"></span> }
-          Envoyer
+          Envoyer via WhatsApp
         </button>
       </div>
     } @else {
       <div class="contact-success">
         <p>Merci {{ contactName() }} ! 🎉</p>
-        <p>Votre question a été envoyée. On vous répond sur WhatsApp.</p>
+        <p>Votre question a été envoyée. On vous répond sur WhatsApp au <strong>{{ contactDialCode() }}{{ contactPhone() }}</strong>.</p>
         <button class="btn-outline" (click)="resetContact()">Nouvelle question</button>
       </div>
     }

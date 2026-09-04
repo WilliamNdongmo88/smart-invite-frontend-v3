@@ -1116,6 +1116,41 @@ $border:  #2a2a2a;
 
 .contact-textarea { resize: vertical; min-height: 100px; }
 
+.contact-phone-wrap {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+
+  .contact-dial-select {
+    flex-shrink: 0;
+    background: #1a1a1a;
+    border: 1px solid $border;
+    border-right: none;
+    color: $gold;
+    font-family: inherit;
+    font-size: 0.78rem;
+    padding: 0 0.5rem;
+    cursor: pointer;
+    outline: none;
+    max-width: 160px;
+    transition: border-color 0.2s;
+    appearance: auto;
+
+    &:focus { border-color: $gold; }
+
+    option {
+      background: #1a1a1a;
+      color: #e5e5e5;
+    }
+  }
+
+  .contact-input--phone {
+    flex: 1;
+    border-left: none;
+    &:focus { border-color: $gold; }
+  }
+}
+
 .contact-success {
   display: flex;
   flex-direction: column;

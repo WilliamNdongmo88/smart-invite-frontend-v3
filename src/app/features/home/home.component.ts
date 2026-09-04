@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +14,7 @@ import { RouterLink } from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly authService = inject(AuthService);
 
   // ── Story book ─────────────────────────────────────────────────────
   activeChapter = signal(0);
@@ -93,10 +95,57 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private toastShown = false;
 
   // ── Contact form ───────────────────────────────────────────────────
-  contactName = signal('');
-  contactMsg = signal('');
-  contactSent = signal(false);
-  contactSending = signal(false);
+  readonly dialCodes = [
+    { code: '+237', flag: '🇨🇲', name: 'Cameroun'         },
+    { code: '+225', flag: '🇨🇮', name: 'Côte d\'Ivoire'   },
+    { code: '+221', flag: '🇸🇳', name: 'Sénégal'          },
+    { code: '+242', flag: '🇨🇬', name: 'Congo'            },
+    { code: '+243', flag: '🇨🇩', name: 'RD Congo'         },
+    { code: '+241', flag: '🇬🇦', name: 'Gabon'            },
+    { code: '+235', flag: '🇹🇩', name: 'Tchad'            },
+    { code: '+236', flag: '🇨🇫', name: 'Centrafrique'     },
+    { code: '+240', flag: '🇬🇶', name: 'Guinée Éq.'       },
+    { code: '+229', flag: '🇧🇯', name: 'Bénin'            },
+    { code: '+226', flag: '🇧🇫', name: 'Burkina Faso'     },
+    { code: '+228', flag: '🇹🇬', name: 'Togo'             },
+    { code: '+223', flag: '🇲🇱', name: 'Mali'             },
+    { code: '+227', flag: '🇳🇪', name: 'Niger'            },
+    { code: '+230', flag: '🇲🇺', name: 'Maurice'          },
+    { code: '+222', flag: '🇲🇷', name: 'Mauritanie'       },
+    { code: '+224', flag: '🇬🇳', name: 'Guinée'           },
+    { code: '+245', flag: '🇬🇼', name: 'Guinée-Bissau'    },
+    { code: '+238', flag: '🇨🇻', name: 'Cap-Vert'         },
+    { code: '+239', flag: '🇸🇹', name: 'São Tomé'         },
+    { code: '+234', flag: '🇳🇬', name: 'Nigéria'          },
+    { code: '+233', flag: '🇬🇭', name: 'Ghana'            },
+    { code: '+212', flag: '🇲🇦', name: 'Maroc'            },
+    { code: '+213', flag: '🇩🇿', name: 'Algérie'          },
+    { code: '+216', flag: '🇹🇳', name: 'Tunisie'          },
+    { code: '+20',  flag: '🇪🇬', name: 'Égypte'           },
+    { code: '+27',  flag: '🇿🇦', name: 'Afrique du Sud'   },
+    { code: '+254', flag: '🇰🇪', name: 'Kenya'            },
+    { code: '+255', flag: '🇹🇿', name: 'Tanzanie'         },
+    { code: '+256', flag: '🇺🇬', name: 'Ouganda'          },
+    { code: '+251', flag: '🇪🇹', name: 'Éthiopie'         },
+    { code: '+33',  flag: '🇫🇷', name: 'France'           },
+    { code: '+32',  flag: '🇧🇪', name: 'Belgique'         },
+    { code: '+41',  flag: '🇨🇭', name: 'Suisse'           },
+    { code: '+1',   flag: '🇺🇸', name: 'États-Unis'       },
+    { code: '+44',  flag: '🇬🇧', name: 'Royaume-Uni'      },
+    { code: '+49',  flag: '🇩🇪', name: 'Allemagne'        },
+    { code: '+34',  flag: '🇪🇸', name: 'Espagne'          },
+    { code: '+39',  flag: '🇮🇹', name: 'Italie'           },
+    { code: '+351', flag: '🇵🇹', name: 'Portugal'         },
+    { code: '+55',  flag: '🇧🇷', name: 'Brésil'           },
+    { code: '+86',  flag: '🇨🇳', name: 'Chine'            },
+  ];
+
+  contactName     = signal(this.authService.getName() ?? '');
+  contactDialCode = signal('+237');
+  contactPhone    = signal('');
+  contactMsg      = signal('');
+  contactSent     = signal(false);
+  contactSending  = signal(false);
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -148,10 +197,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendContact(): void {
-    if (!this.contactName() || !this.contactMsg()) return;
+    if (!this.contactName() || !this.contactPhone() || !this.contactMsg()) return;
     this.contactSending.set(true);
+
+    const fullNumber = `${this.contactDialCode()}${this.contactPhone().replace(/\D/g, '')}`;
+
     const msg = encodeURIComponent(
-      `Bonjour, j'ai une question concernant Smart Invite.\nNom: ${this.contactName()}\nMessage: ${this.contactMsg()}\nEnvoyé depuis le site le ${new Date().toLocaleDateString('fr-FR')}`
+      `Bonjour, j'ai une question concernant Smart Invite.\n` +
+      `Nom : ${this.contactName()}\n` +
+      `WhatsApp : ${fullNumber}\n` +
+      `Message : ${this.contactMsg()}\n` +
+      `Envoyé depuis le site le ${new Date().toLocaleDateString('fr-FR')}`
     );
     setTimeout(() => {
       window.open(`https://wa.me/237600000000?text=${msg}`, '_blank');
@@ -161,7 +217,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   resetContact(): void {
-    this.contactName.set('');
+    this.contactName.set(this.authService.getName() ?? '');
+    this.contactDialCode.set('+237');
+    this.contactPhone.set('');
     this.contactMsg.set('');
     this.contactSent.set(false);
   }
