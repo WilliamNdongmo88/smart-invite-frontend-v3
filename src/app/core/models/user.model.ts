@@ -54,3 +54,16 @@ export interface OrganizerSummary {
   createdAt: string;
   events: EventSummary[];
 }
+
+/** Message de contact reçu via le formulaire public (table usernews) */
+export interface UserNewsMessage {
+  id: number;
+  name:         string;
+  email?:       string;
+  phone?:       string;
+  message:      string;
+  replyChannel: 'WHATSAPP' | 'EMAIL';
+  replyContact: string;
+  userId?:      number;
+  createdAt:    string;
+}

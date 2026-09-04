@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { OrganizerSummary } from '../models/user.model';
+import { OrganizerSummary, UserNewsMessage } from '../models/user.model';
 import { Payment } from '../models/payment.model';
 
 @Injectable({ providedIn: 'root' })
@@ -34,5 +34,18 @@ export class AdminService {
 
   getAllPayments(): Observable<ApiResponse<Payment[]>> {
     return this.http.get<ApiResponse<Payment[]>>(`${this.payBase}/all`);
+  }
+
+  // ── Messages de contact ──────────────────────────────────────────
+
+  getAllContacts(): Observable<ApiResponse<UserNewsMessage[]>> {
+    return this.http.get<ApiResponse<UserNewsMessage[]>>(`${this.base}/contacts`);
+  }
+
+  replyToContact(id: number, replyMessage: string): Observable<ApiResponse<void>> {
+    return this.http.post<ApiResponse<void>>(
+      `${this.base}/contacts/${id}/reply`,
+      { replyMessage }
+    );
   }
 }

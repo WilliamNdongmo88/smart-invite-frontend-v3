@@ -4,7 +4,7 @@
   <div class="au-header">
     <div>
       <h1 class="au-title">Utilisateurs</h1>
-      <p class="au-sub">Gestion des organisateurs inscrits</p>
+      <p class="au-sub">Gestion des organisateurs &amp; messages de contact</p>
     </div>
     <button class="btn-refresh" (click)="load()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -15,108 +15,201 @@
     </button>
   </div>
 
-  <!-- Stats -->
-  <div class="au-stats">
-    <div class="stat-card">
-      <span class="stat-label">Total</span>
-      <span class="stat-value">{{ stats().total }}</span>
-    </div>
-    <div class="stat-card active">
-      <span class="stat-label">Actifs</span>
-      <span class="stat-value">{{ stats().active }}</span>
-    </div>
-    <div class="stat-card blocked">
-      <span class="stat-label">Bloqués</span>
-      <span class="stat-value">{{ stats().blocked }}</span>
-    </div>
-    <div class="stat-card inactive">
-      <span class="stat-label">Inactifs</span>
-      <span class="stat-value">{{ stats().inactive }}</span>
-    </div>
+  <!-- Onglets -->
+  <div class="au-tabs">
+    <button class="au-tab" [class.active]="activeTab() === 'users'" (click)="setTab('users')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      Organisateurs
+      <span class="tab-badge">{{ stats().total }}</span>
+    </button>
+    <button class="au-tab" [class.active]="activeTab() === 'messages'" (click)="setTab('messages')">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Messages
+      <span class="tab-badge">{{ messages().length }}</span>
+    </button>
   </div>
 
-  <!-- Search -->
-  <div class="au-search-wrap">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-    </svg>
-    <input
-      class="au-search"
-      type="text"
-      placeholder="Rechercher par nom ou email…"
-      [value]="search()"
-      (input)="updateSearch($any($event.target).value)" />
-  </div>
+  <!-- ═══════════════════════════════════════
+       ONGLET UTILISATEURS
+  ═══════════════════════════════════════ -->
+  @if (activeTab() === 'users') {
 
-  <!-- Table -->
-  <div class="au-card">
-    @if (loading()) {
-      <div class="au-loading">Chargement…</div>
-    } @else if (filtered().length === 0) {
-      <div class="au-empty">Aucun utilisateur trouvé.</div>
-    } @else {
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Email</th>
-              <th>Téléphone</th>
-              <th>Événements</th>
-              <th>Statut</th>
-              <th>Inscrit le</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (o of filtered(); track o.id) {
-              <tr>
-                <td class="name-cell">{{ o.name }}</td>
-                <td class="email-cell">{{ o.email }}</td>
-                <td>{{ o.phone || '—' }}</td>
-                <td class="events-cell">
-                  @if (o.events.length === 0) {
-                    <span class="no-events">Aucun</span>
-                  } @else {
-                    <div class="events-list">
-                      @for (ev of o.events; track ev.id) {
-                        <span class="event-tag" [class]="'pay-' + (ev.paymentStatus ?? 'none')">
-                          {{ ev.title }}
-                        </span>
-                      }
-                    </div>
-                  }
-                </td>
-                <td>
-                  <span class="badge" [class]="statusClass(o)">{{ statusLabel(o) }}</span>
-                </td>
-                <td class="date-cell">{{ formatDate(o.createdAt) }}</td>
-                <td class="actions-cell">
-                  @if (processing() === o.id) {
-                    <span class="processing">…</span>
-                  } @else {
-                    @if (!o.isActive && !o.isBlocked) {
-                      <button class="btn-action activate" (click)="openConfirm(o, 'activate')">Activer</button>
-                    }
-                    @if (!o.isBlocked) {
-                      <button class="btn-action block" (click)="openConfirm(o, 'block')">Bloquer</button>
-                    } @else {
-                      <button class="btn-action unblock" (click)="openConfirm(o, 'unblock')">Débloquer</button>
-                    }
-                    <button class="btn-action delete" (click)="openConfirm(o, 'delete')">Supprimer</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+    <!-- Stats -->
+    <div class="au-stats">
+      <div class="stat-card">
+        <span class="stat-label">Total</span>
+        <span class="stat-value">{{ stats().total }}</span>
       </div>
-    }
-  </div>
+      <div class="stat-card active">
+        <span class="stat-label">Actifs</span>
+        <span class="stat-value">{{ stats().active }}</span>
+      </div>
+      <div class="stat-card blocked">
+        <span class="stat-label">Bloqués</span>
+        <span class="stat-value">{{ stats().blocked }}</span>
+      </div>
+      <div class="stat-card inactive">
+        <span class="stat-label">Inactifs</span>
+        <span class="stat-value">{{ stats().inactive }}</span>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="au-search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="au-search" type="text" placeholder="Rechercher par nom ou email…"
+             [value]="search()" (input)="updateSearch($any($event.target).value)" />
+    </div>
+
+    <!-- Table users -->
+    <div class="au-card">
+      @if (loading()) {
+        <div class="au-loading">Chargement…</div>
+      } @else if (filtered().length === 0) {
+        <div class="au-empty">Aucun utilisateur trouvé.</div>
+      } @else {
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Événements</th>
+                <th>Statut</th>
+                <th>Inscrit le</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (o of filtered(); track o.id) {
+                <tr>
+                  <td class="name-cell">{{ o.name }}</td>
+                  <td class="email-cell">{{ o.email }}</td>
+                  <td>{{ o.phone || '—' }}</td>
+                  <td class="events-cell">
+                    @if (o.events.length === 0) {
+                      <span class="no-events">Aucun</span>
+                    } @else {
+                      <div class="events-list">
+                        @for (ev of o.events; track ev.id) {
+                          <span class="event-tag" [class]="'pay-' + (ev.paymentStatus ?? 'none')">
+                            {{ ev.title }}
+                          </span>
+                        }
+                      </div>
+                    }
+                  </td>
+                  <td>
+                    <span class="badge" [class]="statusClass(o)">{{ statusLabel(o) }}</span>
+                  </td>
+                  <td class="date-cell">{{ formatDate(o.createdAt) }}</td>
+                  <td class="actions-cell">
+                    @if (processing() === o.id) {
+                      <span class="processing">…</span>
+                    } @else {
+                      @if (!o.isActive && !o.isBlocked) {
+                        <button class="btn-action activate" (click)="openConfirm(o, 'activate')">Activer</button>
+                      }
+                      @if (!o.isBlocked) {
+                        <button class="btn-action block" (click)="openConfirm(o, 'block')">Bloquer</button>
+                      } @else {
+                        <button class="btn-action unblock" (click)="openConfirm(o, 'unblock')">Débloquer</button>
+                      }
+                      <button class="btn-action delete" (click)="openConfirm(o, 'delete')">Supprimer</button>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+  }
+
+  <!-- ═══════════════════════════════════════
+       ONGLET MESSAGES
+  ═══════════════════════════════════════ -->
+  @if (activeTab() === 'messages') {
+
+    <!-- Search messages -->
+    <div class="au-search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="au-search" type="text" placeholder="Rechercher par nom, contact ou message…"
+             [value]="msgSearch()" (input)="updateMsgSearch($any($event.target).value)" />
+    </div>
+
+    <!-- Liste des messages -->
+    <div class="au-card">
+      @if (messagesLoading()) {
+        <div class="au-loading">Chargement des messages…</div>
+      } @else if (filteredMessages().length === 0) {
+        <div class="au-empty">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5" style="margin-bottom:.75rem">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <p>Aucun message de contact reçu.</p>
+        </div>
+      } @else {
+        <div class="msg-list">
+          @for (msg of filteredMessages(); track msg.id) {
+            <div class="msg-card">
+
+              <!-- En-tête message -->
+              <div class="msg-head">
+                <div class="msg-meta">
+                  <span class="msg-name">{{ msg.name }}</span>
+                  <span class="msg-channel" [class]="channelClass(msg.replyChannel)">
+                    {{ channelIcon(msg.replyChannel) }} {{ channelLabel(msg.replyChannel) }}
+                  </span>
+                </div>
+                <div class="msg-right">
+                  <span class="msg-contact">{{ msg.replyContact }}</span>
+                  <span class="msg-date">{{ formatDateTime(msg.createdAt) }}</span>
+                </div>
+              </div>
+
+              <!-- Corps du message -->
+              <p class="msg-body">{{ msg.message }}</p>
+
+              <!-- Bouton répondre -->
+              <div class="msg-actions">
+                <button class="btn-reply" (click)="openReply(msg)">
+                  @if (msg.replyChannel === 'WHATSAPP') {
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+                    Répondre via WhatsApp
+                  } @else {
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Répondre par Email
+                  }
+                </button>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  }
 
 </div>
 
-<!-- Confirm Modal -->
+<!-- ═══════════════════════════════════════
+     CONFIRM MODAL (utilisateurs)
+═══════════════════════════════════════ -->
 @if (confirmUser()) {
   <div class="modal-backdrop" (click)="closeConfirm()">
     <div class="modal" (click)="$event.stopPropagation()">
@@ -134,6 +227,60 @@
           Confirmer
         </button>
       </div>
+    </div>
+  </div>
+}
+
+<!-- ═══════════════════════════════════════
+     REPLY MODAL (messages)
+═══════════════════════════════════════ -->
+@if (replyTarget()) {
+  <div class="modal-backdrop" (click)="closeReply()">
+    <div class="modal reply-modal" (click)="$event.stopPropagation()">
+
+      <!-- En-tête -->
+      <div class="reply-modal-head">
+        <h3 class="modal-title">Répondre à {{ replyTarget()!.name }}</h3>
+        <button class="btn-close-modal" (click)="closeReply()">✕</button>
+      </div>
+
+      <!-- Rappel du message reçu -->
+      <div class="reply-original">
+        <div class="reply-original-meta">
+          <span class="msg-channel" [class]="channelClass(replyTarget()!.replyChannel)">
+            {{ channelIcon(replyTarget()!.replyChannel) }} {{ channelLabel(replyTarget()!.replyChannel) }}
+          </span>
+          <span class="reply-original-contact">→ {{ replyTarget()!.replyContact }}</span>
+        </div>
+        <p class="reply-original-text">{{ replyTarget()!.message }}</p>
+      </div>
+
+      <!-- Zone de réponse -->
+      <label class="reply-label">Votre réponse</label>
+      <textarea
+        class="reply-textarea"
+        rows="5"
+        placeholder="Saisissez votre réponse ici…"
+        [value]="replyText()"
+        (input)="updateReplyText($any($event.target).value)">
+      </textarea>
+
+      <!-- Actions -->
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeReply()">Annuler</button>
+        <button
+          class="btn-confirm reply-send"
+          [class.ch-wa]="replyTarget()!.replyChannel === 'WHATSAPP'"
+          [disabled]="replySending() || !replyText().trim()"
+          (click)="sendReply()">
+          @if (replySending()) {
+            <span class="spinner-sm"></span>
+          }
+          @if (replyTarget()!.replyChannel === 'WHATSAPP') { Envoyer via WhatsApp }
+          @else { Envoyer par Email }
+        </button>
+      </div>
+
     </div>
   </div>
 }

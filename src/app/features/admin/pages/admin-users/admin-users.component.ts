@@ -1,13 +1,16 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ToastService } from '../../../../core/services/toast.service';
-import { OrganizerSummary } from '../../../../core/models/user.model';
+import { OrganizerSummary, UserNewsMessage } from '../../../../core/models/user.model';
+import { DatePipe } from '@angular/common';
 
 type ActionType = 'block' | 'unblock' | 'activate' | 'delete';
+type Tab = 'users' | 'messages';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
+  imports: [DatePipe],
   templateUrl: 'admin-users.component.html',
   styleUrl: 'admin-users.component.scss',
 })
@@ -15,12 +18,15 @@ export class AdminUsersComponent implements OnInit {
   private readonly adminSvc = inject(AdminService);
   private readonly toast    = inject(ToastService);
 
-  organizers = signal<OrganizerSummary[]>([]);
-  loading    = signal(true);
-  processing = signal<number | null>(null);
-  search     = signal('');
+  // ── Onglet actif ──────────────────────────────────────────────────
+  activeTab = signal<Tab>('users');
 
-  // Confirm modal
+  // ── Utilisateurs ─────────────────────────────────────────────────
+  organizers  = signal<OrganizerSummary[]>([]);
+  loading     = signal(true);
+  processing  = signal<number | null>(null);
+  search      = signal('');
+
   confirmUser   = signal<OrganizerSummary | null>(null);
   confirmAction = signal<ActionType | null>(null);
 
@@ -42,15 +48,59 @@ export class AdminUsersComponent implements OnInit {
     };
   });
 
-  ngOnInit(): void { this.load(); }
+  // ── Messages (usernews) ───────────────────────────────────────────
+  messages        = signal<UserNewsMessage[]>([]);
+  messagesLoading = signal(false);
+  msgSearch       = signal('');
 
-  load(): void {
+  filteredMessages = computed(() => {
+    const q = this.msgSearch().toLowerCase();
+    return q
+      ? this.messages().filter(m =>
+          (m.name ?? '').toLowerCase().includes(q) ||
+          (m.message ?? '').toLowerCase().includes(q) ||
+          (m.replyContact ?? '').toLowerCase().includes(q))
+      : this.messages();
+  });
+
+  // ── Modale de réponse ─────────────────────────────────────────────
+  replyTarget  = signal<UserNewsMessage | null>(null);
+  replyText    = signal('');
+  replySending = signal(false);
+
+  ngOnInit(): void { this.loadUsers(); }
+
+  // ── Chargement ───────────────────────────────────────────────────
+
+  loadUsers(): void {
     this.loading.set(true);
     this.adminSvc.getAllOrganizers().subscribe({
-      next: (res) => { this.organizers.set(res.data ?? []); this.loading.set(false); },
-      error: () => this.loading.set(false),
+      next:  (res) => { this.organizers.set(res.data ?? []); this.loading.set(false); },
+      error: ()    => this.loading.set(false),
     });
   }
+
+  loadMessages(): void {
+    this.messagesLoading.set(true);
+    this.adminSvc.getAllContacts().subscribe({
+      next:  (res) => { this.messages.set(res.data ?? []); this.messagesLoading.set(false); },
+      error: ()    => this.messagesLoading.set(false),
+    });
+  }
+
+  setTab(tab: Tab): void {
+    this.activeTab.set(tab);
+    if (tab === 'messages' && this.messages().length === 0) {
+      this.loadMessages();
+    }
+  }
+
+  load(): void {
+    this.loadUsers();
+    if (this.activeTab() === 'messages') this.loadMessages();
+  }
+
+  // ── Gestion utilisateurs ─────────────────────────────────────────
 
   openConfirm(user: OrganizerSummary, action: ActionType): void {
     this.confirmUser.set(user);
@@ -82,10 +132,45 @@ export class AdminUsersComponent implements OnInit {
     };
 
     req$.subscribe({
-      next: () => { this.toast.success(msgs[action]); this.load(); this.processing.set(null); },
+      next:  () => { this.toast.success(msgs[action]); this.loadUsers(); this.processing.set(null); },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.processing.set(null); },
     });
   }
+
+  // ── Modale de réponse ─────────────────────────────────────────────
+
+  openReply(msg: UserNewsMessage): void {
+    this.replyTarget.set(msg);
+    this.replyText.set('');
+  }
+
+  closeReply(): void {
+    this.replyTarget.set(null);
+    this.replyText.set('');
+  }
+
+  sendReply(): void {
+    const target = this.replyTarget();
+    const text   = this.replyText().trim();
+    if (!target || !text) return;
+
+    this.replySending.set(true);
+    this.adminSvc.replyToContact(target.id, text).subscribe({
+      next: () => {
+        this.toast.success('Réponse envoyée avec succès !');
+        this.replySending.set(false);
+        this.closeReply();
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de l\'envoi');
+        this.replySending.set(false);
+      },
+    });
+  }
+
+  updateReplyText(value: string): void { this.replyText.set(value); }
+
+  // ── Helpers ──────────────────────────────────────────────────────
 
   statusLabel(o: OrganizerSummary): string {
     if (o.isBlocked)  return 'Bloqué';
@@ -99,8 +184,27 @@ export class AdminUsersComponent implements OnInit {
     return 'badge-active';
   }
 
+  channelIcon(channel: string): string {
+    return channel === 'WHATSAPP' ? '📱' : '✉️';
+  }
+
+  channelLabel(channel: string): string {
+    return channel === 'WHATSAPP' ? 'WhatsApp' : 'Email';
+  }
+
+  channelClass(channel: string): string {
+    return channel === 'WHATSAPP' ? 'ch-wa' : 'ch-email';
+  }
+
   formatDate(dt: string): string {
     return new Date(dt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  formatDateTime(dt: string): string {
+    return new Date(dt).toLocaleString('fr-FR', {
+      day: '2-digit', month: 'short', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
   }
 
   actionLabel(action: ActionType): string {
@@ -111,4 +215,5 @@ export class AdminUsersComponent implements OnInit {
   }
 
   updateSearch(value: string): void { this.search.set(value); }
+  updateMsgSearch(value: string): void { this.msgSearch.set(value); }
 }
