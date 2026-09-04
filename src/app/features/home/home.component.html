@@ -400,39 +400,75 @@
   <!-- Formulaire contact -->
   <div class="contact-form-wrap fade-up">
     <h3 class="contact-title">Une question ?</h3>
-    <p class="contact-sub">Réponse envoyée via WhatsApp</p>
+    <p class="contact-sub">Choisissez comment vous souhaitez être contacté(e) en retour</p>
 
     @if (!contactSent()) {
       <div class="contact-form">
+
+        <!-- Nom -->
         <input class="contact-input" type="text" placeholder="Votre nom"
                [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
-        <div class="contact-phone-wrap">
-          <div class="contact-dial-trigger">
-            <span class="fi" [class]="'fi-' + selectedDialIso2()"></span>
-            <select class="contact-dial-select"
-                    [value]="contactDialCode()"
-                    (change)="contactDialCode.set($any($event.target).value)">
-              @for (d of dialCodes; track d.code) {
-                <option [value]="d.code">{{ d.name }} ({{ d.code }})</option>
-              }
-            </select>
-          </div>
-          <input class="contact-input contact-input--phone" type="tel"
-                 placeholder="XXXXXXXXX"
-                 [value]="contactPhone()"
-                 (input)="contactPhone.set($any($event.target).value)" />
+
+        <!-- Choix du canal de réponse -->
+        <div class="contact-channel-wrap">
+          <button class="contact-channel-btn"
+                  [class.active]="contactChannel() === 'WHATSAPP'"
+                  (click)="contactChannel.set('WHATSAPP')">
+            <span>📱</span> WhatsApp
+          </button>
+          <button class="contact-channel-btn"
+                  [class.active]="contactChannel() === 'EMAIL'"
+                  (click)="contactChannel.set('EMAIL')">
+            <span>✉️</span> Email
+          </button>
         </div>
+
+        <!-- Champ dynamique selon le canal -->
+        @if (contactChannel() === 'WHATSAPP') {
+          <div class="contact-phone-wrap">
+            <div class="contact-dial-trigger">
+              <span class="fi" [class]="'fi-' + selectedDialIso2()"></span>
+              <select class="contact-dial-select"
+                      [value]="contactDialCode()"
+                      (change)="contactDialCode.set($any($event.target).value)">
+                @for (d of dialCodes; track d.code) {
+                  <option [value]="d.code">{{ d.name }} ({{ d.code }})</option>
+                }
+              </select>
+            </div>
+            <input class="contact-input contact-input--phone" type="tel"
+                   placeholder="XXXXXXXXX"
+                   [value]="contactPhone()"
+                   (input)="contactPhone.set($any($event.target).value)" />
+          </div>
+        } @else {
+          <input class="contact-input" type="email" placeholder="Votre adresse email"
+                 [value]="contactEmail()"
+                 (input)="contactEmail.set($any($event.target).value)" />
+        }
+
+        <!-- Message -->
         <textarea class="contact-input contact-textarea" placeholder="Écrivez votre question ici…" rows="4"
                   [value]="contactMsg()" (input)="contactMsg.set($any($event.target).value)"></textarea>
-        <button class="btn-primary" (click)="sendContact()" [disabled]="contactSending() || !contactName() || !contactPhone() || !contactMsg()">
+
+        <!-- Bouton d'envoi -->
+        <button class="btn-primary"
+                (click)="sendContact()"
+                [disabled]="contactSending() || !contactName() || !contactReplyContact() || !contactMsg()">
           @if (contactSending()) { <span class="spinner"></span> }
-          Envoyer via WhatsApp
+          @if (contactChannel() === 'WHATSAPP') { Envoyer &amp; répondre via WhatsApp }
+          @else { Envoyer &amp; répondre par Email }
         </button>
+
       </div>
     } @else {
       <div class="contact-success">
         <p>Merci {{ contactName() }} ! 🎉</p>
-        <p>Votre question a été envoyée. On vous répond sur WhatsApp au <strong>{{ contactDialCode() }}{{ contactPhone() }}</strong>.</p>
+        @if (contactChannel() === 'WHATSAPP') {
+          <p>Votre message a bien été reçu. Nous vous répondrons sur WhatsApp au <strong>{{ contactDialCode() }}{{ contactPhone() }}</strong>.</p>
+        } @else {
+          <p>Votre message a bien été reçu. Nous vous répondrons par email à <strong>{{ contactEmail() }}</strong>.</p>
+        }
         <button class="btn-outline" (click)="resetContact()">Nouvelle question</button>
       </div>
     }

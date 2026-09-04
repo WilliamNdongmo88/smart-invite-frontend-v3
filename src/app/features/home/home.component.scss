@@ -1116,6 +1116,38 @@ $border:  #2a2a2a;
 
 .contact-textarea { resize: vertical; min-height: 100px; }
 
+// Sélecteur de canal de réponse (WhatsApp / Email)
+.contact-channel-wrap {
+  display: flex;
+  gap: 0.5rem;
+
+  .contact-channel-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.75rem;
+    background: #1a1a1a;
+    border: 1px solid $border;
+    color: #888;
+    font-family: inherit;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+    &:hover { border-color: rgba($gold, 0.5); color: #ccc; }
+
+    &.active {
+      border-color: $gold;
+      color: $gold;
+      background: rgba($gold, 0.08);
+    }
+  }
+}
+
 .contact-phone-wrap {
   display: flex;
   align-items: stretch;

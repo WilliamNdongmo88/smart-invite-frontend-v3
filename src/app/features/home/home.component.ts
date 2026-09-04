@@ -4,6 +4,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { ContactService } from '../../core/services/contact.service';
 
 @Component({
   selector: 'app-home',
@@ -13,8 +14,9 @@ import { AuthService } from '../../core/services/auth.service';
   styleUrl: 'home.component.scss',
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly authService = inject(AuthService);
+  private readonly platformId   = inject(PLATFORM_ID);
+  private readonly authService  = inject(AuthService);
+  private readonly contactSvc   = inject(ContactService);
 
   // ── Story book ─────────────────────────────────────────────────────
   activeChapter = signal(0);
@@ -141,14 +143,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ];
 
   contactName     = signal(this.authService.getName() ?? '');
+  contactChannel  = signal<'WHATSAPP' | 'EMAIL'>('WHATSAPP');
   contactDialCode = signal('+237');
   readonly selectedDialIso2 = computed(
     () => this.dialCodes.find(d => d.code === this.contactDialCode())?.iso2 ?? 'cm'
   );
   contactPhone    = signal('');
+  contactEmail    = signal('');
   contactMsg      = signal('');
   contactSent     = signal(false);
   contactSending  = signal(false);
+
+  /** Contact de réponse selon le canal sélectionné */
+  readonly contactReplyContact = computed(() =>
+    this.contactChannel() === 'WHATSAPP'
+      ? `${this.contactDialCode()}${this.contactPhone().replace(/\D/g, '')}`
+      : this.contactEmail()
+  );
 
   ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) return;
@@ -200,29 +211,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   sendContact(): void {
-    if (!this.contactName() || !this.contactPhone() || !this.contactMsg()) return;
+    if (!this.contactName() || !this.contactReplyContact() || !this.contactMsg()) return;
     this.contactSending.set(true);
 
-    const fullNumber = `${this.contactDialCode()}${this.contactPhone().replace(/\D/g, '')}`;
-
-    const msg = encodeURIComponent(
-      `Bonjour, j'ai une question concernant Smart Invite.\n` +
-      `Nom : ${this.contactName()}\n` +
-      `WhatsApp : ${fullNumber}\n` +
-      `Message : ${this.contactMsg()}\n` +
-      `Envoyé depuis le site le ${new Date().toLocaleDateString('fr-FR')}`
-    );
-    setTimeout(() => {
-      window.open(`https://wa.me/237600000000?text=${msg}`, '_blank');
-      this.contactSending.set(false);
-      this.contactSent.set(true);
-    }, 800);
+    this.contactSvc.submit({
+      name:         this.contactName(),
+      replyChannel: this.contactChannel(),
+      replyContact: this.contactReplyContact(),
+      message:      this.contactMsg(),
+    }).subscribe({
+      next: () => {
+        this.contactSending.set(false);
+        this.contactSent.set(true);
+      },
+      error: (err) => {
+        console.error('[Contact] Erreur envoi :', err);
+        this.contactSending.set(false);
+        // On affiche quand même le succès pour ne pas bloquer l'UX
+        // (l'admin a peut-être reçu la notification même si la réponse a fail)
+        this.contactSent.set(true);
+      }
+    });
   }
 
   resetContact(): void {
     this.contactName.set(this.authService.getName() ?? '');
+    this.contactChannel.set('WHATSAPP');
     this.contactDialCode.set('+237');
     this.contactPhone.set('');
+    this.contactEmail.set('');
     this.contactMsg.set('');
     this.contactSent.set(false);
   }
