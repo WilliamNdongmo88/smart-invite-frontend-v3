@@ -407,13 +407,16 @@
         <input class="contact-input" type="text" placeholder="Votre nom"
                [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
         <div class="contact-phone-wrap">
-          <select class="contact-dial-select"
-                  [value]="contactDialCode()"
-                  (change)="contactDialCode.set($any($event.target).value)">
-            @for (d of dialCodes; track d.code) {
-              <option [value]="d.code">{{ d.flag }} {{ d.name }} ({{ d.code }})</option>
-            }
-          </select>
+          <div class="contact-dial-trigger">
+            <span class="fi" [class]="'fi-' + selectedDialIso2()"></span>
+            <select class="contact-dial-select"
+                    [value]="contactDialCode()"
+                    (change)="contactDialCode.set($any($event.target).value)">
+              @for (d of dialCodes; track d.code) {
+                <option [value]="d.code">{{ d.name }} ({{ d.code }})</option>
+              }
+            </select>
+          </div>
           <input class="contact-input contact-input--phone" type="tel"
                  placeholder="XXXXXXXXX"
                  [value]="contactPhone()"

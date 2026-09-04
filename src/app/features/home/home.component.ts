@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, OnDestroy, signal, PLATFORM_ID, inject, AfterViewInit
+  Component, OnInit, OnDestroy, signal, computed, PLATFORM_ID, inject, AfterViewInit
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
@@ -96,52 +96,55 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // ── Contact form ───────────────────────────────────────────────────
   readonly dialCodes = [
-    { code: '+237', flag: '🇨🇲', name: 'Cameroun'         },
-    { code: '+225', flag: '🇨🇮', name: 'Côte d\'Ivoire'   },
-    { code: '+221', flag: '🇸🇳', name: 'Sénégal'          },
-    { code: '+242', flag: '🇨🇬', name: 'Congo'            },
-    { code: '+243', flag: '🇨🇩', name: 'RD Congo'         },
-    { code: '+241', flag: '🇬🇦', name: 'Gabon'            },
-    { code: '+235', flag: '🇹🇩', name: 'Tchad'            },
-    { code: '+236', flag: '🇨🇫', name: 'Centrafrique'     },
-    { code: '+240', flag: '🇬🇶', name: 'Guinée Éq.'       },
-    { code: '+229', flag: '🇧🇯', name: 'Bénin'            },
-    { code: '+226', flag: '🇧🇫', name: 'Burkina Faso'     },
-    { code: '+228', flag: '🇹🇬', name: 'Togo'             },
-    { code: '+223', flag: '🇲🇱', name: 'Mali'             },
-    { code: '+227', flag: '🇳🇪', name: 'Niger'            },
-    { code: '+230', flag: '🇲🇺', name: 'Maurice'          },
-    { code: '+222', flag: '🇲🇷', name: 'Mauritanie'       },
-    { code: '+224', flag: '🇬🇳', name: 'Guinée'           },
-    { code: '+245', flag: '🇬🇼', name: 'Guinée-Bissau'    },
-    { code: '+238', flag: '🇨🇻', name: 'Cap-Vert'         },
-    { code: '+239', flag: '🇸🇹', name: 'São Tomé'         },
-    { code: '+234', flag: '🇳🇬', name: 'Nigéria'          },
-    { code: '+233', flag: '🇬🇭', name: 'Ghana'            },
-    { code: '+212', flag: '🇲🇦', name: 'Maroc'            },
-    { code: '+213', flag: '🇩🇿', name: 'Algérie'          },
-    { code: '+216', flag: '🇹🇳', name: 'Tunisie'          },
-    { code: '+20',  flag: '🇪🇬', name: 'Égypte'           },
-    { code: '+27',  flag: '🇿🇦', name: 'Afrique du Sud'   },
-    { code: '+254', flag: '🇰🇪', name: 'Kenya'            },
-    { code: '+255', flag: '🇹🇿', name: 'Tanzanie'         },
-    { code: '+256', flag: '🇺🇬', name: 'Ouganda'          },
-    { code: '+251', flag: '🇪🇹', name: 'Éthiopie'         },
-    { code: '+33',  flag: '🇫🇷', name: 'France'           },
-    { code: '+32',  flag: '🇧🇪', name: 'Belgique'         },
-    { code: '+41',  flag: '🇨🇭', name: 'Suisse'           },
-    { code: '+1',   flag: '🇺🇸', name: 'États-Unis'       },
-    { code: '+44',  flag: '🇬🇧', name: 'Royaume-Uni'      },
-    { code: '+49',  flag: '🇩🇪', name: 'Allemagne'        },
-    { code: '+34',  flag: '🇪🇸', name: 'Espagne'          },
-    { code: '+39',  flag: '🇮🇹', name: 'Italie'           },
-    { code: '+351', flag: '🇵🇹', name: 'Portugal'         },
-    { code: '+55',  flag: '🇧🇷', name: 'Brésil'           },
-    { code: '+86',  flag: '🇨🇳', name: 'Chine'            },
+    { code: '+237', iso2: 'cm', name: 'Cameroun'        },
+    { code: '+225', iso2: 'ci', name: "Côte d'Ivoire"   },
+    { code: '+221', iso2: 'sn', name: 'Sénégal'         },
+    { code: '+242', iso2: 'cg', name: 'Congo'           },
+    { code: '+243', iso2: 'cd', name: 'RD Congo'        },
+    { code: '+241', iso2: 'ga', name: 'Gabon'           },
+    { code: '+235', iso2: 'td', name: 'Tchad'           },
+    { code: '+236', iso2: 'cf', name: 'Centrafrique'    },
+    { code: '+240', iso2: 'gq', name: 'Guinée Éq.'      },
+    { code: '+229', iso2: 'bj', name: 'Bénin'           },
+    { code: '+226', iso2: 'bf', name: 'Burkina Faso'    },
+    { code: '+228', iso2: 'tg', name: 'Togo'            },
+    { code: '+223', iso2: 'ml', name: 'Mali'            },
+    { code: '+227', iso2: 'ne', name: 'Niger'           },
+    { code: '+230', iso2: 'mu', name: 'Maurice'         },
+    { code: '+222', iso2: 'mr', name: 'Mauritanie'      },
+    { code: '+224', iso2: 'gn', name: 'Guinée'          },
+    { code: '+245', iso2: 'gw', name: 'Guinée-Bissau'   },
+    { code: '+238', iso2: 'cv', name: 'Cap-Vert'        },
+    { code: '+239', iso2: 'st', name: 'São Tomé'        },
+    { code: '+234', iso2: 'ng', name: 'Nigéria'         },
+    { code: '+233', iso2: 'gh', name: 'Ghana'           },
+    { code: '+212', iso2: 'ma', name: 'Maroc'           },
+    { code: '+213', iso2: 'dz', name: 'Algérie'         },
+    { code: '+216', iso2: 'tn', name: 'Tunisie'         },
+    { code: '+20',  iso2: 'eg', name: 'Égypte'          },
+    { code: '+27',  iso2: 'za', name: 'Afrique du Sud'  },
+    { code: '+254', iso2: 'ke', name: 'Kenya'           },
+    { code: '+255', iso2: 'tz', name: 'Tanzanie'        },
+    { code: '+256', iso2: 'ug', name: 'Ouganda'         },
+    { code: '+251', iso2: 'et', name: 'Éthiopie'        },
+    { code: '+33',  iso2: 'fr', name: 'France'          },
+    { code: '+32',  iso2: 'be', name: 'Belgique'        },
+    { code: '+41',  iso2: 'ch', name: 'Suisse'          },
+    { code: '+1',   iso2: 'us', name: 'États-Unis'      },
+    { code: '+44',  iso2: 'gb', name: 'Royaume-Uni'     },
+    { code: '+49',  iso2: 'de', name: 'Allemagne'       },
+    { code: '+34',  iso2: 'es', name: 'Espagne'         },
+    { code: '+39',  iso2: 'it', name: 'Italie'          },
+    { code: '+351', iso2: 'pt', name: 'Portugal'        },
+    { code: '+55',  iso2: 'br', name: 'Brésil'          },
+    { code: '+86',  iso2: 'cn', name: 'Chine'           },
   ];
 
   contactName     = signal(this.authService.getName() ?? '');
   contactDialCode = signal('+237');
+  readonly selectedDialIso2 = computed(
+    () => this.dialCodes.find(d => d.code === this.contactDialCode())?.iso2 ?? 'cm'
+  );
   contactPhone    = signal('');
   contactMsg      = signal('');
   contactSent     = signal(false);
