@@ -45,7 +45,7 @@ export class PaymentsComponent implements OnInit {
   // ── Subscribe form ──
   form = this.fb.group({
     eventId: [null as number | null, Validators.required],
-    quota:   [100, [Validators.required, Validators.min(1)]],
+    quota:   [null as number | null, [Validators.required, Validators.min(1)]],
   });
 
   subscribing = signal(false);
@@ -105,8 +105,16 @@ export class PaymentsComponent implements OnInit {
       error: () => { this.loadingPlan.set(false); },
     });
 
-    // Initial plan fetch
-    this.quotaSubject.next(100);
+    // Watch eventId changes → auto-fill quota with maxGuests
+    this.form.get('eventId')!.valueChanges.subscribe(id => {
+      const event = this.events().find(e => e.id === Number(id));
+      if (event?.maxGuests) {
+        this.form.get('quota')!.setValue(event.maxGuests, { emitEvent: true });
+      } else {
+        this.form.get('quota')!.setValue(null, { emitEvent: false });
+        this.plan.set(null);
+      }
+    });
 
     // Watch quota changes
     this.form.get('quota')!.valueChanges.subscribe(v => {

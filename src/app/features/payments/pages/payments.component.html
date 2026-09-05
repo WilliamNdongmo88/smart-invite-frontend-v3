@@ -65,8 +65,16 @@
             <div class="field">
               <label class="label">Nombre d'invités <span class="req">*</span></label>
               <input formControlName="quota" type="number" class="input" [class.error]="isInvalid('quota')"
-                min="1" placeholder="Ex : 100" />
+                min="1" placeholder="Sélectionnez d'abord un événement" />
               @if (isInvalid('quota')) { <p class="field-error">Minimum 1 invité</p> }
+              @else {
+                @if (form.value.eventId) {
+                  <p class="field-hint">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    Pré-rempli avec le maximum d'invités défini sur l'événement
+                  </p>
+                }
+              }
             </div>
 
             <button type="button" class="btn-gold" [disabled]="subscribing() || form.invalid" (click)="subscribe()">
