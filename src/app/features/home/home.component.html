@@ -16,7 +16,32 @@
     <a routerLink="/login" class="btn-nav-outline">Se connecter</a>
     <a routerLink="/register" class="btn-nav-solid">Commencer</a>
   </div>
+
+  <!-- Bouton hamburger (mobile uniquement) -->
+  <button class="hamburger" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
+
+<!-- Overlay fond (ferme le menu au clic extérieur) -->
+<div class="mobile-overlay" [class.open]="mobileMenuOpen()" (click)="closeMobileMenu()"></div>
+
+<!-- Menu mobile -->
+<div class="mobile-menu" [class.open]="mobileMenuOpen()">
+  <ul class="mobile-nav-links">
+    <li><a href="#features" (click)="closeMobileMenu()">FONCTIONNALITÉS</a></li>
+    <li><a href="#how" (click)="closeMobileMenu()">COMMENT ÇA MARCHE</a></li>
+    <li><a href="#programme" (click)="closeMobileMenu()">PROGRAMME</a></li>
+    <li><a href="#temoignages" (click)="closeMobileMenu()">TÉMOIGNAGES</a></li>
+    <li><a href="#contact" (click)="closeMobileMenu()">CONTACT</a></li>
+  </ul>
+  <div class="mobile-nav-actions">
+    <a routerLink="/login" class="btn-nav-outline" (click)="closeMobileMenu()">Se connecter</a>
+    <a routerLink="/register" class="btn-nav-solid" (click)="closeMobileMenu()">Commencer</a>
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════════
      HERO — SAVE THE DATE

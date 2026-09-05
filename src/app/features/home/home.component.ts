@@ -89,6 +89,17 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     ],
   };
 
+  // ── Mobile menu ────────────────────────────────────────────────────
+  mobileMenuOpen = signal(false);
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update(v => !v);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
+
   // ── Parallax / scroll ──────────────────────────────────────────────
   scrollY = signal(0);
   navScrolled = signal(false);
