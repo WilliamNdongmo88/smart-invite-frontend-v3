@@ -378,8 +378,8 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg,
-    rgba(var(--overlay-color), .55) 0%,
-    rgba(var(--overlay-color), .88) 80%,
+    rgba(var(--overlay-color), .45) 0%,
+    rgba(var(--overlay-color), .50) 80%,
     var(--ivory) 100%);
   z-index: 1;
 }
@@ -669,11 +669,11 @@
   background-position: center;
 }
 .band-venue {
-  background-image: url('/images/venue/parc-etang.webp');
+  background-image: url('/images/venue/domaine-vue-aerienne.webp');
   min-height: 55vh;
 }
 .band-quote {
-  background-image: url('/images/fond-section-photo.webp');
+  background-image: url('/images/couple-fond-hero.webp');
   min-height: 40vh;
 }
 .band-hotel {
@@ -683,7 +683,7 @@
 .band-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(var(--overlay-color), .68), rgba(var(--overlay-color), .85));
+  background: linear-gradient(180deg, rgba(var(--overlay-color), .45), rgba(var(--overlay-color), .50));
 }
 .band-content {
   position: relative;
@@ -910,7 +910,7 @@
 .gallery-caption {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  background: linear-gradient(transparent, rgba(var(--overlay-color), .85));
+  background: linear-gradient(transparent, rgba(var(--overlay-color), .50));
   padding: 1.2rem .875rem .6rem;
   font-family: 'Great Vibes', cursive;
   font-size: 1.1rem;
@@ -1342,7 +1342,7 @@
 ═══════════════════════════════════════════════════════════════ */
 .rsvp-section {
   position: relative;
-  background: url('/images/venue/domaine-vue-aerienne.webp') center/cover no-repeat;
+  background: url('/images/venue/parc-etang.webp') center/cover no-repeat;
   background-attachment: fixed;
   padding: 6rem 1.5rem;
   display: flex;
@@ -1359,7 +1359,7 @@
   text-align: center;
   gap: 1rem;
   max-width: 600px;
-  background: rgba(var(--overlay-color), .88);
+  background: rgba(var(--overlay-color), .50);
   border: 1px solid rgba(var(--gold-rgb), .45);
   border-radius: 20px;
   padding: 2.5rem 2rem;
@@ -1386,7 +1386,7 @@
 .contact-form-wrap {
   position: relative;
   z-index: 1;
-  background: rgba(var(--overlay-color), .88);
+  background: rgba(var(--overlay-color), .50);
   border: 1px solid rgba(var(--gold-rgb), .4);
   border-radius: 20px;
   padding: 2rem;
@@ -1413,7 +1413,7 @@
 }
 .contact-form { display: flex; flex-direction: column; gap: .75rem; }
 .contact-input {
-  background: rgba(var(--overlay-color), .85);
+  background: rgba(var(--overlay-color), .50);
   border: 1px solid rgba(var(--gold-rgb), .35);
   color: var(--ink);
   font-family: 'Belleza', sans-serif;

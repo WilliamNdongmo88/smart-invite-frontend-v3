@@ -41,8 +41,8 @@ function sortDays(days: WeddingDetailsProgramDay[]): WeddingDetailsProgramDay[] 
 // ── Contenu initial (source de vérité) ──────────────────────────────
 const INITIAL_CONTENT: WeddingDetailsContent = {
   hero: {
-    brideFirstName:  'Leatitia',
-    groomFirstName:  'Christophe',
+    brideFirstName:  'Sophie',
+    groomFirstName:  'Nicolas',
     dateLabel:       'Les 07 & 08 Août 2026',
     venueName:       'MA CABANE AU CANADA',
     venueCity:       'GOSNÉ',
@@ -52,16 +52,16 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     budget:          '15 600 XAF',
   },
   couple: {
-    bridePortraitUrl: '/images/leatitia-seule.webp',
+    bridePortraitUrl: '/images/sophie-seule.webp',
     brideBio:
-      'Réservée et attentive, Leatitia est de celles qui parlent peu mais ressentent profondément. ' +
+      'Réservée et attentive, Sophie est de celles qui parlent peu mais ressentent profondément. ' +
       'Elle observe, écoute et accorde sa confiance avec sincérité. Derrière son calme se cachent ' +
       'une grande sensibilité, une foi profonde et une capacité naturelle à prendre soin des autres ' +
       'avec discrétion et douceur. Dans leur histoire, elle apporte l\'équilibre, la sérénité et ' +
       'cette présence apaisante qui transforme les choses simples en moments précieux.',
-    groomPortraitUrl: '/images/chris-seul.webp',
+    groomPortraitUrl: '/images/nicolas-seul.webp',
     groomBio:
-      'Christophe aime les gens, les échanges et les moments partagés. Toujours entouré, toujours ' +
+      'Nicolas aime les gens, les échanges et les moments partagés. Toujours entouré, toujours ' +
       'prêt à rassembler, il possède cette énergie chaleureuse qui crée du lien naturellement autour ' +
       'de lui. Mais derrière cette aisance se trouve surtout un homme profondément attentif, loyal et ' +
       'vrai. Dans leur histoire, il apporte l\'élan, la spontanéité et cette capacité à aimer ' +
@@ -177,23 +177,23 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
   },
   gallery: {
     items: [
-      { url: '/images/couple-fond-hero.webp',       caption: 'Notre complicité',        large: true  },
       { url: '/images/galerie-photo-1.webp',         caption: 'En amoureux',             large: false },
       { url: '/images/couple_en_fete.webp',          caption: 'Complices',               large: false },
       { url: '/images/invitation-couple-real.webp',  caption: 'Nos racines, notre fierté', large: false },
       { url: '/images/mr-mme-zome.webp',             caption: 'Mr & Mme',                large: false },
+      { url: '/images/couple-fond-hero.webp',       caption: 'Notre complicité',        large: true  },
       { url: '/images/save-the-date-invit1.webp',    caption: 'Save the date',           large: false },
     ],
   },
   backgrounds: {
     hero:        '/images/background-section-hero.webp',
-    venue:       '/images/venue/parc-etang.webp',
-    quote:       '/images/fond-section-photo.webp',
-    galleryBand: '/images/paralax_ce_nest_pas_tout.webp',
-    rsvp:        '/images/venue/domaine-vue-aerienne.webp',
+    venue:       'images/venue/domaine-vue-aerienne.webp',
+    quote:       '/images/couple-fond-hero.webp',
+    galleryBand: 'images/paralax_ce_nest_pas_tout.webp',
+    rsvp:        'images/venue/parc-etang.webp',
   },
   footer: {
-    logoText: 'Leatitia & Christophe',
+    logoText: 'Sophie & Nicolas',
     subText:  '08 Août 2026 · Ma Cabane Au Canada · Rennes',
     loveText: 'AVEC TOUT NOTRE AMOUR ❤',
   },
