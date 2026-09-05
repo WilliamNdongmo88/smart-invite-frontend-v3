@@ -66,10 +66,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   // ── FAQ ────────────────────────────────────────────────────────────
   faqs = [
-    { q: 'Smart Invite est-il gratuit ?', a: 'Smart Invite propose une offre d\'essai gratuite. Des plans payants sont disponibles pour les événements de grande envergure avec des fonctionnalités avancées.' },
+    { q: 'Smart Invite est-il gratuit ?', a: 'Smart Invite est facturé en fonction du nombre d’invités. Le tarif est de 52 XAF par invité.' },
     { q: 'Combien d\'invités puis-je gérer ?', a: 'Il n\'y a pas de limite stricte. La plateforme est conçue pour gérer des événements de 10 à plusieurs milliers d\'invités.' },
     { q: 'Les invités ont-ils besoin d\'un compte ?', a: 'Non. Les invités reçoivent un lien unique et peuvent confirmer leur présence sans créer de compte.' },
-    { q: 'Le check-in fonctionne-t-il hors ligne ?', a: 'L\'application de check-in nécessite une connexion internet pour synchroniser les données en temps réel.' },
+    { q: 'Le check-in fonctionne-t-il hors ligne ?', a: 'L\’application de check-in nécessite une connexion Internet. Un agent doit être créé par l\’organisateur afin de permettre la synchronisation des données en temps réel.' },
   ];
 
   // ── Palette dress code (réutilisé pour "thème design") ─────────────
