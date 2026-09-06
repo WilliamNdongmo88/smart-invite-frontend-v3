@@ -44,8 +44,8 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     brideFirstName:  'Sophie',
     groomFirstName:  'Nicolas',
     dateLabel:       'Les 07 & 08 Août 2026',
-    venueName:       'MA CABANE AU CANADA',
-    venueCity:       'GOSNÉ',
+    venueName:       'MA CABANE AU CAMEROUN',
+    venueCity:       'YAOUNDE',
     heroCatchphrase: 'Une célébration pensée comme un souvenir éternel.',
     targetDate:      '2026-09-09T14:00:00',
     maxGuests:       300,
@@ -194,7 +194,7 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
   },
   footer: {
     logoText: 'Sophie & Nicolas',
-    subText:  '08 Août 2026 · Ma Cabane Au Canada · Rennes',
+    subText:  '08 Août 2026 · Ma Cabane Au Cameroun · Yaoundé',
     loveText: 'AVEC TOUT NOTRE AMOUR ❤',
   },
   theme: { ...DEFAULT_WEDDING_THEME },
@@ -274,7 +274,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   // Label/hint pour chaque fond — utilisé dans le template
   readonly BG_FIELDS: { key: keyof WeddingDetailsBackgroundsContent; label: string; hint: string }[] = [
     { key: 'hero',        label: 'Hero principal',  hint: 'Grande image de fond du haut de page' },
-    { key: 'venue',       label: 'Bandeau Lieu',    hint: 'Parallax « Ma Cabane Au Canada »' },
+    { key: 'venue',       label: 'Bandeau Lieu',    hint: 'Parallax « Ma Cabane Au Cameroun »' },
     { key: 'quote',       label: 'Bandeau Citation',hint: 'Parallax « Il n\'y a qu\'un bonheur… »' },
     { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
     { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
