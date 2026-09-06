@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://smart-invite.com',
+  apiUrl: 'https://smart-invites-production.up.railway.app',
 };
