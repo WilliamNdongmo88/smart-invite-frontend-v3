@@ -30,12 +30,9 @@
               "src/styles.css"
             ],
             "scripts": [],
-            "server": "src/main.server.ts",
-            "outputMode": "static",
             "security": {
               "allowedHosts": []
-            },
-            "prerender": false
+            }
           },
           "configurations": {
             "production": {
