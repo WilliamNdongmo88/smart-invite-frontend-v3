@@ -9,6 +9,7 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { Invitation } from '../../../../core/models/invitation.model';
 import { NotificationMode } from '../../../../core/models/enums.model';
 import { DIAL_CODES } from '../../../../core/data/dial-codes';
+import { DialCodeSelectComponent } from '../../../../shared/components/dial-code-select/dial-code-select.component';
 import {
   WeddingDetailsTheme,
   DEFAULT_WEDDING_THEME,
@@ -37,7 +38,7 @@ type InvitationViewData = Invitation & {
 @Component({
   selector: 'app-join',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DialCodeSelectComponent],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
 })
@@ -201,6 +202,8 @@ export class JoinComponent implements OnInit {
 
   // Signal : le mode sélectionné nécessite-t-il WhatsApp ?
   needsWhatsApp = signal(true); // WHATSAPP par défaut
+  // Signal : le mode sélectionné nécessite-t-il un email ?
+  needsEmail = signal(false);   // WHATSAPP par défaut → pas d'email
 
   form = this.fb.group({
     fullName:         ['', [Validators.required, Validators.minLength(2)]],
@@ -227,9 +230,10 @@ export class JoinComponent implements OnInit {
       return;
     }
 
-    // Met à jour needsWhatsApp à chaque changement de mode de notification
+    // Met à jour needsWhatsApp et needsEmail à chaque changement de mode de notification
     this.form.get('notificationMode')!.valueChanges.subscribe(mode => {
       this.needsWhatsApp.set(mode === 'WHATSAPP' || mode === 'BOTH');
+      this.needsEmail.set(mode === 'EMAIL' || mode === 'BOTH');
     });
 
     // Mode prévisualisation locale (depuis sessionStorage)
@@ -363,12 +367,23 @@ export class JoinComponent implements OnInit {
   submit(): void {
     const mode = this.form.get('notificationMode')?.value as NotificationMode;
     const requiresWhatsApp = mode === 'WHATSAPP' || mode === 'BOTH';
+    const requiresEmail    = mode === 'EMAIL'     || mode === 'BOTH';
 
     // Validation manuelle : numéro WhatsApp obligatoire si le mode le nécessite
     if (requiresWhatsApp) {
       const localNumber = (this.form.get('phoneNumber')?.value ?? '').toString().trim();
       if (!localNumber) {
         this.form.get('phoneNumber')?.setErrors({ required: true });
+        this.form.markAllAsTouched();
+        return;
+      }
+    }
+
+    // Validation manuelle : email obligatoire si le mode le nécessite
+    if (requiresEmail) {
+      const emailVal = (this.form.get('email')?.value ?? '').toString().trim();
+      if (!emailVal) {
+        this.form.get('email')?.setErrors({ required: true });
         this.form.markAllAsTouched();
         return;
       }

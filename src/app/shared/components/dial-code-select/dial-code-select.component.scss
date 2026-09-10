@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════
+   DIAL-CODE-SELECT — Sélecteur d'indicatif pays
+   S'intègre dans .phone-field-wrap du parent
+═══════════════════════════════════════════════════ */
+:host {
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* ── Wrapper principal ─────────────────────────── */
+.dial-wrapper {
+  display: flex;
+  align-items: stretch;
+  position: relative;
+}
+
+/* ── Bouton déclencheur ────────────────────────── */
+.dial-trigger {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+  padding: 0 8px 0 8px;
+  border: none;
+  border-right: 1px solid #dfd9cc;
+  background: #ede8df;
+  color: #4a3f33;
+  font: 600 .68rem 'Montserrat', sans-serif;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color .2s;
+  outline: none;
+
+  &:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: #e2dbd0;
+  }
+}
+
+.dial-flag {
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.dial-code {
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.dial-chevron {
+  flex-shrink: 0;
+  opacity: .6;
+  transition: transform .2s;
+
+  .is-open & {
+    transform: rotate(180deg);
+  }
+}
+
+/* ── Dropdown ──────────────────────────────────── */
+.dial-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 9999;
+  width: 220px;
+  background: #fffefa;
+  border: 1px solid #dfd9cc;
+  border-top: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+  border-radius: 0 0 4px 4px;
+  overflow: hidden;
+}
+
+/* ── Barre de recherche ────────────────────────── */
+.dial-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-bottom: 1px solid #e8e2d9;
+  background: #f5f2ed;
+
+  svg { opacity: .5; flex-shrink: 0; }
+}
+
+.dial-search {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font: .68rem 'Montserrat', sans-serif;
+  color: #25251f;
+  outline: none;
+
+  &::placeholder { color: #b0a89a; }
+}
+
+/* ── Liste ─────────────────────────────────────── */
+.dial-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #d4c8b8 transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-thumb { background: #d4c8b8; border-radius: 2px; }
+}
+
+.dial-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  cursor: pointer;
+  transition: background .15s;
+  font: .68rem 'Montserrat', sans-serif;
+
+  &:hover { background: #f0ebe4; }
+  &.active { background: #e8e0d4; font-weight: 600; }
+}
+
+.opt-flag {
+  font-size: .9rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.opt-name {
+  flex: 1;
+  color: #3a3028;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.opt-code {
+  color: #8a7d6e;
+  font-size: .62rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.dial-empty {
+  padding: 12px 10px;
+  text-align: center;
+  color: #b0a89a;
+  font: .68rem 'Montserrat', sans-serif;
+}
+
+/* ══════════════════════════════════════════════════
+   SURCHARGES PAR THÈME (transmis via [class] parent)
+══════════════════════════════════════════════════ */
+
+/* ── Mariage ───────────────────────────────────── */
+.theme-mariage .dial-trigger,
+:host-context(.theme-mariage) .dial-trigger {
+  background: rgba(var(--gold-rgb, 212, 175, 55), 0.08);
+  border-right-color: rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+  color: var(--gold, #d4af37);
+}
+
+:host-context(.theme-mariage) .dial-dropdown {
+  background: #18141c;
+  border-color: rgba(var(--gold-rgb, 212, 175, 55), 0.25);
+}
+
+:host-context(.theme-mariage) .dial-search-wrap {
+  background: #120f18;
+  border-bottom-color: rgba(var(--gold-rgb, 212, 175, 55), 0.15);
+}
+
+:host-context(.theme-mariage) .dial-search {
+  color: #fdfaf6;
+  &::placeholder { color: rgba(255, 255, 255, .3); }
+}
+
+:host-context(.theme-mariage) .dial-option {
+  &:hover { background: rgba(var(--gold-rgb, 212, 175, 55), 0.08); }
+  &.active { background: rgba(var(--gold-rgb, 212, 175, 55), 0.15); }
+}
+
+:host-context(.theme-mariage) .opt-name { color: #fdfaf6; }
+:host-context(.theme-mariage) .opt-code { color: var(--gold, #d4af37); }
+
+/* ── Conférence ────────────────────────────────── */
+:host-context(.theme-conference) .dial-trigger {
+  background: rgba(0, 201, 167, 0.08);
+  border-right-color: #1e2e4a;
+  color: #00c9a7;
+}
+
+:host-context(.theme-conference) .dial-dropdown {
+  background: #091322;
+  border-color: #1e2e4a;
+}
+
+:host-context(.theme-conference) .dial-search-wrap {
+  background: #060d18;
+  border-bottom-color: #1e2e4a;
+}
+
+:host-context(.theme-conference) .dial-search {
+  color: #f8fafc;
+  &::placeholder { color: rgba(148, 163, 184, .5); }
+}
+
+:host-context(.theme-conference) .dial-option {
+  &:hover { background: rgba(0, 201, 167, 0.08); }
+  &.active { background: rgba(0, 201, 167, 0.15); }
+}
+
+:host-context(.theme-conference) .opt-name { color: #f8fafc; }
+:host-context(.theme-conference) .opt-code { color: #00c9a7; }
+
+/* ── Gala ──────────────────────────────────────── */
+:host-context(.theme-gala) .dial-trigger {
+  background: rgba(201, 163, 82, 0.08);
+  border-right-color: rgba(201, 163, 82, 0.25);
+  color: #c9a352;
+}
+
+:host-context(.theme-gala) .dial-dropdown {
+  background: #100d07;
+  border-color: rgba(201, 163, 82, 0.25);
+}
+
+:host-context(.theme-gala) .dial-option {
+  &:hover { background: rgba(201, 163, 82, 0.08); }
+  &.active { background: rgba(201, 163, 82, 0.15); }
+}
+
+:host-context(.theme-gala) .opt-name { color: #f5f0e8; }
+:host-context(.theme-gala) .opt-code { color: #c9a352; }
+
+/* ── Cérémonie ─────────────────────────────────── */
+:host-context(.theme-ceremonie) .dial-trigger {
+  background: rgba(180, 140, 60, 0.08);
+  border-right-color: rgba(180, 140, 60, 0.25);
+  color: #b48c3c;
+}

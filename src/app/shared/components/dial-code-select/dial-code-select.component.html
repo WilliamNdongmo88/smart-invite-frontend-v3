@@ -1,0 +1,56 @@
+<div class="dial-wrapper" [class.is-open]="isOpen()" [class.is-disabled]="disabled()">
+
+  <!-- Bouton déclencheur -->
+  <button type="button"
+          class="dial-trigger"
+          (click)="toggle()"
+          [attr.aria-expanded]="isOpen()"
+          aria-haspopup="listbox"
+          [disabled]="disabled()">
+    <span class="dial-flag">{{ selected().flag }}</span>
+    <span class="dial-code">{{ selected().code }}</span>
+    <svg class="dial-chevron" width="10" height="10" viewBox="0 0 24 24"
+         fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </button>
+
+  <!-- Dropdown -->
+  @if (isOpen()) {
+    <div class="dial-dropdown" role="listbox">
+      <!-- Recherche -->
+      <div class="dial-search-wrap">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text"
+               class="dial-search"
+               placeholder="Rechercher…"
+               [value]="search()"
+               (input)="search.set($any($event.target).value)"
+               (click)="$event.stopPropagation()"
+               autocomplete="off" />
+      </div>
+
+      <!-- Liste -->
+      <ul class="dial-list">
+        @for (d of filtered(); track d.code + d.name) {
+          <li class="dial-option"
+              [class.active]="d.code === selected().code"
+              role="option"
+              [attr.aria-selected]="d.code === selected().code"
+              (click)="select(d.code)">
+            <span class="opt-flag">{{ d.flag }}</span>
+            <span class="opt-name">{{ d.name }}</span>
+            <span class="opt-code">{{ d.code }}</span>
+          </li>
+        }
+        @if (filtered().length === 0) {
+          <li class="dial-empty">Aucun résultat</li>
+        }
+      </ul>
+    </div>
+  }
+
+</div>

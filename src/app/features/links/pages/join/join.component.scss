@@ -208,6 +208,8 @@ input { width: 100%; border: 1px solid #dfd9cc; border-radius: 0; outline: none;
 input.invalid { border-color: #c9796e; }
 .field small { color: #bd7167; font-size: .62rem; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Quand un seul champ est affiché, il occupe toute la largeur */
+.field-full { grid-column: 1 / -1; }
 
 /* ── Champ téléphone avec indicatif pays ── */
 
@@ -222,7 +224,7 @@ input.invalid { border-color: #c9796e; }
   /* Reprend le style de base des inputs */
   border: 1px solid #dfd9cc;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible; /* ne pas couper le dropdown du sélecteur indicatif */
   transition: border-color .2s;
 
   &:focus-within { border-color: #a08060; }
@@ -230,6 +232,8 @@ input.invalid { border-color: #c9796e; }
 
   /* Annuler la bordure individuelle que les rules globales input appliquent */
   input { border: none !important; box-shadow: none !important; padding: 10px 11px; width: 100%; }
+  /* Assurer que le host du sélecteur indicatif s'aligne */
+  app-dial-code-select { display: flex; align-items: stretch; }
 }
 
 .dial-select {

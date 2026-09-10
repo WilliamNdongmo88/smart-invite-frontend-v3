@@ -121,20 +121,20 @@
             @if (isInvalid('fullName')) { <small>Minimum 2 caractères requis.</small> }
           </div>
 
-          <div class="form-grid">
-            <div class="field">
-              <label for="phoneNumber">
-                Téléphone (WhatsApp)
-                @if (needsWhatsApp()) { <strong>*</strong> }
-              </label>
-              @if (needsWhatsApp()) {
-                <!-- Sélecteur indicatif + numéro local -->
+          <div class="form-grid" [class.form-grid-single]="!needsWhatsApp() && form.value.notificationMode !== 'BOTH' || !needsEmail() && form.value.notificationMode !== 'BOTH'">
+            <!-- Champ téléphone : visible si WhatsApp ou BOTH -->
+            @if (needsWhatsApp()) {
+              <div class="field" [class.field-full]="!needsEmail()">
+                <label for="phoneNumber">
+                  Téléphone (WhatsApp) <strong>*</strong>
+                </label>
+                <!-- Sélecteur indicatif avec drapeaux + numéro local -->
                 <div class="phone-field-wrap" [class.invalid]="isInvalid('phoneNumber')">
-                  <select formControlName="phoneDialCode" class="dial-select" title="Indicatif pays" aria-label="Indicatif pays">
-                    @for (d of dialCodes; track d.code + d.name) {
-                      <option [value]="d.code">{{ d.flag }} {{ d.code }}</option>
-                    }
-                  </select>
+                  <app-dial-code-select
+                    formControlName="phoneDialCode"
+                    [themeClass]="themeClass()"
+                    aria-label="Indicatif pays">
+                  </app-dial-code-select>
                   <input formControlName="phoneNumber" type="tel" class="phone-local"
                     id="phoneNumber" placeholder="6XX XXX XXX"
                     [class.invalid]="isInvalid('phoneNumber')" />
@@ -142,14 +142,22 @@
                 @if (isInvalid('phoneNumber')) {
                   <small>Le numéro WhatsApp est requis.</small>
                 }
-              } @else {
-                <input id="phoneNumber" formControlName="phoneNumber" type="tel" placeholder="+237 6XX XXX XXX" />
-              }
-            </div>
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" formControlName="email" type="email" placeholder="jean@exemple.com" />
-            </div>
+              </div>
+            }
+            <!-- Champ email : visible si Email ou BOTH -->
+            @if (needsEmail()) {
+              <div class="field" [class.field-full]="!needsWhatsApp()">
+                <label for="email">
+                  Email
+                  @if (form.value.notificationMode === 'EMAIL') { <strong>*</strong> }
+                </label>
+                <input id="email" formControlName="email" type="email" placeholder="jean@exemple.com"
+                  [class.invalid]="isInvalid('email')" />
+                @if (isInvalid('email')) {
+                  <small>L'adresse email est requise.</small>
+                }
+              </div>
+            }
           </div>
 
           <div class="field">
