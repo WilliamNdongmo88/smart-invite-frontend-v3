@@ -1098,10 +1098,15 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onGalleryImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'gallery', `gallery_${idx}`);
-    const d = deepClone(this.draft());
-    d.gallery.items[idx].url = url;
-    this.draft.set(d);
+    const previousUrl = this.draft().gallery.items[idx]?.url ?? '';
+    this.uploadFile(file, 'gallery', `gallery_${idx}`,
+      (url) => {
+        const d = deepClone(this.draft());
+        d.gallery.items[idx].url = url;
+        this.draft.set(d);
+      },
+      previousUrl,
+    );
   }
 
   // ── Draft — Footer ────────────────────────────────────────────
@@ -1137,8 +1142,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBackgroundImageChange(event: Event, key: keyof WeddingDetailsBackgroundsContent): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'backgrounds', `bg_${key}`);
-    this.updateDraftBackground(key, url);
+    const previousUrl = this.draft().backgrounds[key] ?? '';
+    this.uploadFile(file, 'backgrounds', `bg_${key}`,
+      (url) => this.updateDraftBackground(key, url),
+      previousUrl,
+    );
   }
 
   // ── Helpers ───────────────────────────────────────────────────────
@@ -1148,24 +1156,32 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   // ── Upload d'images vers Firebase Storage ──────────────────────────
 
-  private uploadFile(file: File, folder: string = 'wedding', uploadKey?: string): Promise<string> {
+  private uploadFile(
+    file: File,
+    folder: string = 'wedding',
+    uploadKey: string | undefined,
+    applyUrl: (url: string) => void,
+    rollbackUrl?: string,
+  ): void {
+    // 1. Spinner actif uniquement pendant la lecture locale du fichier
     if (uploadKey) this.uploadingImage.set(uploadKey);
-    return new Promise((resolve) => {
+
+    this.readFileAsDataUrl(file).then((blobUrl) => {
+      // Dès que le blob est prêt : affichage immédiat + spinner éteint
+      applyUrl(blobUrl);
+      if (uploadKey) this.uploadingImage.set(null);
+
+      // 2. Upload Firebase en arrière-plan — silencieux, sans spinner
       this.eventSvc.uploadImage(file, folder).subscribe({
         next: (res) => {
-          if (uploadKey) this.uploadingImage.set(null);
-          this.toast.success('Image uploadée avec succès');
-          resolve(res.data!);
+          // Remplace le blob local par l'URL Firebase définitive
+          applyUrl(res.data!);
         },
         error: () => {
-          this.readFileAsDataUrl(file).then((url) => {
-            if (uploadKey) this.uploadingImage.set(null);
-            resolve(url);
-          }).catch(() => {
-            if (uploadKey) this.uploadingImage.set(null);
-            resolve('');
-          });
-        }
+          // Rollback : remet l'ancienne URL si disponible, sinon garde le blob
+          if (rollbackUrl !== undefined) applyUrl(rollbackUrl);
+          this.toast.error("Erreur lors de l'upload de l'image");
+        },
       });
     });
   }
@@ -1183,23 +1199,32 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   async onBridePortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'portraits', 'bride_portrait');
-    this.updateDraftCouple('bridePortraitUrl', url);
+    const previousUrl = this.draft().couple.bridePortraitUrl ?? '';
+    this.uploadFile(file, 'portraits', 'bride_portrait',
+      (url) => this.updateDraftCouple('bridePortraitUrl', url),
+      previousUrl,
+    );
   }
 
   /** Upload portrait marié */
   async onGroomPortraitChange(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'portraits', 'groom_portrait');
-    this.updateDraftCouple('groomPortraitUrl', url);
+    const previousUrl = this.draft().couple.groomPortraitUrl ?? '';
+    this.uploadFile(file, 'portraits', 'groom_portrait',
+      (url) => this.updateDraftCouple('groomPortraitUrl', url),
+      previousUrl,
+    );
   }
 
   /** Upload image d'un chapitre */
   async onChapterImageChange(event: Event, idx: number): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (!file) return;
-    const url = await this.uploadFile(file, 'story', `chapter_${idx}`);
-    this.updateDraftChapter(idx, 'image', url);
+    const previousUrl = this.draft().story.chapters[idx]?.image ?? '';
+    this.uploadFile(file, 'story', `chapter_${idx}`,
+      (url) => this.updateDraftChapter(idx, 'image', url),
+      previousUrl,
+    );
   }
 }
