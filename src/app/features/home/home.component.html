@@ -457,7 +457,7 @@
                       [value]="contactDialCode()"
                       (change)="contactDialCode.set($any($event.target).value)">
                 @for (d of dialCodes; track d.code) {
-                  <option [value]="d.code">{{ d.name }} ({{ d.code }})</option>
+                  <option [value]="d.code">{{ d.code }}</option>
                 }
               </select>
             </div>
