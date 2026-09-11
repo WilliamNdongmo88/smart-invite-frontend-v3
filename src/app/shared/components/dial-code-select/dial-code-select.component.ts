@@ -42,7 +42,7 @@ export class DialCodeSelectComponent implements ControlValueAccessor {
 
   selected = computed<DialCodeEntry>(() => {
     return this.allCodes.find(d => d.code === this.selectedCode())
-      ?? { name: 'Cameroun', flag: '🇨🇲', code: '+237' };
+      ?? { iso: 'CM', name: 'Cameroun', flag: '🇨🇲', code: '+237' };
   });
 
   filtered = computed<DialCodeEntry[]>(() => {

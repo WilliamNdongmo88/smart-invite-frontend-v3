@@ -95,6 +95,7 @@
 }
 .form-group {
   display: flex; flex-direction: column; gap: 0.4rem;
+  min-width: 0;
   &.full { grid-column: 1 / -1; }
 }
 .form-label { font-size: 0.75rem; color: #888; font-weight: 500; }
@@ -104,6 +105,69 @@
   transition: border-color 0.15s;
   &:focus { border-color: #c9a84c; }
   &::placeholder { color: #444; }
+}
+
+// Champ téléphone avec indicatif
+.phone-field-wrap {
+  display: flex; align-items: stretch;
+  border: 1px solid #2a2a2a; border-radius: 8px;
+  background: #141414; width: 100%; box-sizing: border-box; min-width: 0;
+  transition: border-color 0.15s; position: relative;
+  &:focus-within { border-color: #c9a84c; }
+
+  app-dial-code-select { flex-shrink: 0; }
+
+  // Arrondi uniquement sur les coins gauches du trigger (le wrapper gère le border-radius global)
+  ::ng-deep .dial-trigger {
+    border-radius: 7px 0 0 7px;
+  }
+
+  .phone-local {
+    flex: 1; min-width: 0; border: none; border-left: 1px solid #2a2a2a;
+    border-radius: 0 7px 7px 0; background: transparent;
+    padding: 0.6rem 0.75rem; color: #fff;
+    font-size: 0.875rem; outline: none; width: 100%; box-sizing: border-box;
+    &::placeholder { color: #444; }
+  }
+}
+
+// Surcharge dark du DialCodeSelectComponent dans le contexte profil
+.phone-field-wrap {
+  ::ng-deep .dial-trigger {
+    background: #141414;
+    border-right-color: #2a2a2a;
+    color: #c9a84c;
+    font-family: inherit;
+    min-width: 76px;
+    &:hover:not(:disabled) { background: #1e1e1e; }
+  }
+
+  ::ng-deep .dial-dropdown {
+    background: #1a1a1a;
+    border-color: #2a2a2a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  ::ng-deep .dial-search-wrap {
+    background: #111;
+    border-bottom-color: #2a2a2a;
+  }
+
+  ::ng-deep .dial-search {
+    color: #fff;
+    font-family: inherit;
+    &::placeholder { color: #444; }
+  }
+
+  ::ng-deep .dial-option {
+    font-family: inherit;
+    &:hover { background: rgba(201, 168, 76, 0.08); }
+    &.active { background: rgba(201, 168, 76, 0.15); font-weight: 600; }
+  }
+
+  ::ng-deep .opt-name { color: #ddd; }
+  ::ng-deep .opt-code { color: #c9a84c; }
+  ::ng-deep .dial-empty { color: #555; }
 }
 
 // Radio group

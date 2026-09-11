@@ -13,9 +13,6 @@
           } @else {
             <span class="avatar-initials">{{ initials() }}</span>
           }
-          @if (avatarUploading) {
-            <div class="avatar-overlay">…</div>
-          }
         </div>
         <label class="avatar-edit-btn" title="Changer l'avatar">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -57,7 +54,17 @@
           </div>
           <div class="form-group">
             <label class="form-label">Téléphone / WhatsApp</label>
-            <input class="form-input" type="tel" [(ngModel)]="phone" placeholder="+237 6XX XXX XXX" />
+            <div class="phone-field-wrap">
+              <app-dial-code-select
+                [(ngModel)]="phoneDialCode"
+                name="phoneDialCode"
+                aria-label="Indicatif pays">
+              </app-dial-code-select>
+              <input class="phone-local form-input" type="tel"
+                [(ngModel)]="phoneLocal"
+                name="phoneLocal"
+                placeholder="6XX XXX XXX" />
+            </div>
           </div>
           <div class="form-group full">
             <label class="form-label">Mode de notification préféré</label>
