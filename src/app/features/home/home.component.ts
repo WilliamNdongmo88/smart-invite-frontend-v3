@@ -3,13 +3,15 @@ import {
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ContactService } from '../../core/services/contact.service';
+import { DialCodeSelectComponent } from '../../shared/components/dial-code-select/dial-code-select.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, FormsModule, DialCodeSelectComponent],
   templateUrl: 'home.component.html',
   styleUrl: 'home.component.scss',
 })
@@ -108,57 +110,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private toastShown = false;
 
   // ── Contact form ───────────────────────────────────────────────────
-  readonly dialCodes = [
-    { code: '+237', iso2: 'cm', name: 'Cameroun'        },
-    { code: '+225', iso2: 'ci', name: "Côte d'Ivoire"   },
-    { code: '+221', iso2: 'sn', name: 'Sénégal'         },
-    { code: '+242', iso2: 'cg', name: 'Congo'           },
-    { code: '+243', iso2: 'cd', name: 'RD Congo'        },
-    { code: '+241', iso2: 'ga', name: 'Gabon'           },
-    { code: '+235', iso2: 'td', name: 'Tchad'           },
-    { code: '+236', iso2: 'cf', name: 'Centrafrique'    },
-    { code: '+240', iso2: 'gq', name: 'Guinée Éq.'      },
-    { code: '+229', iso2: 'bj', name: 'Bénin'           },
-    { code: '+226', iso2: 'bf', name: 'Burkina Faso'    },
-    { code: '+228', iso2: 'tg', name: 'Togo'            },
-    { code: '+223', iso2: 'ml', name: 'Mali'            },
-    { code: '+227', iso2: 'ne', name: 'Niger'           },
-    { code: '+230', iso2: 'mu', name: 'Maurice'         },
-    { code: '+222', iso2: 'mr', name: 'Mauritanie'      },
-    { code: '+224', iso2: 'gn', name: 'Guinée'          },
-    { code: '+245', iso2: 'gw', name: 'Guinée-Bissau'   },
-    { code: '+238', iso2: 'cv', name: 'Cap-Vert'        },
-    { code: '+239', iso2: 'st', name: 'São Tomé'        },
-    { code: '+234', iso2: 'ng', name: 'Nigéria'         },
-    { code: '+233', iso2: 'gh', name: 'Ghana'           },
-    { code: '+212', iso2: 'ma', name: 'Maroc'           },
-    { code: '+213', iso2: 'dz', name: 'Algérie'         },
-    { code: '+216', iso2: 'tn', name: 'Tunisie'         },
-    { code: '+20',  iso2: 'eg', name: 'Égypte'          },
-    { code: '+27',  iso2: 'za', name: 'Afrique du Sud'  },
-    { code: '+254', iso2: 'ke', name: 'Kenya'           },
-    { code: '+255', iso2: 'tz', name: 'Tanzanie'        },
-    { code: '+256', iso2: 'ug', name: 'Ouganda'         },
-    { code: '+251', iso2: 'et', name: 'Éthiopie'        },
-    { code: '+33',  iso2: 'fr', name: 'France'          },
-    { code: '+32',  iso2: 'be', name: 'Belgique'        },
-    { code: '+41',  iso2: 'ch', name: 'Suisse'          },
-    { code: '+1',   iso2: 'us', name: 'États-Unis'      },
-    { code: '+44',  iso2: 'gb', name: 'Royaume-Uni'     },
-    { code: '+49',  iso2: 'de', name: 'Allemagne'       },
-    { code: '+34',  iso2: 'es', name: 'Espagne'         },
-    { code: '+39',  iso2: 'it', name: 'Italie'          },
-    { code: '+351', iso2: 'pt', name: 'Portugal'        },
-    { code: '+55',  iso2: 'br', name: 'Brésil'          },
-    { code: '+86',  iso2: 'cn', name: 'Chine'           },
-  ];
-
   contactName     = signal(this.authService.getName() ?? '');
   contactChannel  = signal<'WHATSAPP' | 'EMAIL'>('WHATSAPP');
   contactDialCode = signal('+237');
-  readonly selectedDialIso2 = computed(
-    () => this.dialCodes.find(d => d.code === this.contactDialCode())?.iso2 ?? 'cm'
-  );
   contactPhone    = signal('');
   contactEmail    = signal('');
   contactMsg      = signal('');

@@ -451,16 +451,12 @@
         <!-- Champ dynamique selon le canal -->
         @if (contactChannel() === 'WHATSAPP') {
           <div class="contact-phone-wrap">
-            <div class="contact-dial-trigger">
-              <span class="fi" [class]="'fi-' + selectedDialIso2()"></span>
-              <select class="contact-dial-select"
-                      [value]="contactDialCode()"
-                      (change)="contactDialCode.set($any($event.target).value)">
-                @for (d of dialCodes; track d.code) {
-                  <option [value]="d.code">{{ d.code }}</option>
-                }
-              </select>
-            </div>
+            <app-dial-code-select
+              [ngModel]="contactDialCode()"
+              (ngModelChange)="contactDialCode.set($event)"
+              name="contactDialCode"
+              aria-label="Indicatif pays">
+            </app-dial-code-select>
             <input class="contact-input contact-input--phone" type="tel"
                    placeholder="XXXXXXXXX"
                    [value]="contactPhone()"

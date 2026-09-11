@@ -1277,48 +1277,45 @@ $border:  #2a2a2a;
 .contact-phone-wrap {
   display: flex;
   align-items: stretch;
-  gap: 0;
 
-  .contact-dial-trigger {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
+  // Surcharge dark pour DialCodeSelectComponent
+  ::ng-deep .dial-trigger {
     background: #1a1a1a;
     border: 1px solid $border;
     border-right: none;
-    transition: border-color 0.2s;
-
-    &:focus-within { border-color: $gold; }
-
-    // Drapeau affiché à gauche
-    .fi {
-      position: absolute;
-      left: 0.45rem;
-      pointer-events: none;
-      font-size: 1.1rem;
-      line-height: 1;
-      border-radius: 2px;
-    }
-
-    .contact-dial-select {
-      background: transparent;
-      border: none;
-      color: $gold;
-      font-family: inherit;
-      font-size: 0.78rem;
-      padding: 0 0.3rem 0 2rem; // espace pour le drapeau
-      cursor: pointer;
-      outline: none;
-      max-width: 80px;
-      appearance: auto;
-
-      option {
-        background: #1a1a1a;
-        color: #e5e5e5;
-      }
-    }
+    border-radius: 0;
+    color: $gold;
+    font-family: inherit;
+    min-width: 82px;
+    &:hover:not(:disabled) { background: #222; }
   }
+
+  ::ng-deep .dial-dropdown {
+    background: #1a1a1a;
+    border-color: $border;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+
+  ::ng-deep .dial-search-wrap {
+    background: #111;
+    border-bottom-color: $border;
+  }
+
+  ::ng-deep .dial-search {
+    color: #fff;
+    font-family: inherit;
+    &::placeholder { color: #444; }
+  }
+
+  ::ng-deep .dial-option {
+    font-family: inherit;
+    &:hover  { background: rgba(201, 168, 76, 0.08); }
+    &.active { background: rgba(201, 168, 76, 0.15); font-weight: 600; }
+  }
+
+  ::ng-deep .opt-name { color: #ddd; }
+  ::ng-deep .opt-code { color: $gold; }
+  ::ng-deep .dial-empty { color: #555; }
 
   .contact-input--phone {
     flex: 1;
