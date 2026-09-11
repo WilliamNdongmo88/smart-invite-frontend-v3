@@ -327,41 +327,53 @@ export class JoinComponent implements OnInit {
     const file  = input.files[0];
     const token = this.route.snapshot.paramMap.get('token');
 
+    // Sauvegarde l'ancienne URL pour rollback éventuel
+    const previousUrl = this.customPhotoUrl() ?? this.previewData()?.couplePhotoUrl ?? null;
+
+    // 1. Prévisualisation immédiate via blob local — spinner uniquement pendant cette étape
     this.uploading.set(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const blobUrl = e.target!.result as string;
+      this.customPhotoUrl.set(blobUrl);
+      this.previewData.update(p => p ? { ...p, couplePhotoUrl: blobUrl } : p);
+      this.uploading.set(false); // spinner éteint dès que le blob est prêt
 
-    const handleSuccess = (url: string) => {
-      this.customPhotoUrl.set(url);
-      if (this.previewData()) {
-        this.previewData.update((p) => (p ? { ...p, couplePhotoUrl: url } : null));
+      // 2. Upload réel en arrière-plan — silencieux
+      const applyFinalUrl = (url: string) => {
+        this.customPhotoUrl.set(url);
+        this.previewData.update(p => p ? { ...p, couplePhotoUrl: url } : p);
+        // Synchronise aussi le sessionStorage (mode preview)
+        const raw = sessionStorage.getItem('join_preview');
+        if (raw) {
+          try {
+            const preview = JSON.parse(raw);
+            preview.couplePhotoUrl = url;
+            sessionStorage.setItem('join_preview', JSON.stringify(preview));
+          } catch { /* ignore */ }
+        }
+      };
+
+      const handleError = () => {
+        // Rollback vers l'ancienne photo
+        this.customPhotoUrl.set(previousUrl);
+        this.previewData.update(p => p ? { ...p, couplePhotoUrl: previousUrl ?? '' } : p);
+        this.toast.error("Erreur lors de l'upload de la photo.");
+      };
+
+      if (token && token !== 'preview') {
+        this.svc.uploadPhoto(token, file).subscribe({
+          next:  (res) => { if (res.data) applyFinalUrl(res.data); else handleError(); },
+          error: handleError,
+        });
+      } else {
+        this.eventSvc.uploadImage(file, 'photos').subscribe({
+          next:  (res) => { if (res.data) applyFinalUrl(res.data); else handleError(); },
+          error: handleError,
+        });
       }
-      const raw = sessionStorage.getItem('join_preview');
-      if (raw) {
-        try {
-          const preview = JSON.parse(raw);
-          preview.couplePhotoUrl = url;
-          sessionStorage.setItem('join_preview', JSON.stringify(preview));
-        } catch { /* ignore */ }
-      }
-      this.toast.success("Photo mise à jour et enregistrée sur l'événement !");
-      this.uploading.set(false);
     };
-
-    const handleError = () => {
-      this.toast.error("Erreur lors de l'upload de la photo.");
-      this.uploading.set(false);
-    };
-
-    if (token && token !== 'preview') {
-      this.svc.uploadPhoto(token, file).subscribe({
-        next:  (res) => { if (res.data) handleSuccess(res.data); else handleError(); },
-        error: handleError,
-      });
-    } else {
-      this.eventSvc.uploadImage(file, 'photos').subscribe({
-        next:  (res) => { if (res.data) handleSuccess(res.data); else handleError(); },
-        error: handleError,
-      });
-    }
+    reader.readAsDataURL(file);
   }
 
   submit(): void {
