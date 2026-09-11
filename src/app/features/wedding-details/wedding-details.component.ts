@@ -279,7 +279,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
     { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
   ];
-  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer', 'theme'];
+  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'theme', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer'];
   readonly THEME_PRESETS = WEDDING_THEME_PRESETS;
 
   /** Signal pour la prévisualisation au survol d'un preset */
