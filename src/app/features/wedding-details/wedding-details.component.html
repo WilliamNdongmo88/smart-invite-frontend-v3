@@ -1198,18 +1198,6 @@
               </div>
             }
 
-            <div class="edit-divider"><span>Palette Champagne</span></div>
-            @for (sw of draft().dressCode.paletteChampagne; track $index) {
-              <div class="edit-palette-item">
-                <input class="edit-input edit-input--color" type="color"
-                       [ngModel]="sw.color"
-                       (ngModelChange)="updateDraftPaletteItem('paletteChampagne', $index, 'color', $event)" />
-                <input class="edit-input" type="text"
-                       [ngModel]="sw.label"
-                       (ngModelChange)="updateDraftPaletteItem('paletteChampagne', $index, 'label', $event)"
-                       placeholder="Nom de la couleur" />
-              </div>
-            }
           </div>
         }
 
