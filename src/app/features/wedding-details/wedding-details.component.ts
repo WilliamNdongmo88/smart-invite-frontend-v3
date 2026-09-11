@@ -764,14 +764,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     this.saveToLocalStorage();
     // Persister uniquement le thème en base — sans toucher aux photos ni au reste du contenu
     if (this.eventId()) {
-      this.saveThemeOnly('Thème appliqué et sauvegardé !');
-    } else {
-      this.toast.success('Thème appliqué !');
+      this.saveThemeOnly();
     }
   }
 
   /** Sauvegarde uniquement le thème en base (évite d'écraser couplePhotoUrl) */
-  private saveThemeOnly(successMessage?: string): void {
+  private saveThemeOnly(): void {
     const c = this.content();
     const id = this.eventId();
     if (!id) return;
@@ -803,7 +801,6 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     this.eventSvc.update(id, payload).subscribe({
       next: () => {
         this.saving.set(false);
-        this.toast.success(successMessage ?? 'Thème mis à jour !');
       },
       error: (err) => {
         this.saving.set(false);

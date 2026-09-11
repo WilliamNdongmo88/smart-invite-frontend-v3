@@ -20,7 +20,7 @@ export class EventCreateComponent {
     { key: 'MARIAGE',    label: 'Mariage',    icon: '💍' },
     { key: 'GALA',       label: 'Gala',       icon: '🎭' },
     { key: 'CONFERENCE', label: 'Conférence', icon: '🎤' },
-    { key: 'CEREMONIE',  label: 'Cérémonie',  icon: '🎗️' },
+    { key: 'CEREMONIE',  label: 'Autres Cérémonies',  icon: '🎗️' },
   ];
 
   form = this.fb.group({
