@@ -85,6 +85,11 @@ export const routes: Routes = [
           import('./features/admin/pages/admin-payments/admin-payments.component').then((m) => m.AdminPaymentsComponent),
       },
       {
+        path: 'finance',
+        loadComponent: () =>
+          import('./features/admin/pages/admin-finance/admin-finance.component').then((m) => m.AdminFinanceComponent),
+      },
+      {
         path: 'visitors',
         loadComponent: () =>
           import('./features/admin/pages/admin-visitors/admin-visitors.component').then((m) => m.AdminVisitorsComponent),

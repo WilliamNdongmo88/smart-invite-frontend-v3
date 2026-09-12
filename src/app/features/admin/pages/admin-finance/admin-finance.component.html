@@ -1,0 +1,220 @@
+<div class="fp">
+
+  <!-- ── En-tête ──────────────────────────────────────────────────── -->
+  <div class="fp-header">
+    <div>
+      <h1 class="fp-title">Finances</h1>
+      <p class="fp-sub">Revenus générés par l'application</p>
+    </div>
+    <button class="btn-refresh" (click)="load()" [disabled]="loading()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      Actualiser
+    </button>
+  </div>
+
+  <!-- ── Loader ───────────────────────────────────────────────────── -->
+  @if (loading()) {
+    <div class="fp-loader">
+      <div class="spinner"></div>
+      <span>Chargement…</span>
+    </div>
+  }
+
+  <!-- ── Erreur ───────────────────────────────────────────────────── -->
+  @if (!loading() && error()) {
+    <div class="fp-error">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ error() }}
+      <button (click)="load()">Réessayer</button>
+    </div>
+  }
+
+  @if (!loading() && !error() && stats()) {
+
+    <!-- ── KPIs ─────────────────────────────────────────────────── -->
+    <div class="kpi-grid">
+
+      <!-- Revenu total -->
+      <div class="kpi-card kpi-main">
+        <div class="kpi-icon-wrap kpi-gold">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Revenu total</p>
+          <p class="kpi-value">{{ fmt(stats()!.totalRevenue) }}</p>
+          <p class="kpi-hint">{{ stats()!.totalApproved | number }} paiements approuvés</p>
+        </div>
+      </div>
+
+      <!-- Ce mois -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8"  y1="2" x2="8"  y2="6"/>
+            <line x1="3"  y1="10" x2="21" y2="10"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Ce mois</p>
+          <p class="kpi-value">{{ fmt(stats()!.revenueThisMonth) }}</p>
+          <p class="kpi-hint kpi-trend" [class]="growthClass(stats()!.monthlyGrowthPct)">
+            {{ fmtGrowth(stats()!.monthlyGrowthPct) }} vs mois précédent
+          </p>
+        </div>
+      </div>
+
+      <!-- Mois précédent -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-purple">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Mois précédent</p>
+          <p class="kpi-value">{{ fmt(stats()!.revenueLastMonth) }}</p>
+          <p class="kpi-hint">Référence de comparaison</p>
+        </div>
+      </div>
+
+      <!-- Panier moyen -->
+      <div class="kpi-card">
+        <div class="kpi-icon-wrap kpi-green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Panier moyen</p>
+          <p class="kpi-value">{{ fmt(stats()!.avgOrderValue) }}</p>
+          <p class="kpi-hint">Par paiement approuvé</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Ligne secondaire KPIs ─────────────────────────────────── -->
+    <div class="kpi-row">
+      <div class="kpi-mini">
+        <p class="kpi-mini-label">En attente</p>
+        <p class="kpi-mini-value kpi-warn">{{ stats()!.totalPending | number }}</p>
+        <p class="kpi-mini-sub">paiements</p>
+      </div>
+      <div class="kpi-mini">
+        <p class="kpi-mini-label">Montant en attente</p>
+        <p class="kpi-mini-value kpi-warn">{{ fmt(stats()!.pendingAmount) }}</p>
+        <p class="kpi-mini-sub">à valider</p>
+      </div>
+      <div class="kpi-mini">
+        <p class="kpi-mini-label">Croissance mensuelle</p>
+        <p class="kpi-mini-value" [class]="growthClass(stats()!.monthlyGrowthPct)">
+          {{ fmtGrowth(stats()!.monthlyGrowthPct) }}
+        </p>
+        <p class="kpi-mini-sub">vs mois précédent</p>
+      </div>
+    </div>
+
+    <!-- ── Graphique ─────────────────────────────────────────────── -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">Revenus approuvés</h2>
+        <div class="chart-tabs">
+          <button class="chart-tab" [class.active]="chartMode() === 'month'" (click)="setMode('month')">
+            Par mois
+          </button>
+          <button class="chart-tab" [class.active]="chartMode() === 'year'"  (click)="setMode('year')">
+            Par année
+          </button>
+        </div>
+      </div>
+
+      @if (chartData().length === 0) {
+        <p class="chart-empty">Aucune donnée disponible</p>
+      } @else {
+        <div class="bar-chart">
+          @for (item of chartData(); track item.period) {
+            <div class="bar-col" [title]="fmt(item.amount)">
+              <span class="bar-amount">{{ fmt(item.amount) }}</span>
+              <div class="bar-wrap">
+                <div class="bar-fill" [style.height.%]="barHeight(item.amount)"></div>
+              </div>
+              <span class="bar-label">{{ item.period }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- ── Tableau double ─────────────────────────────────────────── -->
+    <div class="double-grid">
+
+      <!-- Revenus par mois -->
+      <div class="section-card">
+        <h2 class="section-title">Détail par mois</h2>
+        @if (stats()!.byMonth.length === 0) {
+          <p class="empty-msg">Aucune donnée</p>
+        } @else {
+          <table class="ft">
+            <thead>
+              <tr>
+                <th>Mois</th>
+                <th class="ta-r">Paiements</th>
+                <th class="ta-r">Revenu</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of stats()!.byMonth; track row.period) {
+                <tr>
+                  <td>{{ row.period }}</td>
+                  <td class="ta-r muted">{{ countForPeriod(row.period) }}</td>
+                  <td class="ta-r bold">{{ fmt(row.amount) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+      <!-- Revenus par année -->
+      <div class="section-card">
+        <h2 class="section-title">Détail par année</h2>
+        @if (stats()!.byYear.length === 0) {
+          <p class="empty-msg">Aucune donnée</p>
+        } @else {
+          <table class="ft">
+            <thead>
+              <tr>
+                <th>Année</th>
+                <th class="ta-r">Revenu</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of stats()!.byYear; track row.period) {
+                <tr>
+                  <td>{{ row.period }}</td>
+                  <td class="ta-r bold">{{ fmt(row.amount) }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
+
+    </div>
+
+  }
+</div>
