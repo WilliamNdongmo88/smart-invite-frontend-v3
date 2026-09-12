@@ -34,6 +34,14 @@ import { TopbarComponent } from '../topbar/topbar.component';
               </svg>
               <span>Paiements</span>
             </a>
+            <a routerLink="/admin/visitors" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="20" x2="18" y2="10"/>
+                <line x1="12" y1="20" x2="12" y2="4"/>
+                <line x1="6"  y1="20" x2="6"  y2="14"/>
+              </svg>
+              <span>Visiteurs</span>
+            </a>
             <a routerLink="/admin/profile" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>

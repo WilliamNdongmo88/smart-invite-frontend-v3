@@ -1,0 +1,284 @@
+// ── Variables ────────────────────────────────────────────────────────────────
+$bg:       #1e1e1e;
+$bg-card:  #252525;
+$bg-input: #2a2a2a;
+$border:   #333;
+$gold:     #c9a84c;
+$text:     #e0e0e0;
+$text-sub: #888;
+$radius:   0.5rem;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+// ── Page ─────────────────────────────────────────────────────────────────────
+.vp {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  color: $text;
+}
+
+// ── Titre ─────────────────────────────────────────────────────────────────────
+.vp-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $text;
+  margin: 0 0 0.25rem;
+}
+
+// ── KPIs ──────────────────────────────────────────────────────────────────────
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 500px) { grid-template-columns: 1fr; }
+}
+
+.kpi-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  color: $text-sub;
+  text-align: center;
+  margin: 0;
+}
+
+.kpi-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: $text;
+  text-align: center;
+  margin: 0;
+}
+
+.kpi-pct {
+  font-size: 1rem;
+  font-weight: 400;
+  color: $text-sub;
+  margin-left: 0.25rem;
+}
+
+// ── Stats cards (6 en grille 3×2) ────────────────────────────────────────────
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 500px) { grid-template-columns: 1fr; }
+}
+
+.stats-card {
+  background: $bg-card;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 1rem 1.25rem;
+  min-height: 80px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.stats-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: $text-sub;
+}
+
+// ── Filtres ──────────────────────────────────────────────────────────────────
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  align-items: center;
+}
+
+.filters-row--actions {
+  align-items: center;
+}
+
+// Inputs & selects
+.f-input,
+.f-select {
+  background: $bg-input;
+  border: 1px solid $border;
+  border-radius: $radius;
+  color: $text;
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder { color: $text-sub; }
+  &:focus        { border-color: $gold; }
+
+  option { background: $bg-input; }
+}
+
+.f-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.f-select {
+  min-width: 150px;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.f-date {
+  min-width: 140px;
+  color-scheme: dark;
+}
+
+// Boutons filtres
+.btn-filter {
+  background: $gold;
+  color: #111;
+  border: none;
+  border-radius: $radius;
+  padding: 0.5rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) { opacity: 0.85; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btn-reset {
+  background: transparent;
+  color: $text;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) { border-color: $text; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+// ── Tableau ──────────────────────────────────────────────────────────────────
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid $border;
+  border-radius: $radius;
+}
+
+.vt {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+
+  th {
+    background: $bg-card;
+    color: $text;
+    font-weight: 700;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #2c2c2c;
+    color: $text;
+    vertical-align: middle;
+  }
+
+  tbody tr {
+    transition: background 0.1s;
+    &:hover { background: rgba(255,255,255,0.03); }
+    &:last-child td { border-bottom: none; }
+  }
+}
+
+// Cellules spéciales
+.td-center { text-align: center; padding: 2rem 1rem !important; }
+.td-empty  { text-align: left;   color: $text-sub; padding: 1rem !important; }
+.td-error  { color: #f87171; }
+.td-num    { text-align: right; }
+.td-dur    { white-space: nowrap; }
+.td-date   { white-space: nowrap; font-size: 0.75rem; color: $text-sub; }
+
+.td-main { display: block; }
+.td-sub  { display: block; font-size: 0.7rem; color: $text-sub; margin-top: 0.125rem; }
+
+// Badges Type
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge--new {
+  background: rgba(96, 165, 250, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.badge--ret {
+  background: rgba(201, 168, 76, 0.15);
+  color: $gold;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+}
+
+// Bouton action
+.btn-action {
+  background: transparent;
+  border: 1px solid $border;
+  border-radius: 0.375rem;
+  color: $text-sub;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: border-color 0.15s, color 0.15s;
+
+  &:hover { border-color: $gold; color: $gold; }
+}
+
+// Loader inline
+.loader-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: $text-sub;
+}
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid $border;
+  border-top-color: $gold;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

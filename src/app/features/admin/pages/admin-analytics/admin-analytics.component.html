@@ -1,0 +1,235 @@
+<div class="an-page">
+
+  <!-- Header -->
+  <div class="an-header">
+    <div>
+      <h1 class="an-title">Analytiques</h1>
+      <p class="an-sub">Suivi des visiteurs de l'application</p>
+    </div>
+    <button class="btn-refresh" (click)="load()" [disabled]="loading()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+      Actualiser
+    </button>
+  </div>
+
+  <!-- Loader -->
+  @if (loading()) {
+    <div class="an-loader">
+      <div class="spinner"></div>
+      <span>Chargement des statistiques…</span>
+    </div>
+  }
+
+  <!-- Erreur -->
+  @if (!loading() && error()) {
+    <div class="an-error">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      {{ error() }}
+      <button (click)="load()">Réessayer</button>
+    </div>
+  }
+
+  @if (!loading() && !error() && stats()) {
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-gold">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Visiteurs uniques</p>
+          <p class="kpi-value">{{ stats()!.totalVisitors | number }}</p>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-blue">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Sessions totales</p>
+          <p class="kpi-value">{{ stats()!.totalSessions | number }}</p>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-green">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Pages vues</p>
+          <p class="kpi-value">{{ stats()!.totalPageViews | number }}</p>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-orange">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div class="kpi-body">
+          <p class="kpi-label">Taux de rebond</p>
+          <p class="kpi-value">{{ stats()!.bounceRate }}%</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Graphique visiteurs uniques -->
+    <div class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">Visiteurs uniques</h2>
+        <div class="period-tabs">
+          <button class="period-tab" [class.active]="activePeriod() === 'day'"   (click)="setPeriod('day')">Jour</button>
+          <button class="period-tab" [class.active]="activePeriod() === 'week'"  (click)="setPeriod('week')">Semaine</button>
+          <button class="period-tab" [class.active]="activePeriod() === 'month'" (click)="setPeriod('month')">Mois</button>
+        </div>
+      </div>
+      @if (chartData().length === 0) {
+        <p class="chart-empty">Aucune donnée disponible</p>
+      } @else {
+        <div class="bar-chart">
+          @for (item of chartData(); track item.period) {
+            <div class="bar-col">
+              <span class="bar-count">{{ item.count }}</span>
+              <div class="bar-wrap">
+                <div class="bar-fill"
+                     [style.height.%]="(item.count / chartMax()) * 100">
+                </div>
+              </div>
+              <span class="bar-label">{{ item.period }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Grille double : top pages + device -->
+    <div class="double-grid">
+
+      <!-- Top Pages -->
+      <div class="section-card">
+        <h2 class="section-title">Top 10 pages</h2>
+        @if (stats()!.topPages.length === 0) {
+          <p class="empty-msg">Aucune donnée</p>
+        } @else {
+          <div class="page-list">
+            @for (page of stats()!.topPages; track page.url; let i = $index) {
+              <div class="page-row">
+                <span class="page-rank">#{{ i + 1 }}</span>
+                <span class="page-url" [title]="page.url">{{ page.url }}</span>
+                <div class="page-bar-wrap">
+                  <div class="page-bar-fill"
+                       [style.width.%]="(page.views / maxPageViews()) * 100">
+                  </div>
+                </div>
+                <span class="page-views">{{ page.views | number }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Répartition device -->
+      <div class="section-card">
+        <h2 class="section-title">Répartition par device</h2>
+        @if (stats()!.byDevice.length === 0) {
+          <p class="empty-msg">Aucune donnée</p>
+        } @else {
+          <div class="dist-list">
+            @for (item of stats()!.byDevice; track item.label) {
+              <div class="dist-row">
+                <span class="dist-label">{{ item.label }}</span>
+                <div class="dist-bar-wrap">
+                  <div class="dist-bar-fill"
+                       [style.width.%]="pct(item.count, totalDevice())"
+                       [style.background]="deviceColor(item.label)">
+                  </div>
+                </div>
+                <span class="dist-pct">{{ pct(item.count, totalDevice()) }}%</span>
+                <span class="dist-count">{{ item.count | number }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+
+    <!-- Grille double : pays + durée sessions -->
+    <div class="double-grid">
+
+      <!-- Répartition pays -->
+      <div class="section-card">
+        <h2 class="section-title">Top pays</h2>
+        @if (stats()!.byCountry.length === 0) {
+          <p class="empty-msg">Aucune donnée (GeoIP non configuré)</p>
+        } @else {
+          <div class="dist-list">
+            @for (item of stats()!.byCountry; track item.label) {
+              <div class="dist-row">
+                <span class="dist-label">{{ item.label }}</span>
+                <div class="dist-bar-wrap">
+                  <div class="dist-bar-fill"
+                       [style.width.%]="pct(item.count, totalCountry())">
+                  </div>
+                </div>
+                <span class="dist-pct">{{ pct(item.count, totalCountry()) }}%</span>
+                <span class="dist-count">{{ item.count | number }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Durée moyenne par browser -->
+      <div class="section-card">
+        <h2 class="section-title">Durée moy. par navigateur</h2>
+        @if (stats()!.avgDurationByBrowser.length === 0) {
+          <p class="empty-msg">Aucune donnée</p>
+        } @else {
+          <div class="dur-list">
+            @for (item of stats()!.avgDurationByBrowser; track item.label) {
+              <div class="dur-row">
+                <span class="dur-label">{{ item.label }}</span>
+                <span class="dur-value">{{ formatDuration(item.avgSeconds) }}</span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+
+    <!-- Durée moyenne par OS -->
+    <div class="section-card">
+      <h2 class="section-title">Durée moyenne des sessions par OS</h2>
+      @if (stats()!.avgDurationByOs.length === 0) {
+        <p class="empty-msg">Aucune donnée</p>
+      } @else {
+        <div class="os-grid">
+          @for (item of stats()!.avgDurationByOs; track item.label) {
+            <div class="os-card">
+              <p class="os-name">{{ item.label }}</p>
+              <p class="os-dur">{{ formatDuration(item.avgSeconds) }}</p>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  }
+</div>

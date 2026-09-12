@@ -1,0 +1,174 @@
+<div class="vp">
+
+  <!-- ── Titre ───────────────────────────────────────────────────── -->
+  <h1 class="vp-title">Visiteurs du Site</h1>
+
+  <!-- ── KPIs ────────────────────────────────────────────────────── -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <p class="kpi-label">Visiteurs uniques</p>
+      <p class="kpi-value">{{ kpi()?.totalVisitors ?? 0 }}</p>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-label">Visiteurs récurrents</p>
+      <p class="kpi-value">
+        {{ kpi()?.returningVisitors ?? 0 }}
+        <span class="kpi-pct">({{ returningPct() }})</span>
+      </p>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-label">Pages vues</p>
+      <p class="kpi-value">{{ kpi()?.totalPageViews ?? 0 }}</p>
+    </div>
+    <div class="kpi-card">
+      <p class="kpi-label">Durée moyenne</p>
+      <p class="kpi-value">{{ formatAvg(kpi()?.avgDurationSeconds ?? 0) }}</p>
+    </div>
+  </div>
+
+  <!-- ── Cards stats vides ────────────────────────────────────────── -->
+  <div class="stats-grid">
+    <div class="stats-card"><span class="stats-label">TOP PAYS</span></div>
+    <div class="stats-card"><span class="stats-label">NAVIGATEURS</span></div>
+    <div class="stats-card"><span class="stats-label">SYSTÈMES D'EXPLOITATION</span></div>
+    <div class="stats-card"><span class="stats-label">APPAREILS</span></div>
+    <div class="stats-card"><span class="stats-label">PAGES POPULAIRES</span></div>
+    <div class="stats-card"><span class="stats-label">VISITES / JOUR (30J)</span></div>
+  </div>
+
+  <!-- ── Filtres ──────────────────────────────────────────────────── -->
+  <div class="filters">
+
+    <!-- Ligne 1 -->
+    <div class="filters-row">
+      <input
+        class="f-input f-search"
+        type="text"
+        placeholder="Rechercher par IP, pays, ville, navigateur…"
+        [(ngModel)]="search"
+      />
+
+      <select class="f-select" [(ngModel)]="country">
+        <option value="">Tous les pays</option>
+        <option value="France">France</option>
+        <option value="Maroc">Maroc</option>
+        <option value="Sénégal">Sénégal</option>
+        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
+        <option value="Belgique">Belgique</option>
+        <option value="Inconnu">Inconnu</option>
+      </select>
+
+      <select class="f-select" [(ngModel)]="city">
+        <option value="">Toutes les villes</option>
+        <option value="Paris">Paris</option>
+        <option value="Dakar">Dakar</option>
+        <option value="Casablanca">Casablanca</option>
+        <option value="Abidjan">Abidjan</option>
+        <option value="Bruxelles">Bruxelles</option>
+        <option value="Inconnue">Inconnue</option>
+      </select>
+
+      <select class="f-select" [(ngModel)]="device">
+        <option value="">Tous les appareils</option>
+        <option value="Desktop">Desktop</option>
+        <option value="Mobile">Mobile</option>
+        <option value="Tablet">Tablet</option>
+      </select>
+
+      <select class="f-select" [(ngModel)]="browser">
+        <option value="">Tous les navigateurs</option>
+        <option value="Chrome">Chrome</option>
+        <option value="Firefox">Firefox</option>
+        <option value="Safari">Safari</option>
+        <option value="Edge">Edge</option>
+        <option value="Opera">Opera</option>
+      </select>
+
+      <input class="f-input f-date" type="date" [(ngModel)]="dateTo" />
+    </div>
+
+    <!-- Ligne 2 -->
+    <div class="filters-row filters-row--actions">
+      <input class="f-input f-date" type="date" [(ngModel)]="dateFrom" />
+      <button class="btn-filter" (click)="filter()" [disabled]="loading()">Filtrer</button>
+      <button class="btn-reset"  (click)="reset()"  [disabled]="loading()">Réinitialiser</button>
+    </div>
+
+  </div>
+
+  <!-- ── Tableau ──────────────────────────────────────────────────── -->
+  <div class="table-wrap">
+    <table class="vt">
+      <thead>
+        <tr>
+          <th>Première visite</th>
+          <th>Pays / Ville</th>
+          <th>Appareil / OS</th>
+          <th>Navigateur</th>
+          <th>Pages vues</th>
+          <th>Sessions</th>
+          <th>Durée (dernière)</th>
+          <th>Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        @if (loading()) {
+          <tr><td colspan="9" class="td-center">
+            <div class="loader-row">
+              <div class="spinner"></div>
+              <span>Chargement…</span>
+            </div>
+          </td></tr>
+        }
+
+        @else if (error()) {
+          <tr><td colspan="9" class="td-center td-error">{{ error() }}</td></tr>
+        }
+
+        @else if (visitors().length === 0) {
+          <tr><td colspan="9" class="td-empty">Aucun visiteur trouvé.</td></tr>
+        }
+
+        @else {
+          @for (v of visitors(); track v.id) {
+            <tr>
+              <td class="td-date">
+                {{ v.firstVisit ? (v.firstVisit | date:'dd/MM/yyyy HH:mm') : '—' }}
+              </td>
+              <td>
+                <span class="td-main">{{ v.country }}</span>
+                <span class="td-sub">{{ v.city }}</span>
+              </td>
+              <td>
+                <span class="td-main">{{ deviceIcon(v.device) }} {{ v.device }}</span>
+                <span class="td-sub">{{ v.os }}</span>
+              </td>
+              <td>{{ v.browser }}</td>
+              <td class="td-num">{{ v.totalPageViews }}</td>
+              <td class="td-num">{{ v.totalSessions }}</td>
+              <td class="td-dur">{{ formatDuration(v.lastDurationSeconds) }}</td>
+              <td>
+                <span class="badge" [class.badge--new]="v.visitorType === 'new'"
+                                    [class.badge--ret]="v.visitorType === 'returning'">
+                  {{ v.visitorType === 'new' ? 'Nouveau' : 'Récurrent' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-action" title="Voir détails">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          }
+        }
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
