@@ -31,6 +31,11 @@ export class EventDetailComponent implements OnInit {
   stats   = signal<EventStats | null>(null);
   guests  = signal<Guest[]>([]);
 
+  /** true si l'utilisateur a déjà cliqué sur "Page Inscription" — persisté en localStorage */
+  joinPageClicked = signal<boolean>(
+    localStorage.getItem('joinPageClicked') === 'true'
+  );
+
   typeLabel   = computed(() => this.event() ? EVENT_TYPE_LABELS[this.event()!.type] : '');
   statusLabel = computed(() => this.event() ? EVENT_STATUS_LABELS[this.event()!.status] : '');
   isMariage   = computed(() => {
@@ -99,6 +104,9 @@ export class EventDetailComponent implements OnInit {
   goToJoinPage(): void {
     const e = this.event();
     if (!e) return;
+    // Marquer que l'utilisateur a cliqué — stoppe le clignotement
+    localStorage.setItem('joinPageClicked', 'true');
+    this.joinPageClicked.set(true);
     this.linkLoading.set(true);
     this.linkSvc.getByEvent(e.id).subscribe({
       next: (res) => {

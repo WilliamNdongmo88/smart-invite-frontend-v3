@@ -29,7 +29,7 @@
 
   <!-- Alerte : invités confirmés sans numéro de table -->
   @if (confirmedWithoutTable() > 0) {
-    <div class="table-alert">
+    <div class="table-alert" [class.blinking]="!tableAlertDismissed()">
       <div class="table-alert-top">
         <div class="table-alert-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -46,7 +46,7 @@
           </span>
         </div>
         <!-- Bouton visible sur desktop uniquement -->
-        <button class="table-alert-filter table-alert-filter--desktop" (click)="setTab('CONFIRMED')" title="Voir les confirmés">
+        <button class="table-alert-filter table-alert-filter--desktop" (click)="dismissTableAlert()" title="Voir les confirmés">
           Voir les confirmés
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="9 18 15 12 9 6"/>
@@ -54,7 +54,7 @@
         </button>
       </div>
       <!-- Bouton pleine largeur sur mobile -->
-      <button class="table-alert-filter table-alert-filter--mobile" (click)="setTab('CONFIRMED')">
+      <button class="table-alert-filter table-alert-filter--mobile" (click)="dismissTableAlert()">
         Voir les invités confirmés
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="9 18 15 12 9 6"/>

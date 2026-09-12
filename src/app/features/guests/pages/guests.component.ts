@@ -71,6 +71,11 @@ export class GuestsComponent implements OnInit {
   readonly rsvpLabels = RSVP_STATUS_LABELS;
   readonly notifLabels = NOTIFICATION_MODE_LABELS;
 
+  /** true si l'utilisateur a déjà cliqué sur "Voir les confirmés" — stoppe le clignotement */
+  tableAlertDismissed = signal<boolean>(
+    localStorage.getItem('tableAlertDismissed') === 'true'
+  );
+
   readonly tabs: { key: RsvpTab; label: string }[] = [
     { key: 'ALL',       label: 'Tous' },
     { key: 'PENDING',   label: 'En attente' },
@@ -163,6 +168,13 @@ export class GuestsComponent implements OnInit {
     this.activeTab.set(tab);
     this.page.set(0);
     this.load();
+  }
+
+  /** Stoppe le clignotement de l'alerte table et navigue vers les confirmés */
+  dismissTableAlert(): void {
+    localStorage.setItem('tableAlertDismissed', 'true');
+    this.tableAlertDismissed.set(true);
+    this.setTab('CONFIRMED');
   }
 
   onSearch(value: string): void {

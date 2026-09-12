@@ -204,6 +204,34 @@
   flex-shrink: 0;
 }
 
+/* Animation clignotement hint Page Inscription */
+@keyframes hint-blink {
+  0%, 100% {
+    color: #888;
+    background: rgba(201,168,76,0.0);
+    border-radius: 6px;
+  }
+  50% {
+    color: #e8c96d;
+    background: rgba(201,168,76,0.12);
+    border-radius: 6px;
+  }
+}
+
+.action-hint.blinking {
+  animation: hint-blink 1.4s ease-in-out infinite;
+  padding: 0.2rem 0.4rem;
+  margin: -0.2rem -0.4rem;
+
+  strong {
+    color: inherit;
+  }
+
+  svg {
+    color: inherit;
+  }
+}
+
 /* Quick links */
 .quick-links { display: flex; flex-direction: column; gap: 0.5rem; }
 .quick-link {
