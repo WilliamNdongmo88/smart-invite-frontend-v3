@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -29,6 +29,19 @@ export interface VisitorStatsKpi {
   avgDurationSeconds: number;
 }
 
+export interface LabelCount    { label: string; count: number; }
+export interface PageViewCount { url: string;   views: number; }
+export interface DailyCount    { period: string; count: number; }
+
+export interface VisitorOverview {
+  byCountry:   LabelCount[];
+  byBrowser:   LabelCount[];
+  byOs:        LabelCount[];
+  byDevice:    LabelCount[];
+  topPages:    PageViewCount[];
+  visitsByDay: DailyCount[];
+}
+
 // ── Composant ─────────────────────────────────────────────────────────────────
 
 @Component({
@@ -44,11 +57,13 @@ export class AdminVisitorsComponent implements OnInit {
   private readonly base = `${environment.apiUrl}/api/admin/analytics`;
 
   // ── State ──────────────────────────────────────────────────────────
-  kpi       = signal<VisitorStatsKpi | null>(null);
-  visitors  = signal<VisitorRow[]>([]);
-  loading   = signal(false);
-  kpiLoading = signal(false);
-  error     = signal<string | null>(null);
+  kpi          = signal<VisitorStatsKpi | null>(null);
+  overview     = signal<VisitorOverview | null>(null);
+  visitors     = signal<VisitorRow[]>([]);
+  loading      = signal(false);
+  kpiLoading   = signal(false);
+  ovLoading    = signal(false);
+  error        = signal<string | null>(null);
 
   // ── Filtres ────────────────────────────────────────────────────────
   search   = '';
@@ -59,8 +74,17 @@ export class AdminVisitorsComponent implements OnInit {
   dateFrom = '';
   dateTo   = '';
 
+  // ── Computed pour les barres des stats cards ───────────────────────
+  maxCountry  = computed(() => Math.max(...(this.overview()?.byCountry  ?? []).map(x => x.count), 1));
+  maxBrowser  = computed(() => Math.max(...(this.overview()?.byBrowser  ?? []).map(x => x.count), 1));
+  maxOs       = computed(() => Math.max(...(this.overview()?.byOs       ?? []).map(x => x.count), 1));
+  maxDevice   = computed(() => Math.max(...(this.overview()?.byDevice   ?? []).map(x => x.count), 1));
+  maxPageView = computed(() => Math.max(...(this.overview()?.topPages   ?? []).map(x => x.views), 1));
+  maxDay      = computed(() => Math.max(...(this.overview()?.visitsByDay ?? []).map(x => x.count), 1));
+
   ngOnInit(): void {
     this.loadKpi();
+    this.loadOverview();
     this.loadVisitors();
   }
 
@@ -71,6 +95,16 @@ export class AdminVisitorsComponent implements OnInit {
       .subscribe({
         next:  res => { this.kpi.set(res.data ?? null); this.kpiLoading.set(false); },
         error: ()  => this.kpiLoading.set(false),
+      });
+  }
+
+  // ── Chargement overview (6 stats cards) ────────────────────────────
+  loadOverview(): void {
+    this.ovLoading.set(true);
+    this.http.get<ApiResponse<VisitorOverview>>(`${this.base}/overview`)
+      .subscribe({
+        next:  res => { this.overview.set(res.data ?? null); this.ovLoading.set(false); },
+        error: ()  => this.ovLoading.set(false),
       });
   }
 
@@ -96,25 +130,33 @@ export class AdminVisitorsComponent implements OnInit {
   }
 
   // ── Actions filtres ────────────────────────────────────────────────
-  filter(): void  { this.loadVisitors(); }
+  filter(): void { this.loadVisitors(); }
 
   reset(): void {
     this.search = this.country = this.city = this.device = this.browser = this.dateFrom = this.dateTo = '';
     this.loadVisitors();
   }
 
+  reload(): void {
+    this.loadKpi();
+    this.loadOverview();
+    this.loadVisitors();
+  }
+
   // ── Utilitaires ────────────────────────────────────────────────────
 
-  /** Formate les secondes en "Xm Ys" */
+  pct(value: number, max: number): number {
+    if (!max) return 0;
+    return Math.max(Math.round((value / max) * 100), value > 0 ? 2 : 0);
+  }
+
   formatDuration(sec: number | null): string {
     if (sec == null || sec <= 0) return '—';
     const m = Math.floor(sec / 60);
     const s = sec % 60;
-    if (m === 0) return `${s}s`;
-    return `${m}m ${s}s`;
+    return m === 0 ? `${s}s` : `${m}m ${s}s`;
   }
 
-  /** Formate la durée moyenne des KPI */
   formatAvg(sec: number): string {
     if (!sec || sec <= 0) return '0m 0s';
     const m = Math.floor(sec / 60);
@@ -122,18 +164,21 @@ export class AdminVisitorsComponent implements OnInit {
     return `${m}m ${s}s`;
   }
 
-  /** Retourne le % de visiteurs récurrents */
   returningPct(): string {
     const k = this.kpi();
     if (!k || k.totalVisitors === 0) return '0%';
     return `${Math.round((k.returningVisitors / k.totalVisitors) * 100)}%`;
   }
 
-  /** Icône device */
   deviceIcon(device: string): string {
     const d = device?.toLowerCase() ?? '';
-    if (d === 'mobile')  return '📱';
-    if (d === 'tablet')  return '📟';
+    if (d === 'mobile') return '📱';
+    if (d === 'tablet') return '📟';
     return '🖥️';
+  }
+
+  /** Tronque une URL longue pour l'affichage */
+  shortUrl(url: string): string {
+    return url?.length > 40 ? url.substring(0, 40) + '…' : url;
   }
 }

@@ -1,7 +1,15 @@
 <div class="vp">
 
   <!-- ── Titre ───────────────────────────────────────────────────── -->
-  <h1 class="vp-title">Visiteurs du Site</h1>
+  <div class="vp-header">
+    <h1 class="vp-title">Visiteurs du Site</h1>
+    <button class="btn-refresh" (click)="reload()" title="Actualiser tout">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="23 4 23 10 17 10"/>
+        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+      </svg>
+    </button>
+  </div>
 
   <!-- ── KPIs ────────────────────────────────────────────────────── -->
   <div class="kpi-grid">
@@ -26,74 +34,180 @@
     </div>
   </div>
 
-  <!-- ── Cards stats vides ────────────────────────────────────────── -->
+  <!-- ── 6 Stats cards ────────────────────────────────────────────── -->
   <div class="stats-grid">
-    <div class="stats-card"><span class="stats-label">TOP PAYS</span></div>
-    <div class="stats-card"><span class="stats-label">NAVIGATEURS</span></div>
-    <div class="stats-card"><span class="stats-label">SYSTÈMES D'EXPLOITATION</span></div>
-    <div class="stats-card"><span class="stats-label">APPAREILS</span></div>
-    <div class="stats-card"><span class="stats-label">PAGES POPULAIRES</span></div>
-    <div class="stats-card"><span class="stats-label">VISITES / JOUR (30J)</span></div>
+
+    <!-- TOP PAYS -->
+    <div class="stats-card">
+      <span class="stats-label">TOP PAYS</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.byCountry?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-rows">
+          @for (item of overview()!.byCountry.slice(0, 5); track item.label) {
+            <div class="sc-row">
+              <span class="sc-name">{{ item.label }}</span>
+              <div class="sc-bar-wrap">
+                <div class="sc-bar-fill" [style.width.%]="pct(item.count, maxCountry())"></div>
+              </div>
+              <span class="sc-count">{{ item.count }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- NAVIGATEURS -->
+    <div class="stats-card">
+      <span class="stats-label">NAVIGATEURS</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.byBrowser?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-rows">
+          @for (item of overview()!.byBrowser.slice(0, 5); track item.label) {
+            <div class="sc-row">
+              <span class="sc-name">{{ item.label }}</span>
+              <div class="sc-bar-wrap">
+                <div class="sc-bar-fill sc-bar-blue" [style.width.%]="pct(item.count, maxBrowser())"></div>
+              </div>
+              <span class="sc-count">{{ item.count }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- SYSTÈMES D'EXPLOITATION -->
+    <div class="stats-card">
+      <span class="stats-label">SYSTÈMES D'EXPLOITATION</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.byOs?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-rows">
+          @for (item of overview()!.byOs.slice(0, 5); track item.label) {
+            <div class="sc-row">
+              <span class="sc-name">{{ item.label }}</span>
+              <div class="sc-bar-wrap">
+                <div class="sc-bar-fill sc-bar-green" [style.width.%]="pct(item.count, maxOs())"></div>
+              </div>
+              <span class="sc-count">{{ item.count }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- APPAREILS -->
+    <div class="stats-card">
+      <span class="stats-label">APPAREILS</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.byDevice?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-rows">
+          @for (item of overview()!.byDevice; track item.label) {
+            <div class="sc-row">
+              <span class="sc-name">{{ item.label }}</span>
+              <div class="sc-bar-wrap">
+                <div class="sc-bar-fill sc-bar-purple" [style.width.%]="pct(item.count, maxDevice())"></div>
+              </div>
+              <span class="sc-count">{{ item.count }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- PAGES POPULAIRES -->
+    <div class="stats-card">
+      <span class="stats-label">PAGES POPULAIRES</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.topPages?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-rows">
+          @for (item of overview()!.topPages.slice(0, 5); track item.url) {
+            <div class="sc-row">
+              <span class="sc-name sc-url" [title]="item.url">{{ shortUrl(item.url) }}</span>
+              <div class="sc-bar-wrap">
+                <div class="sc-bar-fill sc-bar-orange" [style.width.%]="pct(item.views, maxPageView())"></div>
+              </div>
+              <span class="sc-count">{{ item.views }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- VISITES / JOUR (30J) -->
+    <div class="stats-card stats-card--chart">
+      <span class="stats-label">VISITES / JOUR (30J)</span>
+      @if (ovLoading()) {
+        <div class="sc-loader"><div class="spinner-sm"></div></div>
+      } @else if (!overview()?.visitsByDay?.length) {
+        <p class="sc-empty">Aucune donnée</p>
+      } @else {
+        <div class="sc-bars-chart">
+          @for (item of overview()!.visitsByDay; track item.period) {
+            <div class="sc-bar-col" [title]="item.period + ' : ' + item.count + ' visites'">
+              <div class="sc-bar-v" [style.height.%]="pct(item.count, maxDay())"></div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
   </div>
 
   <!-- ── Filtres ──────────────────────────────────────────────────── -->
   <div class="filters">
-
-    <!-- Ligne 1 -->
     <div class="filters-row">
-      <input
-        class="f-input f-search"
-        type="text"
-        placeholder="Rechercher par IP, pays, ville, navigateur…"
-        [(ngModel)]="search"
-      />
-
+      <input class="f-input f-search" type="text"
+             placeholder="Rechercher par IP, pays, ville, navigateur…"
+             [(ngModel)]="search" />
       <select class="f-select" [(ngModel)]="country">
         <option value="">Tous les pays</option>
-        <option value="France">France</option>
-        <option value="Maroc">Maroc</option>
-        <option value="Sénégal">Sénégal</option>
-        <option value="Côte d'Ivoire">Côte d'Ivoire</option>
-        <option value="Belgique">Belgique</option>
-        <option value="Inconnu">Inconnu</option>
+        @for (item of (overview()?.byCountry ?? []); track item.label) {
+          <option [value]="item.label">{{ item.label }}</option>
+        }
       </select>
-
       <select class="f-select" [(ngModel)]="city">
         <option value="">Toutes les villes</option>
         <option value="Paris">Paris</option>
         <option value="Dakar">Dakar</option>
         <option value="Casablanca">Casablanca</option>
         <option value="Abidjan">Abidjan</option>
+        <option value="Yaoundé">Yaoundé</option>
+        <option value="Douala">Douala</option>
         <option value="Bruxelles">Bruxelles</option>
-        <option value="Inconnue">Inconnue</option>
       </select>
-
       <select class="f-select" [(ngModel)]="device">
         <option value="">Tous les appareils</option>
-        <option value="Desktop">Desktop</option>
-        <option value="Mobile">Mobile</option>
-        <option value="Tablet">Tablet</option>
+        @for (item of (overview()?.byDevice ?? []); track item.label) {
+          <option [value]="item.label">{{ item.label }}</option>
+        }
       </select>
-
       <select class="f-select" [(ngModel)]="browser">
         <option value="">Tous les navigateurs</option>
-        <option value="Chrome">Chrome</option>
-        <option value="Firefox">Firefox</option>
-        <option value="Safari">Safari</option>
-        <option value="Edge">Edge</option>
-        <option value="Opera">Opera</option>
+        @for (item of (overview()?.byBrowser ?? []); track item.label) {
+          <option [value]="item.label">{{ item.label }}</option>
+        }
       </select>
-
       <input class="f-input f-date" type="date" [(ngModel)]="dateTo" />
     </div>
-
-    <!-- Ligne 2 -->
     <div class="filters-row filters-row--actions">
       <input class="f-input f-date" type="date" [(ngModel)]="dateFrom" />
       <button class="btn-filter" (click)="filter()" [disabled]="loading()">Filtrer</button>
       <button class="btn-reset"  (click)="reset()"  [disabled]="loading()">Réinitialiser</button>
     </div>
-
   </div>
 
   <!-- ── Tableau ──────────────────────────────────────────────────── -->
@@ -113,33 +227,23 @@
         </tr>
       </thead>
       <tbody>
-
         @if (loading()) {
           <tr><td colspan="9" class="td-center">
-            <div class="loader-row">
-              <div class="spinner"></div>
-              <span>Chargement…</span>
-            </div>
+            <div class="loader-row"><div class="spinner"></div><span>Chargement…</span></div>
           </td></tr>
-        }
-
-        @else if (error()) {
+        } @else if (error()) {
           <tr><td colspan="9" class="td-center td-error">{{ error() }}</td></tr>
-        }
-
-        @else if (visitors().length === 0) {
+        } @else if (visitors().length === 0) {
           <tr><td colspan="9" class="td-empty">Aucun visiteur trouvé.</td></tr>
-        }
-
-        @else {
+        } @else {
           @for (v of visitors(); track v.id) {
             <tr>
               <td class="td-date">
                 {{ v.firstVisit ? (v.firstVisit | date:'dd/MM/yyyy HH:mm') : '—' }}
               </td>
               <td>
-                <span class="td-main">{{ v.country }}</span>
-                <span class="td-sub">{{ v.city }}</span>
+                <span class="td-main">{{ v.country || '—' }}</span>
+                <span class="td-sub">{{ v.city || '' }}</span>
               </td>
               <td>
                 <span class="td-main">{{ deviceIcon(v.device) }} {{ v.device }}</span>
@@ -150,8 +254,9 @@
               <td class="td-num">{{ v.totalSessions }}</td>
               <td class="td-dur">{{ formatDuration(v.lastDurationSeconds) }}</td>
               <td>
-                <span class="badge" [class.badge--new]="v.visitorType === 'new'"
-                                    [class.badge--ret]="v.visitorType === 'returning'">
+                <span class="badge"
+                      [class.badge--new]="v.visitorType === 'new'"
+                      [class.badge--ret]="v.visitorType === 'returning'">
                   {{ v.visitorType === 'new' ? 'Nouveau' : 'Récurrent' }}
                 </span>
               </td>
@@ -166,7 +271,6 @@
             </tr>
           }
         }
-
       </tbody>
     </table>
   </div>
