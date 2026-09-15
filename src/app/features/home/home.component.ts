@@ -82,6 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   // ── Parallax / scroll ──────────────────────────────────────────────
   scrollY = signal(0);
   navScrolled = signal(false);
+  showBackToTop = computed(() => this.scrollY() > 600);
   showToast = signal(false);
   private scrollListener: (() => void) | null = null;
   private toastShown = false;
@@ -116,6 +117,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     if (this.scrollListener) window.removeEventListener('scroll', this.scrollListener);
+  }
+
+  scrollToTop(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   private onScroll(): void {
