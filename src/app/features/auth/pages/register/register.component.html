@@ -31,13 +31,8 @@
     </svg>
 
     <div class="left-bottom">
-      <h2 class="left-headline">
-        Créez des<br/>invitations<br/>mémorables
-      </h2>
-      <p class="left-sub">
-        Gérez vos événements, envoyez vos invitations<br/>
-        et suivez vos invités en temps réel.
-      </p>
+      <h2 class="left-headline">{{ 'auth.leftHeadline' | translate }}</h2>
+      <p class="left-sub">{{ 'auth.leftSub' | translate }}</p>
     </div>
   </div>
 
@@ -50,12 +45,12 @@
         <span>Smart<span class="gold">Invite</span></span>
       </div>
 
-      <h1 class="right-title">Créer un compte</h1>
+      <h1 class="right-title">{{ 'auth.register.title' | translate }}</h1>
       <p class="right-sub">
         @if (fromGoogle()) {
-          Complétez votre profil pour finaliser l'inscription
+          {{ 'auth.register.subtitleGoogle' | translate }}
         } @else {
-          Rejoignez SmartInvite et gérez vos événements
+          {{ 'auth.register.subtitle' | translate }}
         }
       </p>
 
@@ -63,32 +58,32 @@
 
         <!-- Nom -->
         <div class="field">
-          <label for="name">Nom complet</label>
+          <label for="name">{{ 'auth.register.fullName' | translate }}</label>
           <input id="name" type="text" formControlName="name"
-                 placeholder="Jean Dupont"
+                 [placeholder]="'auth.register.fullNamePlaceholder' | translate"
                  [class.invalid]="isInvalid('name')"
                  autocomplete="name"/>
           @if (isInvalid('name')) {
-            <span class="field-error">Nom requis (min. 2 caractères)</span>
+            <span class="field-error">{{ 'auth.register.fullNameError' | translate }}</span>
           }
         </div>
 
         <!-- Email -->
         <div class="field">
-          <label for="email">E-mail</label>
+          <label for="email">{{ 'auth.register.email' | translate }}</label>
           <input id="email" type="email" formControlName="email"
-                 placeholder="vous@exemple.com"
+                 [placeholder]="'auth.register.emailPlaceholder' | translate"
                  [class.invalid]="isInvalid('email')"
                  autocomplete="email"/>
           @if (isInvalid('email')) {
-            <span class="field-error">E-mail invalide</span>
+            <span class="field-error">{{ 'auth.register.emailError' | translate }}</span>
           }
         </div>
 
         <!-- Téléphone -->
         <div class="field">
           <label for="phone">
-            Téléphone WhatsApp <span class="req">*</span>
+            {{ 'auth.register.phone' | translate }} <span class="req">*</span>
           </label>
           <div class="phone-wrap" [class.invalid]="isInvalid('phone')">
             <select formControlName="phoneDialCode" class="dial-select" title="Indicatif pays" aria-label="Indicatif pays">
@@ -98,26 +93,26 @@
             </select>
             <input id="phone" type="tel" formControlName="phone"
                    class="phone-local"
-                   placeholder="6XX XXX XXX"
+                   [placeholder]="'auth.register.phonePlaceholder' | translate"
                    autocomplete="tel"/>
           </div>
           @if (isInvalid('phone')) {
-            <span class="field-error">Le numéro WhatsApp est requis</span>
+            <span class="field-error">{{ 'auth.register.phoneError' | translate }}</span>
           }
           <span class="field-hint">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="color:#25D366;flex-shrink:0">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
-            Sélectionnez votre pays puis saisissez votre numéro local
+            {{ 'auth.register.phoneHint' | translate }}
           </span>
         </div>
 
         <!-- Mot de passe -->
         <div class="field">
-          <label for="password">Mot de passe</label>
+          <label for="password">{{ 'auth.register.password' | translate }}</label>
           <div class="input-wrap">
             <input id="password" [type]="showPw() ? 'text' : 'password'"
-                   formControlName="password" placeholder="Min. 8 caractères"
+                   formControlName="password" [placeholder]="'auth.register.passwordPlaceholder' | translate"
                    [class.invalid]="isInvalid('password')"
                    autocomplete="new-password"/>
             <button type="button" class="eye-btn" (click)="showPw.set(!showPw())">
@@ -129,13 +124,13 @@
             </button>
           </div>
           @if (isInvalid('password')) {
-            <span class="field-error">Minimum 8 caractères</span>
+            <span class="field-error">{{ 'auth.register.passwordError' | translate }}</span>
           }
         </div>
 
         <!-- Confirmer mot de passe -->
         <div class="field">
-          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <label for="confirmPassword">{{ 'auth.register.confirmPassword' | translate }}</label>
           <div class="input-wrap">
             <input id="confirmPassword" [type]="showConfirm() ? 'text' : 'password'"
                    formControlName="confirmPassword" placeholder="••••••••"
@@ -150,19 +145,19 @@
             </button>
           </div>
           @if (passwordMismatch) {
-            <span class="field-error">Les mots de passe ne correspondent pas</span>
+            <span class="field-error">{{ 'auth.register.passwordMismatch' | translate }}</span>
           }
         </div>
 
         <button type="submit" class="btn-submit" [disabled]="loading()">
           @if (loading()) { <span class="spinner"></span> }
-          Créer mon compte
+          {{ 'auth.register.submit' | translate }}
         </button>
 
       </form>
 
       <p class="bottom-link">
-        Déjà un compte ? <a routerLink="/login">Se connecter</a>
+        {{ 'auth.register.alreadyAccount' | translate }} <a routerLink="/login">{{ 'auth.register.signIn' | translate }}</a>
       </p>
 
     </div>

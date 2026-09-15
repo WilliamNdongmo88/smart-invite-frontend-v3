@@ -8,13 +8,15 @@ import { Invitation } from '../../../core/models/invitation.model';
 import { Guest } from '../../../core/models/guest.model';
 import { Event } from '../../../core/models/event.model';
 import { InvitationStatus, RSVP_STATUS_LABELS } from '../../../core/models/enums.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 type FilterTab = 'ALL' | InvitationStatus;
 
 @Component({
   selector: 'app-invitations',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: 'invitations.component.html',
   styleUrl: 'invitations.component.scss',
 })

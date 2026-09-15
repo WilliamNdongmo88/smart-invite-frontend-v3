@@ -2,11 +2,13 @@ import { Component, inject, input, output } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-topbar',
   standalone: true,
-  imports: [RouterLink, AvatarComponent],
+  imports: [RouterLink, AvatarComponent, TranslatePipe],
   template: `
     <header class="topbar">
       <div class="topbar-left">
@@ -25,13 +27,18 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
         </a>
       </div>
       <div class="topbar-right">
+        <!-- Sélecteur de langue FR / EN -->
+        <button class="lang-btn" (click)="lang.toggle()" [title]="lang.activeLang() === 'fr' ? 'Switch to English' : 'Passer en Français'">
+          <img [src]="lang.activeLang() === 'fr' ? '/img/flag-fr.svg' : '/img/flag-en.svg'" class="lang-flag" alt="" />
+          <span class="lang-label">{{ lang.activeLang() === 'fr' ? 'FR' : 'EN' }}</span>
+        </button>
         <button class="logout-btn" (click)="logout()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
             <polyline points="16 17 21 12 16 7"/>
             <line x1="21" y1="12" x2="9" y2="12"/>
           </svg>
-          <span class="logout-label">Déconnexion</span>
+          <span class="logout-label">{{ 'nav.logout' | translate }}</span>
         </button>
         <app-avatar [name]="userName()" [size]="25" />
       </div>
@@ -80,6 +87,15 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
       display: flex; align-items: center; gap: 0.75rem;
       flex-shrink: 0;
     }
+    .lang-btn {
+      display: flex; align-items: center; gap: 0.3rem;
+      background: none; border: 1px solid #333; border-radius: 6px;
+      color: #aaa; cursor: pointer; font-size: 0.8rem; padding: 0.3rem 0.6rem;
+      transition: border-color 0.2s, color 0.2s; white-space: nowrap;
+    }
+    .lang-btn:hover { border-color: #c9a84c; color: #c9a84c; }
+    .lang-flag { width: 18px; height: 12px; border-radius: 2px; display: block; object-fit: cover; flex-shrink: 0; }
+    .lang-label { font-weight: 600; font-size: 0.75rem; }
     .logout-btn {
       display: flex; align-items: center; gap: 0.4rem;
       background: none; border: 1px solid #333; border-radius: 6px;
@@ -92,6 +108,8 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
       .topbar { padding: 0 0.75rem; }
       .logout-label { display: none; }
       .logout-btn { padding: 0.35rem; }
+      .lang-label { display: none; }
+      .lang-btn { padding: 0.3rem; }
       .topbar-right { gap: 0.5rem; }
     }
 
@@ -108,6 +126,7 @@ export class TopbarComponent {
 
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  readonly lang = inject(LanguageService);
 
   logout(): void {
     this.auth.logout().subscribe({ complete: () => this.router.navigate(['/login']) });

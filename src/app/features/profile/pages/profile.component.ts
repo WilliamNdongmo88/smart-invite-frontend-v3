@@ -8,13 +8,15 @@ import { User, UpdateProfileRequest, ChangePasswordRequest } from '../../../core
 import { NotificationMode, NOTIFICATION_MODE_LABELS } from '../../../core/models/enums.model';
 import { DialCodeSelectComponent } from '../../../shared/components/dial-code-select/dial-code-select.component';
 import { DIAL_CODES } from '../../../core/data/dial-codes';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 type ActiveTab = 'info' | 'notifications' | 'security';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [FormsModule, DialCodeSelectComponent],
+  imports: [FormsModule, DialCodeSelectComponent, TranslatePipe],
   templateUrl: 'profile.component.html',
   styleUrl: 'profile.component.scss',
 })
@@ -23,6 +25,7 @@ export class ProfileComponent implements OnInit {
   private readonly authSvc    = inject(AuthService);
   private readonly toast      = inject(ToastService);
   private readonly router     = inject(Router);
+  private readonly lang       = inject(LanguageService);
 
   user        = signal<User | null>(null);
   loading     = signal(true);
@@ -109,7 +112,7 @@ export class ProfileComponent implements OnInit {
         const parsed = this.parsePhone(u.phone ?? '');
         this.phoneDialCode = parsed.dialCode;
         this.phoneLocal    = parsed.local;
-        this.toast.success('Profil mis à jour ✅');
+        this.toast.success(this.lang.t('profile.toast.updateSuccess'));
         this.saving.set(false);
       },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.saving.set(false); },
@@ -137,7 +140,7 @@ export class ProfileComponent implements OnInit {
           marketingEmails:         u.marketingEmails,
           notifyMe:                u.notifyMe,
         } : prev);
-        this.toast.success('Préférences sauvegardées ✅');
+        this.toast.success(this.lang.t('profile.toast.updateSuccess'));
         this.saving.set(false);
       },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.saving.set(false); },
@@ -146,24 +149,24 @@ export class ProfileComponent implements OnInit {
 
   changePassword(): void {
     if (this.newPassword !== this.confirmPassword) {
-      this.toast.error('Les mots de passe ne correspondent pas');
+      this.toast.error(this.lang.t('profile.security.passwordMismatch'));
       return;
     }
     if (this.newPassword.length < 6) {
-      this.toast.error('Le mot de passe doit contenir au moins 6 caractères');
+      this.toast.error(this.lang.t('auth.register.passwordError'));
       return;
     }
     this.pwSaving = true;
     const req: ChangePasswordRequest = { currentPassword: this.currentPassword, newPassword: this.newPassword };
     this.profileSvc.changePassword(req).subscribe({
       next: () => {
-        this.toast.success('Mot de passe modifié ✅');
+        this.toast.success(this.lang.t('profile.toast.passwordSuccess'));
         this.currentPassword = '';
         this.newPassword     = '';
         this.confirmPassword = '';
         this.pwSaving = false;
       },
-      error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.pwSaving = false; },
+      error: (err) => { this.toast.error(err?.error?.message || this.lang.t('profile.toast.error')); this.pwSaving = false; },
     });
   }
 

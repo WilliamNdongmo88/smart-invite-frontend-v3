@@ -1,6 +1,6 @@
 import {
   Component, OnInit, OnDestroy, AfterViewInit,
-  signal, computed, inject, PLATFORM_ID, ElementRef, HostBinding
+  signal, computed, inject, effect, PLATFORM_ID, ElementRef, HostBinding
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { ToastService } from '../../core/services/toast.service';
+import { LanguageService } from '../../core/services/language.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import {
   WeddingDetailsContent,
   WeddingDetailsEditSection,
@@ -200,6 +202,156 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
   theme: { ...DEFAULT_WEDDING_THEME },
 };
 
+/** English version of default content — used when activeLang === 'en' at creation time */
+const INITIAL_CONTENT_EN: WeddingDetailsContent = {
+  ...INITIAL_CONTENT,
+  hero: {
+    ...INITIAL_CONTENT.hero,
+    dateLabel:       'August 7th & 8th, 2026',
+    heroCatchphrase: 'A celebration crafted as an eternal memory.',
+  },
+  couple: {
+    ...INITIAL_CONTENT.couple,
+    brideBio:
+      'Reserved and attentive, Sophie is one of those who speaks little but feels deeply. ' +
+      'She observes, listens and gives her trust with sincerity. Behind her calm lies ' +
+      'great sensitivity, deep faith and a natural ability to care for others ' +
+      'with discretion and gentleness. In their story, she brings balance, serenity and ' +
+      'that soothing presence that turns simple moments into precious ones.',
+    groomBio:
+      'Nicolas loves people, conversations and shared moments. Always surrounded, always ' +
+      'ready to bring everyone together, he has that warm energy that naturally creates bonds. ' +
+      'But behind this ease is above all a deeply attentive, loyal and genuine man. ' +
+      'In their story, he brings momentum, spontaneity and the ability to love ' +
+      'fully, without restraint.',
+    coupleTagline: 'Two ways of being. One single truth.',
+  },
+  story: {
+    ...INITIAL_CONTENT.story,
+    headline:    'A story built over time',
+    subheadline: '« A meeting. A friendship. A certainty. And sixteen years of naturally walking together. »',
+    chapters: [
+      {
+        label: 'CHAPTER I', sublabel: 'The meeting',
+        year: '2008', title: 'An unexpected encounter',
+        caption: 'The first glance',
+        image: '/images/chap1-veste.webp',
+        paragraphs: [
+          'Back then, within the ACR, nothing foreshadowed what their story would become. They collaborated, organised events and shared the same environment… not knowing they were already heading in the same direction.',
+        ],
+      },
+      {
+        label: 'CHAPTER II', sublabel: 'The bond',
+        year: '2010', title: 'A friendship turned certainty',
+        caption: 'Memories for two',
+        image: '/images/couple_zome_amor.webp',
+        paragraphs: [
+          'In 2010, their paths crossed again. And this time, something changed. Exchanges became more natural. Conversations grew longer. Silences became comfortable, and laughter came without effort.',
+          'Talking about everything and nothing became obvious. And the absences… a little longer, began to say what words had not yet expressed.',
+        ],
+      },
+      {
+        label: 'CHAPTER III', sublabel: 'Our journey',
+        year: '2011 – 2025', title: 'The path together',
+        caption: 'You and I, for life',
+        image: '/images/image-1-converted.webp',
+        paragraphs: [
+          'It is no longer just a meeting or a certainty… It is a life built together. Over time, we have learned to move forward side by side, through simple days and more intense moments alike.',
+          'Our story wrote itself naturally, between shared projects, travels, memories and that unique way of understanding each other. Little by little, our dreams became reality. And each step brought us even closer, with that same discreet, sincere and essential bond.',
+          'Today, all of this leads us toward what comes next.',
+        ],
+      },
+      {
+        label: 'CHAPTER IV', sublabel: 'The celebration',
+        year: 'Aug 7th & 8th 2026', title: 'Two days to say YES',
+        caption: 'The next chapter',
+        image: '/images/venue/domaine-vue-aerienne.webp',
+        paragraphs: [
+          'Everything now converges toward this moment: celebrating our union with those we love. More than a celebration, it is a pause in time.',
+          'A moment of gratitude for everything we have been through together: the seasons, the joys, the challenges and all that has shaped our story. This milestone does not mark the beginning of a new story. It celebrates the one we have already been writing for so many years, with patience, love and trust.',
+          'May tenderness and closeness continue to guide what we have yet to write together.',
+        ],
+      },
+    ],
+    footer: 'Thank you for being part of our story. Thank you for having walked through so many chapters by our side. And thank you for being here to write the next ones with us.',
+  },
+  program: {
+    days: [
+      {
+        date:     '2026-08-07',
+        label:    'Friday August 7th, 2026 · The Eve',
+        tabIcon:  '☾',
+        tabDate:  'AUG 7',
+        tabLabel: 'The Eve',
+        items: [
+          { icon: '♡', time: '2pm – 3pm',       title: 'Civil Ceremony',         desc: 'Civil ceremony in the presence of close ones. The first official "yes".' },
+          { icon: '⌖', time: '3pm – 3:30pm',    title: 'Transfer to Thabord',    desc: 'Heading to Thabord for a photo session in a green setting.' },
+          { icon: '●', time: '3:30pm – 4:30pm', title: 'Photo Session Thabord',  desc: 'Photo session with the couple and family in the magnificent Thabord park.' },
+          { icon: '✦', time: '5pm – 6:30pm',    title: 'Reception at the Venue', desc: 'A convivial moment over drinks and light bites at the venue.' },
+        ],
+      },
+      {
+        date:     '2026-08-08',
+        label:    'Saturday August 8th, 2026 · The Big Day',
+        tabIcon:  '☼',
+        tabDate:  'AUG 8',
+        tabLabel: 'The Big Day',
+        items: [
+          { icon: '♡', time: '10am – 11:30am', title: 'Religious Ceremony',  desc: 'The most emotional moment. A solemn ceremony surrounded by all those we love.' },
+          { icon: '♢', time: '12pm – 2pm',     title: 'Champagne Reception', desc: 'Champagne, refined bites and meeting of families in the venue gardens.' },
+          { icon: '♫', time: '12pm – 2pm',     title: 'Kids\' Corner',       desc: 'A fun space dedicated to the little ones, with games for their greatest joy.' },
+          { icon: '◉', time: '7pm – 8pm',      title: 'Arrival / Seating',   desc: 'Settling in, catching up and building the atmosphere for the evening.' },
+        ],
+      },
+    ],
+    footer: 'Every moment was imagined to be lived together.',
+  },
+  dressCode: {
+    ...INITIAL_CONTENT.dressCode,
+    description: 'Most importantly, feel comfortable and enjoy an unforgettable evening. No strict dress code — come as you feel best!',
+    advice:      'Tip: please avoid pure white (reserved for the bride).',
+    paletteTerracotta: [
+      { color: '#b65a3a', label: 'Terracotta' },
+      { color: '#8d4128', label: 'Sienna' },
+      { color: '#d58a67', label: 'Peach' },
+      { color: '#f2d2c2', label: 'Blush' },
+    ],
+    paletteChampagne: [
+      { color: '#f1e0bc', label: 'Champagne' },
+      { color: '#dcc295', label: 'Gold' },
+      { color: '#b99768', label: 'Honey' },
+      { color: '#fff3dc', label: 'Ivory' },
+    ],
+  },
+  faq: {
+    items: [
+      { q: 'Is there a dress code?',           a: 'No strict dress code, but we count on your good taste — dress smartly and appropriately for the occasion. 😊' },
+      { q: 'How do I confirm my attendance?',  a: 'Via the RSVP link received on WhatsApp. Your response is recorded instantly.' },
+      { q: 'When will the QR code be used?',   a: 'On the day, at the time of the banquet.' },
+    ],
+  },
+  rsvp: {
+    title:    'We can\'t wait to see you!',
+    subtitle: 'Don\'t forget your QR code! It is your personal access key to the banquet and will be required upon arrival.',
+  },
+  gallery: {
+    items: [
+      { url: '/images/galerie-photo-1.webp',         caption: 'In love',              large: false },
+      { url: '/images/couple_en_fete.webp',          caption: 'Partners in crime',    large: false },
+      { url: '/images/invitation-couple-real.webp',  caption: 'Our roots, our pride', large: false },
+      { url: '/images/mr-mme-zome.webp',             caption: 'Mr & Mrs',             large: false },
+      { url: '/images/couple-fond-hero.webp',        caption: 'Our bond',             large: true  },
+      { url: '/images/save-the-date-invit1.webp',    caption: 'Save the date',        large: false },
+    ],
+  },
+  footer: {
+    logoText: 'Sophie & Nicolas',
+    subText:  'August 8th, 2026 · Ma Cabane Au Cameroun · Yaoundé',
+    loveText: 'WITH ALL OUR LOVE ❤',
+  },
+  theme: { ...DEFAULT_WEDDING_THEME },
+};
+
 // Deep-clone helper
 function deepClone<T>(val: T): T {
   return JSON.parse(JSON.stringify(val));
@@ -219,7 +371,7 @@ function isColorLight(hex: string): boolean {
 @Component({
   selector: 'app-wedding-details',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslatePipe],
   templateUrl: 'wedding-details.component.html',
   styleUrl:    'wedding-details.component.scss',
 })
@@ -231,6 +383,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   private readonly router      = inject(Router);
   private readonly eventSvc    = inject(EventService);
   private readonly toast       = inject(ToastService);
+  readonly lang                = inject(LanguageService);
 
   // ── Mode création vs édition ──────────────────────────────────────
   /** ID de l'événement existant (null = mode création) */
@@ -249,7 +402,13 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   readonly isLoggedIn = computed(() => !this.isPreview() && this.authService.isLoggedIn());
 
   // ── Contenu éditable ──────────────────────────────────────────────
-  content = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
+  private get initialContent() {
+    return this.lang.activeLang() === 'en' ? INITIAL_CONTENT_EN : INITIAL_CONTENT;
+  }
+
+  content = signal<WeddingDetailsContent>(deepClone(
+    inject(LanguageService).activeLang() === 'en' ? INITIAL_CONTENT_EN : INITIAL_CONTENT
+  ));
 
   readonly hero      = computed(() => this.content().hero);
   readonly couple    = computed(() => this.content().couple);
@@ -318,7 +477,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const preset = WEDDING_THEME_PRESETS.find(p => p.id === t.preset);
     return preset?.swatches ?? [];
   });
-  draft = signal<WeddingDetailsContent>(deepClone(INITIAL_CONTENT));
+  draft = signal<WeddingDetailsContent>(deepClone(
+    inject(LanguageService).activeLang() === 'en' ? INITIAL_CONTENT_EN : INITIAL_CONTENT
+  ));
   uploadingImage = signal<string | null>(null);
   /** Sous-titre auto généré depuis hero (dateLabel · venueName · venueCity). */
   autoSubtitle   = signal<string>('');
@@ -356,6 +517,20 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   private toastShown     = false;
   private scrollListener: (() => void) | null = null;
   private readonly timelineProgress = signal(0);
+
+  // ── Constructor ───────────────────────────────────────────────────
+  constructor() {
+    // En mode création (pas d'événement chargé depuis le backend),
+    // recharge le contenu par défaut dans la bonne langue quand la langue change.
+    effect(() => {
+      const lang = this.lang.activeLang();
+      if (this.eventId() === null) {
+        const initial = lang === 'en' ? INITIAL_CONTENT_EN : INITIAL_CONTENT;
+        this.content.set(deepClone(initial));
+        this.draft.set(deepClone(initial));
+      }
+    });
+  }
 
   // ── Lifecycle ─────────────────────────────────────────────────────
   ngOnInit(): void {
@@ -898,7 +1073,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   resetToDefault(): void {
     if (confirm('Remettre tout le contenu d\'origine ? Cette action est irréversible.')) {
-      this.content.set(deepClone(INITIAL_CONTENT));
+      this.content.set(deepClone(this.initialContent));
       this.activeDayIdx.set(0);
       if (isPlatformBrowser(this.platformId)) {
         const key = this.eventId() ? `si_wedding_${this.eventId()}` : 'si_home_content';

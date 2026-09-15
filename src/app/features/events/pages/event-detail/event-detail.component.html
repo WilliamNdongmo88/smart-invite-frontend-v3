@@ -4,7 +4,7 @@
   <div class="page-header">
     <a routerLink="/events" class="back-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      Mes événements
+      {{ 'events.detail.backToEvents' | translate }}
     </a>
     @if (event()) {
       <div class="header-row">
@@ -18,29 +18,29 @@
         <div class="header-actions">
           <a [routerLink]="['/events', event()!.id, 'guests']" class="btn-action btn-outline">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Invités
+            {{ 'events.detail.guests' | translate }}
           </a>
           <a [routerLink]="editorRoute() ? ['/events', event()!.id, editorRoute()] : ['/events', event()!.id, 'card']"
              [queryParams]="editorRoute() ? { preview: 'true' } : {}"
              class="btn-action btn-outline">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            Carte
+            {{ 'events.detail.card' | translate }}
           </a>
-          <button type="button" class="btn-action btn-outline" (click)="goToJoinPage()" [disabled]="linkLoading()" title="Voir la page d'inscription et modifier la photo">
+          <button type="button" class="btn-action btn-outline" (click)="goToJoinPage()" [disabled]="linkLoading()" [title]="'events.detail.joinPage' | translate">
             @if (linkLoading()) {
               <span class="spinner-sm"></span>
             } @else {
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             }
-            Page Inscription
+            {{ 'events.detail.joinPage' | translate }}
           </button>
           <a [routerLink]="['/events', event()!.id, 'invitations']" class="btn-action btn-gold">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            Inviter
+            {{ 'events.detail.invite' | translate }}
           </a>
           <a [routerLink]="['/events', event()!.id, 'edit']" class="btn-action btn-outline">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Éditer
+            {{ 'events.detail.edit' | translate }}
           </a>
         </div>
       </div>
@@ -49,12 +49,12 @@
       <div class="action-hints">
         <div class="action-hint">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          <span>Cliquez sur <strong>Carte</strong> pour prévisualiser la page de détails de l'événement</span>
+          <span>{{ 'events.detail.hintCard' | translate }}</span>
         </div>
         <span class="hint-sep">·</span>
         <div class="action-hint" [class.blinking]="!joinPageClicked()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-          <span>Cliquez sur <strong>Page Inscription</strong> pour prévisualiser et mettre à jour la photo de la page d'inscription</span>
+          <span>{{ 'events.detail.hintJoin' | translate }}</span>
         </div>
       </div>
     }
@@ -66,47 +66,11 @@
     </div>
   } @else if (event()) {
 
-    <!-- Stat cards -->
-    <!-- <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-body">
-          <p class="stat-label">Total invités</p>
-          <p class="stat-value">{{ stats()?.totalGuests ?? 0 }}</p>
-          <p class="stat-sub">sur {{ event()!.maxGuests }} places</p>
-        </div>
-        <div class="stat-icon">👥</div>
-      </div>
-      <div class="stat-card stat-green">
-        <div class="stat-body">
-          <p class="stat-label">Confirmés</p>
-          <p class="stat-value">{{ stats()?.confirmed ?? 0 }}</p>
-          <p class="stat-sub">Réponses positives</p>
-        </div>
-        <div class="stat-icon">✅</div>
-      </div>
-      <div class="stat-card stat-gold">
-        <div class="stat-body">
-          <p class="stat-label">En attente</p>
-          <p class="stat-value">{{ stats()?.pending ?? 0 }}</p>
-          <p class="stat-sub">Sans réponse</p>
-        </div>
-        <div class="stat-icon">⏳</div>
-      </div>
-      <div class="stat-card stat-red">
-        <div class="stat-body">
-          <p class="stat-label">Refusés</p>
-          <p class="stat-value">{{ stats()?.declined ?? 0 }}</p>
-          <p class="stat-sub">Réponses négatives</p>
-        </div>
-        <div class="stat-icon">❌</div>
-      </div>
-    </div> -->
-
     <!-- Taux de réponse -->
     @if (stats() && stats()!.totalGuests > 0) {
       <div class="response-bar-card">
         <div class="rb-header">
-          <span class="rb-label">Taux de réponse</span>
+          <span class="rb-label">{{ 'events.detail.responseRate' | translate }}</span>
           <span class="rb-pct">{{ responseRate() }}%</span>
         </div>
         <div class="rb-track">
@@ -120,19 +84,19 @@
 
       <!-- Infos événement -->
       <div class="info-card">
-        <h2 class="card-title">Informations</h2>
+        <h2 class="card-title">{{ 'events.detail.information' | translate }}</h2>
         <div class="info-list">
           <div class="info-row">
             <span class="info-icon">🏷️</span>
             <div>
-              <p class="info-key">Type</p>
+              <p class="info-key">{{ 'events.detail.type' | translate }}</p>
               <p class="info-val">{{ typeLabel() }}</p>
             </div>
           </div>
           <div class="info-row">
             <span class="info-icon">📊</span>
             <div>
-              <p class="info-key">Statut</p>
+              <p class="info-key">{{ 'events.detail.status' | translate }}</p>
               <span class="status-badge" [class]="'status-' + event()!.status.toLowerCase()">{{ statusLabel() }}</span>
             </div>
           </div>
@@ -140,7 +104,7 @@
             <div class="info-row">
               <span class="info-icon">📅</span>
               <div>
-                <p class="info-key">Date principale</p>
+                <p class="info-key">{{ 'events.detail.mainDate' | translate }}</p>
                 <p class="info-val">{{ formatDate(event()!.eventDate) }}</p>
               </div>
             </div>
@@ -149,7 +113,7 @@
             <div class="info-row">
               <span class="info-icon">💳</span>
               <div>
-                <p class="info-key">Budget</p>
+                <p class="info-key">{{ 'events.detail.budget' | translate }}</p>
                 <p class="info-val">{{ event()!.budget }}</p>
               </div>
             </div>
@@ -158,7 +122,7 @@
             <div class="info-row">
               <span class="info-icon">📝</span>
               <div>
-                <p class="info-key">Description</p>
+                <p class="info-key">{{ 'events.detail.description' | translate }}</p>
                 <p class="info-val">{{ event()!.description }}</p>
               </div>
             </div>
@@ -167,13 +131,13 @@
 
         <!-- Cérémonies mariage -->
         @if (isMariage()) {
-          <h3 class="section-sub">Programme</h3>
+          <h3 class="section-sub">{{ 'events.detail.program' | translate }}</h3>
           <div class="ceremony-list">
             @if (event()!.civilLocation || event()!.civilDateTime) {
               <div class="ceremony-row">
                 <span class="cer-icon">🏛️</span>
                 <div>
-                  <p class="cer-title">Cérémonie civile</p>
+                  <p class="cer-title">{{ 'events.detail.civilCeremony' | translate }}</p>
                   <p class="cer-detail">{{ event()!.civilLocation }}</p>
                   <p class="cer-date">{{ formatDate(event()!.civilDateTime) }}</p>
                 </div>
@@ -183,7 +147,7 @@
               <div class="ceremony-row">
                 <span class="cer-icon">⛪</span>
                 <div>
-                  <p class="cer-title">Cérémonie religieuse</p>
+                  <p class="cer-title">{{ 'events.detail.religiousCeremony' | translate }}</p>
                   <p class="cer-detail">{{ event()!.religiousLocation }}</p>
                   <p class="cer-date">{{ formatDate(event()!.religiousDateTime) }}</p>
                 </div>
@@ -193,7 +157,7 @@
               <div class="ceremony-row">
                 <span class="cer-icon">🥂</span>
                 <div>
-                  <p class="cer-title">Réception / Banquet</p>
+                  <p class="cer-title">{{ 'events.detail.reception' | translate }}</p>
                   <p class="cer-detail">{{ event()!.banquetLocation }}</p>
                   <p class="cer-date">{{ formatDate(event()!.banquetDateTime) }}</p>
                 </div>
@@ -206,15 +170,15 @@
       <!-- Invités récents -->
       <div class="guests-card">
         <div class="guests-header">
-          <h2 class="card-title">Invités récents</h2>
-          <a [routerLink]="['/events', event()!.id, 'guests']" class="see-all">Voir tous →</a>
+          <h2 class="card-title">{{ 'events.detail.recentGuests' | translate }}</h2>
+          <a [routerLink]="['/events', event()!.id, 'guests']" class="see-all">{{ 'events.detail.seeAll' | translate }}</a>
         </div>
 
         @if (guests().length === 0) {
           <div class="empty-guests">
             <span>👤</span>
-            <p>Aucun invité pour l'instant</p>
-            <a [routerLink]="['/events', event()!.id, 'guests']" class="btn-add-guest">+ Ajouter des invités</a>
+            <p>{{ 'events.detail.noGuests' | translate }}</p>
+            <a [routerLink]="['/events', event()!.id, 'guests']" class="btn-add-guest">{{ 'events.detail.addGuests' | translate }}</a>
           </div>
         } @else {
           <div class="guest-list">
@@ -242,24 +206,24 @@
     <div class="quick-links">
       <a [routerLink]="['/events', event()!.id, 'links']" class="quick-link">
         <span class="ql-icon">🔗</span>
-        <span class="ql-label">Liens d'invitation</span>
+        <span class="ql-label">{{ 'events.detail.invitationLinks' | translate }}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
       <a [routerLink]="['/events', event()!.id, 'invitations']" class="quick-link">
         <span class="ql-icon">✉️</span>
-        <span class="ql-label">Gérer les invitations</span>
+        <span class="ql-label">{{ 'events.detail.manageInvitations' | translate }}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
-      <a (click)="goToJoinPage()" class="quick-link clickable" role="button" tabindex="0" title="Accéder à la page d'inscription pour voir et modifier la photo">
+      <a (click)="goToJoinPage()" class="quick-link clickable" role="button" tabindex="0" [title]="'events.detail.joinPage' | translate">
         <span class="ql-icon">✨</span>
-        <span class="ql-label">Page d'inscription (Join & Photo)</span>
+        <span class="ql-label">{{ 'events.detail.joinPageLink' | translate }}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
       <a [routerLink]="editorRoute() ? ['/events', event()!.id, editorRoute()] : ['/events', event()!.id, 'card']"
          [queryParams]="editorRoute() ? { preview: 'true' } : {}"
          class="quick-link">
         <span class="ql-icon">🎴</span>
-        <span class="ql-label">Carte d'invitation</span>
+        <span class="ql-label">{{ 'events.detail.card' | translate }}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       </a>
     </div>

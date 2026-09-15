@@ -9,13 +9,15 @@ import { ToastService } from '../../../core/services/toast.service';
 import { Payment, PaymentPlan } from '../../../core/models/payment.model';
 import { Event } from '../../../core/models/event.model';
 import { PAYMENT_STATUS_LABELS, PaymentStatus } from '../../../core/models/enums.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 type Tab = 'subscribe' | 'history';
 
 @Component({
   selector: 'app-payments',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, TranslatePipe],
   templateUrl: 'payments.component.html',
   styleUrl: 'payments.component.scss',
 })
@@ -24,6 +26,7 @@ export class PaymentsComponent implements OnInit {
   private readonly eventSvc = inject(EventService);
   private readonly fb       = inject(FormBuilder);
   private readonly toast    = inject(ToastService);
+  readonly lang             = inject(LanguageService);
 
   // ── Tabs ──
   activeTab = signal<Tab>('subscribe');
@@ -63,12 +66,12 @@ export class PaymentsComponent implements OnInit {
 
   readonly statusLabels = PAYMENT_STATUS_LABELS;
 
-  readonly historyTabs: { key: 'ALL' | PaymentStatus; label: string }[] = [
-    { key: 'ALL',          label: 'Tous' },
-    { key: 'PENDING',      label: 'En attente' },
-    { key: 'UNDER_REVIEW', label: 'En vérification' },
-    { key: 'APPROVED',     label: 'Approuvés' },
-    { key: 'REJECTED',     label: 'Rejetés' },
+  readonly historyTabs: { key: 'ALL' | PaymentStatus; labelKey: string }[] = [
+    { key: 'ALL',          labelKey: 'common.total' },
+    { key: 'PENDING',      labelKey: 'payments_user.status.PENDING' },
+    { key: 'UNDER_REVIEW', labelKey: 'payments_user.status.UNDER_REVIEW' },
+    { key: 'APPROVED',     labelKey: 'payments_user.status.APPROVED' },
+    { key: 'REJECTED',     labelKey: 'payments_user.status.REJECTED' },
   ];
 
   filteredHistory = computed(() => {
@@ -154,10 +157,10 @@ export class PaymentsComponent implements OnInit {
       next: (res) => {
         this.pendingPayment.set(res.data!);
         this.subscribing.set(false);
-        this.toast.success('Souscription initiée ! Uploadez votre preuve de paiement.');
+        this.toast.success(this.lang.t('payments_user.toast.subscribeSuccess'));
       },
       error: (err) => {
-        this.toast.error(err?.error?.message || 'Erreur lors de la souscription');
+        this.toast.error(err?.error?.message || this.lang.t('payments_user.toast.error'));
         this.subscribing.set(false);
       },
     });
@@ -212,7 +215,7 @@ export class PaymentsComponent implements OnInit {
     this.uploadingProof.set(true);
     this.svc.submitProof(payment.id, file).subscribe({
       next: (res) => {
-        this.toast.success('Preuve envoyée ! Votre paiement est en cours de vérification.');
+        this.toast.success(this.lang.t('payments_user.toast.uploadSuccess'));
         this.pendingPayment.set(null);
         this.proofFile.set(null);
         this.proofPreview.set(null);
@@ -221,7 +224,7 @@ export class PaymentsComponent implements OnInit {
         this.setTab('history');
       },
       error: (err) => {
-        this.toast.error(err?.error?.message || 'Erreur lors de l\'upload');
+        this.toast.error(err?.error?.message || this.lang.t('payments_user.toast.error'));
         this.uploadingProof.set(false);
       },
     });

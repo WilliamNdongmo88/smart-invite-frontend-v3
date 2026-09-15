@@ -14,12 +14,12 @@
   }
 
   <ul class="nav-links">
-    <li><a (click)="scrollTo('couple')" style="cursor:pointer">LE COUPLE</a></li>
-    <li><a (click)="scrollTo('histoire')" style="cursor:pointer">NOTRE HISTOIRE</a></li>
-    <li><a (click)="scrollTo('evenements')" style="cursor:pointer">ÉVÉNEMENTS</a></li>
-    <li><a (click)="scrollTo('photos')" style="cursor:pointer">PHOTOS</a></li>
-    <li><a (click)="scrollTo('infos')" style="cursor:pointer">INFOS</a></li>
-    <li><a (click)="scrollTo('rsvp')" style="cursor:pointer">RSVP</a></li>
+    <li><a (click)="scrollTo('couple')" style="cursor:pointer">{{ 'wedding.nav.couple' | translate }}</a></li>
+    <li><a (click)="scrollTo('histoire')" style="cursor:pointer">{{ 'wedding.nav.histoire' | translate }}</a></li>
+    <li><a (click)="scrollTo('evenements')" style="cursor:pointer">{{ 'wedding.nav.evenements' | translate }}</a></li>
+    <li><a (click)="scrollTo('photos')" style="cursor:pointer">{{ 'wedding.nav.photos' | translate }}</a></li>
+    <li><a (click)="scrollTo('infos')" style="cursor:pointer">{{ 'wedding.nav.infos' | translate }}</a></li>
+    <li><a (click)="scrollTo('rsvp')" style="cursor:pointer">{{ 'wedding.nav.rsvp' | translate }}</a></li>
   </ul>
 
   <div class="nav-actions">
@@ -32,36 +32,36 @@
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        Fermer l'aperçu
+        {{ 'wedding.nav.closePreview' | translate }}
       </a>
     } @else if (isEditMode()) {
-      <a [routerLink]="['/events', eventId()]" class="btn-nav-back" title="Retour à l'événement">
+      <a [routerLink]="['/events', eventId()]" class="btn-nav-back" [title]="'wedding.nav.backToEvent' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span class="btn-label-desktop">Retour à l'événement</span>
-        <span class="btn-label-mobile">Retour</span>
+        <span class="btn-label-desktop">{{ 'wedding.nav.backToEvent' | translate }}</span>
+        <span class="btn-label-mobile">{{ 'wedding.nav.backToEventMobile' | translate }}</span>
       </a>
     } @else {
-      <a [routerLink]="'/events/new'" class="btn-nav-back" title="Annuler">
+      <a [routerLink]="'/events/new'" class="btn-nav-back" [title]="'wedding.nav.cancel' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Annuler</span>
+        <span>{{ 'wedding.nav.cancel' | translate }}</span>
       </a>
     }
 
     @if (saving()) {
       <span class="nav-saving-indicator">
         <span class="nav-saving-dot"></span>
-        <span class="btn-label-desktop">Sauvegarde...</span>
+        <span class="btn-label-desktop">{{ 'wedding.nav.saving' | translate }}</span>
       </span>
     }
 
     @if (isLoggedIn()) {
-      <button class="btn-save-event" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? 'Enregistrer' : 'Créer l\'événement'">
+      <button class="btn-save-event" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? ('wedding.nav.save' | translate) : ('wedding.nav.create' | translate)">
         @if (saving()) {
           <span class="nav-saving-dot"></span>
         } @else {
@@ -72,18 +72,19 @@
             <polyline points="7 3 7 8 15 8"/>
           </svg>
         }
-        <span class="btn-label-desktop">{{ isEditMode() ? 'Enregistrer' : 'Créer l\'événement' }}</span>
-        <span class="btn-label-mobile">{{ isEditMode() ? 'Enregistrer' : 'Créer' }}</span>
+        <span class="btn-label-desktop">{{ isEditMode() ? ('wedding.nav.save' | translate) : ('wedding.nav.create' | translate) }}</span>
+        <span class="btn-label-mobile">{{ isEditMode() ? ('wedding.nav.save' | translate) : ('wedding.nav.createMobile' | translate) }}</span>
       </button>
 
-      <button class="btn-edit-global" (click)="openEdit('hero')" title="Éditer la page">
+      <button class="btn-edit-global" (click)="openEdit('hero')" [title]="'wedding.nav.editTitle' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
-        <span>Éditer</span>
+        <span>{{ 'wedding.nav.edit' | translate }}</span>
       </button>
+
     }
   </div>
 </nav>
@@ -150,30 +151,30 @@
     </div>
 
     <div class="hero-ctas reveal" style="--d:600ms">
-      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">DÉCOUVRIR LE PROGRAMME</button>
-      <button type="button" (click)="scrollTo('infos')" class="btn-outline-hero">INFOS PRATIQUES</button>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">{{ 'wedding.hero.discover' | translate }}</button>
+      <button type="button" (click)="scrollTo('infos')" class="btn-outline-hero">{{ 'wedding.hero.practical' | translate }}</button>
     </div>
 
     <!-- Compte à rebours -->
     <div class="countdown reveal reveal--scale" style="--d:700ms">
       <div class="count-chip">
         <span class="count-val">{{ countdown().days }}</span>
-        <span class="count-label">JOURS</span>
+        <span class="count-label">{{ 'wedding.hero.days' | translate }}</span>
       </div>
       <div class="count-sep">|</div>
       <div class="count-chip">
         <span class="count-val">{{ countdown().hours }}</span>
-        <span class="count-label">HEURES</span>
+        <span class="count-label">{{ 'wedding.hero.hours' | translate }}</span>
       </div>
       <div class="count-sep">|</div>
       <div class="count-chip">
         <span class="count-val">{{ countdown().minutes }}</span>
-        <span class="count-label">MINUTES</span>
+        <span class="count-label">{{ 'wedding.hero.minutes' | translate }}</span>
       </div>
       <div class="count-sep">|</div>
       <div class="count-chip">
         <span class="count-val">{{ countdown().seconds }}</span>
-        <span class="count-label">SECONDES</span>
+        <span class="count-label">{{ 'wedding.hero.seconds' | translate }}</span>
       </div>
     </div>
   </div>
@@ -193,8 +194,8 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">LES FUTURS MARIÉS</span>
-    <h2 class="section-title reveal" style="--d:80ms">Le Couple</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.couple.eyebrow' | translate }}</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ 'wedding.couple.title' | translate }}</h2>
     <p class="section-quote reveal" style="--d:160ms">« {{ couple().coupleTagline }} »</p>
     <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
@@ -209,7 +210,7 @@
           <div class="portrait-ring"></div>
         </div>
         <h3 class="portrait-name">{{ hero().brideFirstName }}</h3>
-        <p class="portrait-role">La Mariée</p>
+        <p class="portrait-role">{{ 'wedding.couple.bride' | translate }}</p>
         <p class="portrait-bio">{{ couple().brideBio }}</p>
       </div>
 
@@ -227,7 +228,7 @@
           <div class="portrait-ring"></div>
         </div>
         <h3 class="portrait-name">{{ hero().groomFirstName }}</h3>
-        <p class="portrait-role">Le Marié</p>
+        <p class="portrait-role">{{ 'wedding.couple.groom' | translate }}</p>
         <p class="portrait-bio">{{ couple().groomBio }}</p>
       </div>
     </div>
@@ -249,7 +250,7 @@
   <div class="band-bg" [style.backgroundImage]="'url(' + bgs().venue + ')'"></div>
   <div class="band-overlay"></div>
   <div class="band-content">
-    <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">LE LIEU</span>
+    <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">{{ 'wedding.band.venue' | translate }}</span>
     <h2 class="band-title reveal" style="--d:100ms">{{ hero().venueName }}</h2>
     <p class="band-sub reveal" style="--d:180ms">{{ hero().venueCity }}</p>
     <p class="band-desc reveal" style="--d:260ms">
@@ -273,7 +274,7 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">NOTRE HISTOIRE</span>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.story.eyebrow' | translate }}</span>
     <h2 class="section-title reveal" style="--d:80ms">{{ story().headline }}</h2>
     <p class="section-quote reveal" style="--d:160ms">{{ story().subheadline }}</p>
     <div class="sep-ornament reveal" style="--d:200ms">
@@ -313,9 +314,9 @@
           <p class="story-chapter-content">{{ p }}</p>
         }
         <div class="story-nav">
-          <button class="btn-story-nav" (click)="prevChapter()">← PAGE PRÉCÉDENTE</button>
+          <button class="btn-story-nav" (click)="prevChapter()">{{ 'wedding.story.prevPage' | translate }}</button>
           <span class="story-page">Page {{ activeChapter() + 1 }} / {{ story().chapters.length }}</span>
-          <button class="btn-story-nav" (click)="nextChapter()">PAGE SUIVANTE →</button>
+          <button class="btn-story-nav" (click)="nextChapter()">{{ 'wedding.story.nextPage' | translate }}</button>
         </div>
       </div>
     </div>
@@ -340,7 +341,7 @@
   <div class="band-overlay"></div>
   <div class="band-content">
     <p class="band-big-quote reveal reveal--scale" style="--d:0ms">
-      « Il n'y a qu'un bonheur dans la vie, aimer et être aimé. »
+      {{ 'wedding.band.quote' | translate }}
     </p>
   </div>
 </div>
@@ -360,9 +361,9 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">NOS PHOTOS</span>
-    <h2 class="section-title reveal" style="--d:80ms">Nos Plus Beaux Moments</h2>
-    <p class="section-quote reveal" style="--d:160ms">Puissiez-vous vivre aussi longtemps que vous aimez.</p>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.gallery.eyebrow' | translate }}</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ 'wedding.gallery.title' | translate }}</h2>
+    <p class="section-quote reveal" style="--d:160ms">{{ 'wedding.gallery.quote' | translate }}</p>
     <div class="sep-ornament reveal" style="--d:200ms">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
@@ -390,9 +391,9 @@
     <div class="band-bg" [style.backgroundImage]="'url(' + bgs().galleryBand + ')'"></div>
     <div class="band-overlay"></div>
     <div class="band-content">
-      <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">ET CE N'EST PAS TOUT</span>
-      <h2 class="band-title reveal" style="--d:100ms">Notre histoire continue — Le temps de la célébrer ensemble</h2>
-      <button type="button" (click)="scrollTo('evenements')" class="btn-primary reveal reveal--scale" style="--d:200ms">Voir le programme</button>
+      <span class="eyebrow-band reveal reveal--fade" style="--d:0ms">{{ 'wedding.gallery.bandEyebrow' | translate }}</span>
+      <h2 class="band-title reveal" style="--d:100ms">{{ 'wedding.gallery.bandTitle' | translate }}</h2>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary reveal reveal--scale" style="--d:200ms">{{ 'wedding.gallery.bandCta' | translate }}</button>
     </div>
   </div>
 </section>
@@ -411,7 +412,7 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">PROGRAMME</span>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.programme.eyebrow' | translate }}</span>
     <h2 class="section-title reveal" style="--d:80ms">Le Week-end en Scènes</h2>
     <p class="section-quote reveal" style="--d:160ms">« Si vous n'avez qu'un sourire, offrez-le aux gens que vous aimez. »</p>
     <div class="sep-ornament reveal" style="--d:200ms">
@@ -459,21 +460,21 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="infos" class="infos-section section-entrance">
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">BON À SAVOIR</span>
-    <h2 class="section-title reveal" style="--d:80ms">Infos Pratiques</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.infos.eyebrow' | translate }}</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ 'wedding.infos.title' | translate }}</h2>
 
     <div class="infos-grid stagger reveal" style="--d:160ms">
       <div class="info-card">
         <div class="info-icon">📍</div>
-        <h3 class="info-title">Lieu</h3>
+        <h3 class="info-title">{{ 'wedding.infos.lieuTitle' | translate }}</h3>
         <p class="info-subtitle">{{ hero().venueName }}</p>
-        <p class="info-detail">Accueil invités dès 12h00 · Parking sur place</p>
+        <p class="info-detail">{{ 'wedding.infos.lieuDetail' | translate }}</p>
       </div>
       <div class="info-card">
         <div class="info-icon">💬</div>
-        <h3 class="info-title">RSVP</h3>
-        <p class="info-subtitle">Lien personnel WhatsApp</p>
-        <p class="info-detail">Confirmez via votre lien unique · Places, régime, table</p>
+        <h3 class="info-title">{{ 'wedding.infos.rsvpTitle' | translate }}</h3>
+        <p class="info-subtitle">{{ 'wedding.infos.rsvpSub' | translate }}</p>
+        <p class="info-detail">{{ 'wedding.infos.rsvpDetail' | translate }}</p>
       </div>
     </div>
   </div>
@@ -497,13 +498,13 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">✦ Thème de la soirée</span>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.dressCode.eyebrow' | translate }}</span>
     <h2 class="section-title reveal" style="--d:80ms">{{ dressCode().title }}</h2>
 
     <!-- Sélecteur rapide de palette (visible uniquement si connecté) -->
     @if (isLoggedIn()) {
       <div class="theme-quick-bar reveal" style="--d:80ms">
-        <span class="theme-quick-label">Ambiance visuelle :</span>
+        <span class="theme-quick-label">{{ 'wedding.dressCode.themeLabel' | translate }}</span>
         <div class="theme-quick-presets">
           @for (preset of visiblePresets(); track preset.id) {
             <button
@@ -525,7 +526,7 @@
             type="button"
             class="theme-expand-btn"
             (click)="presetsExpanded.set(!presetsExpanded())"
-            [title]="presetsExpanded() ? 'Réduire' : 'Voir plus de palettes'"
+            [title]="presetsExpanded() ? ('wedding.dressCode.reduce' | translate) : ('wedding.dressCode.morePalettes' | translate)"
           >
             @if (presetsExpanded()) {
               <span>−</span>
@@ -593,8 +594,8 @@
     </button>
   }
   <div class="section-inner">
-    <span class="eyebrow-gold reveal" style="--d:0ms">FAQ</span>
-    <h2 class="section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
+    <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.faq.eyebrow' | translate }}</span>
+    <h2 class="section-title reveal" style="--d:80ms">{{ 'wedding.faq.title' | translate }}</h2>
 
     <div class="faq-shell reveal" style="--d:160ms">
       @for (item of faq().items; track $index) {
@@ -632,15 +633,15 @@
   <div class="band-overlay"></div>
 
   <div class="rsvp-card reveal reveal--scale" style="--d:100ms">
-    <span class="eyebrow-band">VENEZ CÉLÉBRER AVEC NOUS</span>
+    <span class="eyebrow-band">{{ 'wedding.rsvp.eyebrow' | translate }}</span>
     <h2 class="rsvp-title">{{ rsvp().title }}</h2>
     <div class="sep-ornament sep-light">
       <span class="sep-line"></span><span class="sep-heart">♡</span><span class="sep-line"></span>
     </div>
     <p class="rsvp-sub">{{ rsvp().subtitle }}</p>
     <div class="rsvp-ctas">
-      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">Voir le programme</button>
-      <button type="button" (click)="scrollTo('histoire')" class="btn-outline-hero">Notre histoire</button>
+      <button type="button" (click)="scrollTo('evenements')" class="btn-primary">{{ 'wedding.rsvp.viewProgram' | translate }}</button>
+      <button type="button" (click)="scrollTo('histoire')" class="btn-outline-hero">{{ 'wedding.rsvp.ourStory' | translate }}</button>
     </div>
   </div>
 </section>
@@ -664,7 +665,7 @@
   </div>
   <p class="footer-love reveal reveal--fade" style="--d:200ms">{{ footer().loveText }}</p>
   <p class="footer-credit reveal reveal--fade" style="--d:260ms">
-    SITE RÉALISÉ PAR
+    {{ 'wedding.footer.madeBy' | translate }}
     <a href="https://will-portfolio-rosy.vercel.app/" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
   </p>
 </footer>
@@ -673,7 +674,7 @@
      BOUTON MUSIQUE
 ══════════════════════════════════════════════════════════════ -->
 <button class="music-fab" [class.playing]="musicPlaying()" (click)="toggleMusic()"
-        [title]="musicPlaying() ? 'Couper la musique' : 'Jouer la musique'">
+        [title]="musicPlaying() ? ('wedding.music.stop' | translate) : ('wedding.music.play' | translate)">
   @if (musicPlaying()) { 🔊 } @else { 🔈 }
 </button>
 
@@ -700,7 +701,7 @@
      MODAL D'ÉDITION
 ══════════════════════════════════════════════════════════════ -->
 @if (editOpen()) {
-  <div class="edit-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" aria-label="Éditer la page">
+  <div class="edit-modal-backdrop" (click)="onBackdropClick($event)" role="dialog" aria-modal="true" [attr.aria-label]="'wedding.edit.title' | translate">
     <div class="edit-modal">
 
       <!-- Header modal -->
@@ -710,9 +711,9 @@
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
           </svg>
-          Éditer la page
+          {{ 'wedding.edit.title' | translate }}
         </h2>
-        <button class="edit-modal-close" (click)="closeEdit()" aria-label="Fermer">✕</button>
+        <button class="edit-modal-close" (click)="closeEdit()" [attr.aria-label]="'wedding.edit.close' | translate">✕</button>
       </div>
 
       <!-- Onglets de section -->
@@ -735,17 +736,17 @@
         <!-- ── HERO ── -->
         @if (activeSection() === 'hero') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Hero &amp; Save the Date</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.hero.heading' | translate }}</h3>
 
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Prénom de la mariée</label>
+                <label class="edit-label">{{ 'wedding.edit.hero.brideFirstName' | translate }}</label>
                 <input class="edit-input" type="text"
                        [ngModel]="draft().hero.brideFirstName"
                        (ngModelChange)="updateDraftHero('brideFirstName', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Prénom du marié</label>
+                <label class="edit-label">{{ 'wedding.edit.hero.groomFirstName' | translate }}</label>
                 <input class="edit-input" type="text"
                        [ngModel]="draft().hero.groomFirstName"
                        (ngModelChange)="updateDraftHero('groomFirstName', $event)" />
@@ -753,7 +754,7 @@
             </div>
 
             <div class="edit-field">
-              <label class="edit-label">Date affichée <span class="edit-hint">(ex&nbsp;: Les 07 &amp; 08 Août 2026)</span></label>
+              <label class="edit-label">{{ 'wedding.edit.hero.dateLabel' | translate }} <span class="edit-hint">({{ 'wedding.edit.hero.dateLabelHint' | translate }})</span></label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().hero.dateLabel"
                      (ngModelChange)="updateDraftHero('dateLabel', $event)" />
@@ -761,13 +762,13 @@
 
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Nom du lieu</label>
+                <label class="edit-label">{{ 'wedding.edit.hero.venueName' | translate }}</label>
                 <input class="edit-input" type="text"
                        [ngModel]="draft().hero.venueName"
                        (ngModelChange)="updateDraftHero('venueName', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Ville</label>
+                <label class="edit-label">{{ 'wedding.edit.hero.venueCity' | translate }}</label>
                 <input class="edit-input" type="text"
                        [ngModel]="draft().hero.venueCity"
                        (ngModelChange)="updateDraftHero('venueCity', $event)" />
@@ -775,24 +776,24 @@
             </div>
 
             <div class="edit-field">
-              <label class="edit-label">Phrase d'accroche</label>
+              <label class="edit-label">{{ 'wedding.edit.hero.catchphrase' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().hero.heroCatchphrase"
                      (ngModelChange)="updateDraftHero('heroCatchphrase', $event)" />
             </div>
 
             <div class="edit-field">
-              <label class="edit-label">Date cible du countdown <span class="edit-hint">(ISO : AAAA-MM-JJTHH:MM:SS)</span></label>
+              <label class="edit-label">{{ 'wedding.edit.hero.targetDate' | translate }} <span class="edit-hint">({{ 'wedding.edit.hero.targetDateHint' | translate }})</span></label>
               <input class="edit-input" type="datetime-local"
                      [ngModel]="draft().hero.targetDate"
                      (ngModelChange)="updateDraftHero('targetDate', $event)" />
             </div>
 
-            <div class="edit-divider"><span>Capacité</span></div>
+            <div class="edit-divider"><span>{{ 'wedding.edit.hero.capacity' | translate }}</span></div>
 
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Invités maximum</label>
+                <label class="edit-label">{{ 'wedding.edit.hero.maxGuests' | translate }}</label>
                 <input class="edit-input" type="number" min="1"
                        [class.edit-input--error]="!draft().hero.maxGuests || draft().hero.maxGuests < 1"
                        [ngModel]="draft().hero.maxGuests"
@@ -803,12 +804,12 @@
                          fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                       <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
                     </svg>
-                    Ce champ est requis pour enregistrer.
+                    {{ 'wedding.edit.hero.maxGuestsError' | translate }}
                   </p>
                 }
               </div>
               <div class="edit-field">
-                <label class="edit-label">Montant à payer <span class="edit-hint">calculé auto.</span></label>
+                <label class="edit-label">{{ 'wedding.edit.hero.budget' | translate }} <span class="edit-hint">{{ 'wedding.edit.hero.budgetHint' | translate }}</span></label>
                 <div class="edit-budget-display">
                   💳 {{ draft().hero.budget || '—' }}
                   @if (draft().hero.maxGuests > 0) {
@@ -823,22 +824,22 @@
         <!-- ── COUPLE ── -->
         @if (activeSection() === 'couple') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Le Couple</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.couple.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Tagline du couple</label>
+              <label class="edit-label">{{ 'wedding.edit.couple.tagline' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().couple.coupleTagline"
                      (ngModelChange)="updateDraftCouple('coupleTagline', $event)" />
             </div>
 
             <div class="edit-divider">
-              <span>Mariée</span>
+              <span>{{ 'wedding.edit.couple.bride' | translate }}</span>
             </div>
 
             <div class="edit-portrait-row">
               <div class="edit-field">
-                <label class="edit-label">Portrait mariée</label>
+                <label class="edit-label">{{ 'wedding.edit.couple.bridePortrait' | translate }}</label>
                 <div class="edit-upload-zone" (click)="brideInput.click()">
                   @if (draft().couple.bridePortraitUrl) {
                     <img class="edit-upload-preview" [src]="draft().couple.bridePortraitUrl" alt="Aperçu mariée" />
@@ -849,7 +850,7 @@
                         <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                         <polyline points="21 15 16 10 5 21"/>
                       </svg>
-                      <span>Choisir une photo</span>
+                      <span>{{ 'wedding.edit.couple.choosePhoto' | translate }}</span>
                     </div>
                   }
                   <div class="edit-upload-overlay">
@@ -858,12 +859,12 @@
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <span>Changer la photo</span>
+                    <span>{{ 'wedding.edit.couple.changePhoto' | translate }}</span>
                   </div>
                   @if (uploadingImage() === 'bride_portrait') {
                     <div class="edit-upload-spinner-overlay">
                       <div class="edit-spinner"></div>
-                      <span>Upload en cours...</span>
+                      <span>{{ 'wedding.edit.couple.uploading' | translate }}</span>
                     </div>
                   }
                 </div>
@@ -871,7 +872,7 @@
                        (change)="onBridePortraitChange($event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Biographie mariée</label>
+                <label class="edit-label">{{ 'wedding.edit.couple.brideBio' | translate }}</label>
                 <textarea class="edit-textarea" rows="5"
                           [ngModel]="draft().couple.brideBio"
                           (ngModelChange)="updateDraftCouple('brideBio', $event)"></textarea>
@@ -879,12 +880,12 @@
             </div>
 
             <div class="edit-divider">
-              <span>Marié</span>
+              <span>{{ 'wedding.edit.couple.groom' | translate }}</span>
             </div>
 
             <div class="edit-portrait-row">
               <div class="edit-field">
-                <label class="edit-label">Portrait marié</label>
+                <label class="edit-label">{{ 'wedding.edit.couple.groomPortrait' | translate }}</label>
                 <div class="edit-upload-zone" (click)="groomInput.click()">
                   @if (draft().couple.groomPortraitUrl) {
                     <img class="edit-upload-preview" [src]="draft().couple.groomPortraitUrl" alt="Aperçu marié" />
@@ -895,7 +896,7 @@
                         <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                         <polyline points="21 15 16 10 5 21"/>
                       </svg>
-                      <span>Choisir une photo</span>
+                      <span>{{ 'wedding.edit.couple.choosePhoto' | translate }}</span>
                     </div>
                   }
                   <div class="edit-upload-overlay">
@@ -904,12 +905,12 @@
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <span>Changer la photo</span>
+                    <span>{{ 'wedding.edit.couple.changePhoto' | translate }}</span>
                   </div>
                   @if (uploadingImage() === 'groom_portrait') {
                     <div class="edit-upload-spinner-overlay">
                       <div class="edit-spinner"></div>
-                      <span>Upload en cours...</span>
+                      <span>{{ 'wedding.edit.couple.uploading' | translate }}</span>
                     </div>
                   }
                 </div>
@@ -917,7 +918,7 @@
                        (change)="onGroomPortraitChange($event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Biographie marié</label>
+                <label class="edit-label">{{ 'wedding.edit.couple.groomBio' | translate }}</label>
                 <textarea class="edit-textarea" rows="5"
                           [ngModel]="draft().couple.groomBio"
                           (ngModelChange)="updateDraftCouple('groomBio', $event)"></textarea>
@@ -929,48 +930,48 @@
         <!-- ── HISTOIRE ── -->
         @if (activeSection() === 'story') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Notre Histoire</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.story.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Titre de la section</label>
+              <label class="edit-label">{{ 'wedding.edit.story.sectionTitle' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().story.headline"
                      (ngModelChange)="updateDraftStory('headline', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre / citation</label>
+              <label class="edit-label">{{ 'wedding.edit.story.subtitle' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().story.subheadline"
                      (ngModelChange)="updateDraftStory('subheadline', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Texte de pied de section</label>
+              <label class="edit-label">{{ 'wedding.edit.story.footer' | translate }}</label>
               <textarea class="edit-textarea" rows="3"
                         [ngModel]="draft().story.footer"
                         (ngModelChange)="updateDraftStory('footer', $event)"></textarea>
             </div>
 
-            <div class="edit-divider"><span>Chapitres</span></div>
+            <div class="edit-divider"><span>{{ 'wedding.edit.story.chapters' | translate }}</span></div>
 
             @for (ch of draft().story.chapters; track $index) {
               <div class="edit-chapter-block">
                 <div class="edit-chapter-header">
                   <span class="edit-chapter-num">{{ ch.label }}</span>
                   <button class="edit-btn-remove" (click)="removeChapter($index)"
-                          [disabled]="draft().story.chapters.length <= 1" title="Supprimer ce chapitre">
+                          [disabled]="draft().story.chapters.length <= 1" [title]="'wedding.edit.story.removeChapter' | translate">
                     ✕
                   </button>
                 </div>
 
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Label onglet</label>
+                    <label class="edit-label">{{ 'wedding.edit.story.tabLabel' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="ch.label"
                            (ngModelChange)="updateDraftChapter($index, 'label', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Sous-label</label>
+                    <label class="edit-label">{{ 'wedding.edit.story.subLabel' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="ch.sublabel"
                            (ngModelChange)="updateDraftChapter($index, 'sublabel', $event)" />
@@ -979,13 +980,13 @@
 
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Année / période</label>
+                    <label class="edit-label">{{ 'wedding.edit.story.year' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="ch.year"
                            (ngModelChange)="updateDraftChapter($index, 'year', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Légende photo</label>
+                    <label class="edit-label">{{ 'wedding.edit.story.photoCaption' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="ch.caption"
                            (ngModelChange)="updateDraftChapter($index, 'caption', $event)" />
@@ -993,14 +994,14 @@
                 </div>
 
                 <div class="edit-field">
-                  <label class="edit-label">Titre du chapitre</label>
+                  <label class="edit-label">{{ 'wedding.edit.story.chapterTitle' | translate }}</label>
                   <input class="edit-input" type="text"
                          [ngModel]="ch.title"
                          (ngModelChange)="updateDraftChapter($index, 'title', $event)" />
                 </div>
 
                 <div class="edit-field">
-                  <label class="edit-label">Image du chapitre</label>
+                  <label class="edit-label">{{ 'wedding.edit.story.chapterImage' | translate }}</label>
                   <div class="edit-upload-zone edit-upload-zone--wide" (click)="chapterImgInput.click()">
                     @if (ch.image) {
                       <img class="edit-upload-preview edit-upload-preview--wide" [src]="ch.image" [alt]="ch.title" />
@@ -1011,7 +1012,7 @@
                           <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
-                        <span>Choisir une image</span>
+                        <span>{{ 'wedding.edit.story.chooseImage' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -1020,12 +1021,12 @@
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                       </svg>
-                      <span>Changer l'image</span>
+                      <span>{{ 'wedding.edit.story.changeImage' | translate }}</span>
                     </div>
                     @if (uploadingImage() === 'chapter_' + $index) {
                       <div class="edit-upload-spinner-overlay">
                         <div class="edit-spinner"></div>
-                        <span>Upload en cours...</span>
+                        <span>{{ 'wedding.edit.story.uploading' | translate }}</span>
                       </div>
                     }
                   </div>
@@ -1034,7 +1035,7 @@
                 </div>
 
                 <div class="edit-field">
-                  <label class="edit-label">Paragraphes <span class="edit-hint">(séparez chaque paragraphe par une ligne vide)</span></label>
+                  <label class="edit-label">{{ 'wedding.edit.story.paragraphs' | translate }} <span class="edit-hint">({{ 'wedding.edit.story.paragraphsHint' | translate }})</span></label>
                   <textarea class="edit-textarea" rows="6"
                             [ngModel]="chapterParagraphsText($index)"
                             (ngModelChange)="updateDraftChapter($index, 'paragraphs', $event)"></textarea>
@@ -1042,17 +1043,17 @@
               </div>
             }
 
-            <button class="edit-btn-add" (click)="addChapter()">+ Ajouter un chapitre</button>
+            <button class="edit-btn-add" (click)="addChapter()">{{ 'wedding.edit.story.addChapter' | translate }}</button>
           </div>
         }
 
         <!-- ── PROGRAMME ── -->
         @if (activeSection() === 'program') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Programme</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.program.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Texte de pied de section</label>
+              <label class="edit-label">{{ 'wedding.edit.program.footer' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().program.footer"
                      (ngModelChange)="updateDraftProgramFooter($event)" />
@@ -1062,23 +1063,23 @@
               <div class="edit-chapter-block">
 
                 <div class="edit-chapter-header">
-                  <span class="edit-chapter-num">Jour {{ $index + 1 }}</span>
+                  <span class="edit-chapter-num">{{ 'wedding.edit.program.day' | translate }} {{ $index + 1 }}</span>
                   <button class="edit-btn-remove"
                           (click)="removeDay($index)"
                           [disabled]="draft().program.days.length <= 1"
-                          title="Supprimer ce jour">✕</button>
+                          [title]="'wedding.edit.program.removeDay' | translate">✕</button>
                 </div>
 
                 <!-- Date (tri) + icône onglet -->
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Date <span class="edit-hint">AAAA-MM-JJ — sert au tri</span></label>
+                    <label class="edit-label">{{ 'wedding.edit.program.date' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.dateHint' | translate }}</span></label>
                     <input class="edit-input" type="date"
                            [ngModel]="day.date"
                            (ngModelChange)="updateDraftDay($index, 'date', $event)" />
                   </div>
                   <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône onglet</label>
+                    <label class="edit-label">{{ 'wedding.edit.program.tabIcon' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabIcon"
                            (ngModelChange)="updateDraftDay($index, 'tabIcon', $event)" />
@@ -1088,13 +1089,13 @@
                 <!-- Date onglet + libellé onglet -->
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Date onglet <span class="edit-hint">ex : 07 AOÛT</span></label>
+                    <label class="edit-label">{{ 'wedding.edit.program.tabDate' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.tabDateHint' | translate }}</span></label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabDate"
                            (ngModelChange)="updateDraftDay($index, 'tabDate', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Libellé onglet <span class="edit-hint">ex : La Veille</span></label>
+                    <label class="edit-label">{{ 'wedding.edit.program.tabLabel' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.tabLabelHint' | translate }}</span></label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabLabel"
                            (ngModelChange)="updateDraftDay($index, 'tabLabel', $event)" />
@@ -1103,43 +1104,43 @@
 
                 <!-- Libellé timeline -->
                 <div class="edit-field">
-                  <label class="edit-label">Libellé timeline <span class="edit-hint">ex : Vendredi 7 Août 2026 · La Veille</span></label>
+                  <label class="edit-label">{{ 'wedding.edit.program.timelineLabel' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.timelineLabelHint' | translate }}</span></label>
                   <input class="edit-input" type="text"
                          [ngModel]="day.label"
                          (ngModelChange)="updateDraftDay($index, 'label', $event)" />
                 </div>
 
                 <!-- Créneaux -->
-                <div class="edit-divider"><span>Créneaux</span></div>
+                <div class="edit-divider"><span>{{ 'wedding.edit.program.slots' | translate }}</span></div>
 
                 @for (item of day.items; track $index; let itemIdx = $index) {
                   <div class="edit-program-item">
                     <div class="edit-program-item-header">
                       <span class="edit-program-idx">{{ itemIdx + 1 }}</span>
-                      <button class="edit-btn-remove" (click)="removeDayItem($index, itemIdx)" title="Supprimer">✕</button>
+                      <button class="edit-btn-remove" (click)="removeDayItem($index, itemIdx)" [title]="'wedding.edit.program.removeSlot' | translate">✕</button>
                     </div>
                     <div class="edit-field-row">
                       <div class="edit-field edit-field--icon">
-                        <label class="edit-label">Icône</label>
+                        <label class="edit-label">{{ 'wedding.edit.program.icon' | translate }}</label>
                         <input class="edit-input" type="text"
                                [ngModel]="item.icon"
                                (ngModelChange)="updateDraftDayItem($index, itemIdx, 'icon', $event)" />
                       </div>
                       <div class="edit-field">
-                        <label class="edit-label">Horaire</label>
+                        <label class="edit-label">{{ 'wedding.edit.program.time' | translate }}</label>
                         <input class="edit-input" type="text"
                                [ngModel]="item.time"
                                (ngModelChange)="updateDraftDayItem($index, itemIdx, 'time', $event)" />
                       </div>
                     </div>
                     <div class="edit-field">
-                      <label class="edit-label">Titre</label>
+                      <label class="edit-label">{{ 'wedding.edit.program.title' | translate }}</label>
                       <input class="edit-input" type="text"
                              [ngModel]="item.title"
                              (ngModelChange)="updateDraftDayItem($index, itemIdx, 'title', $event)" />
                     </div>
                     <div class="edit-field">
-                      <label class="edit-label">Description</label>
+                      <label class="edit-label">{{ 'wedding.edit.program.description' | translate }}</label>
                       <textarea class="edit-textarea" rows="2"
                                 [ngModel]="item.desc"
                                 (ngModelChange)="updateDraftDayItem($index, itemIdx, 'desc', $event)"></textarea>
@@ -1147,7 +1148,7 @@
                   </div>
                 }
 
-                <button class="edit-btn-add" (click)="addDayItem($index)">+ Ajouter un créneau</button>
+                <button class="edit-btn-add" (click)="addDayItem($index)">{{ 'wedding.edit.program.addSlot' | translate }}</button>
               </div>
             }
 
@@ -1156,7 +1157,7 @@
                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Ajouter une journée au programme
+              {{ 'wedding.edit.program.addDay' | translate }}
             </button>
           </div>
         }
@@ -1164,28 +1165,28 @@
         <!-- ── DRESS CODE ── -->
         @if (activeSection() === 'dressCode') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Dress Code</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.dressCode.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Titre de la section</label>
+              <label class="edit-label">{{ 'wedding.edit.dressCode.sectionTitle' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().dressCode.title"
                      (ngModelChange)="updateDraftDressCode('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Description</label>
+              <label class="edit-label">{{ 'wedding.edit.dressCode.description' | translate }}</label>
               <textarea class="edit-textarea" rows="3"
                         [ngModel]="draft().dressCode.description"
                         (ngModelChange)="updateDraftDressCode('description', $event)"></textarea>
             </div>
             <div class="edit-field">
-              <label class="edit-label">Conseil</label>
+              <label class="edit-label">{{ 'wedding.edit.dressCode.advice' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().dressCode.advice"
                      (ngModelChange)="updateDraftDressCode('advice', $event)" />
             </div>
 
-            <div class="edit-divider"><span>Palette Terracotta</span></div>
+            <div class="edit-divider"><span>{{ 'wedding.edit.dressCode.paletteTerracotta' | translate }}</span></div>
             @for (sw of draft().dressCode.paletteTerracotta; track $index) {
               <div class="edit-palette-item">
                 <input class="edit-input edit-input--color" type="color"
@@ -1194,7 +1195,7 @@
                 <input class="edit-input" type="text"
                        [ngModel]="sw.label"
                        (ngModelChange)="updateDraftPaletteItem('paletteTerracotta', $index, 'label', $event)"
-                       placeholder="Nom de la couleur" />
+                       [placeholder]="'wedding.edit.dressCode.colorName' | translate" />
               </div>
             }
 
@@ -1204,22 +1205,22 @@
         <!-- ── FAQ ── -->
         @if (activeSection() === 'faq') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Questions Fréquentes</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.faq.heading' | translate }}</h3>
 
             @for (item of draft().faq.items; track $index) {
               <div class="edit-faq-item">
                 <div class="edit-faq-item-header">
                   <span class="edit-program-idx">Q{{ $index + 1 }}</span>
-                  <button class="edit-btn-remove" (click)="removeFaqItem($index)" title="Supprimer">✕</button>
+                  <button class="edit-btn-remove" (click)="removeFaqItem($index)" [title]="'wedding.edit.faq.remove' | translate">✕</button>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Question</label>
+                  <label class="edit-label">{{ 'wedding.edit.faq.question' | translate }}</label>
                   <input class="edit-input" type="text"
                          [ngModel]="item.q"
                          (ngModelChange)="updateDraftFaqItem($index, 'q', $event)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Réponse</label>
+                  <label class="edit-label">{{ 'wedding.edit.faq.answer' | translate }}</label>
                   <textarea class="edit-textarea" rows="3"
                             [ngModel]="item.a"
                             (ngModelChange)="updateDraftFaqItem($index, 'a', $event)"></textarea>
@@ -1227,23 +1228,23 @@
               </div>
             }
 
-            <button class="edit-btn-add" (click)="addFaqItem()">+ Ajouter une question</button>
+            <button class="edit-btn-add" (click)="addFaqItem()">{{ 'wedding.edit.faq.addQuestion' | translate }}</button>
           </div>
         }
 
         <!-- ── RSVP ── -->
         @if (activeSection() === 'rsvp') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Section RSVP</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.rsvp.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'wedding.edit.rsvp.title' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().rsvp.title"
                      (ngModelChange)="updateDraftRsvp('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre</label>
+              <label class="edit-label">{{ 'wedding.edit.rsvp.subtitle' | translate }}</label>
               <textarea class="edit-textarea" rows="4"
                         [ngModel]="draft().rsvp.subtitle"
                         (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
@@ -1254,9 +1255,9 @@
         <!-- ── GALERIE ── -->
         @if (activeSection() === 'gallery') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Galerie Photos</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.gallery.heading' | translate }}</h3>
             <p class="edit-form-note">
-              La première photo marquée <strong>Grande</strong> occupera 2 rangées dans la mosaïque.
+              La première photo marquée <strong>{{ 'wedding.edit.gallery.large' | translate }}</strong> occupera 2 rangées dans la mosaïque.
             </p>
 
             <div class="edit-gallery-grid">
@@ -1274,7 +1275,7 @@
                           <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
-                        <span>Ajouter</span>
+                        <span>{{ 'wedding.edit.gallery.add' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -1287,7 +1288,7 @@
                     @if (uploadingImage() === 'gallery_' + $index) {
                       <div class="edit-upload-spinner-overlay">
                         <div class="edit-spinner"></div>
-                        <span>Upload...</span>
+                        <span>{{ 'wedding.edit.gallery.uploading' | translate }}</span>
                       </div>
                     }
                   </div>
@@ -1296,7 +1297,7 @@
 
                   <!-- Légende -->
                   <input class="edit-input edit-gallery-caption" type="text"
-                         placeholder="Légende…"
+                         [placeholder]="'wedding.edit.gallery.caption' | translate"
                          [ngModel]="item.caption"
                          (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
 
@@ -1305,27 +1306,27 @@
                     <button class="edit-gallery-badge"
                             [class.active]="item.large"
                             (click)="toggleDraftGalleryLarge($index)"
-                            title="Grande photo (2 rangées)">
-                      {{ item.large ? '★ Grande' : '☆ Grande' }}
+                            [title]="'wedding.edit.gallery.large' | translate">
+                      {{ item.large ? ('wedding.edit.gallery.largeBadgeActive' | translate) : ('wedding.edit.gallery.largeBadgeInactive' | translate) }}
                     </button>
                     <button class="edit-btn-remove"
                             (click)="removeGalleryItem($index)"
                             [disabled]="draft().gallery.items.length <= 1"
-                            title="Supprimer">✕</button>
+                            [title]="'wedding.edit.gallery.remove' | translate">✕</button>
                   </div>
 
                 </div>
               }
             </div>
 
-            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
+            <button class="edit-btn-add" (click)="addGalleryItem()">{{ 'wedding.edit.gallery.addPhoto' | translate }}</button>
           </div>
         }
 
         <!-- ── FONDS & BANDEAUX ── -->
         @if (activeSection() === 'backgrounds') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Fonds &amp; Bandeaux</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.backgrounds.heading' | translate }}</h3>
 
             @for (bg of BG_FIELDS; track bg.key) {
               <div class="edit-bg-card">
@@ -1340,7 +1341,7 @@
                           <circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
-                        <span>Aucune image</span>
+                        <span>{{ 'wedding.edit.backgrounds.noImage' | translate }}</span>
                       </div>
                     }
                   </div>
@@ -1350,12 +1351,12 @@
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <span>Changer</span>
+                    <span>{{ 'wedding.edit.backgrounds.change' | translate }}</span>
                   </div>
                   @if (uploadingImage() === 'bg_' + bg.key) {
                     <div class="edit-upload-spinner-overlay">
                       <div class="edit-spinner"></div>
-                      <span>Upload...</span>
+                      <span>{{ 'wedding.edit.backgrounds.uploading' | translate }}</span>
                     </div>
                   }
                 </div>
@@ -1373,10 +1374,10 @@
         <!-- ── FOOTER ── -->
         @if (activeSection() === 'footer') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Footer</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.footer.heading' | translate }}</h3>
 
             <div class="edit-field">
-              <label class="edit-label">Logo / Noms <span class="edit-hint">affiché en script cursive</span></label>
+              <label class="edit-label">{{ 'wedding.edit.footer.logoText' | translate }} <span class="edit-hint">{{ 'wedding.edit.footer.logoHint' | translate }}</span></label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().footer.logoText"
                      (ngModelChange)="updateDraftFooter('logoText', $event)" />
@@ -1384,11 +1385,11 @@
 
             <div class="edit-field">
               <label class="edit-label">
-                Sous-titre
-                <span class="edit-hint">date · lieu · ville</span>
+                {{ 'wedding.edit.footer.subtitle' | translate }}
+                <span class="edit-hint">{{ 'wedding.edit.footer.subtitleHint' | translate }}</span>
                 @if (subtitleEdited()) {
-                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" title="Remettre la valeur automatique">
-                    ↺ Sync auto
+                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" [title]="'wedding.edit.footer.syncAuto' | translate">
+                    {{ 'wedding.edit.footer.syncAuto' | translate }}
                   </button>
                 }
               </label>
@@ -1397,12 +1398,12 @@
                      (ngModelChange)="updateDraftFooter('subText', $event)"
                      [placeholder]="autoSubtitle()" />
               @if (!subtitleEdited()) {
-                <p class="edit-field-hint">Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.</p>
+                <p class="edit-field-hint">{{ 'wedding.edit.footer.autoGenerated' | translate }}</p>
               }
             </div>
 
             <div class="edit-field">
-              <label class="edit-label">Message d'amour</label>
+              <label class="edit-label">{{ 'wedding.edit.footer.loveText' | translate }}</label>
               <input class="edit-input" type="text"
                      [ngModel]="draft().footer.loveText"
                      (ngModelChange)="updateDraftFooter('loveText', $event)" />
@@ -1420,7 +1421,7 @@
         <!-- ── THÈME ── -->
         @if (activeSection() === 'theme') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">🎨 Thème visuel du mariage</h3>
+            <h3 class="edit-form-heading">{{ 'wedding.edit.theme.heading' | translate }}</h3>
             <p class="edit-hint" style="margin-bottom:1.5rem">
               Choisissez une palette prédéfinie ou ajustez les couleurs manuellement.
               L'aperçu s'applique <strong>en temps réel</strong> en survolant une palette.
@@ -1461,20 +1462,20 @@
               (click)="presetsExpanded.set(!presetsExpanded())"
             >
               @if (presetsExpanded()) {
-                ▲ Réduire
+                {{ 'wedding.edit.theme.reduce' | translate }}
               } @else {
                 ▼ Voir les {{ THEME_PRESETS.length - 6 }} autres palettes
               }
             </button>
 
             <!-- Séparateur -->
-            <div class="edit-divider" style="margin:1.5rem 0"><span>Personnalisation avancée</span></div>
+            <div class="edit-divider" style="margin:1.5rem 0"><span>{{ 'wedding.edit.theme.advanced' | translate }}</span></div>
 
             <!-- Color pickers -->
             <div class="theme-color-grid">
 
               <div class="theme-color-item">
-                <label class="edit-label">Fond de page</label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorBackground' | translate }}</label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorBackground"
@@ -1484,7 +1485,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Accent principal <em>(or, titres)</em></label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorAccent' | translate }} <em>{{ 'wedding.edit.theme.colorAccentHint' | translate }}</em></label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorAccent"
@@ -1494,7 +1495,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Accent secondaire <em>(boutons)</em></label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorAccentSecondary' | translate }} <em>{{ 'wedding.edit.theme.colorAccentSecondaryHint' | translate }}</em></label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorAccentSecondary"
@@ -1504,7 +1505,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Accent profond <em>(hover)</em></label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorAccentDeep' | translate }} <em>{{ 'wedding.edit.theme.colorAccentDeepHint' | translate }}</em></label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorAccentDeep"
@@ -1514,7 +1515,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Texte principal</label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorText' | translate }}</label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorText"
@@ -1524,7 +1525,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Texte secondaire</label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorTextSecondary' | translate }}</label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorTextSecondary"
@@ -1534,7 +1535,7 @@
               </div>
 
               <div class="theme-color-item">
-                <label class="edit-label">Fond des cartes</label>
+                <label class="edit-label">{{ 'wedding.edit.theme.colorCardBg' | translate }}</label>
                 <div class="theme-color-row">
                   <input type="color" class="edit-input edit-input--color"
                          [value]="draft().theme.colorCardBg"
@@ -1551,16 +1552,16 @@
 
       <!-- Footer modal -->
       <div class="edit-modal-footer">
-        <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
+        <button class="edit-btn-reset" (click)="resetToDefault()">{{ 'wedding.edit.reset' | translate }}</button>
         <div class="edit-modal-footer-right">
-          <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
+          <button class="edit-btn-cancel" (click)="closeEdit()">{{ 'wedding.edit.cancel' | translate }}</button>
           <button class="edit-btn-save" (click)="saveEdit()" [disabled]="!draft().hero.maxGuests || draft().hero.maxGuests < 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
               <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
             </svg>
-            Enregistrer
+            {{ 'wedding.edit.save' | translate }}
           </button>
         </div>
       </div>

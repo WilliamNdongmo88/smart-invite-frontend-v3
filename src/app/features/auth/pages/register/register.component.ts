@@ -12,6 +12,8 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { NotificationMode } from '../../../../core/models/enums.model';
 import { DIAL_CODES } from '../../../../core/data/dial-codes';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null {
   const pw = ctrl.get('password')?.value;
@@ -22,7 +24,7 @@ function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: 'register.component.html',
   styleUrl: 'register.component.scss',
 })
@@ -33,6 +35,7 @@ export class RegisterComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly lang = inject(LanguageService);
 
   loading = signal(false);
   showPw = signal(false);
@@ -101,7 +104,7 @@ export class RegisterComponent implements OnInit {
         },
         error: (err) => {
           this.loading.set(false);
-          this.toast.error(err?.error?.message ?? 'Erreur lors de l\'inscription');
+          this.toast.error(err?.error?.message ?? this.lang.t('auth.register.errorDefault'));
         },
       });
   }

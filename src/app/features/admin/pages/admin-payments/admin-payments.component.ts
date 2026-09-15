@@ -5,13 +5,14 @@ import { PaymentService } from '../../../../core/services/payment.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Payment } from '../../../../core/models/payment.model';
 import { PAYMENT_STATUS_LABELS, PaymentStatus } from '../../../../core/models/enums.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 type StatusFilter = 'ALL' | PaymentStatus;
 
 @Component({
   selector: 'app-admin-payments',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: 'admin-payments.component.html',
   styleUrl: 'admin-payments.component.scss',
 })

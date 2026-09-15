@@ -6,13 +6,14 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CheckinService } from '../../../../core/services/checkin.service';
 import { EventSummary, ScanResponse } from '../../../../core/models/checkin.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 type FeedbackState = 'idle' | 'scanning' | 'VALID' | 'DUPLICATE' | 'EXPIRED' | 'INVALID' | 'error';
 
 @Component({
   selector: 'app-scan',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './scan.component.html',
   styleUrls: ['./scan.component.scss'],
 })

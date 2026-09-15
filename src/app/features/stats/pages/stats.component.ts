@@ -2,11 +2,12 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { PaymentService } from '../../../core/services/payment.service';
 import { Payment } from '../../../core/models/payment.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-stats',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: 'stats.component.html',
   styleUrl: 'stats.component.scss',
 })

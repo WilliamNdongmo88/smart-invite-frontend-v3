@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // ── Variables ─────────────────────────────────────────────────────────────────
 $gold:    #c9a84c;
 $blue:    #60a5fa;
@@ -358,7 +360,7 @@ $radius:  0.5rem;
 
   td {
     padding: 0.55rem 0.75rem;
-    border-bottom: 1px solid darken($border, 3%);
+    border-bottom: 1px solid color.adjust($border, $lightness: -3%);
     color: $text;
 
     &:last-child { border-bottom: none; }

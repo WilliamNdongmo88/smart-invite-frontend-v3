@@ -4,6 +4,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../../environments/environment';
 import { ApiResponse } from '../../../../core/models/api-response.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 // ── Modèles ───────────────────────────────────────────────────────────────────
 
@@ -47,7 +48,7 @@ export interface VisitorOverview {
 @Component({
   selector: 'app-admin-visitors',
   standalone: true,
-  imports: [FormsModule, DatePipe],
+  imports: [FormsModule, DatePipe, TranslatePipe],
   templateUrl: './admin-visitors.component.html',
   styleUrl: './admin-visitors.component.scss',
 })

@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { ToastService } from '../../core/services/toast.service';
+import { LanguageService } from '../../core/services/language.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import {
   GalaDetailsContent,
   GalaDetailsEditSection,
@@ -144,7 +146,7 @@ const INITIAL_CONTENT: GalaDetailsContent = {
 @Component({
   selector: 'app-gala-details',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslatePipe],
   templateUrl: 'gala-details.component.html',
   styleUrl:    'gala-details.component.scss',
 })
@@ -156,6 +158,7 @@ export class GalaDetailsComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly router      = inject(Router);
   private readonly eventSvc    = inject(EventService);
   private readonly toast       = inject(ToastService);
+  readonly lang                = inject(LanguageService);
 
   // ── Mode création / édition ────────────────────────────────────
   readonly eventId    = signal<number | null>(null);

@@ -3,14 +3,14 @@
   <!-- Header -->
   <div class="dash-header">
     <div>
-      <h1 class="dash-title">Bonjour, {{ userName }} 👋</h1>
-      <p class="dash-sub">Voici un aperçu de vos événements</p>
+      <h1 class="dash-title">{{ 'dashboard.title' | translate }} {{ userName }} 👋</h1>
+      <p class="dash-sub">{{ 'dashboard.subtitle' | translate }}</p>
     </div>
     <a routerLink="/events/new" class="btn-primary">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
       </svg>
-      Créer un événement
+      {{ 'dashboard.createEvent' | translate }}
     </a>
   </div>
 
@@ -27,7 +27,7 @@
       <div class="stat-card">
         <div class="stat-body">
           <span class="stat-value">{{ stats().activeEvents }}</span>
-          <span class="stat-label">Événements actifs</span>
+          <span class="stat-label">{{ 'dashboard.activeEvents' | translate }}</span>
         </div>
         <div class="stat-icon icon-blue">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -40,7 +40,7 @@
       <div class="stat-card">
         <div class="stat-body">
           <span class="stat-value">{{ stats().totalGuests }}</span>
-          <span class="stat-label">Total invités</span>
+          <span class="stat-label">{{ 'dashboard.totalGuests' | translate }}</span>
         </div>
         <div class="stat-icon icon-gold">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -54,7 +54,7 @@
       <div class="stat-card">
         <div class="stat-body">
           <span class="stat-value">{{ stats().confirmationRate }}%</span>
-          <span class="stat-label">Taux de confirmation</span>
+          <span class="stat-label">{{ 'dashboard.confirmationRate' | translate }}</span>
         </div>
         <div class="stat-icon icon-green">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -70,7 +70,7 @@
             <span class="stat-label">{{ stats().nextEventTitle }}</span>
           } @else {
             <span class="stat-value">—</span>
-            <span class="stat-label">Prochain événement</span>
+            <span class="stat-label">{{ 'dashboard.nextEvent' | translate }}</span>
           }
         </div>
         <div class="stat-icon icon-purple">
@@ -84,8 +84,8 @@
     <!-- Recent events -->
     <div class="section">
       <div class="section-header">
-        <h2 class="section-title">Événements récents</h2>
-        <a routerLink="/events" class="section-link">Voir tout →</a>
+        <h2 class="section-title">{{ 'dashboard.recentEvents' | translate }}</h2>
+        <a routerLink="/events" class="section-link">{{ 'dashboard.seeAll' | translate }}</a>
       </div>
 
       @if (events().length === 0) {
@@ -94,8 +94,8 @@
             <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
             <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
           </svg>
-          <p>Aucun événement pour l'instant</p>
-          <a routerLink="/events/new" class="btn-primary btn-sm">Créer mon premier événement</a>
+          <p>{{ 'dashboard.noEvents' | translate }}</p>
+          <a routerLink="/events/new" class="btn-primary btn-sm">{{ 'dashboard.createFirst' | translate }}</a>
         </div>
       } @else {
         <div class="events-list">
@@ -117,7 +117,7 @@
                 <div class="event-progress-bar">
                   <div class="event-progress-fill" [style.width.%]="responseRate(event.id)"></div>
                 </div>
-                <span class="event-progress-label">{{ responseRate(event.id) }}% de réponses</span>
+                <span class="event-progress-label">{{ responseRate(event.id) }}{{ 'dashboard.responseRate' | translate }}</span>
               </div>
             </a>
           }

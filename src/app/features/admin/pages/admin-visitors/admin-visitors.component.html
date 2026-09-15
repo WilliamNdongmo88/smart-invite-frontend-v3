@@ -2,8 +2,8 @@
 
   <!-- ── Titre ───────────────────────────────────────────────────── -->
   <div class="vp-header">
-    <h1 class="vp-title">Visiteurs du Site</h1>
-    <button class="btn-refresh" (click)="reload()" title="Actualiser tout">
+    <h1 class="vp-title">{{ 'visitors.title' | translate }}</h1>
+    <button class="btn-refresh" (click)="reload()" [title]="'admin.refresh' | translate">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <polyline points="23 4 23 10 17 10"/>
         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
@@ -14,22 +14,22 @@
   <!-- ── KPIs ────────────────────────────────────────────────────── -->
   <div class="kpi-grid">
     <div class="kpi-card">
-      <p class="kpi-label">Visiteurs uniques</p>
+      <p class="kpi-label">{{ 'visitors.uniqueVisitors' | translate }}</p>
       <p class="kpi-value">{{ kpi()?.totalVisitors ?? 0 }}</p>
     </div>
     <div class="kpi-card">
-      <p class="kpi-label">Visiteurs récurrents</p>
+      <p class="kpi-label">{{ 'visitors.returningVisitors' | translate }}</p>
       <p class="kpi-value">
         {{ kpi()?.returningVisitors ?? 0 }}
         <span class="kpi-pct">({{ returningPct() }})</span>
       </p>
     </div>
     <div class="kpi-card">
-      <p class="kpi-label">Pages vues</p>
+      <p class="kpi-label">{{ 'visitors.pageViews' | translate }}</p>
       <p class="kpi-value">{{ kpi()?.totalPageViews ?? 0 }}</p>
     </div>
     <div class="kpi-card">
-      <p class="kpi-label">Durée moyenne</p>
+      <p class="kpi-label">{{ 'visitors.avgDuration' | translate }}</p>
       <p class="kpi-value">{{ formatAvg(kpi()?.avgDurationSeconds ?? 0) }}</p>
     </div>
   </div>
@@ -39,11 +39,11 @@
 
     <!-- TOP PAYS -->
     <div class="stats-card">
-      <span class="stats-label">TOP PAYS</span>
+      <span class="stats-label">{{ 'visitors.topCountries' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.byCountry?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-rows">
           @for (item of overview()!.byCountry.slice(0, 5); track item.label) {
@@ -61,11 +61,11 @@
 
     <!-- NAVIGATEURS -->
     <div class="stats-card">
-      <span class="stats-label">NAVIGATEURS</span>
+      <span class="stats-label">{{ 'visitors.browsers' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.byBrowser?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-rows">
           @for (item of overview()!.byBrowser.slice(0, 5); track item.label) {
@@ -83,11 +83,11 @@
 
     <!-- SYSTÈMES D'EXPLOITATION -->
     <div class="stats-card">
-      <span class="stats-label">SYSTÈMES D'EXPLOITATION</span>
+      <span class="stats-label">{{ 'visitors.os' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.byOs?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-rows">
           @for (item of overview()!.byOs.slice(0, 5); track item.label) {
@@ -105,11 +105,11 @@
 
     <!-- APPAREILS -->
     <div class="stats-card">
-      <span class="stats-label">APPAREILS</span>
+      <span class="stats-label">{{ 'visitors.devices' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.byDevice?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-rows">
           @for (item of overview()!.byDevice; track item.label) {
@@ -127,11 +127,11 @@
 
     <!-- PAGES POPULAIRES -->
     <div class="stats-card">
-      <span class="stats-label">PAGES POPULAIRES</span>
+      <span class="stats-label">{{ 'visitors.topPages' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.topPages?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-rows">
           @for (item of overview()!.topPages.slice(0, 5); track item.url) {
@@ -149,11 +149,11 @@
 
     <!-- VISITES / JOUR (30J) -->
     <div class="stats-card stats-card--chart">
-      <span class="stats-label">VISITES / JOUR (30J)</span>
+      <span class="stats-label">{{ 'visitors.visitsByDay' | translate }}</span>
       @if (ovLoading()) {
         <div class="sc-loader"><div class="spinner-sm"></div></div>
       } @else if (!overview()?.visitsByDay?.length) {
-        <p class="sc-empty">Aucune donnée</p>
+        <p class="sc-empty">{{ 'visitors.noData' | translate }}</p>
       } @else {
         <div class="sc-bars-chart">
           @for (item of overview()!.visitsByDay; track item.period) {
@@ -171,16 +171,16 @@
   <div class="filters">
     <div class="filters-row">
       <input class="f-input f-search" type="text"
-             placeholder="Rechercher par IP, pays, ville, navigateur…"
+             [placeholder]="'visitors.searchPlaceholder' | translate"
              [(ngModel)]="search" />
       <select class="f-select" [(ngModel)]="country">
-        <option value="">Tous les pays</option>
+        <option value="">{{ 'visitors.allCountries' | translate }}</option>
         @for (item of (overview()?.byCountry ?? []); track item.label) {
           <option [value]="item.label">{{ item.label }}</option>
         }
       </select>
       <select class="f-select" [(ngModel)]="city">
-        <option value="">Toutes les villes</option>
+        <option value="">{{ 'visitors.allCities' | translate }}</option>
         <option value="Paris">Paris</option>
         <option value="Dakar">Dakar</option>
         <option value="Casablanca">Casablanca</option>
@@ -190,13 +190,13 @@
         <option value="Bruxelles">Bruxelles</option>
       </select>
       <select class="f-select" [(ngModel)]="device">
-        <option value="">Tous les appareils</option>
+        <option value="">{{ 'visitors.allDevices' | translate }}</option>
         @for (item of (overview()?.byDevice ?? []); track item.label) {
           <option [value]="item.label">{{ item.label }}</option>
         }
       </select>
       <select class="f-select" [(ngModel)]="browser">
-        <option value="">Tous les navigateurs</option>
+        <option value="">{{ 'visitors.allBrowsers' | translate }}</option>
         @for (item of (overview()?.byBrowser ?? []); track item.label) {
           <option [value]="item.label">{{ item.label }}</option>
         }
@@ -205,8 +205,8 @@
     </div>
     <div class="filters-row filters-row--actions">
       <input class="f-input f-date" type="date" [(ngModel)]="dateFrom" />
-      <button class="btn-filter" (click)="filter()" [disabled]="loading()">Filtrer</button>
-      <button class="btn-reset"  (click)="reset()"  [disabled]="loading()">Réinitialiser</button>
+      <button class="btn-filter" (click)="filter()" [disabled]="loading()">{{ 'visitors.filter' | translate }}</button>
+      <button class="btn-reset"  (click)="reset()"  [disabled]="loading()">{{ 'visitors.reset' | translate }}</button>
     </div>
   </div>
 
@@ -215,26 +215,26 @@
     <table class="vt">
       <thead>
         <tr>
-          <th>Première visite</th>
-          <th>Pays / Ville</th>
-          <th>Appareil / OS</th>
-          <th>Navigateur</th>
-          <th>Pages vues</th>
-          <th>Sessions</th>
-          <th>Durée (dernière)</th>
-          <th>Type</th>
-          <th>Actions</th>
+          <th>{{ 'visitors.firstVisit' | translate }}</th>
+          <th>{{ 'visitors.country' | translate }}</th>
+          <th>{{ 'visitors.device' | translate }}</th>
+          <th>{{ 'visitors.browser' | translate }}</th>
+          <th>{{ 'visitors.pageViews' | translate }}</th>
+          <th>{{ 'visitors.sessions' | translate }}</th>
+          <th>{{ 'visitors.lastDuration' | translate }}</th>
+          <th>{{ 'visitors.type' | translate }}</th>
+          <th>{{ 'visitors.actions' | translate }}</th>
         </tr>
       </thead>
       <tbody>
         @if (loading()) {
           <tr><td colspan="9" class="td-center">
-            <div class="loader-row"><div class="spinner"></div><span>Chargement…</span></div>
+            <div class="loader-row"><div class="spinner"></div><span>{{ 'visitors.loading' | translate }}</span></div>
           </td></tr>
         } @else if (error()) {
           <tr><td colspan="9" class="td-center td-error">{{ error() }}</td></tr>
         } @else if (visitors().length === 0) {
-          <tr><td colspan="9" class="td-empty">Aucun visiteur trouvé.</td></tr>
+          <tr><td colspan="9" class="td-empty">{{ 'visitors.noVisitors' | translate }}</td></tr>
         } @else {
           @for (v of visitors(); track v.id) {
             <tr>
@@ -257,11 +257,11 @@
                 <span class="badge"
                       [class.badge--new]="v.visitorType === 'new'"
                       [class.badge--ret]="v.visitorType === 'returning'">
-                  {{ v.visitorType === 'new' ? 'Nouveau' : 'Récurrent' }}
+                  {{ v.visitorType === 'new' ? ('visitors.new' | translate) : ('visitors.returning' | translate) }}
                 </span>
               </td>
               <td>
-                <button class="btn-action" title="Voir détails">
+                <button class="btn-action" [title]="'visitors.viewDetails' | translate">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"/>

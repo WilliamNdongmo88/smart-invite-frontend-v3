@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { LinkService } from '../../../../core/services/link.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Link, CreateLinkRequest, UpdateLinkRequest } from '../../../../core/models/checkin.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-links',
   standalone: true,
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink, TranslatePipe],
   templateUrl: 'link.component.html',
   styleUrl: 'link.component.scss',
 })
@@ -16,6 +18,7 @@ export class LinksComponent implements OnInit {
   private readonly route    = inject(ActivatedRoute);
   private readonly linkSvc  = inject(LinkService);
   private readonly toast    = inject(ToastService);
+  private readonly lang     = inject(LanguageService);
 
   eventId  = 0;
   links    = signal<Link[]>([]);
@@ -66,8 +69,8 @@ export class LinksComponent implements OnInit {
       dateLimitLink: this.newExpiry ? this.newExpiry + ':00' : undefined,
     };
     this.linkSvc.create(req).subscribe({
-      next: () => { this.toast.success('Lien créé ✅'); this.createModal.set(false); this.load(); this.saving.set(false); },
-      error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.saving.set(false); },
+      next: () => { this.toast.success(this.lang.t('links.toast.createSuccess')); this.createModal.set(false); this.load(); this.saving.set(false); },
+      error: (err) => { this.toast.error(err?.error?.message || this.lang.t('links.toast.error')); this.saving.set(false); },
     });
   }
 
@@ -96,8 +99,8 @@ export class LinksComponent implements OnInit {
     if (!link) return;
     this.deleting.set(link.id);
     this.linkSvc.delete(link.id).subscribe({
-      next: () => { this.toast.success('Lien supprimé'); this.deleteLink.set(null); this.load(); this.deleting.set(null); },
-      error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.deleting.set(null); },
+      next: () => { this.toast.success(this.lang.t('links.toast.revokeSuccess')); this.deleteLink.set(null); this.load(); this.deleting.set(null); },
+      error: (err) => { this.toast.error(err?.error?.message || this.lang.t('links.toast.error')); this.deleting.set(null); },
     });
   }
 
@@ -112,7 +115,7 @@ export class LinksComponent implements OnInit {
   }
 
   copy(url: string): void {
-    navigator.clipboard.writeText(url).then(() => this.toast.success('Lien copié !'));
+    navigator.clipboard.writeText(url).then(() => this.toast.success(this.lang.t('links.toast.copySuccess')));
   }
 
   statusLabel(link: Link): string {

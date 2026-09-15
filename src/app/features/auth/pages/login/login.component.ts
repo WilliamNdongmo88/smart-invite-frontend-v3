@@ -4,11 +4,13 @@ import { Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: 'login.component.html',
   styleUrl: 'login.component.scss',
 })
@@ -18,6 +20,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly lang = inject(LanguageService);
 
   @ViewChild('googleBtnRef') googleBtnRef!: ElementRef;
 
@@ -95,7 +98,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         this.loading.set(false);
-        this.toast.error(err?.error?.message ?? 'Erreur Google');
+        this.toast.error(err?.error?.message ?? this.lang.t('auth.errorGoogle'));
       },
     });
   }
@@ -118,7 +121,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
       },
       error: (err) => {
         this.loading.set(false);
-        this.toast.error(err?.error?.message ?? 'Identifiants incorrects');
+        this.toast.error(err?.error?.message ?? this.lang.t('auth.login.errorDefault'));
       },
     });
   }

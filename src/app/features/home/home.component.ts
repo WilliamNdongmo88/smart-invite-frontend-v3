@@ -7,11 +7,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ContactService } from '../../core/services/contact.service';
 import { DialCodeSelectComponent } from '../../shared/components/dial-code-select/dial-code-select.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FormsModule, DialCodeSelectComponent],
+  imports: [RouterLink, FormsModule, DialCodeSelectComponent, TranslatePipe],
   templateUrl: 'home.component.html',
   styleUrl: 'home.component.scss',
 })

@@ -9,11 +9,12 @@ import { Event } from '../../../../core/models/event.model';
 import { EventStats } from '../../../../core/models/event.model';
 import { Guest } from '../../../../core/models/guest.model';
 import { EVENT_TYPE_LABELS, EVENT_STATUS_LABELS } from '../../../../core/models/enums.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-event-detail',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './event-detail.component.html',
   styleUrls: ['./event-detail.component.scss'], 
 })

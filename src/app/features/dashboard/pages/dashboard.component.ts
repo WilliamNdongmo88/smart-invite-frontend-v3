@@ -7,6 +7,8 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Event } from '../../../core/models/event.model';
 import { EventStats } from '../../../core/models/event.model';
 import { EVENT_TYPE_LABELS, EVENT_STATUS_LABELS } from '../../../core/models/enums.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 interface DashboardStats {
   activeEvents: number;
@@ -19,13 +21,14 @@ interface DashboardStats {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: 'dashboard.component.html',
   styleUrl: 'dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
   private readonly eventService = inject(EventService);
   private readonly auth = inject(AuthService);
+  readonly lang = inject(LanguageService);
 
   userName = this.auth.getName() ?? 'vous';
   loading = signal(true);

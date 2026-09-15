@@ -30,13 +30,8 @@
     </svg>
 
     <div class="left-bottom">
-      <h2 class="left-headline">
-        Vérifiez<br/>votre<br/>identité
-      </h2>
-      <p class="left-sub">
-        Un code à 6 chiffres a été envoyé<br/>
-        à votre adresse email.
-      </p>
+      <h2 class="left-headline">{{ 'auth.verifyEmail.leftHeadline' | translate }}</h2>
+      <p class="left-sub">{{ 'auth.verifyEmail.leftSub' | translate }}</p>
     </div>
   </div>
 
@@ -56,9 +51,9 @@
         </svg>
       </div>
 
-      <h1 class="right-title">Vérification email</h1>
+      <h1 class="right-title">{{ 'auth.verifyEmail.title' | translate }}</h1>
       <p class="right-sub">
-        Code envoyé à<br/>
+        {{ 'auth.verifyEmail.subtitle' | translate }}<br/>
         <span class="email-highlight">{{ maskedEmail }}</span>
       </p>
 
@@ -84,24 +79,24 @@
       <!-- Submit -->
       <button class="btn-submit" [disabled]="loading() || digits().join('').length < 6" (click)="submit()">
         @if (loading()) { <span class="spinner"></span> }
-        Vérifier le code
+        {{ 'auth.verifyEmail.submit' | translate }}
       </button>
 
       <!-- Resend -->
       <div class="resend-row">
-        <span class="resend-label">Vous n'avez pas reçu le code ?</span>
+        <span class="resend-label">{{ 'auth.verifyEmail.noCode' | translate }}</span>
         @if (countdown() > 0) {
-          <span class="countdown">Renvoyer dans {{ countdown() }}s</span>
+          <span class="countdown">{{ 'auth.verifyEmail.resendIn' | translate }} {{ countdown() }}s</span>
         } @else {
           <button class="resend-btn" [disabled]="resendLoading()" (click)="resend()">
             @if (resendLoading()) { <span class="spinner-sm"></span> }
-            Renvoyer le code
+            {{ 'auth.verifyEmail.resend' | translate }}
           </button>
         }
       </div>
 
       <p class="bottom-link">
-        <a routerLink="/login">← Retour à la connexion</a>
+        <a routerLink="/login">{{ 'auth.verifyEmail.backToLogin' | translate }}</a>
       </p>
 
     </div>

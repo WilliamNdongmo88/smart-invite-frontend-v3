@@ -1,13 +1,14 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { AdminFinanceService, FinanceStats, PeriodAmount } from '../../../../core/services/admin-finance.service';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 type ChartMode = 'month' | 'year';
 
 @Component({
   selector: 'app-admin-finance',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, TranslatePipe],
   templateUrl: './admin-finance.component.html',
   styleUrl:    './admin-finance.component.scss',
 })

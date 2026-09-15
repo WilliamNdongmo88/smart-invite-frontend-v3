@@ -3,6 +3,7 @@ import { AdminService } from '../../../../core/services/admin.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { OrganizerSummary, UserNewsMessage } from '../../../../core/models/user.model';
 import { DatePipe } from '@angular/common';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 type ActionType = 'block' | 'unblock' | 'activate' | 'delete';
 type Tab = 'users' | 'messages';
@@ -10,7 +11,7 @@ type Tab = 'users' | 'messages';
 @Component({
   selector: 'app-admin-users',
   standalone: true,
-  imports: [DatePipe],
+  imports: [DatePipe, TranslatePipe],
   templateUrl: 'admin-users.component.html',
   styleUrl: 'admin-users.component.scss',
 })

@@ -3,34 +3,34 @@
   <!-- Header -->
   <div class="ap-header">
     <div>
-      <h1 class="ap-title">Paiements</h1>
-      <p class="ap-sub">Gestion et validation des preuves de paiement</p>
+      <h1 class="ap-title">{{ 'payments.title' | translate }}</h1>
+      <p class="ap-sub">{{ 'payments.subtitle' | translate }}</p>
     </div>
     <button class="btn-refresh" (click)="load()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
         <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
       </svg>
-      Actualiser
+      {{ 'admin.refresh' | translate }}
     </button>
   </div>
 
   <!-- Stats -->
   <div class="ap-stats">
     <div class="stat-card">
-      <span class="stat-label">Total</span>
+      <span class="stat-label">{{ 'payments.all' | translate }}</span>
       <span class="stat-value">{{ stats().total }}</span>
     </div>
     <div class="stat-card review">
-      <span class="stat-label">En vérification</span>
+      <span class="stat-label">{{ 'payments.underReview' | translate }}</span>
       <span class="stat-value">{{ stats().underReview }}</span>
     </div>
     <div class="stat-card approved">
-      <span class="stat-label">Approuvés</span>
+      <span class="stat-label">{{ 'payments.approved' | translate }}</span>
       <span class="stat-value">{{ stats().approved }}</span>
     </div>
     <div class="stat-card rejected">
-      <span class="stat-label">Rejetés</span>
+      <span class="stat-label">{{ 'payments.rejected' | translate }}</span>
       <span class="stat-value">{{ stats().rejected }}</span>
     </div>
   </div>
@@ -50,23 +50,23 @@
   <!-- Table -->
   <div class="ap-card">
     @if (loading()) {
-      <div class="ap-loading">Chargement…</div>
+      <div class="ap-loading">{{ 'admin.loading' | translate }}</div>
     } @else if (filtered().length === 0) {
-      <div class="ap-empty">Aucun paiement dans cette catégorie.</div>
+      <div class="ap-empty">{{ 'payments.noPayments' | translate }}</div>
     } @else {
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Organisateur</th>
-              <th>Événement</th>
-              <th>Quota</th>
-              <th>Montant</th>
-              <th>Statut</th>
-              <th>Preuve</th>
-              <th>Date</th>
-              <th>Actions</th>
+              <th>{{ 'payments.organizer' | translate }}</th>
+              <th>{{ 'payments.event' | translate }}</th>
+              <th>{{ 'payments.quota' | translate }}</th>
+              <th>{{ 'payments.amount' | translate }}</th>
+              <th>{{ 'common.status' | translate }}</th>
+              <th>{{ 'payments.proof' | translate }}</th>
+              <th>{{ 'common.date' | translate }}</th>
+              <th>{{ 'common.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -80,7 +80,7 @@
                 <td><span class="badge" [class]="statusClass(p.status)">{{ statusLabels[p.status] }}</span></td>
                 <td>
                   @if (p.proofUrl) {
-                    <a [href]="p.proofUrl" target="_blank" class="proof-link">Voir</a>
+                    <a [href]="p.proofUrl" target="_blank" class="proof-link">{{ 'common.see' | translate }}</a>
                   } @else {
                     <span class="no-proof">—</span>
                   }
@@ -89,10 +89,10 @@
                 <td class="actions-cell">
                   @if (p.status === 'UNDER_REVIEW') {
                     <button class="btn-approve" [disabled]="reviewing() === p.id" (click)="approve(p.id)">
-                      @if (reviewing() === p.id) { … } @else { ✓ Approuver }
+                      @if (reviewing() === p.id) { … } @else { {{ 'payments.approve' | translate }} }
                     </button>
                     <button class="btn-reject" [disabled]="reviewing() === p.id" (click)="openReject(p.id)">
-                      ✕ Rejeter
+                      {{ 'payments.reject' | translate }}
                     </button>
                   } @else {
                     <span class="no-action">—</span>
@@ -102,7 +102,7 @@
               @if (p.status === 'REJECTED' && p.rejectionReason) {
                 <tr class="reason-row">
                   <td colspan="9">
-                    <span class="reason-label">Motif :</span> {{ p.rejectionReason }}
+                    <span class="reason-label">{{ 'payments.reason' | translate }}</span> {{ p.rejectionReason }}
                   </td>
                 </tr>
               }
@@ -119,18 +119,18 @@
 @if (rejectId()) {
   <div class="modal-backdrop" (click)="closeReject()">
     <div class="modal" (click)="$event.stopPropagation()">
-      <h3 class="modal-title">Rejeter le paiement #{{ rejectId() }}</h3>
-      <p class="modal-sub">Veuillez indiquer le motif de rejet (obligatoire).</p>
+      <h3 class="modal-title">{{ 'payments.rejectTitle' | translate }} #{{ rejectId() }}</h3>
+      <p class="modal-sub">{{ 'payments.rejectSubtitle' | translate }}</p>
       <textarea
         class="modal-textarea"
         rows="4"
-        placeholder="Ex : Preuve illisible, montant incorrect…"
+        [placeholder]="'payments.rejectPlaceholder' | translate"
         [(ngModel)]="rejectReason">
       </textarea>
       <div class="modal-actions">
-        <button class="btn-cancel" (click)="closeReject()">Annuler</button>
+        <button class="btn-cancel" (click)="closeReject()">{{ 'common.cancel' | translate }}</button>
         <button class="btn-confirm-reject" [disabled]="!rejectReason.trim() || reviewing() !== null" (click)="confirmReject()">
-          Confirmer le rejet
+          {{ 'payments.confirmReject' | translate }}
         </button>
       </div>
     </div>

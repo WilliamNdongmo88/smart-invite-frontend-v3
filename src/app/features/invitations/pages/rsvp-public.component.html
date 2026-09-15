@@ -1,12 +1,12 @@
 <main class="invitation-page" [class]="'invitation-page ' + themeClass()">
   <!-- Barre de navigation supérieure avec bouton retour -->
   <div class="top-nav-bar">
-    <button type="button" class="btn-back" (click)="goBack()" title="Retour à la page précédente">
+    <button type="button" class="btn-back" (click)="goBack()" [title]="'invitations.public.back' | translate">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
       </svg>
-      <span>Retour</span>
+      <span>{{ 'invitations.public.back' | translate }}</span>
     </button>
   </div>
 
@@ -16,22 +16,22 @@
     @if (eventType() === 'MARIAGE') {
       <div class="mariage-header-badge">
         <span class="mariage-filigree">✦ 💍 ✦</span>
-        <span class="mariage-badge-pill">CÉLÉBRATION DE MARIAGE • UNION ROYALE</span>
+        <span class="mariage-badge-pill">{{ headerBadgeText() }}</span>
       </div>
     } @else if (eventType() === 'CONFERENCE') {
       <div class="conf-header-badge">
         <div class="conf-lanyard-slot"></div>
-        <span class="conf-badge-pill">ACCRÉDITATION & PASS OFFICIEL</span>
+        <span class="conf-badge-pill">{{ headerBadgeText() }}</span>
       </div>
     } @else if (eventType() === 'GALA') {
       <div class="gala-header-badge">
         <span class="gala-filigree">✦ ❖ ✦</span>
-        <span class="gala-badge-pill">INVITATION EXCLUSIVE • BLACK TIE</span>
+        <span class="gala-badge-pill">{{ headerBadgeText() }}</span>
       </div>
     } @else if (eventType() === 'CEREMONIE') {
       <div class="cere-header-badge">
         <span class="cere-filigree">⚜</span>
-        <span class="cere-badge-pill">CÉLÉBRATION DE PRESTIGE</span>
+        <span class="cere-badge-pill">{{ headerBadgeText() }}</span>
       </div>
     }
 
@@ -39,7 +39,7 @@
     @if (state() === 'loading') {
       <section class="state-card">
         <div class="spinner"></div>
-        <p class="state-text">Chargement de votre invitation…</p>
+        <p class="state-text">{{ 'invitations.public.loading' | translate }}</p>
       </section>
     }
 
@@ -47,7 +47,7 @@
     @if (state() === 'error') {
       <section class="state-card">
         <div class="state-icon">!</div>
-        <h2>Invitation introuvable</h2>
+        <h2>{{ 'invitations.public.invalidTitle' | translate }}</h2>
         <p>{{ errorMsg() }}</p>
       </section>
     }
@@ -59,24 +59,18 @@
         <h1>{{ mainTitleText() }}</h1>
         <p class="intro">{{ introText() }}</p>
 
-        <!-- Cadre photo avec design et découpe propre à chaque thème -->
+        <!-- Cadre photo -->
         <div class="photo-frame-wrapper" [class]="'frame-' + eventType().toLowerCase()">
           @if (eventType() === 'MARIAGE') {
-            <div class="frame-tag mariage-tag">
-              💍 CÉLÉBRATION DE NOTRE UNION 💍
-            </div>
+            <div class="frame-tag mariage-tag">{{ frameTagText() }}</div>
           } @else if (eventType() === 'CONFERENCE') {
             <div class="frame-tag conf-tag">
-              <span class="tag-dot"></span> INTERVENANT & CONFÉRENCE
+              <span class="tag-dot"></span> {{ frameTagText() }}
             </div>
           } @else if (eventType() === 'GALA') {
-            <div class="frame-tag gala-tag">
-              ✦ TABLE D'HONNEUR & VIP ✦
-            </div>
+            <div class="frame-tag gala-tag">{{ frameTagText() }}</div>
           } @else if (eventType() === 'CEREMONIE') {
-            <div class="frame-tag cere-tag">
-              ⚜ CÉLÉBRATION OFFICIELLE ⚜
-            </div>
+            <div class="frame-tag cere-tag">{{ frameTagText() }}</div>
           }
 
           <div class="photo-frame" [class.editable]="isLoggedIn()">
@@ -106,12 +100,12 @@
             }
 
             @if (isLoggedIn() && !uploading()) {
-              <button type="button" class="photo-edit-btn" (click)="photoInputReady.click()" title="Changer la photo sur Firebase">
+              <button type="button" class="photo-edit-btn" (click)="photoInputReady.click()" [title]="'invitations.public.changePhoto' | translate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                   <circle cx="12" cy="13" r="4"/>
                 </svg>
-                <span>Changer la photo</span>
+                <span>{{ 'invitations.public.changePhoto' | translate }}</span>
               </button>
               <input #photoInputReady type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
             }
@@ -124,7 +118,7 @@
         <p class="event-date">{{ eventDate() }}</p>
 
         <div class="guest-salutation">
-          <p class="greeting-text">Cher(e) <strong>{{ inv()!.guestName }}</strong>,</p>
+          <p class="greeting-text">{{ 'invitations.public.greeting' | translate }} <strong>{{ inv()!.guestName }}</strong>,</p>
           <p class="event-message">{{ salutationLead() }}</p>
           @if (eventLocation()) {
             <p class="event-location">📍 {{ eventLocation() }}</p>
@@ -132,12 +126,12 @@
         </div>
 
         <div class="rsvp-action-box">
-          <p class="rsvp-question">Confirmez-vous votre présence ?</p>
+          <p class="rsvp-question">{{ 'invitations.public.rsvpQuestion' | translate }}</p>
 
           <div class="action-buttons">
             <button type="button" class="btn-confirm" [disabled]="submitting() !== null" (click)="respond('CONFIRMED')">
               @if (submitting() === 'CONFIRMED') {
-                <span class="spinner-sm"></span> Confirmation en cours…
+                <span class="spinner-sm"></span> {{ 'invitations.public.confirming' | translate }}
               } @else {
                 <span>✓</span> {{ confirmBtnText() }}
               }
@@ -145,9 +139,9 @@
 
             <button type="button" class="btn-decline" [disabled]="submitting() !== null" (click)="respond('DECLINED')">
               @if (submitting() === 'DECLINED') {
-                <span class="spinner-sm"></span> Envoi en cours…
+                <span class="spinner-sm"></span> {{ 'invitations.public.declining' | translate }}
               } @else {
-                Je ne pourrai pas être présent(e)
+                {{ 'invitations.public.declineBtn' | translate }}
               }
             </button>
           </div>
@@ -172,12 +166,12 @@
             }
 
             @if (isLoggedIn() && !uploading()) {
-              <button type="button" class="photo-edit-btn" (click)="photoInputConfirmed.click()" title="Changer la photo sur Firebase">
+              <button type="button" class="photo-edit-btn" (click)="photoInputConfirmed.click()" [title]="'invitations.public.changePhoto' | translate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                   <circle cx="12" cy="13" r="4"/>
                 </svg>
-                <span>Changer la photo</span>
+                <span>{{ 'invitations.public.changePhoto' | translate }}</span>
               </button>
               <input #photoInputConfirmed type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
             }
@@ -189,10 +183,10 @@
         <p class="event-date">{{ eventDate() }}</p>
 
         <div class="success-mark">✓</div>
-        <h3>Présence confirmée !</h3>
+        <h3>{{ 'invitations.public.confirmedTitle' | translate }}</h3>
         <p class="success-message">
-          Merci <strong>{{ inv()!.guestName }}</strong>, votre confirmation a bien été enregistrée.<br />
-          Nous avons hâte de vous compter parmi nous !
+          {{ 'invitations.public.confirmedMsg' | translate }} <strong>{{ inv()!.guestName }}</strong>.<br />
+          {{ 'invitations.public.confirmedSub' | translate }}
         </p>
 
         @if (eventLocation()) {
@@ -201,15 +195,15 @@
 
         @if (inv()!.qrCodeUrl) {
           <div class="qr-block">
-            <p>Votre QR Code d’accès</p>
-            <img [src]="inv()!.qrCodeUrl" alt="QR Code d’accès" />
-            <small class="qr-hint">Présentez ce QR code à l'entrée de l'événement.</small>
+            <p>{{ 'invitations.public.qrCodeLabel' | translate }}</p>
+            <img [src]="inv()!.qrCodeUrl" [alt]="'invitations.public.qrCodeLabel' | translate" />
+            <small class="qr-hint">{{ 'invitations.public.qrCodeHint' | translate }}</small>
           </div>
         }
 
         @if (inv()!.pdfUrl) {
           <a [href]="inv()!.pdfUrl" target="_blank" rel="noopener" class="download-link">
-            Télécharger le pass / carte d’invitation (PDF)
+            {{ 'invitations.public.downloadPass' | translate }}
           </a>
         }
       </section>
@@ -232,12 +226,12 @@
             }
 
             @if (isLoggedIn() && !uploading()) {
-              <button type="button" class="photo-edit-btn" (click)="photoInputDeclined.click()" title="Changer la photo sur Firebase">
+              <button type="button" class="photo-edit-btn" (click)="photoInputDeclined.click()" [title]="'invitations.public.changePhoto' | translate">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
                   <circle cx="12" cy="13" r="4"/>
                 </svg>
-                <span>Changer la photo</span>
+                <span>{{ 'invitations.public.changePhoto' | translate }}</span>
               </button>
               <input #photoInputDeclined type="file" accept="image/*" class="hidden-file-input" (change)="onPhotoSelected($event)" />
             }
@@ -249,20 +243,20 @@
         <p class="event-date">{{ eventDate() }}</p>
 
         <div class="declined-mark">—</div>
-        <h3>Absence enregistrée</h3>
+        <h3>{{ 'invitations.public.declinedTitle' | translate }}</h3>
         <p class="declined-message">
-          Merci <strong>{{ inv()!.guestName }}</strong> de nous avoir informés.<br />
-          Nous espérons avoir le plaisir de vous retrouver lors d'un prochain événement.
+          {{ 'invitations.public.declinedMsg' | translate }} <strong>{{ inv()!.guestName }}</strong>.<br />
+          {{ 'invitations.public.declinedSub' | translate }}
         </p>
 
         <div class="change-response-box">
           <button type="button" class="btn-change-response" (click)="state.set('ready')">
-            Modifier ma réponse
+            {{ 'invitations.public.changeResponse' | translate }}
           </button>
         </div>
       </section>
     }
 
-    <footer>Smart Invite <span>•</span> Gestion d’invitations</footer>
+    <footer>{{ 'invitations.public.footer' | translate }}</footer>
   </div>
 </main>

@@ -1,23 +1,27 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LowerCasePipe } from '@angular/common';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Event } from '../../../../core/models/event.model';
 import { EventStatus, EVENT_TYPE_LABELS, EVENT_STATUS_LABELS } from '../../../../core/models/enums.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 type FilterTab = 'ALL' | EventStatus;
 
 @Component({
   selector: 'app-events-list',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslatePipe, LowerCasePipe],
   templateUrl: 'events-list.component.html',
   styleUrl: 'events-list.component.scss',
 })
 export class EventsListComponent implements OnInit {
   private readonly eventService = inject(EventService);
   private readonly toast = inject(ToastService);
+  private readonly lang = inject(LanguageService);
 
   loading = signal(true);
   deleting = signal<number | null>(null);

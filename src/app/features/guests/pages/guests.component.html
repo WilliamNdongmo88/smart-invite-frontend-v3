@@ -9,8 +9,8 @@
           {{ event()!.title }}
         </a>
       }
-      <h1 class="page-title">Invités</h1>
-      <p class="page-sub">{{ totalElements() }} invité(s) au total</p>
+      <h1 class="page-title">{{ 'guests.title' | translate }}</h1>
+      <p class="page-sub">{{ totalElements() }} {{ 'guests.totalGuests' | translate }}</p>
     </div>
     <div class="header-actions">
       <a [routerLink]="['/events', eventId, 'invitations']" class="btn-invitations">
@@ -18,11 +18,11 @@
           <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
           <polyline points="22,6 12,13 2,6"/>
         </svg>
-        Gérer les invitations
+        {{ 'guests.manageInvitations' | translate }}
       </a>
       <button class="btn-gold" (click)="openAdd()">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Ajouter un invité
+        {{ 'guests.addGuest' | translate }}
       </button>
     </div>
   </div>
@@ -38,27 +38,19 @@
           </svg>
         </div>
         <div class="table-alert-body">
-          <span class="table-alert-title">Numéros de table manquants</span>
+          <span class="table-alert-title">{{ 'guests.tableAlert.title' | translate }}</span>
           <span class="table-alert-text">
-            {{ confirmedWithoutTable() }} invité{{ confirmedWithoutTable() > 1 ? 's' : '' }} confirmé{{ confirmedWithoutTable() > 1 ? 's' : '' }}
-            {{ confirmedWithoutTable() > 1 ? "n'ont" : "n'a" }} pas encore de numéro de table assigné.
-            Pensez à les mettre à jour avant l'événement.
+            {{ confirmedWithoutTable() }} {{ 'guests.tableAlert.text' | translate }}
           </span>
         </div>
-        <!-- Bouton visible sur desktop uniquement -->
-        <button class="table-alert-filter table-alert-filter--desktop" (click)="dismissTableAlert()" title="Voir les confirmés">
-          Voir les confirmés
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="9 18 15 12 9 6"/>
-          </svg>
+        <button class="table-alert-filter table-alert-filter--desktop" (click)="dismissTableAlert()" [title]="'guests.tableAlert.viewConfirmed' | translate">
+          {{ 'guests.tableAlert.viewConfirmed' | translate }}
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
-      <!-- Bouton pleine largeur sur mobile -->
       <button class="table-alert-filter table-alert-filter--mobile" (click)="dismissTableAlert()">
-        Voir les invités confirmés
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <polyline points="9 18 15 12 9 6"/>
-        </svg>
+        {{ 'guests.tableAlert.viewConfirmedMobile' | translate }}
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
   }
@@ -66,7 +58,7 @@
   <!-- Toolbar -->
   <div class="toolbar">
     <div class="tabs">
-      @for (tab of tabs; track tab.key) {
+      @for (tab of tabs(); track tab.key) {
         <button class="tab" [class.active]="activeTab() === tab.key" (click)="setTab(tab.key)">
           {{ tab.label }}
         </button>
@@ -76,23 +68,23 @@
       @if (selectedCount() > 0) {
         <button class="btn-danger-sm" (click)="askBulkDelete()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-          Supprimer ({{ selectedCount() }})
+          {{ 'guests.deleteSelected' | translate }} ({{ selectedCount() }})
         </button>
       }
       <!-- Bouton importer Excel -->
-      <button class="btn-import" (click)="openImport()" title="Importer depuis un fichier Excel">
+      <button class="btn-import" (click)="openImport()" [title]="'guests.importTitle' | translate">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Importer Excel
+        {{ 'guests.import' | translate }}
       </button>
-      <!-- Menu export Excel / PDF -->
+      <!-- Menu export -->
       <div class="export-wrap">
-        <button class="btn-export" (click)="toggleExportMenu()" [disabled]="exportLoading()" title="Exporter la liste filtrée">
+        <button class="btn-export" (click)="toggleExportMenu()" [disabled]="exportLoading()" [title]="'guests.export' | translate">
           @if (exportLoading()) {
             <span class="spinner-xs spinner-export"></span>
-            Export...
+            {{ 'guests.exportLoading' | translate }}
           } @else {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Exporter
+            {{ 'guests.export' | translate }}
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" [style.transform]="showExportMenu() ? 'rotate(180deg)' : 'rotate(0)'"><polyline points="6 9 12 15 18 9"/></svg>
           }
         </button>
@@ -101,18 +93,18 @@
           <div class="export-menu">
             <button class="export-item export-item-excel" (click)="exportExcel()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-              Excel (.xlsx)
+              {{ 'guests.excel' | translate }}
             </button>
             <button class="export-item export-item-pdf" (click)="exportPdf()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              PDF (.pdf)
+              {{ 'guests.pdf' | translate }}
             </button>
           </div>
         }
       </div>
       <div class="search-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input class="search-input" type="text" placeholder="Rechercher un invité..."
+        <input class="search-input" type="text" [placeholder]="'guests.searchPlaceholder' | translate"
           [value]="searchTerm()" (input)="onSearch($any($event.target).value)" />
       </div>
     </div>
@@ -121,25 +113,23 @@
   <!-- Table -->
   @if (loading()) {
     <div class="skeleton-wrap">
-      @for (i of [1,2,3,4,5,6,7,8]; track i) {
-        <div class="skeleton-row"></div>
-      }
+      @for (i of [1,2,3,4,5,6,7,8]; track i) { <div class="skeleton-row"></div> }
     </div>
   } @else if (guests().length === 0) {
     <div class="empty-state">
       <div class="empty-icon">
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       </div>
-      <p class="empty-title">Aucun invité trouvé</p>
+      <p class="empty-title">{{ 'guests.noGuests' | translate }}</p>
       <p class="empty-sub">
         @if (searchTerm() || activeTab() !== 'ALL') {
-          Aucun résultat pour ces filtres.
+          {{ 'guests.noResults' | translate }}
         } @else {
-          Commencez par ajouter vos premiers invités.
+          {{ 'guests.noGuestsHint' | translate }}
         }
       </p>
       @if (!searchTerm() && activeTab() === 'ALL') {
-        <button class="btn-gold btn-sm" (click)="openAdd()">+ Ajouter un invité</button>
+        <button class="btn-gold btn-sm" (click)="openAdd()">+ {{ 'guests.addGuest' | translate }}</button>
       }
     </div>
   } @else {
@@ -150,13 +140,13 @@
             <th class="th-check">
               <input type="checkbox" class="checkbox" [checked]="allSelected()" (change)="toggleAll()" />
             </th>
-            <th>Invité</th>
-            <th>Contact</th>
-            <th>Notification</th>
-            <th>Table</th>
-            <th>Statut RSVP</th>
-            <th>Ajouté le</th>
-            <th class="th-actions">Actions</th>
+            <th>{{ 'guests.fields.name' | translate }}</th>
+            <th>{{ 'guests.contact' | translate }}</th>
+            <th>{{ 'guests.fields.notification' | translate }}</th>
+            <th>{{ 'guests.fields.table' | translate }}</th>
+            <th>{{ 'guests.fields.rsvp' | translate }}</th>
+            <th>{{ 'common.date' | translate }}</th>
+            <th class="th-actions">{{ 'common.actions' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -187,7 +177,7 @@
               </td>
               <td>
                 @if (g.tableNumber) {
-                  <span class="table-num">Table {{ g.tableNumber }}</span>
+                  <span class="table-num">{{ 'guests.fields.table' | translate }} {{ g.tableNumber }}</span>
                 } @else {
                   <span class="muted">—</span>
                 }
@@ -200,7 +190,7 @@
               <td><span class="muted">{{ formatDate(g.createdAt) }}</span></td>
               <td>
                 <div class="actions-cell">
-                  <button class="act-btn act-remind" title="Envoyer un rappel"
+                  <button class="act-btn act-remind" [title]="'guests.remind' | translate"
                     [disabled]="reminderLoading() === g.id"
                     (click)="askReminder(g.id)">
                     @if (reminderLoading() === g.id) {
@@ -209,10 +199,10 @@
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
                     }
                   </button>
-                  <button class="act-btn act-edit" title="Modifier" (click)="openEdit(g)">
+                  <button class="act-btn act-edit" [title]="'common.edit' | translate" (click)="openEdit(g)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   </button>
-                  <button class="act-btn act-delete" title="Supprimer" (click)="askDelete(g.id)">
+                  <button class="act-btn act-delete" [title]="'common.delete' | translate" (click)="askDelete(g.id)">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
                   </button>
                 </div>
@@ -227,15 +217,15 @@
     @if (totalPages() > 1) {
       <div class="pagination">
         <span class="pag-info">
-          Page {{ page() + 1 }} sur {{ totalPages() }} — {{ totalElements() }} invité(s)
+          {{ 'guests.prev' | translate }} {{ page() + 1 }} / {{ totalPages() }} — {{ totalElements() }} {{ 'guests.totalGuests' | translate }}
         </span>
         <div class="pag-btns">
           <button class="pag-btn" [disabled]="page() === 0" (click)="prevPage()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-            Précédent
+            {{ 'guests.prev' | translate }}
           </button>
           <button class="pag-btn" [disabled]="page() >= totalPages() - 1" (click)="nextPage()">
-            Suivant
+            {{ 'guests.next' | translate }}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
         </div>
@@ -250,32 +240,31 @@
   <div class="modal-overlay" (click)="closeForm()">
     <div class="modal modal-form" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2 class="modal-title">{{ editingGuest() ? 'Modifier l\'invité' : 'Ajouter un invité' }}</h2>
+        <h2 class="modal-title">{{ editingGuest() ? ('guests.form.titleEdit' | translate) : ('guests.form.titleAdd' | translate) }}</h2>
         <button class="modal-close" (click)="closeForm()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
       <form [formGroup]="form" (ngSubmit)="saveGuest()" class="form-body">
         <div class="field">
-          <label class="label">Nom complet <span class="req">*</span></label>
+          <label class="label">{{ 'guests.form.fullName' | translate }} <span class="req">*</span></label>
           <input formControlName="fullName" type="text" class="input" [class.error]="isInvalid('fullName')"
-            placeholder="Jean Dupont" />
-          @if (isInvalid('fullName')) { <p class="field-error">Requis, minimum 2 caractères</p> }
+            [placeholder]="'guests.form.fullNamePlaceholder' | translate" />
+          @if (isInvalid('fullName')) { <p class="field-error">{{ 'guests.form.fullNameError' | translate }}</p> }
         </div>
         <div class="fields-row">
           <div class="field">
-            <label class="label">Email</label>
+            <label class="label">{{ 'guests.form.email' | translate }}</label>
             <input formControlName="email" type="email" class="input" placeholder="jean@exemple.com" />
           </div>
           <div class="field">
             <label class="label">
-              Téléphone
+              {{ 'guests.form.phone' | translate }}
               @if (needsWhatsApp()) { <span class="req">*</span> }
             </label>
             @if (needsWhatsApp()) {
-              <!-- Champ téléphone WhatsApp : indicatif + numéro -->
               <div class="phone-input-wrap" [class.error]="isInvalid('phoneNumber')">
-                <select formControlName="phoneDialCode" class="dial-select" title="Indicatif pays">
+                <select formControlName="phoneDialCode" class="dial-select" [title]="'auth.register.phone' | translate">
                   @for (d of dialCodes; track d.code + d.name) {
                     <option [value]="d.code">{{ d.flag }} {{ d.code }}</option>
                   }
@@ -285,39 +274,38 @@
                   placeholder="6XX XXX XXX" [class.error]="isInvalid('phoneNumber')" />
               </div>
               @if (isInvalid('phoneNumber')) {
-                <p class="field-error">Le numéro WhatsApp est requis</p>
+                <p class="field-error">{{ 'guests.form.whatsappError' | translate }}</p>
               }
               <p class="field-hint">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="color:#25D366;flex-shrink:0">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                 </svg>
-                Numéro WhatsApp avec indicatif pays
+                {{ 'guests.form.whatsappHint' | translate }}
               </p>
             } @else {
-              <!-- Champ téléphone classique (email only) -->
               <input formControlName="phoneNumber" type="tel" class="input" placeholder="+237 6XX XXX XXX" />
             }
           </div>
         </div>
         <div class="fields-row">
           <div class="field">
-            <label class="label">Mode de notification</label>
+            <label class="label">{{ 'guests.form.notifMode' | translate }}</label>
             <select formControlName="notificationMode" class="input">
-              @for (opt of notifOptions; track opt.key) {
+              @for (opt of notifOptions(); track opt.key) {
                 <option [value]="opt.key">{{ opt.label }}</option>
               }
             </select>
           </div>
           <div class="field">
-            <label class="label">Numéro de table</label>
+            <label class="label">{{ 'guests.form.tableNum' | translate }}</label>
             <input formControlName="tableNumber" type="number" class="input" placeholder="Ex : 5" min="1" />
           </div>
         </div>
         <div class="modal-actions">
-          <button type="button" class="btn-cancel" (click)="closeForm()">Annuler</button>
+          <button type="button" class="btn-cancel" (click)="closeForm()">{{ 'common.cancel' | translate }}</button>
           <button type="submit" class="btn-gold" [disabled]="saving()">
-            @if (saving()) { <span class="spinner-sm"></span> Enregistrement... }
-            @else { {{ editingGuest() ? 'Enregistrer' : 'Ajouter' }} }
+            @if (saving()) { <span class="spinner-sm"></span> {{ 'guests.form.saving' | translate }} }
+            @else { {{ editingGuest() ? ('guests.form.save' | translate) : ('guests.form.add' | translate) }} }
           </button>
         </div>
       </form>
@@ -325,18 +313,18 @@
   </div>
 }
 
-<!-- ══ MODAL : Suppression ══ -->
+<!-- ══ MODAL : Suppression individuelle ══ -->
 @if (confirmDeleteId()) {
   <div class="modal-overlay" (click)="cancelDelete()">
     <div class="modal modal-confirm" (click)="$event.stopPropagation()">
       <div class="modal-icon modal-icon-danger">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
       </div>
-      <h2 class="modal-title">Supprimer l'invité ?</h2>
-      <p class="modal-text">Cette action est irréversible.</p>
+      <h2 class="modal-title">{{ 'guests.deleteTitle' | translate }}</h2>
+      <p class="modal-text">{{ 'guests.deleteText' | translate }}</p>
       <div class="modal-actions">
-        <button class="btn-cancel" (click)="cancelDelete()">Annuler</button>
-        <button class="btn-danger" (click)="confirmDelete()">Supprimer</button>
+        <button class="btn-cancel" (click)="cancelDelete()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-danger" (click)="confirmDelete()">{{ 'common.delete' | translate }}</button>
       </div>
     </div>
   </div>
@@ -349,11 +337,11 @@
       <div class="modal-icon modal-icon-danger">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M9 6V4h6v2"/></svg>
       </div>
-      <h2 class="modal-title">Supprimer {{ selectedCount() }} invité(s) ?</h2>
-      <p class="modal-text">Cette action est irréversible.</p>
+      <h2 class="modal-title">{{ 'guests.deleteSelected' | translate }} {{ selectedCount() }} ?</h2>
+      <p class="modal-text">{{ 'common.irreversible' | translate }}</p>
       <div class="modal-actions">
-        <button class="btn-cancel" (click)="cancelBulkDelete()">Annuler</button>
-        <button class="btn-danger" (click)="confirmBulkDeleteAction()">Supprimer</button>
+        <button class="btn-cancel" (click)="cancelBulkDelete()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-danger" (click)="confirmBulkDeleteAction()">{{ 'common.delete' | translate }}</button>
       </div>
     </div>
   </div>
@@ -366,11 +354,11 @@
       <div class="modal-icon modal-icon-gold">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c9a84c" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg>
       </div>
-      <h2 class="modal-title">Envoyer un rappel ?</h2>
-      <p class="modal-text">Un rappel sera envoyé à cet invité selon son mode de notification.</p>
+      <h2 class="modal-title">{{ 'guests.reminderTitle' | translate }}</h2>
+      <p class="modal-text">{{ 'guests.reminderText' | translate }}</p>
       <div class="modal-actions">
-        <button class="btn-cancel" (click)="cancelReminder()">Annuler</button>
-        <button class="btn-gold" (click)="confirmReminder()">Envoyer</button>
+        <button class="btn-cancel" (click)="cancelReminder()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-gold" (click)="confirmReminder()">{{ 'common.send' | translate }}</button>
       </div>
     </div>
   </div>
@@ -381,66 +369,62 @@
   <div class="modal-overlay" (click)="closeImport()">
     <div class="modal modal-import" (click)="$event.stopPropagation()">
       <div class="modal-header">
-        <h2 class="modal-title">Importer depuis Excel</h2>
+        <h2 class="modal-title">{{ 'guests.importModal.title' | translate }}</h2>
         <button class="modal-close" (click)="closeImport()">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
       </div>
 
       @if (!importResult()) {
-        <!-- Zone de sélection du fichier -->
         <div class="import-body">
           <div class="import-info">
-            <p class="import-desc">Le fichier Excel doit contenir les colonnes dans cet ordre :</p>
+            <p class="import-desc">{{ 'guests.importModal.desc' | translate }}</p>
             <div class="import-columns">
-              <span class="col-tag">Nom *</span>
-              <span class="col-tag">Email</span>
-              <span class="col-tag">Téléphone</span>
-              <span class="col-tag">Notification</span>
-              <span class="col-tag">Table</span>
+              <span class="col-tag">{{ 'guests.importModal.colName' | translate }}</span>
+              <span class="col-tag">{{ 'guests.importModal.colEmail' | translate }}</span>
+              <span class="col-tag">{{ 'guests.importModal.colPhone' | translate }}</span>
+              <span class="col-tag">{{ 'guests.importModal.colNotif' | translate }}</span>
+              <span class="col-tag">{{ 'guests.importModal.colTable' | translate }}</span>
             </div>
-            <p class="import-hint">* Requis. Notification : EMAIL, WHATSAPP ou BOTH. La 1ère ligne est ignorée (en-têtes).</p>
+            <p class="import-hint">{{ 'guests.importModal.hint' | translate }}</p>
           </div>
 
           <label class="import-dropzone" [class.loading]="importLoading()">
             @if (importLoading()) {
               <span class="spinner-sm" style="border-top-color: #c9a84c; border-color: rgba(201,168,76,0.3);"></span>
-              <span>Import en cours...</span>
+              <span>{{ 'guests.importModal.loading' | translate }}</span>
             } @else {
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-              <span>Cliquez pour sélectionner un fichier .xlsx</span>
+              <span>{{ 'guests.importModal.dropzone' | translate }}</span>
             }
             <input type="file" accept=".xlsx,.xls" [disabled]="importLoading()"
               (change)="onExcelFileSelected($event)" style="display:none" />
           </label>
         </div>
       } @else {
-        <!-- Résultat de l'import -->
         <div class="import-result">
           <div class="result-stats">
             <div class="stat-card stat-success">
               <span class="stat-num">{{ importResult()!.imported }}</span>
-              <span class="stat-label">importé(s)</span>
+              <span class="stat-label">{{ 'guests.importModal.imported' | translate }}</span>
             </div>
             <div class="stat-card stat-warn">
               <span class="stat-num">{{ importResult()!.skipped }}</span>
-              <span class="stat-label">ignoré(s)</span>
+              <span class="stat-label">{{ 'guests.importModal.skipped' | translate }}</span>
             </div>
           </div>
           @if (importResult()!.errors.length > 0) {
             <div class="import-errors">
-              <p class="errors-title">Détails :</p>
+              <p class="errors-title">{{ 'guests.importModal.errors' | translate }}</p>
               <ul class="errors-list">
-                @for (err of importResult()!.errors; track err) {
-                  <li>{{ err }}</li>
-                }
+                @for (err of importResult()!.errors; track err) { <li>{{ err }}</li> }
               </ul>
             </div>
           }
           <div class="modal-actions">
-            <button class="btn-cancel" (click)="closeImport()">Fermer</button>
+            <button class="btn-cancel" (click)="closeImport()">{{ 'common.close' | translate }}</button>
             <button class="btn-gold btn-sm" (click)="importResult.set(null)">
-              Importer un autre fichier
+              {{ 'guests.importModal.reimport' | translate }}
             </button>
           </div>
         </div>

@@ -34,13 +34,8 @@
         </svg>
 
         <div class="left-bottom">
-          <h2 class="left-headline">
-            Créez des<br/>invitations<br/>mémorables
-          </h2>
-          <p class="left-sub">
-            Gérez vos événements, envoyez vos invitations<br/>
-            et suivez vos invités en temps réel.
-          </p>
+          <h2 class="left-headline">{{ 'auth.leftHeadline' | translate }}</h2>
+          <p class="left-sub">{{ 'auth.leftSub' | translate }}</p>
         </div>
       </div>
 
@@ -53,24 +48,24 @@
             <span class="logo-text">Smart<span class="gold">Invite</span></span>
           </div>
 
-          <h1 class="right-title">Bon retour</h1>
-          <p class="right-sub">Entrez vos identifiants pour accéder à votre espace</p>
+          <h1 class="right-title">{{ 'auth.login.title' | translate }}</h1>
+          <p class="right-sub">{{ 'auth.login.subtitle' | translate }}</p>
 
           <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
 
             <div class="field">
-              <label for="email">E-mail</label>
+              <label for="email">{{ 'auth.login.email' | translate }}</label>
               <input id="email" type="email" formControlName="email"
-                     placeholder="vous@exemple.com"
+                     [placeholder]="'auth.login.emailPlaceholder' | translate"
                      [class.invalid]="isInvalid('email')"
                      autocomplete="email"/>
               @if (isInvalid('email')) {
-                <span class="field-error">E-mail invalide</span>
+                <span class="field-error">{{ 'auth.login.emailError' | translate }}</span>
               }
             </div>
 
             <div class="field">
-              <label for="password">Mot de passe</label>
+              <label for="password">{{ 'auth.login.password' | translate }}</label>
               <div class="input-wrap">
                 <input id="password" [type]="showPw() ? 'text' : 'password'"
                        formControlName="password" placeholder="••••••••"
@@ -85,29 +80,29 @@
                 </button>
               </div>
               @if (isInvalid('password')) {
-                <span class="field-error">Mot de passe requis</span>
+                <span class="field-error">{{ 'auth.login.passwordError' | translate }}</span>
               }
             </div>
 
             <div class="row-between">
               <span></span>
-              <a routerLink="/forgot-password" class="forgot">Mot de passe oublié ?</a>
+              <a routerLink="/forgot-password" class="forgot">{{ 'auth.login.forgotPassword' | translate }}</a>
             </div>
 
             <button type="submit" class="btn-submit" [disabled]="loading()">
               @if (loading()) {
                 <span class="spinner"></span>
               }
-              Se connecter
+              {{ 'auth.login.submit' | translate }}
             </button>
 
-            <div class="divider"><span>ou</span></div>
+            <div class="divider"><span>{{ 'common.or' | translate }}</span></div>
 
             <div #googleBtnRef class="google-btn-wrapper"></div>
           </form>
           <p class="bottom-link">
-            Pas encore de compte ?
-            <a routerLink="/register">Créer un compte</a>
+            {{ 'auth.login.noAccount' | translate }}
+            <a routerLink="/register">{{ 'auth.login.createAccount' | translate }}</a>
           </p>
         </div>
       </div>

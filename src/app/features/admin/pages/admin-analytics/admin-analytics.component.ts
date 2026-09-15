@@ -1,13 +1,14 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { DecimalPipe, PercentPipe } from '@angular/common';
 import { AdminAnalyticsService, AnalyticsStats } from '../../../../core/services/admin-analytics.service';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 type Period = 'day' | 'week' | 'month';
 
 @Component({
   selector: 'app-admin-analytics',
   standalone: true,
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, TranslatePipe],
   templateUrl: './admin-analytics.component.html',
   styleUrl:    './admin-analytics.component.scss',
 })

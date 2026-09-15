@@ -2240,6 +2240,27 @@ section { position: relative; }
   &:hover { background: rgba(var(--gold-rgb), .2); border-color: var(--gold); }
 }
 
+.edit-btn-day-toggle--add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  width: 100%;
+  background: rgba(var(--gold-rgb), .08);
+  border: 1px dashed rgba(var(--gold-rgb), .4);
+  color: var(--gold);
+  font-family: 'Belleza', sans-serif;
+  font-size: .72rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .65rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: .5rem;
+  transition: background .2s, border-color .2s;
+  &:hover { background: rgba(var(--gold-rgb), .18); border-color: var(--gold); }
+}
+
 .edit-btn-remove {
   width: 24px;
   height: 24px;

@@ -3,49 +3,50 @@
   <button type="button" class="cere-nav-logo" (click)="scrollTo('top')">{{ hero().title }}</button>
 
   <ul class="cere-nav-links">
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('about')">LA CÉRÉMONIE</button></li>
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('program')">PROGRAMME</button></li>
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('keyguests')">PERSONNES CLÉS</button></li>
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('dresscode')">TENUE</button></li>
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('faq')">FAQ</button></li>
-    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('rsvp')">INVITATION</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('about')">{{ 'ceremonie.nav.ceremony' | translate }}</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('program')">{{ 'ceremonie.nav.program' | translate }}</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('keyguests')">{{ 'ceremonie.nav.keyguests' | translate }}</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('dresscode')">{{ 'ceremonie.nav.dresscode' | translate }}</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('faq')">{{ 'ceremonie.nav.faq' | translate }}</button></li>
+    <li><button type="button" class="cere-nav-btn" (click)="scrollTo('rsvp')">{{ 'ceremonie.nav.rsvp' | translate }}</button></li>
   </ul>
 
   <div class="cere-nav-actions">
     @if (isPreview()) {
-      <a [routerLink]="['/events', eventId()]" class="cere-btn-back" title="Fermer l'aperçu">
+      <a [routerLink]="['/events', eventId()]" class="cere-btn-back" [title]="'ceremonie.nav.closePreview' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Fermer l'aperçu</span>
+        <span>{{ 'ceremonie.nav.closePreview' | translate }}</span>
       </a>
     } @else if (isEditMode()) {
-      <a [routerLink]="['/events', eventId()]" class="cere-btn-back" title="Retour à l'événement">
+      <a [routerLink]="['/events', eventId()]" class="cere-btn-back" [title]="'ceremonie.nav.backToEvent' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span class="btn-label-desktop">Retour à l'événement</span>
-        <span class="btn-label-mobile">Retour</span>
+        <span class="btn-label-desktop">{{ 'ceremonie.nav.backToEvent' | translate }}</span>
+        <span class="btn-label-mobile">{{ 'ceremonie.nav.backToEventMobile' | translate }}</span>
       </a>
     } @else {
-      <a [routerLink]="'/events/new'" class="cere-btn-back" title="Annuler">
+      <a [routerLink]="'/events/new'" class="cere-btn-back" [title]="'ceremonie.nav.cancel' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Annuler</span>
+        <span>{{ 'ceremonie.nav.cancel' | translate }}</span>
       </a>
     }
     @if (saving()) {
       <span class="cere-saving">
         <span class="cere-saving-dot"></span>
-        <span class="btn-label-desktop">Sauvegarde...</span>
+        <span class="btn-label-desktop">{{ 'ceremonie.nav.saving' | translate }}</span>
       </span>
     }
     @if (isLoggedIn()) {
-      <button class="cere-btn-save" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? 'Enregistrer' : 'Créer l\'événement'">
+
+      <button class="cere-btn-save" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? ('ceremonie.nav.save' | translate) : ('ceremonie.nav.create' | translate)">
         @if (saving()) {
           <span class="cere-saving-dot"></span>
         } @else {
@@ -56,17 +57,17 @@
             <polyline points="7 3 7 8 15 8"/>
           </svg>
         }
-        <span class="btn-label-desktop">{{ isEditMode() ? 'Enregistrer' : 'Créer l\'événement' }}</span>
-        <span class="btn-label-mobile">{{ isEditMode() ? 'Enregistrer' : 'Créer' }}</span>
+        <span class="btn-label-desktop">{{ isEditMode() ? ('ceremonie.nav.save' | translate) : ('ceremonie.nav.create' | translate) }}</span>
+        <span class="btn-label-mobile">{{ isEditMode() ? ('ceremonie.nav.save' | translate) : ('ceremonie.nav.createMobile' | translate) }}</span>
       </button>
 
-      <button class="cere-btn-edit" (click)="openEdit('hero')" title="Éditer la page">
+      <button class="cere-btn-edit" (click)="openEdit('hero')" [title]="'ceremonie.nav.editTitle' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
-        <span>Éditer</span>
+        <span>{{ 'ceremonie.nav.edit' | translate }}</span>
       </button>
     }
   </div>
@@ -127,18 +128,18 @@
     </div>
 
     <div class="cere-hero-ctas reveal" style="--d:580ms">
-      <button type="button" class="cere-btn-primary" (click)="scrollTo('rsvp')">CONFIRMER MA PRÉSENCE</button>
-      <button type="button" class="cere-btn-outline" (click)="scrollTo('program')">VOIR LE PROGRAMME</button>
+      <button type="button" class="cere-btn-primary" (click)="scrollTo('rsvp')">{{ 'ceremonie.hero.confirmPresence' | translate }}</button>
+      <button type="button" class="cere-btn-outline" (click)="scrollTo('program')">{{ 'ceremonie.hero.viewProgram' | translate }}</button>
     </div>
 
     <div class="cere-countdown reveal reveal--scale" style="--d:680ms">
-      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().days }}</span><span class="cere-count-label">JOURS</span></div>
+      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().days }}</span><span class="cere-count-label">{{ 'ceremonie.hero.days' | translate }}</span></div>
       <span class="cere-count-sep">·</span>
-      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().hours }}</span><span class="cere-count-label">HEURES</span></div>
+      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().hours }}</span><span class="cere-count-label">{{ 'ceremonie.hero.hours' | translate }}</span></div>
       <span class="cere-count-sep">·</span>
-      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().minutes }}</span><span class="cere-count-label">MIN</span></div>
+      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().minutes }}</span><span class="cere-count-label">{{ 'ceremonie.hero.minutes' | translate }}</span></div>
       <span class="cere-count-sep">·</span>
-      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().seconds }}</span><span class="cere-count-label">SEC</span></div>
+      <div class="cere-count-chip"><span class="cere-count-val">{{ countdown().seconds }}</span><span class="cere-count-label">{{ 'ceremonie.hero.seconds' | translate }}</span></div>
     </div>
   </div>
 </section>
@@ -156,7 +157,7 @@
   <div class="cere-about-bg band-bg" [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'"></div>
   <div class="cere-about-overlay"></div>
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">LA CÉRÉMONIE</span>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.about.eyebrow' | translate }}</span>
     <h2 class="cere-section-title reveal" style="--d:80ms">{{ about().headline }}</h2>
     <p class="cere-about-desc reveal" style="--d:160ms">{{ about().description }}</p>
     <div class="cere-message-card reveal reveal--scale" style="--d:240ms">
@@ -177,7 +178,7 @@
     </button>
   }
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">DÉROULÉ</span>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.program.eyebrow' | translate }}</span>
     <h2 class="cere-section-title reveal" style="--d:80ms">{{ program().headline }}</h2>
 
     <div class="cere-moments">
@@ -211,7 +212,7 @@
   <div class="cere-band-overlay"></div>
   <div class="cere-band-content">
     <p class="cere-band-quote reveal reveal--scale" style="--d:0ms">
-      « Chaque instant partagé avec ceux qu'on aime est un cadeau précieux. »
+      {{ 'ceremonie.band.quote' | translate }}
     </p>
   </div>
 </div>
@@ -227,7 +228,7 @@
     </button>
   }
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">LES PROTAGONISTES</span>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.keyguests.eyebrow' | translate }}</span>
     <h2 class="cere-section-title reveal" style="--d:80ms">{{ keyGuests().headline }}</h2>
     <p class="cere-section-quote reveal" style="--d:140ms">{{ keyGuests().subheadline }}</p>
 
@@ -267,8 +268,8 @@
     </button>
   }
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">SOUVENIRS</span>
-    <h2 class="cere-section-title reveal" style="--d:80ms">Les Moments Précieux</h2>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.gallery.eyebrow' | translate }}</span>
+    <h2 class="cere-section-title reveal" style="--d:80ms">{{ 'ceremonie.gallery.title' | translate }}</h2>
 
     <div class="cere-gallery-mosaic reveal" style="--d:160ms">
       @for (item of gallery().items; track $index) {
@@ -303,7 +304,7 @@
     </button>
   }
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">TENUE</span>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.dresscode.eyebrow' | translate }}</span>
     <h2 class="cere-section-title reveal" style="--d:80ms">{{ dressCode().title }}</h2>
     <p class="cere-dresscode-desc reveal" style="--d:140ms">{{ dressCode().description }}</p>
 
@@ -331,8 +332,8 @@
     </button>
   }
   <div class="cere-section-inner">
-    <span class="cere-eyebrow-dark reveal" style="--d:0ms">FAQ</span>
-    <h2 class="cere-section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
+    <span class="cere-eyebrow-dark reveal" style="--d:0ms">{{ 'ceremonie.faq.eyebrow' | translate }}</span>
+    <h2 class="cere-section-title reveal" style="--d:80ms">{{ 'ceremonie.faq.title' | translate }}</h2>
     <div class="cere-faq-shell reveal" style="--d:160ms">
       @for (item of faq().items; track $index) {
         <details class="cere-faq-item">
@@ -365,15 +366,15 @@
   <div class="band-bg" [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'"></div>
   <div class="cere-rsvp-overlay"></div>
   <div class="cere-rsvp-card reveal reveal--scale" style="--d:80ms">
-    <span class="cere-rsvp-eyebrow">INVITATION</span>
+    <span class="cere-rsvp-eyebrow">{{ 'ceremonie.rsvp.eyebrow' | translate }}</span>
     <h2 class="cere-rsvp-title">{{ rsvp().title }}</h2>
     <div class="cere-sep cere-sep--light">
       <span class="cere-sep-line"></span><span class="cere-sep-leaf">✿</span><span class="cere-sep-line"></span>
     </div>
     <p class="cere-rsvp-sub">{{ rsvp().subtitle }}</p>
     <div class="cere-rsvp-ctas">
-      <button type="button" class="cere-btn-primary" (click)="scrollTo('program')">Voir le programme</button>
-      <button type="button" class="cere-btn-outline cere-btn-outline--light" (click)="scrollTo('keyguests')">Les personnes clés</button>
+      <button type="button" class="cere-btn-primary" (click)="scrollTo('program')">{{ 'ceremonie.rsvp.viewProgram' | translate }}</button>
+      <button type="button" class="cere-btn-outline cere-btn-outline--light" (click)="scrollTo('keyguests')">{{ 'ceremonie.rsvp.keyguests' | translate }}</button>
     </div>
   </div>
 </section>
@@ -395,7 +396,7 @@
   </div>
   <p class="cere-footer-tagline reveal reveal--fade" style="--d:180ms">{{ footer().tagline }}</p>
   <p class="cere-footer-credit reveal reveal--fade" style="--d:240ms">
-    SITE RÉALISÉ PAR <a href="https://will-portfolio-rosy.vercel.app/" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
+    {{ 'ceremonie.footer.madeBy' | translate }} <a href="https://will-portfolio-rosy.vercel.app/" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
   </p>
 </footer>
 
@@ -409,7 +410,7 @@
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
           </svg>
-          Éditer la cérémonie
+          {{ 'ceremonie.edit.title' | translate }}
         </h2>
         <button class="edit-modal-close" (click)="closeEdit()">✕</button>
       </div>
@@ -426,58 +427,58 @@
         <!-- HERO -->
         @if (activeSection() === 'hero') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Hero &amp; Date</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.hero.heading' | translate }}</h3>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Type de cérémonie <span class="edit-hint">ex : BAPTÊME</span></label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.type' | translate }} <span class="edit-hint">{{ 'ceremonie.edit.hero.typeHint' | translate }}</span></label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.type" (ngModelChange)="updateDraftHero('type', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Titre</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.title' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
               </div>
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre</label>
+              <label class="edit-label">{{ 'ceremonie.edit.hero.subtitle' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.subtitle" (ngModelChange)="updateDraftHero('subtitle', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Phrase d'accroche</label>
+              <label class="edit-label">{{ 'ceremonie.edit.hero.catchphrase' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.catchphrase" (ngModelChange)="updateDraftHero('catchphrase', $event)" />
             </div>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Date affichée</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.dateLabel' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.dateLabel" (ngModelChange)="updateDraftHero('dateLabel', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Date countdown</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.targetDate' | translate }}</label>
                 <input class="edit-input" type="datetime-local" [ngModel]="draft().hero.targetDate" (ngModelChange)="updateDraftHero('targetDate', $event)" />
               </div>
             </div>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Nom du lieu</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.venueName' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.venueName" (ngModelChange)="updateDraftHero('venueName', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Ville</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.venueCity' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.venueCity" (ngModelChange)="updateDraftHero('venueCity', $event)" />
               </div>
             </div>
-            <div class="edit-divider"><span>Capacité</span></div>
+            <div class="edit-divider"><span>{{ 'ceremonie.edit.hero.capacity' | translate }}</span></div>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Invités maximum</label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.maxGuests' | translate }}</label>
                 <input class="edit-input" type="number" min="1"
                        [class.edit-input--error]="!draft().hero.maxGuests || draft().hero.maxGuests < 1"
                        [ngModel]="draft().hero.maxGuests" (ngModelChange)="updateDraftMaxGuests($event)" />
                 @if (!draft().hero.maxGuests || draft().hero.maxGuests < 1) {
-                  <p class="edit-field-error">Ce champ est requis pour enregistrer.</p>
+                  <p class="edit-field-error">{{ 'ceremonie.edit.hero.maxGuestsError' | translate }}</p>
                 }
               </div>
               <div class="edit-field">
-                <label class="edit-label">Montant <span class="edit-hint">calculé auto.</span></label>
+                <label class="edit-label">{{ 'ceremonie.edit.hero.budget' | translate }} <span class="edit-hint">{{ 'ceremonie.edit.hero.budgetHint' | translate }}</span></label>
                 <div class="edit-budget-display">
                   💳 {{ draft().hero.budget || '—' }}
                   @if (draft().hero.maxGuests > 0) {
@@ -492,22 +493,22 @@
         <!-- ABOUT -->
         @if (activeSection() === 'about') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">À Propos</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.about.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'ceremonie.edit.about.title' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().about.headline" (ngModelChange)="updateDraftAbout('headline', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Description</label>
+              <label class="edit-label">{{ 'ceremonie.edit.about.description' | translate }}</label>
               <textarea class="edit-textarea" rows="5" [ngModel]="draft().about.description" (ngModelChange)="updateDraftAbout('description', $event)"></textarea>
             </div>
             <div class="edit-field-row">
               <div class="edit-field edit-field--icon">
-                <label class="edit-label">Icône</label>
+                <label class="edit-label">{{ 'ceremonie.edit.about.icon' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().about.messageIcon" (ngModelChange)="updateDraftAbout('messageIcon', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Citation / Message</label>
+                <label class="edit-label">{{ 'ceremonie.edit.about.message' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().about.message" (ngModelChange)="updateDraftAbout('message', $event)" />
               </div>
             </div>
@@ -517,14 +518,14 @@
         <!-- PROGRAMME -->
         @if (activeSection() === 'program') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Programme</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.program.heading' | translate }}</h3>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Titre de section</label>
+                <label class="edit-label">{{ 'ceremonie.edit.program.sectionTitle' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().program.headline" (ngModelChange)="updateDraftProgramHeadline($event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Note de bas de page</label>
+                <label class="edit-label">{{ 'ceremonie.edit.program.footer' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().program.footer" (ngModelChange)="updateDraftProgramFooter($event)" />
               </div>
             </div>
@@ -536,50 +537,50 @@
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône</label>
+                    <label class="edit-label">{{ 'ceremonie.edit.program.icon' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="m.icon" (ngModelChange)="updateDraftMoment($index, 'icon', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Horaire</label>
+                    <label class="edit-label">{{ 'ceremonie.edit.program.time' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="m.time" (ngModelChange)="updateDraftMoment($index, 'time', $event)" />
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Titre</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.program.title' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="m.title" (ngModelChange)="updateDraftMoment($index, 'title', $event)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Description</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.program.description' | translate }}</label>
                   <textarea class="edit-textarea" rows="2" [ngModel]="m.desc" (ngModelChange)="updateDraftMoment($index, 'desc', $event)"></textarea>
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addMoment()">+ Ajouter un moment</button>
+            <button class="edit-btn-add" (click)="addMoment()">{{ 'ceremonie.edit.program.addMoment' | translate }}</button>
           </div>
         }
 
         <!-- KEY GUESTS -->
         @if (activeSection() === 'keyGuests') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Personnes Clés</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.keyguests.heading' | translate }}</h3>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Titre de section</label>
+                <label class="edit-label">{{ 'ceremonie.edit.keyguests.sectionTitle' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().keyGuests.headline" (ngModelChange)="updateDraftKeyGuestsHeadline('headline', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Sous-titre</label>
+                <label class="edit-label">{{ 'ceremonie.edit.keyguests.subtitle' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().keyGuests.subheadline" (ngModelChange)="updateDraftKeyGuestsHeadline('subheadline', $event)" />
               </div>
             </div>
             @for (g of draft().keyGuests.guests; track $index) {
               <div class="edit-chapter-block">
                 <div class="edit-chapter-header">
-                  <span class="edit-chapter-num">{{ g.name || 'Personne ' + ($index + 1) }}</span>
+                  <span class="edit-chapter-num">{{ g.name || ('ceremonie.edit.keyguests.name' | translate) + ' ' + ($index + 1) }}</span>
                   <button class="edit-btn-remove" (click)="removeGuest($index)" [disabled]="draft().keyGuests.guests.length <= 1">✕</button>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Photo</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.keyguests.photo' | translate }}</label>
                   <div class="edit-upload-zone" style="width:100px;height:100px" (click)="guestInput.click()">
                     @if (g.portraitUrl) {
                       <img class="edit-upload-preview" [src]="g.portraitUrl" [alt]="g.name" />
@@ -589,7 +590,7 @@
                              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
-                        <span>Photo</span>
+                        <span>{{ 'ceremonie.edit.keyguests.photo' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -609,56 +610,56 @@
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Nom</label>
+                    <label class="edit-label">{{ 'ceremonie.edit.keyguests.name' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="g.name" (ngModelChange)="updateDraftGuest($index, 'name', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Rôle</label>
+                    <label class="edit-label">{{ 'ceremonie.edit.keyguests.role' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="g.role" (ngModelChange)="updateDraftGuest($index, 'role', $event)" />
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Biographie / Description</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.keyguests.bio' | translate }}</label>
                   <textarea class="edit-textarea" rows="3" [ngModel]="g.bio" (ngModelChange)="updateDraftGuest($index, 'bio', $event)"></textarea>
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addGuest()">+ Ajouter une personne</button>
+            <button class="edit-btn-add" (click)="addGuest()">{{ 'ceremonie.edit.keyguests.addGuest' | translate }}</button>
           </div>
         }
 
         <!-- DRESS CODE -->
         @if (activeSection() === 'dressCode') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Tenue</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.dressCode.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'ceremonie.edit.dressCode.title' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().dressCode.title" (ngModelChange)="updateDraftDressCode('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Description</label>
+              <label class="edit-label">{{ 'ceremonie.edit.dressCode.description' | translate }}</label>
               <textarea class="edit-textarea" rows="3" [ngModel]="draft().dressCode.description" (ngModelChange)="updateDraftDressCode('description', $event)"></textarea>
             </div>
             <div class="edit-field">
-              <label class="edit-label">Conseil</label>
+              <label class="edit-label">{{ 'ceremonie.edit.dressCode.advice' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().dressCode.advice" (ngModelChange)="updateDraftDressCode('advice', $event)" />
             </div>
-            <div class="edit-divider"><span>Couleurs</span></div>
+            <div class="edit-divider"><span>{{ 'ceremonie.edit.dressCode.colors' | translate }}</span></div>
             @for (sw of draft().dressCode.swatches; track $index) {
               <div class="edit-palette-item">
                 <input class="edit-input edit-input--color" type="color" [ngModel]="sw.color" (ngModelChange)="updateDraftSwatch($index, 'color', $event)" />
-                <input class="edit-input" type="text" placeholder="Nom" [ngModel]="sw.label" (ngModelChange)="updateDraftSwatch($index, 'label', $event)" />
+                <input class="edit-input" type="text" [placeholder]="'ceremonie.edit.dressCode.colorName' | translate" [ngModel]="sw.label" (ngModelChange)="updateDraftSwatch($index, 'label', $event)" />
                 <button class="edit-btn-remove" (click)="removeSwatch($index)" [disabled]="draft().dressCode.swatches.length <= 1">✕</button>
               </div>
             }
-            <button class="edit-btn-add" (click)="addSwatch()">+ Ajouter une couleur</button>
+            <button class="edit-btn-add" (click)="addSwatch()">{{ 'ceremonie.edit.dressCode.addColor' | translate }}</button>
           </div>
         }
 
         <!-- FAQ -->
         @if (activeSection() === 'faq') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">FAQ</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.faq.heading' | translate }}</h3>
             @for (item of draft().faq.items; track $index) {
               <div class="edit-faq-item">
                 <div class="edit-faq-item-header">
@@ -666,29 +667,29 @@
                   <button class="edit-btn-remove" (click)="removeFaqItem($index)">✕</button>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Question</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.faq.question' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="item.q" (ngModelChange)="updateDraftFaqItem($index, 'q', $event)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Réponse</label>
+                  <label class="edit-label">{{ 'ceremonie.edit.faq.answer' | translate }}</label>
                   <textarea class="edit-textarea" rows="3" [ngModel]="item.a" (ngModelChange)="updateDraftFaqItem($index, 'a', $event)"></textarea>
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addFaqItem()">+ Ajouter une question</button>
+            <button class="edit-btn-add" (click)="addFaqItem()">{{ 'ceremonie.edit.faq.addQuestion' | translate }}</button>
           </div>
         }
 
         <!-- RSVP -->
         @if (activeSection() === 'rsvp') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Invitation</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.rsvp.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'ceremonie.edit.rsvp.title' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().rsvp.title" (ngModelChange)="updateDraftRsvp('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre</label>
+              <label class="edit-label">{{ 'ceremonie.edit.rsvp.subtitle' | translate }}</label>
               <textarea class="edit-textarea" rows="4" [ngModel]="draft().rsvp.subtitle" (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
             </div>
           </div>
@@ -697,7 +698,7 @@
         <!-- GALLERY -->
         @if (activeSection() === 'gallery') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Galerie</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.gallery.heading' | translate }}</h3>
             <div class="edit-gallery-grid">
               @for (item of draft().gallery.items; track $index) {
                 <div class="edit-gallery-item">
@@ -709,7 +710,7 @@
                              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                           <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
-                        </svg><span>Ajouter</span>
+                        </svg><span>{{ 'ceremonie.edit.gallery.add' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -726,23 +727,23 @@
                     }
                   </div>
                   <input #galleryInput type="file" accept="image/*" class="edit-upload-input" (change)="onGalleryImageChange($event, $index)" />
-                  <input class="edit-input edit-gallery-caption" type="text" placeholder="Légende…"
+                  <input class="edit-input edit-gallery-caption" type="text" [placeholder]="'ceremonie.edit.gallery.large' | translate"
                          [ngModel]="item.caption" (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
                   <div class="edit-gallery-item-footer">
-                    <button class="edit-gallery-badge" [class.active]="item.large" (click)="toggleDraftGalleryLarge($index)">{{ item.large ? '★ Grande' : '☆ Grande' }}</button>
+                    <button class="edit-gallery-badge" [class.active]="item.large" (click)="toggleDraftGalleryLarge($index)">{{ item.large ? ('ceremonie.edit.gallery.largeBadgeActive' | translate) : ('ceremonie.edit.gallery.largeBadgeInactive' | translate) }}</button>
                     <button class="edit-btn-remove" (click)="removeGalleryItem($index)" [disabled]="draft().gallery.items.length <= 1">✕</button>
                   </div>
                 </div>
               }
             </div>
-            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
+            <button class="edit-btn-add" (click)="addGalleryItem()">{{ 'ceremonie.edit.gallery.addPhoto' | translate }}</button>
           </div>
         }
 
         <!-- BACKGROUNDS -->
         @if (activeSection() === 'backgrounds') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Fonds &amp; Bandeaux</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.backgrounds.heading' | translate }}</h3>
             @for (bg of BG_FIELDS; track bg.key) {
               <div class="edit-bg-card">
                 <div class="edit-bg-preview-wrap" (click)="bgInput.click()">
@@ -753,7 +754,7 @@
                              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                           <rect x="3" y="3" width="18" height="18" rx="2"/>
                           <circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-                        </svg><span>Aucune image</span>
+                        </svg><span>{{ 'ceremonie.edit.backgrounds.noImage' | translate }}</span>
                       </div>
                     }
                   </div>
@@ -762,12 +763,12 @@
                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                    </svg><span>Changer</span>
+                    </svg><span>{{ 'ceremonie.edit.backgrounds.change' | translate }}</span>
                   </div>
                   @if (uploadingImage() === 'bg_' + bg.key) {
                     <div class="edit-upload-spinner-overlay">
                       <div class="edit-spinner"></div>
-                      <span>Upload...</span>
+                      <span>{{ 'ceremonie.edit.backgrounds.uploading' | translate }}</span>
                     </div>
                   }
                 </div>
@@ -784,18 +785,18 @@
         <!-- FOOTER -->
         @if (activeSection() === 'footer') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Footer</h3>
+            <h3 class="edit-form-heading">{{ 'ceremonie.edit.footer.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Nom</label>
+              <label class="edit-label">{{ 'ceremonie.edit.footer.name' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().footer.logoText" (ngModelChange)="updateDraftFooter('logoText', $event)" />
             </div>
             <div class="edit-field">
               <label class="edit-label">
-                Sous-titre
-                <span class="edit-hint">date · lieu · ville</span>
+                {{ 'ceremonie.edit.footer.subtitle' | translate }}
+                <span class="edit-hint">{{ 'ceremonie.edit.footer.subtitleHint' | translate }}</span>
                 @if (subtitleEdited()) {
                   <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" title="Remettre la valeur automatique">
-                    ↺ Sync auto
+                    {{ 'ceremonie.edit.footer.syncAuto' | translate }}
                   </button>
                 }
               </label>
@@ -804,11 +805,11 @@
                      (ngModelChange)="updateDraftFooter('subText', $event)"
                      [placeholder]="autoSubtitle()" />
               @if (!subtitleEdited()) {
-                <p class="edit-field-hint">Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.</p>
+                <p class="edit-field-hint">{{ 'ceremonie.edit.footer.autoGenerated' | translate }}</p>
               }
             </div>
             <div class="edit-field">
-              <label class="edit-label">Tagline</label>
+              <label class="edit-label">{{ 'ceremonie.edit.footer.tagline' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().footer.tagline" (ngModelChange)="updateDraftFooter('tagline', $event)" />
             </div>
             <div class="edit-footer-preview">
@@ -822,9 +823,9 @@
       </div>
 
       <div class="edit-modal-footer">
-        <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
+        <button class="edit-btn-reset" (click)="resetToDefault()">{{ 'ceremonie.edit.reset' | translate }}</button>
         <div class="edit-modal-footer-right">
-          <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
+          <button class="edit-btn-cancel" (click)="closeEdit()">{{ 'ceremonie.edit.cancel' | translate }}</button>
           <button class="edit-btn-save" (click)="saveEdit()"
                   [disabled]="!draft().hero.maxGuests || draft().hero.maxGuests < 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -832,7 +833,7 @@
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
               <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
             </svg>
-            Enregistrer
+            {{ 'ceremonie.edit.save' | translate }}
           </button>
         </div>
       </div>

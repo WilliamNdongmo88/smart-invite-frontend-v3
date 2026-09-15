@@ -5,20 +5,20 @@
   <a class="nav-logo" routerLink="/">Smart<span class="gold">Invite</span></a>
 
   <ul class="nav-links">
-    <li><a href="#features">FONCTIONNALITÉS</a></li>
-    <li><a href="#how">COMMENT ÇA MARCHE</a></li>
-    <li><a href="#programme">PROGRAMME</a></li>
-    <li><a href="#temoignages">TÉMOIGNAGES</a></li>
-    <li><a href="#contact">CONTACT</a></li>
+    <li><a href="#features">{{ 'home.nav.features' | translate }}</a></li>
+    <li><a href="#how">{{ 'home.nav.how' | translate }}</a></li>
+    <li><a href="#programme">{{ 'home.nav.programme' | translate }}</a></li>
+    <li><a href="#temoignages">{{ 'home.nav.testimonials' | translate }}</a></li>
+    <li><a href="#contact">{{ 'home.nav.contact' | translate }}</a></li>
   </ul>
 
   <div class="nav-actions">
-    <a routerLink="/login" class="btn-nav-outline">Se connecter</a>
-    <a routerLink="/register" class="btn-nav-solid">Commencer</a>
+    <a routerLink="/login" class="btn-nav-outline">{{ 'home.nav.login' | translate }}</a>
+    <a routerLink="/register" class="btn-nav-solid">{{ 'home.nav.register' | translate }}</a>
   </div>
 
   <!-- Bouton hamburger (mobile uniquement) -->
-  <button class="hamburger" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen()" aria-label="Menu">
+  <button class="hamburger" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen()" [attr.aria-label]="'home.nav.features' | translate">
     <span></span>
     <span></span>
     <span></span>
@@ -31,15 +31,15 @@
 <!-- Menu mobile -->
 <div class="mobile-menu" [class.open]="mobileMenuOpen()">
   <ul class="mobile-nav-links">
-    <li><a href="#features" (click)="closeMobileMenu()">FONCTIONNALITÉS</a></li>
-    <li><a href="#how" (click)="closeMobileMenu()">COMMENT ÇA MARCHE</a></li>
-    <li><a href="#programme" (click)="closeMobileMenu()">PROGRAMME</a></li>
-    <li><a href="#temoignages" (click)="closeMobileMenu()">TÉMOIGNAGES</a></li>
-    <li><a href="#contact" (click)="closeMobileMenu()">CONTACT</a></li>
+    <li><a href="#features" (click)="closeMobileMenu()">{{ 'home.nav.features' | translate }}</a></li>
+    <li><a href="#how" (click)="closeMobileMenu()">{{ 'home.nav.how' | translate }}</a></li>
+    <li><a href="#programme" (click)="closeMobileMenu()">{{ 'home.nav.programme' | translate }}</a></li>
+    <li><a href="#temoignages" (click)="closeMobileMenu()">{{ 'home.nav.testimonials' | translate }}</a></li>
+    <li><a href="#contact" (click)="closeMobileMenu()">{{ 'home.nav.contact' | translate }}</a></li>
   </ul>
   <div class="mobile-nav-actions">
-    <a routerLink="/login" class="btn-nav-outline" (click)="closeMobileMenu()">Se connecter</a>
-    <a routerLink="/register" class="btn-nav-solid" (click)="closeMobileMenu()">Commencer</a>
+    <a routerLink="/login" class="btn-nav-outline" (click)="closeMobileMenu()">{{ 'home.nav.login' | translate }}</a>
+    <a routerLink="/register" class="btn-nav-solid" (click)="closeMobileMenu()">{{ 'home.nav.register' | translate }}</a>
   </div>
 </div>
 
@@ -76,7 +76,7 @@
 
   <!-- Contenu centré -->
   <div class="hero-content">
-    <span class="eyebrow">GESTION D'INVITATIONS</span>
+    <span class="eyebrow">{{ 'home.hero.eyebrow' | translate }}</span>
 
     <h1 class="hero-title">
       Smart<span class="amp">&</span>Invite
@@ -84,63 +84,63 @@
 
     <div class="hero-sep"><span class="heart">✦</span></div>
 
-    <p class="hero-sub">La plateforme élégante pour gérer vos événements et vos invités.</p>
+    <p class="hero-sub">{{ 'home.hero.sub' | translate }}</p>
 
     <div class="hero-date-block">
       <div class="date-bar"></div>
       <div>
-        <div class="date-main">Mariages · Galas · Conférences</div>
-        <div class="date-place">INVITATIONS · CHECK-IN · STATISTIQUES</div>
+        <div class="date-main">{{ 'home.hero.eventTypes' | translate }}</div>
+        <div class="date-place">{{ 'home.hero.tagline' | translate }}</div>
       </div>
     </div>
 
     <div class="hero-ctas">
-      <a routerLink="/register" class="btn-primary">CRÉER MON ÉVÉNEMENT</a>
-      <a href="#how" class="btn-outline">COMMENT ÇA MARCHE</a>
+      <a routerLink="/register" class="btn-primary">{{ 'home.hero.cta' | translate }}</a>
+      <a href="#how" class="btn-outline">{{ 'home.hero.howBtn' | translate }}</a>
     </div>
   </div>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════════
-     FEATURES (anciennement "Le Couple")
+     FEATURES
 ══════════════════════════════════════════════════════════════ -->
 <section id="features" class="features-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">NOS FONCTIONNALITÉS</span>
-    <h2 class="section-title fade-up">Tout ce dont vous avez besoin</h2>
-    <p class="section-quote fade-up">« Un outil puissant, une expérience élégante. »</p>
+    <span class="eyebrow-dark fade-up">{{ 'home.features.eyebrow' | translate }}</span>
+    <h2 class="section-title fade-up">{{ 'home.features.title' | translate }}</h2>
+    <p class="section-quote fade-up">{{ 'home.features.quote' | translate }}</p>
     <div class="sep-heart fade-up"><span>✦</span></div>
 
     <div class="features-grid">
       <div class="feature-card fade-up">
         <div class="feature-icon">📋</div>
-        <h3>Gestion des événements</h3>
-        <p>Créez et gérez plusieurs événements simultanément. Configurez chaque détail : date, lieu, programme, photo de couverture.</p>
+        <h3>{{ 'home.features.events.title' | translate }}</h3>
+        <p>{{ 'home.features.events.desc' | translate }}</p>
       </div>
       <div class="feature-card fade-up">
         <div class="feature-icon">👥</div>
-        <h3>Import des invités</h3>
-        <p>Importez vos listes via Excel ou ajoutez-les manuellement. Organisez facilement vos tables.</p>
+        <h3>{{ 'home.features.guests.title' | translate }}</h3>
+        <p>{{ 'home.features.guests.desc' | translate }}</p>
       </div>
       <div class="feature-card fade-up">
         <div class="feature-icon">✉️</div>
-        <h3>Invitations personnalisées</h3>
-        <p>Générez des invitations élégantes avec QR code unique par invité. Envoi par email et/ou WhatsApp en un clic.</p>
+        <h3>{{ 'home.features.invitations.title' | translate }}</h3>
+        <p>{{ 'home.features.invitations.desc' | translate }}</p>
       </div>
       <div class="feature-card fade-up">
         <div class="feature-icon">📊</div>
-        <h3>Suivi en temps réel</h3>
-        <p>Tableau de bord live : confirmations, refus, en attente. Taux de réponse, statistiques et export des données.</p>
+        <h3>{{ 'home.features.stats.title' | translate }}</h3>
+        <p>{{ 'home.features.stats.desc' | translate }}</p>
       </div>
       <div class="feature-card fade-up">
         <div class="feature-icon">📱</div>
-        <h3>Check-in intelligent</h3>
-        <p>Application de scan QR code pour vos agents à l'entrée. Détection des doublons, validation instantanée.</p>
+        <h3>{{ 'home.features.checkin.title' | translate }}</h3>
+        <p>{{ 'home.features.checkin.desc' | translate }}</p>
       </div>
       <div class="feature-card fade-up">
         <div class="feature-icon">🔗</div>
-        <h3>Liens d'inscription</h3>
-        <p>Créez des liens publics d'inscription pour que vos invités s'enregistrent eux-mêmes sur votre page d'événement.</p>
+        <h3>{{ 'home.features.links.title' | translate }}</h3>
+        <p>{{ 'home.features.links.desc' | translate }}</p>
       </div>
     </div>
   </div>
@@ -152,10 +152,10 @@
 <div class="parallax-band band-1">
   <div class="band-overlay"></div>
   <div class="band-content fade-up">
-    <span class="eyebrow">LA PLATEFORME</span>
-    <h2 class="band-title">Conçu pour l'élégance</h2>
-    <p class="band-sub">MARIAGES · GALAS · CONFÉRENCES · CÉRÉMONIES</p>
-    <p class="band-desc">Chaque fonctionnalité a été pensée pour offrir une expérience irréprochable à l'organisateur comme à l'invité.</p>
+    <span class="eyebrow">{{ 'home.band1.eyebrow' | translate }}</span>
+    <h2 class="band-title">{{ 'home.band1.title' | translate }}</h2>
+    <p class="band-sub">{{ 'home.band1.sub' | translate }}</p>
+    <p class="band-desc">{{ 'home.band1.desc' | translate }}</p>
   </div>
 </div>
 
@@ -164,9 +164,9 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="how" class="story-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">NOTRE HISTOIRE</span>
-    <h2 class="section-title fade-up">Une solution construite avec soin</h2>
-    <p class="section-quote fade-up">« Une idée. Une conviction. Et une plateforme qui change tout. »</p>
+    <span class="eyebrow-dark fade-up">{{ 'home.story.eyebrow' | translate }}</span>
+    <h2 class="section-title fade-up">{{ 'home.story.title' | translate }}</h2>
+    <p class="section-quote fade-up">{{ 'home.story.quote' | translate }}</p>
     <div class="sep-heart fade-up"><span>✦</span></div>
 
     <!-- Onglets chapitres -->
@@ -192,14 +192,14 @@
         <h3 class="story-chapter-title">{{ chapters[activeChapter()].title }}</h3>
         <p class="story-chapter-content">{{ chapters[activeChapter()].content }}</p>
         <div class="story-nav">
-          <button class="btn-story-nav" (click)="prevChapter()">← PAGE PRÉCÉDENTE</button>
-          <span class="story-page">Page {{ activeChapter() + 1 }} / {{ chapters.length }}</span>
-          <button class="btn-story-nav" (click)="nextChapter()">PAGE SUIVANTE →</button>
+          <button class="btn-story-nav" (click)="prevChapter()">{{ 'home.story.prevPage' | translate }}</button>
+          <span class="story-page">{{ activeChapter() + 1 }} / {{ chapters.length }}</span>
+          <button class="btn-story-nav" (click)="nextChapter()">{{ 'home.story.nextPage' | translate }}</button>
         </div>
       </div>
     </div>
 
-    <p class="story-footer fade-up">Merci de faire confiance à Smart Invite pour vos événements les plus précieux.</p>
+    <p class="story-footer fade-up">{{ 'home.story.footer' | translate }}</p>
   </div>
 </section>
 
@@ -209,62 +209,27 @@
 <div class="parallax-band band-2">
   <div class="band-overlay"></div>
   <div class="band-content">
-    <p class="band-quote">« Chaque événement mérite d'être vécu pleinement — pas géré dans le stress. »</p>
+    <p class="band-quote">{{ 'home.band2.quote' | translate }}</p>
   </div>
 </div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     GALERIE / APERÇUS
-══════════════════════════════════════════════════════════════ -->
-<!-- <section id="apercu" class="gallery-section">
-  <div class="section-inner">
-    <span class="eyebrow-dark fade-up">APERÇUS</span>
-    <h2 class="section-title fade-up">Smart Invite en action</h2>
-    <p class="section-quote fade-up">« Une interface pensée pour l'élégance et l'efficacité. »</p>
-    <div class="sep-heart fade-up"><span>✦</span></div>
-
-    <div class="gallery-mosaic fade-up">
-      <div class="gallery-item gallery-lg">
-        <img src="/img/pic_wedding.png" alt="Dashboard Smart Invite" />
-        <div class="gallery-caption">Tableau de bord</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/img/photoCouple.avif" alt="Page d'invitation" />
-        <div class="gallery-caption">Page d'invitation</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/img/pic_wedding.png" alt="Check-in QR" />
-        <div class="gallery-caption">Check-in QR</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/img/photoCouple.avif" alt="Gestion invités" />
-        <div class="gallery-caption">Gestion invités</div>
-      </div>
-      <div class="gallery-item">
-        <img src="/img/pic_wedding.png" alt="Statistiques" />
-        <div class="gallery-caption">Statistiques live</div>
-      </div>
-    </div>
-  </div>
-</section> -->
 
 <!-- ══════════════════════════════════════════════════════════════
      PROGRAMME / TIMELINE
 ══════════════════════════════════════════════════════════════ -->
 <section id="programme" class="programme-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">PROGRAMME</span>
-    <h2 class="section-title fade-up">Le cycle de vie d'un événement</h2>
-    <p class="section-quote fade-up">« De la création à la clôture, Smart Invite vous accompagne. »</p>
+    <span class="eyebrow-dark fade-up">{{ 'home.programme.eyebrow' | translate }}</span>
+    <h2 class="section-title fade-up">{{ 'home.programme.title' | translate }}</h2>
+    <p class="section-quote fade-up">{{ 'home.programme.quote' | translate }}</p>
     <div class="sep-heart fade-up"><span>✦</span></div>
 
     <!-- Onglets -->
     <div class="prog-tabs fade-up">
       <button class="prog-tab" [class.active]="activeTab() === 'before'" (click)="activeTab.set('before')">
-        ☾ AVANT L'ÉVÉNEMENT
+        {{ 'home.programme.before' | translate }}
       </button>
       <button class="prog-tab" [class.active]="activeTab() === 'day'" (click)="activeTab.set('day')">
-        ☼ LE JOUR J
+        {{ 'home.programme.day' | translate }}
       </button>
     </div>
 
@@ -301,7 +266,7 @@
       }
     </div>
 
-    <p class="prog-footer fade-up">Chaque étape a été pensée pour vous faire gagner du temps et de la sérénité.</p>
+    <p class="prog-footer fade-up">{{ 'home.programme.footer' | translate }}</p>
   </div>
 </section>
 
@@ -311,88 +276,19 @@
 <div class="parallax-band band-3">
   <div class="band-overlay"></div>
   <div class="band-content fade-up">
-    <span class="eyebrow">ET CE N'EST PAS TOUT</span>
-    <h2 class="band-title">Votre événement mérite le meilleur</h2>
-    <a routerLink="/register" class="btn-primary">Créer mon compte gratuitement</a>
+    <span class="eyebrow">{{ 'home.band3.eyebrow' | translate }}</span>
+    <h2 class="band-title">{{ 'home.band3.title' | translate }}</h2>
+    <a routerLink="/register" class="btn-primary">{{ 'home.band3.cta' | translate }}</a>
   </div>
 </div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     TÉMOIGNAGES
-══════════════════════════════════════════════════════════════ -->
-<!-- <section id="temoignages" class="temoignages-section">
-  <div class="section-inner">
-    <span class="eyebrow-dark fade-up">TÉMOIGNAGES</span>
-    <h2 class="section-title fade-up">Ils nous font confiance</h2>
-    <div class="sep-heart fade-up"><span>✦</span></div>
-
-    <div class="temoignages-grid">
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Smart Invite a transformé l'organisation de notre mariage. Fini le stress des confirmations ! Tout était centralisé et élégant. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">S</div>
-          <div>
-            <div class="temo-name">Sarah M.</div>
-            <div class="temo-role">Mariée · Yaoundé</div>
-          </div>
-        </div>
-      </div>
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Le check-in QR code le jour J était parfait. Nos agents ont validé 200 invités en moins de 30 minutes. Impressionnant. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">K</div>
-          <div>
-            <div class="temo-name">Kevin T.</div>
-            <div class="temo-role">Organisateur · Douala</div>
-          </div>
-        </div>
-      </div>
-      <div class="temoignage-card fade-up">
-        <p class="temo-text">« Les invitations personnalisées avec QR code ont bluffé nos invités. La page d'inscription était magnifique et très simple à utiliser. »</p>
-        <div class="temo-author">
-          <div class="temo-avatar">A</div>
-          <div>
-            <div class="temo-name">Amina B.</div>
-            <div class="temo-role">Event Planner · Abidjan</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
-
-<!-- ══════════════════════════════════════════════════════════════
-     PALETTE / DESIGN SYSTEM
-══════════════════════════════════════════════════════════════ -->
-<!-- <section class="palette-section">
-  <div class="section-inner">
-    <span class="eyebrow-dark fade-up">✦ NOTRE DESIGN</span>
-    <h2 class="section-title fade-up">Palette Smart Invite</h2>
-    <p class="palette-desc fade-up">Un design system élégant, cohérent et adapté à tous vos événements.</p>
-
-    <div class="palette-tabs fade-up">
-      <button class="pal-tab" [class.active]="activePalette() === 'dark'" (click)="activePalette.set('dark')">Mode Sombre</button>
-      <button class="pal-tab" [class.active]="activePalette() === 'light'" (click)="activePalette.set('light')">Mode Clair</button>
-    </div>
-
-    <div class="palette-swatches fade-up">
-      @for (swatch of palettes[activePalette()]; track $index) {
-        <div class="swatch">
-          <div class="swatch-color" [style.background]="swatch.color"></div>
-          <span class="swatch-label">{{ swatch.label }}</span>
-        </div>
-      }
-    </div>
-  </div>
-</section> -->
 
 <!-- ══════════════════════════════════════════════════════════════
      FAQ
 ══════════════════════════════════════════════════════════════ -->
 <section class="faq-section">
   <div class="section-inner">
-    <span class="eyebrow-dark fade-up">FAQ</span>
-    <h2 class="section-title fade-up">Questions Fréquentes</h2>
+    <span class="eyebrow-dark fade-up">{{ 'home.faq.eyebrow' | translate }}</span>
+    <h2 class="section-title fade-up">{{ 'home.faq.title' | translate }}</h2>
     <div class="sep-heart fade-up"><span>✦</span></div>
 
     <div class="faq-shell fade-up">
@@ -412,26 +308,26 @@
 <section id="contact" class="rsvp-section">
   <div class="band-overlay"></div>
   <div class="rsvp-card fade-up">
-    <span class="eyebrow">REJOIGNEZ-NOUS</span>
-    <h2 class="rsvp-title">Prêt à créer votre premier événement ?</h2>
+    <span class="eyebrow">{{ 'home.rsvp.eyebrow' | translate }}</span>
+    <h2 class="rsvp-title">{{ 'home.rsvp.title' | translate }}</h2>
     <div class="hero-sep"><span>✦</span></div>
-    <p class="rsvp-sub">Créez votre compte gratuitement et découvrez comment Smart Invite transforme l'organisation de vos événements.</p>
+    <p class="rsvp-sub">{{ 'home.rsvp.sub' | translate }}</p>
     <div class="rsvp-ctas">
-      <a routerLink="/register" class="btn-primary">Créer mon compte</a>
-      <a routerLink="/login" class="btn-outline">Se connecter</a>
+      <a routerLink="/register" class="btn-primary">{{ 'home.rsvp.cta' | translate }}</a>
+      <a routerLink="/login" class="btn-outline">{{ 'home.rsvp.login' | translate }}</a>
     </div>
   </div>
 
   <!-- Formulaire contact -->
   <div class="contact-form-wrap fade-up">
-    <h3 class="contact-title">Une question ?</h3>
-    <p class="contact-sub">Choisissez comment vous souhaitez être contacté(e) en retour</p>
+    <h3 class="contact-title">{{ 'home.contact.title' | translate }}</h3>
+    <p class="contact-sub">{{ 'home.contact.sub' | translate }}</p>
 
     @if (!contactSent()) {
       <div class="contact-form">
 
         <!-- Nom -->
-        <input class="contact-input" type="text" placeholder="Votre nom"
+        <input class="contact-input" type="text" [placeholder]="'home.contact.namePlaceholder' | translate"
                [value]="contactName()" (input)="contactName.set($any($event.target).value)" />
 
         <!-- Choix du canal de réponse -->
@@ -439,12 +335,12 @@
           <button class="contact-channel-btn"
                   [class.active]="contactChannel() === 'WHATSAPP'"
                   (click)="contactChannel.set('WHATSAPP')">
-            <span>📱</span> WhatsApp
+            <span>📱</span> {{ 'home.contact.whatsapp' | translate }}
           </button>
           <button class="contact-channel-btn"
                   [class.active]="contactChannel() === 'EMAIL'"
                   (click)="contactChannel.set('EMAIL')">
-            <span>✉️</span> Email
+            <span>✉️</span> {{ 'home.contact.email' | translate }}
           </button>
         </div>
 
@@ -455,21 +351,21 @@
               [ngModel]="contactDialCode()"
               (ngModelChange)="contactDialCode.set($event)"
               name="contactDialCode"
-              aria-label="Indicatif pays">
+              [attr.aria-label]="'auth.register.phone' | translate">
             </app-dial-code-select>
             <input class="contact-input contact-input--phone" type="tel"
-                   placeholder="XXXXXXXXX"
+                   [placeholder]="'home.contact.phonePlaceholder' | translate"
                    [value]="contactPhone()"
                    (input)="contactPhone.set($any($event.target).value)" />
           </div>
         } @else {
-          <input class="contact-input" type="email" placeholder="Votre adresse email"
+          <input class="contact-input" type="email" [placeholder]="'home.contact.emailPlaceholder' | translate"
                  [value]="contactEmail()"
                  (input)="contactEmail.set($any($event.target).value)" />
         }
 
         <!-- Message -->
-        <textarea class="contact-input contact-textarea" placeholder="Écrivez votre question ici…" rows="4"
+        <textarea class="contact-input contact-textarea" [placeholder]="'home.contact.msgPlaceholder' | translate" rows="4"
                   [value]="contactMsg()" (input)="contactMsg.set($any($event.target).value)"></textarea>
 
         <!-- Bouton d'envoi -->
@@ -477,20 +373,20 @@
                 (click)="sendContact()"
                 [disabled]="contactSending() || !contactName() || !contactReplyContact() || !contactMsg()">
           @if (contactSending()) { <span class="spinner"></span> }
-          @if (contactChannel() === 'WHATSAPP') { Envoyer &amp; répondre via WhatsApp }
-          @else { Envoyer &amp; répondre par Email }
+          @if (contactChannel() === 'WHATSAPP') { {{ 'home.contact.sendWhatsapp' | translate }} }
+          @else { {{ 'home.contact.sendEmail' | translate }} }
         </button>
 
       </div>
     } @else {
       <div class="contact-success">
-        <p>Merci {{ contactName() }} ! 🎉</p>
+        <p>{{ 'home.contact.successMsg' | translate }} {{ contactName() }} ! 🎉</p>
         @if (contactChannel() === 'WHATSAPP') {
-          <p>Votre message a bien été reçu. Nous vous répondrons sur WhatsApp au <strong>{{ contactDialCode() }}{{ contactPhone() }}</strong>.</p>
+          <p>{{ 'home.contact.successWhatsapp' | translate }} <strong>{{ contactDialCode() }}{{ contactPhone() }}</strong>.</p>
         } @else {
-          <p>Votre message a bien été reçu. Nous vous répondrons par email à <strong>{{ contactEmail() }}</strong>.</p>
+          <p>{{ 'home.contact.successEmail' | translate }} <strong>{{ contactEmail() }}</strong>.</p>
         }
-        <button class="btn-outline" (click)="resetContact()">Nouvelle question</button>
+        <button class="btn-outline" (click)="resetContact()">{{ 'home.contact.newQuestion' | translate }}</button>
       </div>
     }
   </div>
@@ -501,23 +397,8 @@
 ══════════════════════════════════════════════════════════════ -->
 <footer class="site-footer">
   <div class="footer-logo">Smart<span class="gold">Invite</span></div>
-  <p class="footer-sub">La plateforme élégante de gestion d'invitations</p>
+  <p class="footer-sub">{{ 'home.footer.sub' | translate }}</p>
   <div class="footer-sep">✦</div>
-  <p class="footer-love">AVEC TOUT NOTRE SOIN ✦</p>
-  <p class="footer-credit">© 2025 Smart Invite — Tous droits réservés</p>
+  <p class="footer-love">{{ 'home.footer.love' | translate }}</p>
+  <p class="footer-credit">{{ 'home.footer.rights' | translate }}</p>
 </footer>
-
-<!-- ══════════════════════════════════════════════════════════════
-     TOAST POPUP
-══════════════════════════════════════════════════════════════ -->
-<!-- @if (showToast()) {
-  <div class="toast-banner">
-    <button class="toast-close" (click)="showToast.set(false)">✕</button>
-    <div class="toast-badge">🎉 OFFRE DE LANCEMENT</div>
-    <p class="toast-text">Créez votre compte maintenant et bénéficiez de 3 mois d'accès premium offerts.</p>
-    <div class="toast-actions">
-      <a routerLink="/register" class="btn-primary btn-sm">En profiter</a>
-      <button class="btn-ghost" (click)="showToast.set(false)">Plus tard</button>
-    </div>
-  </div>
-} -->

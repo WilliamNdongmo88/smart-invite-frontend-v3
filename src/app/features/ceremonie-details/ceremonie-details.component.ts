@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { ToastService } from '../../core/services/toast.service';
+import { LanguageService } from '../../core/services/language.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import {
   CeremonieDetailsContent,
   CeremonieDetailsEditSection,
@@ -136,7 +138,7 @@ const INITIAL_CONTENT: CeremonieDetailsContent = {
 @Component({
   selector: 'app-ceremonie-details',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslatePipe],
   templateUrl: 'ceremonie-details.component.html',
   styleUrl:    'ceremonie-details.component.scss',
 })
@@ -148,6 +150,7 @@ export class CeremonieDetailsComponent implements OnInit, OnDestroy, AfterViewIn
   private readonly router      = inject(Router);
   private readonly eventSvc    = inject(EventService);
   private readonly toast       = inject(ToastService);
+  readonly lang                = inject(LanguageService);
 
   readonly eventId    = signal<number | null>(null);
   readonly isEditMode = computed(() => this.eventId() !== null);

@@ -3,11 +3,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CheckinService } from '../../../../core/services/checkin.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AgentResponse } from '../../../../core/models/checkin.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
 @Component({
   selector: 'app-agents',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, TranslatePipe],
   templateUrl: 'agents.component.html',
   styleUrl: 'agents.component.scss',
 })
@@ -15,6 +17,7 @@ export class AgentsComponent implements OnInit {
   private readonly svc   = inject(CheckinService);
   private readonly fb    = inject(FormBuilder);
   private readonly toast = inject(ToastService);
+  private readonly lang  = inject(LanguageService);
 
   agents   = signal<AgentResponse[]>([]);
   loading  = signal(true);

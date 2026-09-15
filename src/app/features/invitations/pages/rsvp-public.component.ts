@@ -1,12 +1,14 @@
-import { Component, inject, OnInit, signal, computed, ElementRef, effect, PLATFORM_ID } from '@angular/core';
+﻿import { Component, inject, OnInit, signal, computed, ElementRef, effect, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { InvitationService } from '../../../core/services/invitation.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { EventService } from '../../../core/services/event.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { LanguageService } from '../../../core/services/language.service';
 import { PublicInvitation } from '../../../core/models/invitation.model';
 import { EVENT_TYPE_LABELS } from '../../../core/models/enums.model';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
 import {
   WeddingDetailsTheme,
   DEFAULT_WEDDING_THEME,
@@ -17,7 +19,7 @@ type PageState = 'loading' | 'ready' | 'confirmed' | 'declined' | 'error';
 @Component({
   selector: 'app-rsvp-public',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './rsvp-public.component.html',
   styleUrls: ['./rsvp-public.component.scss'],
 })
@@ -29,6 +31,7 @@ export class RsvpPublicComponent implements OnInit {
   private readonly authSvc    = inject(AuthService);
   private readonly eventSvc   = inject(EventService);
   private readonly toast      = inject(ToastService);
+  readonly lang               = inject(LanguageService);
   private readonly el         = inject(ElementRef);
 
   state          = signal<PageState>('loading');
@@ -36,7 +39,14 @@ export class RsvpPublicComponent implements OnInit {
   submitting     = signal<'CONFIRMED' | 'DECLINED' | null>(null);
   uploading      = signal(false);
   customPhotoUrl = signal<string | null>(null);
-  errorMsg       = signal('Ce lien est invalide ou a expiré.');
+
+  private errorMsgKey = signal<string>('invitations.public.errorMsg');
+  errorMsg = computed(() => {
+    this.lang.translationsVersion();
+    const key = this.errorMsgKey();
+    if (!key.startsWith('invitations.')) return key;
+    return this.lang.t(key);
+  });
 
   isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
@@ -113,57 +123,62 @@ export class RsvpPublicComponent implements OnInit {
   }
 
   eyebrowText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'CÉLÉBRATION DE MARIAGE';
-    if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
-    if (t === 'GALA') return 'SOIRÉE DE GALA & PRESTIGE';
-    if (t === 'CEREMONIE') return 'CÉRÉMONIE OFFICIELLE';
-    return this.eventTitle();
+    const key = `invitations.public.eyebrow.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.eventTitle();
   });
 
   mainTitleText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Invitation';
-    if (t === 'CONFERENCE') return 'Accréditation';
-    if (t === 'GALA') return 'Invitation VIP';
-    if (t === 'CEREMONIE') return 'Célébration';
-    return 'Invitation';
+    const key = `invitations.public.mainTitle.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('invitations.public.fallback.eventTitle');
   });
 
   introText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
-    if (t === 'CONFERENCE') return 'Vous êtes convié(e) à participer à cette session de haut niveau';
-    if (t === 'GALA') return 'Le comité d’honneur est honoré de vous compter parmi ses invités de marque';
-    if (t === 'CEREMONIE') return 'Vous êtes chaleureusement convié(e) à célébrer ce moment marquant';
-    return 'Vous êtes cordialement invité(e) à célébrer ce moment';
+    const key = `invitations.public.intro.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : '';
   });
 
   salutationLead = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE') return "Nous serions infiniment honorés de vous compter parmi nos invités pour ce jour inoubliable.";
-    if (t === 'CONFERENCE') return 'Votre accréditation nominative a été préparée avec soin pour cette conférence.';
-    if (t === 'GALA') return 'Une table d’honneur vous est réservée pour cette prestigieuse réception.';
-    if (t === 'CEREMONIE') return 'Votre présence rendra cette cérémonie encore plus mémorable.';
-    return "Nous avons le plaisir et l'honneur de vous compter parmi nos invités d'exception.";
+    const key = `invitations.public.salutation.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('invitations.public.salutation.default');
   });
 
   ornamentGlyph = computed(() => {
     const t = this.eventType();
-    if (t === 'MARIAGE') return '✦ 💍 ✦';
+    if (t === 'MARIAGE')    return '✦ 💍 ✦';
     if (t === 'CONFERENCE') return '⟨ // ⟩';
-    if (t === 'GALA') return '✦ ❖ ✦';
-    if (t === 'CEREMONIE') return '⚜';
+    if (t === 'GALA')       return '✦ ❖ ✦';
+    if (t === 'CEREMONIE')  return '⚜';
     return '✦';
   });
 
   confirmBtnText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE') return 'Je confirme ma présence au Mariage';
-    if (t === 'CONFERENCE') return 'Je valide mon accréditation';
-    if (t === 'GALA') return 'Je confirme ma venue au Gala';
-    if (t === 'CEREMONIE') return 'Je confirme ma participation';
-    return 'Je confirme ma présence';
+    const key = `invitations.public.confirmBtn.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('invitations.public.confirmBtn.default');
+  });
+
+  headerBadgeText = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.t(`invitations.public.headerBadge.${this.eventType()}`);
+  });
+
+  frameTagText = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.t(`invitations.public.frameTag.${this.eventType()}`);
   });
 
   defaultPhotoForType = computed(() => {
@@ -208,7 +223,7 @@ export class RsvpPublicComponent implements OnInit {
       },
       error: (err) => {
         const msg = err?.error?.message;
-        if (msg) this.errorMsg.set(msg);
+        this.errorMsgKey.set(msg || 'invitations.public.errorMsg');
         this.state.set('error');
       },
     });
@@ -217,16 +232,16 @@ export class RsvpPublicComponent implements OnInit {
   coupleNames(): string {
     const i = this.inv();
     if (i?.concernedNames) return i.concernedNames;
-    return i?.eventTitle || 'Votre événement';
+    return i?.eventTitle || this.lang.t('invitations.public.fallback.coupleNames');
   }
 
   eventTitle(): string {
-    return this.inv()?.eventTitle || 'Invitation';
+    return this.inv()?.eventTitle || this.lang.t('invitations.public.fallback.eventTitle');
   }
 
   eventDate(): string {
     const dt = this.inv()?.eventDate || this.inv()?.banquetDateTime;
-    if (!dt) return "Date de l'événement";
+    if (!dt) return this.lang.t('invitations.public.fallback.eventDate');
     return this.formatDate(dt);
   }
 
@@ -284,7 +299,7 @@ export class RsvpPublicComponent implements OnInit {
       },
       error: (err) => {
         const msg = err?.error?.message;
-        if (msg) this.errorMsg.set(msg);
+        this.errorMsgKey.set(msg || 'invitations.public.errorMsg');
         this.state.set('error');
         this.submitting.set(null);
       },
@@ -294,13 +309,13 @@ export class RsvpPublicComponent implements OnInit {
   private formatDate(dt: string): string {
     const d = new Date(dt);
     if (isNaN(d.getTime())) return dt;
-    const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-    const months = [
-      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
-      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
-    ];
+    const locale = this.lang.activeLang() === 'en' ? 'en-GB' : 'fr-FR';
+    const datePart = new Intl.DateTimeFormat(locale, {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    }).format(d);
     const h = d.getHours().toString().padStart(2, '0');
     const m = d.getMinutes().toString().padStart(2, '0');
-    return `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()} à ${h}:${m}`;
+    const atWord = this.lang.activeLang() === 'en' ? 'at' : 'à';
+    return `${datePart} ${atWord} ${h}:${m}`;
   }
 }

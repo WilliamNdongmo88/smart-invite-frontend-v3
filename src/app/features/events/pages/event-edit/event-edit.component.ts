@@ -4,13 +4,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { EventType } from '../../../../core/models/enums.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
-interface TypeOption { key: EventType; label: string; icon: string; }
+interface TypeOption { key: EventType; icon: string; }
 
 @Component({
   selector: 'app-event-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: 'event-edit.component.html',
   styleUrl: 'event-edit.component.scss',
 })
@@ -25,10 +26,10 @@ export class EventEditComponent implements OnInit {
   loadingData = signal(true);
 
   readonly typeOptions: TypeOption[] = [
-    { key: 'MARIAGE',    label: 'Mariage',    icon: '💍' },
-    { key: 'GALA',       label: 'Gala',       icon: '🎭' },
-    { key: 'CONFERENCE', label: 'Conférence', icon: '🎤' },
-    { key: 'CEREMONIE',  label: 'Autres Cérémonies',  icon: '🎗️' },
+    { key: 'MARIAGE',    icon: '💍' },
+    { key: 'GALA',       icon: '🎭' },
+    { key: 'CONFERENCE', icon: '🎤' },
+    { key: 'CEREMONIE',  icon: '🎗️' },
   ];
 
   form = this.fb.group({ type: ['' as EventType, Validators.required] });

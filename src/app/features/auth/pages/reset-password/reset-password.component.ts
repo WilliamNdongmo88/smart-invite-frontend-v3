@@ -10,6 +10,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null {
   const pw = ctrl.get('newPassword')?.value;
@@ -20,7 +21,7 @@ function passwordMatchValidator(ctrl: AbstractControl): ValidationErrors | null 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: 'reset-password.component.html',
   styleUrl: 'reset-password.component.scss',
 })

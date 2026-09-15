@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { TopbarComponent } from '../topbar/topbar.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-user-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TopbarComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TopbarComponent, TranslatePipe],
   template: `
     <div class="user-layout">
       <app-topbar [userName]="userName" />
@@ -19,20 +20,20 @@ import { TopbarComponent } from '../topbar/topbar.component';
               <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
               <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
             </svg>
-            <span>Dashboard</span>
+            <span>{{ 'layout.user.dashboard' | translate }}</span>
           </a>
           <a routerLink="/events" routerLinkActive="active" class="nav-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
               <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
             </svg>
-            <span>Événements</span>
+            <span>{{ 'layout.user.events' | translate }}</span>
           </a>
           <a routerLink="/payments" routerLinkActive="active" class="nav-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
             </svg>
-            <span>Paiements</span>
+            <span>{{ 'layout.user.payments' | translate }}</span>
           </a>
           <a routerLink="/agents" routerLinkActive="active" class="nav-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -40,14 +41,14 @@ import { TopbarComponent } from '../topbar/topbar.component';
               <circle cx="9" cy="7" r="4"/>
               <line x1="23" y1="11" x2="17" y2="11"/>
             </svg>
-            <span>Agents</span>
+            <span>{{ 'layout.user.agents' | translate }}</span>
           </a>
           <a routerLink="/profile" routerLinkActive="active" class="nav-item">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
               <circle cx="12" cy="7" r="4"/>
             </svg>
-            <span>Profil</span>
+            <span>{{ 'layout.user.profile' | translate }}</span>
           </a>
         </nav>
 
@@ -63,20 +64,20 @@ import { TopbarComponent } from '../topbar/topbar.component';
             <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
             <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
           </svg>
-          <span>Dashboard</span>
+          <span>{{ 'layout.user.dashboard' | translate }}</span>
         </a>
         <a routerLink="/events" routerLinkActive="active" class="nav-item">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
             <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
           </svg>
-          <span>Événements</span>
+          <span>{{ 'layout.user.events' | translate }}</span>
         </a>
         <a routerLink="/payments" routerLinkActive="active" class="nav-item">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
           </svg>
-          <span>Paiements</span>
+          <span>{{ 'layout.user.payments' | translate }}</span>
         </a>
         <a routerLink="/agents" routerLinkActive="active" class="nav-item">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -84,19 +85,19 @@ import { TopbarComponent } from '../topbar/topbar.component';
             <circle cx="9" cy="7" r="4"/>
             <line x1="23" y1="11" x2="17" y2="11"/>
           </svg>
-          <span>Agents</span>
+          <span>{{ 'layout.user.agents' | translate }}</span>
         </a>
         <a routerLink="/profile" routerLinkActive="active" class="nav-item">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          <span>Profil</span>
+          <span>{{ 'layout.user.profile' | translate }}</span>
         </a>
       </nav>
 
       <footer class="user-footer">
-        <span>© {{ year }} smart-invite</span>
+        <span>{{ 'layout.user.footer' | translate }}</span>
       </footer>
     </div>
   `,

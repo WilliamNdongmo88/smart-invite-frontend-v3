@@ -3,15 +3,15 @@
   <!-- ── En-tête ──────────────────────────────────────────────────── -->
   <div class="fp-header">
     <div>
-      <h1 class="fp-title">Finances</h1>
-      <p class="fp-sub">Revenus générés par l'application</p>
+      <h1 class="fp-title">{{ 'finance.title' | translate }}</h1>
+      <p class="fp-sub">{{ 'finance.subtitle' | translate }}</p>
     </div>
     <button class="btn-refresh" (click)="load()" [disabled]="loading()">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="23 4 23 10 17 10"/>
         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
-      Actualiser
+      {{ 'admin.refresh' | translate }}
     </button>
   </div>
 
@@ -19,7 +19,7 @@
   @if (loading()) {
     <div class="fp-loader">
       <div class="spinner"></div>
-      <span>Chargement…</span>
+      <span>{{ 'admin.loading' | translate }}</span>
     </div>
   }
 
@@ -32,7 +32,7 @@
         <line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
       {{ error() }}
-      <button (click)="load()">Réessayer</button>
+      <button (click)="load()">{{ 'common.retry' | translate }}</button>
     </div>
   }
 
@@ -50,9 +50,9 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Revenu total</p>
+          <p class="kpi-label">{{ 'finance.totalRevenue' | translate }}</p>
           <p class="kpi-value">{{ fmt(stats()!.totalRevenue) }}</p>
-          <p class="kpi-hint">{{ stats()!.totalApproved | number }} paiements approuvés</p>
+          <p class="kpi-hint">{{ stats()!.totalApproved | number }} {{ 'finance.approvedCount' | translate }}</p>
         </div>
       </div>
 
@@ -67,10 +67,10 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Ce mois</p>
+          <p class="kpi-label">{{ 'finance.thisMonth' | translate }}</p>
           <p class="kpi-value">{{ fmt(stats()!.revenueThisMonth) }}</p>
           <p class="kpi-hint kpi-trend" [class]="growthClass(stats()!.monthlyGrowthPct)">
-            {{ fmtGrowth(stats()!.monthlyGrowthPct) }} vs mois précédent
+            {{ fmtGrowth(stats()!.monthlyGrowthPct) }} {{ 'finance.vsPrevMonth' | translate }}
           </p>
         </div>
       </div>
@@ -83,9 +83,9 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Mois précédent</p>
+          <p class="kpi-label">{{ 'finance.lastMonth' | translate }}</p>
           <p class="kpi-value">{{ fmt(stats()!.revenueLastMonth) }}</p>
-          <p class="kpi-hint">Référence de comparaison</p>
+          <p class="kpi-hint">{{ 'finance.comparisonRef' | translate }}</p>
         </div>
       </div>
 
@@ -99,9 +99,9 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Panier moyen</p>
+          <p class="kpi-label">{{ 'finance.avgOrder' | translate }}</p>
           <p class="kpi-value">{{ fmt(stats()!.avgOrderValue) }}</p>
-          <p class="kpi-hint">Par paiement approuvé</p>
+          <p class="kpi-hint">{{ 'finance.perApprovedPayment' | translate }}</p>
         </div>
       </div>
 
@@ -110,40 +110,40 @@
     <!-- ── Ligne secondaire KPIs ─────────────────────────────────── -->
     <div class="kpi-row">
       <div class="kpi-mini">
-        <p class="kpi-mini-label">En attente</p>
+        <p class="kpi-mini-label">{{ 'finance.pending' | translate }}</p>
         <p class="kpi-mini-value kpi-warn">{{ stats()!.totalPending | number }}</p>
-        <p class="kpi-mini-sub">paiements</p>
+        <p class="kpi-mini-sub">{{ 'finance.paymentsCount' | translate }}</p>
       </div>
       <div class="kpi-mini">
-        <p class="kpi-mini-label">Montant en attente</p>
+        <p class="kpi-mini-label">{{ 'finance.pendingAmount' | translate }}</p>
         <p class="kpi-mini-value kpi-warn">{{ fmt(stats()!.pendingAmount) }}</p>
-        <p class="kpi-mini-sub">à valider</p>
+        <p class="kpi-mini-sub">{{ 'finance.toValidate' | translate }}</p>
       </div>
       <div class="kpi-mini">
-        <p class="kpi-mini-label">Croissance mensuelle</p>
+        <p class="kpi-mini-label">{{ 'finance.monthlyGrowth' | translate }}</p>
         <p class="kpi-mini-value" [class]="growthClass(stats()!.monthlyGrowthPct)">
           {{ fmtGrowth(stats()!.monthlyGrowthPct) }}
         </p>
-        <p class="kpi-mini-sub">vs mois précédent</p>
+        <p class="kpi-mini-sub">{{ 'finance.vsPrevMonth' | translate }}</p>
       </div>
     </div>
 
     <!-- ── Graphique ─────────────────────────────────────────────── -->
     <div class="chart-card">
       <div class="chart-header">
-        <h2 class="chart-title">Revenus approuvés</h2>
+        <h2 class="chart-title">{{ 'finance.revenueChart' | translate }}</h2>
         <div class="chart-tabs">
           <button class="chart-tab" [class.active]="chartMode() === 'month'" (click)="setMode('month')">
-            Par mois
+            {{ 'finance.byMonth' | translate }}
           </button>
           <button class="chart-tab" [class.active]="chartMode() === 'year'"  (click)="setMode('year')">
-            Par année
+            {{ 'finance.byYear' | translate }}
           </button>
         </div>
       </div>
 
       @if (chartData().length === 0) {
-        <p class="chart-empty">Aucune donnée disponible</p>
+        <p class="chart-empty">{{ 'finance.noData' | translate }}</p>
       } @else {
         <div class="bar-chart">
           @for (item of chartData(); track item.period) {
@@ -164,16 +164,16 @@
 
       <!-- Revenus par mois -->
       <div class="section-card">
-        <h2 class="section-title">Détail par mois</h2>
+        <h2 class="section-title">{{ 'finance.detailByMonth' | translate }}</h2>
         @if (stats()!.byMonth.length === 0) {
-          <p class="empty-msg">Aucune donnée</p>
+          <p class="empty-msg">{{ 'common.noData' | translate }}</p>
         } @else {
           <table class="ft">
             <thead>
               <tr>
-                <th>Mois</th>
-                <th class="ta-r">Paiements</th>
-                <th class="ta-r">Revenu</th>
+                <th>{{ 'finance.month' | translate }}</th>
+                <th class="ta-r">{{ 'finance.paymentsCount' | translate }}</th>
+                <th class="ta-r">{{ 'finance.revenue' | translate }}</th>
               </tr>
             </thead>
             <tbody>
@@ -191,15 +191,15 @@
 
       <!-- Revenus par année -->
       <div class="section-card">
-        <h2 class="section-title">Détail par année</h2>
+        <h2 class="section-title">{{ 'finance.detailByYear' | translate }}</h2>
         @if (stats()!.byYear.length === 0) {
-          <p class="empty-msg">Aucune donnée</p>
+          <p class="empty-msg">{{ 'common.noData' | translate }}</p>
         } @else {
           <table class="ft">
             <thead>
               <tr>
-                <th>Année</th>
-                <th class="ta-r">Revenu</th>
+                <th>{{ 'finance.year' | translate }}</th>
+                <th class="ta-r">{{ 'finance.revenue' | translate }}</th>
               </tr>
             </thead>
             <tbody>

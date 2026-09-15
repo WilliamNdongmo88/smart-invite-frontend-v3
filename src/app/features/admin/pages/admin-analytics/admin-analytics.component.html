@@ -3,15 +3,15 @@
   <!-- Header -->
   <div class="an-header">
     <div>
-      <h1 class="an-title">Analytiques</h1>
-      <p class="an-sub">Suivi des visiteurs de l'application</p>
+      <h1 class="an-title">{{ 'analytics.title' | translate }}</h1>
+      <p class="an-sub">{{ 'analytics.subtitle' | translate }}</p>
     </div>
     <button class="btn-refresh" (click)="load()" [disabled]="loading()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="23 4 23 10 17 10"/>
         <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
       </svg>
-      Actualiser
+      {{ 'admin.refresh' | translate }}
     </button>
   </div>
 
@@ -19,7 +19,7 @@
   @if (loading()) {
     <div class="an-loader">
       <div class="spinner"></div>
-      <span>Chargement des statistiques…</span>
+      <span>{{ 'analytics.loading' | translate }}</span>
     </div>
   }
 
@@ -32,7 +32,7 @@
         <line x1="12" y1="16" x2="12.01" y2="16"/>
       </svg>
       {{ error() }}
-      <button (click)="load()">Réessayer</button>
+      <button (click)="load()">{{ 'admin.retry' | translate }}</button>
     </div>
   }
 
@@ -48,7 +48,7 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Visiteurs uniques</p>
+          <p class="kpi-label">{{ 'analytics.uniqueVisitors' | translate }}</p>
           <p class="kpi-value">{{ stats()!.totalVisitors | number }}</p>
         </div>
       </div>
@@ -59,7 +59,7 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Sessions totales</p>
+          <p class="kpi-label">{{ 'analytics.totalSessions' | translate }}</p>
           <p class="kpi-value">{{ stats()!.totalSessions | number }}</p>
         </div>
       </div>
@@ -71,7 +71,7 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Pages vues</p>
+          <p class="kpi-label">{{ 'analytics.pageViews' | translate }}</p>
           <p class="kpi-value">{{ stats()!.totalPageViews | number }}</p>
         </div>
       </div>
@@ -82,7 +82,7 @@
           </svg>
         </div>
         <div class="kpi-body">
-          <p class="kpi-label">Taux de rebond</p>
+          <p class="kpi-label">{{ 'analytics.bounceRate' | translate }}</p>
           <p class="kpi-value">{{ stats()!.bounceRate }}%</p>
         </div>
       </div>
@@ -91,15 +91,15 @@
     <!-- Graphique visiteurs uniques -->
     <div class="chart-card">
       <div class="chart-header">
-        <h2 class="chart-title">Visiteurs uniques</h2>
+        <h2 class="chart-title">{{ 'analytics.chartTitle' | translate }}</h2>
         <div class="period-tabs">
-          <button class="period-tab" [class.active]="activePeriod() === 'day'"   (click)="setPeriod('day')">Jour</button>
-          <button class="period-tab" [class.active]="activePeriod() === 'week'"  (click)="setPeriod('week')">Semaine</button>
-          <button class="period-tab" [class.active]="activePeriod() === 'month'" (click)="setPeriod('month')">Mois</button>
+          <button class="period-tab" [class.active]="activePeriod() === 'day'"   (click)="setPeriod('day')">{{ 'analytics.day' | translate }}</button>
+          <button class="period-tab" [class.active]="activePeriod() === 'week'"  (click)="setPeriod('week')">{{ 'analytics.week' | translate }}</button>
+          <button class="period-tab" [class.active]="activePeriod() === 'month'" (click)="setPeriod('month')">{{ 'analytics.month' | translate }}</button>
         </div>
       </div>
       @if (chartData().length === 0) {
-        <p class="chart-empty">Aucune donnée disponible</p>
+        <p class="chart-empty">{{ 'analytics.noData' | translate }}</p>
       } @else {
         <div class="bar-chart">
           @for (item of chartData(); track item.period) {
@@ -122,9 +122,9 @@
 
       <!-- Top Pages -->
       <div class="section-card">
-        <h2 class="section-title">Top 10 pages</h2>
+        <h2 class="section-title">{{ 'analytics.topPages' | translate }}</h2>
         @if (stats()!.topPages.length === 0) {
-          <p class="empty-msg">Aucune donnée</p>
+          <p class="empty-msg">{{ 'common.noData' | translate }}</p>
         } @else {
           <div class="page-list">
             @for (page of stats()!.topPages; track page.url; let i = $index) {
@@ -145,9 +145,9 @@
 
       <!-- Répartition device -->
       <div class="section-card">
-        <h2 class="section-title">Répartition par device</h2>
+        <h2 class="section-title">{{ 'analytics.byDevice' | translate }}</h2>
         @if (stats()!.byDevice.length === 0) {
-          <p class="empty-msg">Aucune donnée</p>
+          <p class="empty-msg">{{ 'common.noData' | translate }}</p>
         } @else {
           <div class="dist-list">
             @for (item of stats()!.byDevice; track item.label) {
@@ -174,9 +174,9 @@
 
       <!-- Répartition pays -->
       <div class="section-card">
-        <h2 class="section-title">Top pays</h2>
+        <h2 class="section-title">{{ 'analytics.topCountries' | translate }}</h2>
         @if (stats()!.byCountry.length === 0) {
-          <p class="empty-msg">Aucune donnée (GeoIP non configuré)</p>
+          <p class="empty-msg">{{ 'analytics.noGeoip' | translate }}</p>
         } @else {
           <div class="dist-list">
             @for (item of stats()!.byCountry; track item.label) {
@@ -197,9 +197,9 @@
 
       <!-- Durée moyenne par browser -->
       <div class="section-card">
-        <h2 class="section-title">Durée moy. par navigateur</h2>
+        <h2 class="section-title">{{ 'analytics.avgDurationBrowser' | translate }}</h2>
         @if (stats()!.avgDurationByBrowser.length === 0) {
-          <p class="empty-msg">Aucune donnée</p>
+          <p class="empty-msg">{{ 'common.noData' | translate }}</p>
         } @else {
           <div class="dur-list">
             @for (item of stats()!.avgDurationByBrowser; track item.label) {
@@ -216,9 +216,9 @@
 
     <!-- Durée moyenne par OS -->
     <div class="section-card">
-      <h2 class="section-title">Durée moyenne des sessions par OS</h2>
+      <h2 class="section-title">{{ 'analytics.avgDurationOs' | translate }}</h2>
       @if (stats()!.avgDurationByOs.length === 0) {
-        <p class="empty-msg">Aucune donnée</p>
+        <p class="empty-msg">{{ 'common.noData' | translate }}</p>
       } @else {
         <div class="os-grid">
           @for (item of stats()!.avgDurationByOs; track item.label) {

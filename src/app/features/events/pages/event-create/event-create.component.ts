@@ -2,25 +2,28 @@ import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EventType } from '../../../../core/models/enums.model';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../../core/services/language.service';
 
-interface TypeOption { key: EventType; label: string; icon: string; }
+interface TypeOption { key: EventType; icon: string; }
 
 @Component({
   selector: 'app-event-create',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: 'event-create.component.html',
   styleUrl: 'event-create.component.scss',
 })
 export class EventCreateComponent {
   private readonly fb     = inject(FormBuilder);
   private readonly router = inject(Router);
+  readonly lang           = inject(LanguageService);
 
   readonly typeOptions: TypeOption[] = [
-    { key: 'MARIAGE',    label: 'Mariage',    icon: '💍' },
-    { key: 'GALA',       label: 'Gala',       icon: '🎭' },
-    { key: 'CONFERENCE', label: 'Conférence', icon: '🎤' },
-    { key: 'CEREMONIE',  label: 'Autres Cérémonies',  icon: '🎗️' },
+    { key: 'MARIAGE',    icon: '💍' },
+    { key: 'GALA',       icon: '🎭' },
+    { key: 'CONFERENCE', icon: '🎤' },
+    { key: 'CEREMONIE',  icon: '🎗️' },
   ];
 
   form = this.fb.group({

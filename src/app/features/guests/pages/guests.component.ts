@@ -11,18 +11,21 @@ import { DIAL_CODES } from '../../../core/data/dial-codes';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { TranslatePipe } from '../../../shared/pipes/translate.pipe';
+import { LanguageService } from '../../../core/services/language.service';
 
 type RsvpTab = 'ALL' | RsvpStatus;
 
 @Component({
   selector: 'app-guests',
   standalone: true,
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, TranslatePipe],
   templateUrl: 'guests.component.html',
   styleUrl: 'guests.component.scss',
 })
 export class GuestsComponent implements OnInit {
   private readonly route    = inject(ActivatedRoute);
+  private readonly lang     = inject(LanguageService);
   private readonly router   = inject(Router);
   private readonly fb       = inject(FormBuilder);
   private readonly svc      = inject(GuestService);
@@ -76,19 +79,26 @@ export class GuestsComponent implements OnInit {
     localStorage.getItem('tableAlertDismissed') === 'true'
   );
 
-  readonly tabs: { key: RsvpTab; label: string }[] = [
-    { key: 'ALL',       label: 'Tous' },
-    { key: 'PENDING',   label: 'En attente' },
-    { key: 'CONFIRMED', label: 'Confirmés' },
-    { key: 'DECLINED',  label: 'Refusés' },
-    { key: 'PRESENT',   label: 'Présents' },
-  ];
+  readonly tabs = computed<{ key: RsvpTab; label: string }[]>(() => {
+    // On lit translationsVersion pour que computed se réévalue après chaque chargement i18n
+    this.lang.translationsVersion();
+    return [
+      { key: 'ALL',       label: this.lang.t('guests.tabs.ALL') },
+      { key: 'PENDING',   label: this.lang.t('guests.tabs.PENDING') },
+      { key: 'CONFIRMED', label: this.lang.t('guests.tabs.CONFIRMED') },
+      { key: 'DECLINED',  label: this.lang.t('guests.tabs.DECLINED') },
+      { key: 'PRESENT',   label: this.lang.t('guests.tabs.PRESENT') },
+    ];
+  });
 
-  readonly notifOptions: { key: NotificationMode; label: string }[] = [
-    { key: 'EMAIL',    label: 'Email' },
-    { key: 'WHATSAPP', label: 'WhatsApp' },
-    { key: 'BOTH',     label: 'Email & WhatsApp' },
-  ];
+  readonly notifOptions = computed<{ key: NotificationMode; label: string }[]>(() => {
+    this.lang.translationsVersion();
+    return [
+      { key: 'EMAIL',    label: this.lang.t('guests.notifOptions.EMAIL') },
+      { key: 'WHATSAPP', label: this.lang.t('guests.notifOptions.WHATSAPP') },
+      { key: 'BOTH',     label: this.lang.t('guests.notifOptions.BOTH') },
+    ];
+  });
 
   // ── Dial codes ──
   readonly dialCodes = DIAL_CODES;
@@ -425,7 +435,7 @@ export class GuestsComponent implements OnInit {
         const grayText   = [130, 130, 130] as [number, number, number];
         const eventTitle = this.event()?.title ?? 'Liste des invités';
         const tab        = this.activeTab();
-        const filterLabel = tab !== 'ALL' ? ` — ${this.tabs.find(t => t.key === tab)?.label ?? ''}` : '';
+        const filterLabel = tab !== 'ALL' ? ` — ${this.tabs().find(t => t.key === tab)?.label ?? ''}` : '';
         const dateStr    = new Date().toLocaleDateString('fr-FR');
 
         // ── 1. Logo centré ──

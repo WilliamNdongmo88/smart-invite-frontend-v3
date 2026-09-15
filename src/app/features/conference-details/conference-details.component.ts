@@ -8,6 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { EventService } from '../../core/services/event.service';
 import { ToastService } from '../../core/services/toast.service';
+import { LanguageService } from '../../core/services/language.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import {
   ConferenceDetailsContent,
   ConferenceDetailsEditSection,
@@ -180,7 +182,7 @@ const INITIAL_CONTENT: ConferenceDetailsContent = {
 @Component({
   selector: 'app-conference-details',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslatePipe],
   templateUrl: 'conference-details.component.html',
   styleUrl:    'conference-details.component.scss',
 })
@@ -192,6 +194,7 @@ export class ConferenceDetailsComponent implements OnInit, OnDestroy, AfterViewI
   private readonly router      = inject(Router);
   private readonly eventSvc    = inject(EventService);
   private readonly toast       = inject(ToastService);
+  readonly lang                = inject(LanguageService);
 
   // ── Mode création / édition ────────────────────────────────────
   readonly eventId    = signal<number | null>(null);

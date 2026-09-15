@@ -6,25 +6,25 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="15 18 9 12 15 6"/>
       </svg>
-      Mes événements
+      {{ 'events.create.backToEvents' | translate }}
     </a>
-    <h1 class="page-title">Créer un événement</h1>
+    <h1 class="page-title">{{ 'events.create.title' | translate }}</h1>
   </div>
 
   <!-- Sélection du type -->
   <div class="wizard-card">
     <div class="wizard-head">
-      <h2 class="wizard-title">Quel type d'événement organisez-vous ?</h2>
-      <p class="wizard-sub">Chaque type bénéficie d'un éditeur dédié pour personnaliser votre page.</p>
+      <h2 class="wizard-title">{{ 'events.create.typeQuestion' | translate }}</h2>
+      <p class="wizard-sub">{{ 'events.create.typeSubtitle' | translate }}</p>
     </div>
 
-    <!-- Bannière contextuelle -->
+    <!-- Bannières contextuelles -->
     @if (isMariage) {
       <div class="recommendation-banner recommendation-banner--wedding">
         <span class="rec-icon">💍</span>
         <div class="rec-text">
-          <strong>Mariage</strong>
-          <span>Page personnalisée avec portraits, histoire du couple, programme multi-jours, galerie, dress code et RSVP.</span>
+          <strong>{{ 'events.types.MARIAGE' | translate }}</strong>
+          <span>{{ 'events.create.banners.MARIAGE' | translate }}</span>
         </div>
       </div>
     }
@@ -32,8 +32,8 @@
       <div class="recommendation-banner recommendation-banner--gala">
         <span class="rec-icon">🎭</span>
         <div class="rec-text">
-          <strong>Gala</strong>
-          <span>Page soirée avec programme, artistes, dress code, galerie et section réservation.</span>
+          <strong>{{ 'events.types.GALA' | translate }}</strong>
+          <span>{{ 'events.create.banners.GALA' | translate }}</span>
         </div>
       </div>
     }
@@ -41,8 +41,8 @@
       <div class="recommendation-banner recommendation-banner--conference">
         <span class="rec-icon">🎤</span>
         <div class="rec-text">
-          <strong>Conférence</strong>
-          <span>Page professionnelle avec agenda multi-jours, intervenants, sponsors, galerie et inscription.</span>
+          <strong>{{ 'events.types.CONFERENCE' | translate }}</strong>
+          <span>{{ 'events.create.banners.CONFERENCE' | translate }}</span>
         </div>
       </div>
     }
@@ -50,8 +50,8 @@
       <div class="recommendation-banner recommendation-banner--ceremonie">
         <span class="rec-icon">🎗️</span>
         <div class="rec-text">
-          <strong>Autres cérémonies</strong>
-          <span>Page intime avec programme, personnes clés (parents, parrain…), tenue, galerie et invitation.</span>
+          <strong>{{ 'events.types.CEREMONIE' | translate }}</strong>
+          <span>{{ 'events.create.banners.CEREMONIE' | translate }}</span>
         </div>
       </div>
     }
@@ -61,13 +61,13 @@
         @for (opt of typeOptions; track opt.key) {
           <button type="button" class="type-card" [class.selected]="selectedType === opt.key" (click)="selectType(opt.key)">
             <span class="type-icon">{{ opt.icon }}</span>
-            <span class="type-label">{{ opt.label }}</span>
-            <span class="type-badge">Éditeur dédié</span>
+            <span class="type-label">{{ 'events.types.' + opt.key | translate }}</span>
+            <span class="type-badge">{{ 'events.create.dedicatedEditor' | translate }}</span>
           </button>
         }
       </div>
       @if (form.get('type')?.invalid && form.get('type')?.touched) {
-        <p class="field-error">Veuillez sélectionner un type d'événement.</p>
+        <p class="field-error">{{ 'events.create.typeError' | translate }}</p>
       }
     </form>
   </div>
@@ -76,11 +76,11 @@
   <div class="wizard-nav">
     <span></span>
     <button type="button" class="btn-next" [disabled]="!hasSelection" (click)="proceed()">
-      @if (isMariage)    { Accéder à l'éditeur Mariage }
-      @else if (isGala)       { Accéder à l'éditeur Gala }
-      @else if (isConference) { Accéder à l'éditeur Conférence }
-      @else if (isCeremonie)  { Accéder à l'éditeur Cérémonie }
-      @else                   { Sélectionnez un type }
+      @if (isMariage)    { {{ 'events.create.proceed.MARIAGE' | translate }} }
+      @else if (isGala)       { {{ 'events.create.proceed.GALA' | translate }} }
+      @else if (isConference) { {{ 'events.create.proceed.CONFERENCE' | translate }} }
+      @else if (isCeremonie)  { {{ 'events.create.proceed.CEREMONIE' | translate }} }
+      @else                   { {{ 'events.create.proceed.default' | translate }} }
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="9 18 15 12 9 6"/>
       </svg>

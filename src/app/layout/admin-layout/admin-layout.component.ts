@@ -2,11 +2,12 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { TopbarComponent } from '../topbar/topbar.component';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-admin-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, TopbarComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, TopbarComponent, TranslatePipe],
   template: `
     <div class="admin-layout">
       <app-topbar [showMenuBtn]="true" [userName]="userName()" (menuClick)="toggleSidebar()" />
@@ -15,7 +16,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
         <!-- Sidebar -->
         <aside class="sidebar" [class.collapsed]="sidebarCollapsed()" [class.open]="mobileOpen()">
           <div class="sidebar-header">
-            <span class="sidebar-title">Administration</span>
+            <span class="sidebar-title">{{ 'sidebar.adminPanel' | translate }}</span>
           </div>
           <nav class="sidebar-nav">
             <a routerLink="/admin/users" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
@@ -25,21 +26,21 @@ import { TopbarComponent } from '../topbar/topbar.component';
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
                 <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
               </svg>
-              <span>Utilisateurs</span>
+              <span>{{ 'sidebar.users' | translate }}</span>
             </a>
             <a routerLink="/admin/payments" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="1" y="4" width="22" height="16" rx="2"/>
                 <line x1="1" y1="10" x2="23" y2="10"/>
               </svg>
-              <span>Paiements</span>
+              <span>{{ 'sidebar.payments' | translate }}</span>
             </a>
             <a routerLink="/admin/finance" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="1" x2="12" y2="23"/>
                 <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
               </svg>
-              <span>Finances</span>
+              <span>{{ 'finance.title' | translate }}</span>
             </a>
             <a routerLink="/admin/visitors" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -47,14 +48,14 @@ import { TopbarComponent } from '../topbar/topbar.component';
                 <line x1="12" y1="20" x2="12" y2="4"/>
                 <line x1="6"  y1="20" x2="6"  y2="14"/>
               </svg>
-              <span>Visiteurs</span>
+              <span>{{ 'sidebar.visitors' | translate }}</span>
             </a>
             <a routerLink="/admin/profile" routerLinkActive="active" class="nav-item" (click)="closeMobile()">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
-              <span>Profil</span>
+              <span>{{ 'sidebar.profile' | translate }}</span>
             </a>
           </nav>
         </aside>
@@ -70,7 +71,7 @@ import { TopbarComponent } from '../topbar/topbar.component';
             <router-outlet />
           </main>
           <footer class="admin-footer">
-            <span>© {{ year }} smart-invite — Administration</span>
+            <span>{{ 'layout.user.footer' | translate }}</span>
           </footer>
         </div>
       </div>

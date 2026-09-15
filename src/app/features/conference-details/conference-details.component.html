@@ -5,49 +5,49 @@
   <button type="button" class="conf-nav-logo" (click)="scrollTo('top')">{{ hero().title }}</button>
 
   <ul class="conf-nav-links">
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('about')">À PROPOS</button></li>
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('agenda')">PROGRAMME</button></li>
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('speakers')">INTERVENANTS</button></li>
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('sponsors')">SPONSORS</button></li>
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('faq')">FAQ</button></li>
-    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('rsvp')">INSCRIPTION</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('about')">{{ 'conference.nav.about' | translate }}</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('agenda')">{{ 'conference.nav.agenda' | translate }}</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('speakers')">{{ 'conference.nav.speakers' | translate }}</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('sponsors')">{{ 'conference.nav.sponsors' | translate }}</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('faq')">{{ 'conference.nav.faq' | translate }}</button></li>
+    <li><button type="button" class="conf-nav-link-btn" (click)="scrollTo('rsvp')">{{ 'conference.nav.rsvp' | translate }}</button></li>
   </ul>
 
   <div class="conf-nav-actions">
     @if (isPreview()) {
-      <a [routerLink]="['/events', eventId()]" class="conf-btn-back" title="Fermer l'aperçu">
+      <a [routerLink]="['/events', eventId()]" class="conf-btn-back" [title]="'conference.nav.closePreview' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Fermer l'aperçu</span>
+        <span>{{ 'conference.nav.closePreview' | translate }}</span>
       </a>
     } @else if (isEditMode()) {
-      <a [routerLink]="['/events', eventId()]" class="conf-btn-back" title="Retour à l'événement">
+      <a [routerLink]="['/events', eventId()]" class="conf-btn-back" [title]="'conference.nav.backToEvent' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span class="btn-label-desktop">Retour à l'événement</span>
-        <span class="btn-label-mobile">Retour</span>
+        <span class="btn-label-desktop">{{ 'conference.nav.backToEvent' | translate }}</span>
+        <span class="btn-label-mobile">{{ 'conference.nav.backToEventMobile' | translate }}</span>
       </a>
     } @else {
-      <a [routerLink]="'/events/new'" class="conf-btn-back" title="Annuler">
+      <a [routerLink]="'/events/new'" class="conf-btn-back" [title]="'conference.nav.cancel' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="15 18 9 12 15 6"/>
         </svg>
-        <span>Annuler</span>
+        <span>{{ 'conference.nav.cancel' | translate }}</span>
       </a>
     }
     @if (saving()) {
       <span class="conf-saving">
         <span class="conf-saving-dot"></span>
-        <span class="btn-label-desktop">Sauvegarde...</span>
+        <span class="btn-label-desktop">{{ 'conference.nav.saving' | translate }}</span>
       </span>
     }
     @if (isLoggedIn()) {
-      <button class="conf-btn-save" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? 'Enregistrer' : 'Créer l\'événement'">
+      <button class="conf-btn-save" (click)="saveToBackend()" [disabled]="saving()" [title]="isEditMode() ? ('conference.nav.save' | translate) : ('conference.nav.create' | translate)">
         @if (saving()) {
           <span class="conf-saving-dot"></span>
         } @else {
@@ -58,18 +58,20 @@
             <polyline points="7 3 7 8 15 8"/>
           </svg>
         }
-        <span class="btn-label-desktop">{{ isEditMode() ? 'Enregistrer' : 'Créer l\'événement' }}</span>
-        <span class="btn-label-mobile">{{ isEditMode() ? 'Enregistrer' : 'Créer' }}</span>
+        <span class="btn-label-desktop">{{ isEditMode() ? ('conference.nav.save' | translate) : ('conference.nav.create' | translate) }}</span>
+        <span class="btn-label-mobile">{{ isEditMode() ? ('conference.nav.save' | translate) : ('conference.nav.createMobile' | translate) }}</span>
       </button>
 
-      <button class="conf-btn-edit" (click)="openEdit('hero')" title="Éditer la page">
+      <button class="conf-btn-edit" (click)="openEdit('hero')" [title]="'conference.nav.editTitle' | translate">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
-        <span>Éditer</span>
+        <span>{{ 'conference.nav.edit' | translate }}</span>
       </button>
+
+
     }
   </div>
 </nav>
@@ -80,13 +82,13 @@
 <section id="top" class="conf-hero"
   [style.backgroundImage]="bgs().hero ? 'url(' + bgs().hero + ')' : 'none'">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--hero" (click)="openEdit('hero')" title="Éditer le Hero">
+    <button class="conf-pencil conf-pencil--hero" (click)="openEdit('hero')" [title]="'conference.hero.editHero' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
       </svg>
     </button>
-    <button class="conf-pencil conf-pencil--hero-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+    <button class="conf-pencil conf-pencil--hero-bg" (click)="openEdit('backgrounds')" [title]="'conference.hero.editBg' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -131,30 +133,30 @@
     </div>
 
     <div class="conf-hero-ctas reveal" style="--d:600ms">
-      <button type="button" class="conf-btn-primary" (click)="scrollTo('rsvp')">S'INSCRIRE</button>
-      <button type="button" class="conf-btn-outline" (click)="scrollTo('agenda')">VOIR LE PROGRAMME</button>
+      <button type="button" class="conf-btn-primary" (click)="scrollTo('rsvp')">{{ 'conference.hero.register' | translate }}</button>
+      <button type="button" class="conf-btn-outline" (click)="scrollTo('agenda')">{{ 'conference.hero.viewAgenda' | translate }}</button>
     </div>
 
     <!-- Countdown -->
     <div class="conf-countdown reveal reveal--scale" style="--d:700ms">
       <div class="conf-count-chip">
         <span class="conf-count-val">{{ countdown().days }}</span>
-        <span class="conf-count-label">JOURS</span>
+        <span class="conf-count-label">{{ 'conference.hero.days' | translate }}</span>
       </div>
       <div class="conf-count-sep">:</div>
       <div class="conf-count-chip">
         <span class="conf-count-val">{{ countdown().hours }}</span>
-        <span class="conf-count-label">HEURES</span>
+        <span class="conf-count-label">{{ 'conference.hero.hours' | translate }}</span>
       </div>
       <div class="conf-count-sep">:</div>
       <div class="conf-count-chip">
         <span class="conf-count-val">{{ countdown().minutes }}</span>
-        <span class="conf-count-label">MIN</span>
+        <span class="conf-count-label">{{ 'conference.hero.min' | translate }}</span>
       </div>
       <div class="conf-count-sep">:</div>
       <div class="conf-count-chip">
         <span class="conf-count-val">{{ countdown().seconds }}</span>
-        <span class="conf-count-label">SEC</span>
+        <span class="conf-count-label">{{ 'conference.hero.sec' | translate }}</span>
       </div>
     </div>
   </div>
@@ -166,7 +168,7 @@
 <section id="about" class="conf-section conf-about section-entrance"
   [style.backgroundImage]="bgs().about ? 'url(' + bgs().about + ')' : 'none'">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('about')" title="Éditer À Propos">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('about')" [title]="'conference.about.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -175,7 +177,7 @@
   }
   <div class="conf-about-overlay"></div>
   <div class="conf-section-inner">
-    <span class="conf-eyebrow-dark reveal" style="--d:0ms">L'ÉVÉNEMENT</span>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">{{ 'conference.about.eyebrow' | translate }}</span>
     <h2 class="conf-section-title reveal" style="--d:80ms">{{ about().headline }}</h2>
     <p class="conf-about-desc reveal" style="--d:160ms">{{ about().description }}</p>
 
@@ -196,7 +198,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="agenda" class="conf-section conf-agenda section-entrance">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('agenda')" title="Éditer le Programme">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('agenda')" [title]="'conference.agenda.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -204,9 +206,9 @@
     </button>
   }
   <div class="conf-section-inner">
-    <span class="conf-eyebrow reveal" style="--d:0ms">AGENDA</span>
-    <h2 class="conf-section-title conf-section-title--light reveal" style="--d:80ms">Programme Détaillé</h2>
-    <p class="conf-section-sub reveal" style="--d:140ms">Deux jours d'immersion, d'échanges et d'inspiration.</p>
+    <span class="conf-eyebrow reveal" style="--d:0ms">{{ 'conference.agenda.eyebrow' | translate }}</span>
+    <h2 class="conf-section-title conf-section-title--light reveal" style="--d:80ms">{{ 'conference.agenda.title' | translate }}</h2>
+    <p class="conf-section-sub reveal" style="--d:140ms">{{ 'conference.agenda.subtitle' | translate }}</p>
 
     <!-- Onglets jours -->
     <div class="conf-day-tabs reveal" style="--d:200ms">
@@ -256,7 +258,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <div class="conf-band" [style.backgroundImage]="bgs().agendaBand ? 'url(' + bgs().agendaBand + ')' : 'none'">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
+    <button class="conf-pencil conf-pencil--band" (click)="openEdit('backgrounds')" [title]="'conference.hero.editBg' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -266,7 +268,7 @@
   <div class="conf-band-overlay"></div>
   <div class="conf-band-content">
     <p class="conf-band-quote reveal reveal--scale" style="--d:0ms">
-      « L'intelligence, c'est la capacité de s'adapter au changement. »
+      {{ 'conference.band.quote' | translate }}
     </p>
   </div>
 </div>
@@ -276,7 +278,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="speakers" class="conf-section conf-speakers-section section-entrance">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('speakers')" title="Éditer les Intervenants">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('speakers')" [title]="'conference.speakers.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -284,7 +286,7 @@
     </button>
   }
   <div class="conf-section-inner">
-    <span class="conf-eyebrow-dark reveal" style="--d:0ms">LES EXPERTS</span>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">{{ 'conference.speakers.eyebrow' | translate }}</span>
     <h2 class="conf-section-title reveal" style="--d:80ms">{{ speakers().headline }}</h2>
     <p class="conf-section-quote reveal" style="--d:140ms">{{ speakers().subheadline }}</p>
 
@@ -322,7 +324,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section class="conf-section conf-gallery-section section-entrance">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('gallery')" title="Éditer la Galerie">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('gallery')" [title]="'conference.gallery.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -330,8 +332,8 @@
     </button>
   }
   <div class="conf-section-inner">
-    <span class="conf-eyebrow-dark reveal" style="--d:0ms">ÉDITIONS PRÉCÉDENTES</span>
-    <h2 class="conf-section-title reveal" style="--d:80ms">Revivez l'Expérience</h2>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">{{ 'conference.gallery.eyebrow' | translate }}</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">{{ 'conference.gallery.title' | translate }}</h2>
 
     <div class="conf-gallery-mosaic reveal" style="--d:160ms">
       @for (item of gallery().items; track $index) {
@@ -359,7 +361,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="sponsors" class="conf-section conf-sponsors-section section-entrance">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('sponsors')" title="Éditer les Sponsors">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('sponsors')" [title]="'conference.sponsors.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -367,12 +369,12 @@
     </button>
   }
   <div class="conf-section-inner">
-    <span class="conf-eyebrow-dark reveal" style="--d:0ms">ILS NOUS FONT CONFIANCE</span>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">{{ 'conference.sponsors.eyebrow' | translate }}</span>
     <h2 class="conf-section-title reveal" style="--d:80ms">{{ sponsors().headline }}</h2>
 
     <!-- Platine -->
     @if (platinumSponsors().length) {
-      <p class="conf-sponsor-level-label reveal" style="--d:120ms">✦ PLATINE</p>
+      <p class="conf-sponsor-level-label reveal" style="--d:120ms">{{ 'conference.sponsors.platine' | translate }}</p>
       <div class="conf-sponsors-row conf-sponsors-row--platine stagger">
         @for (sp of platinumSponsors(); track $index) {
           <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
@@ -384,7 +386,7 @@
     }
     <!-- Or -->
     @if (goldSponsors().length) {
-      <p class="conf-sponsor-level-label reveal" style="--d:140ms">◆ OR</p>
+      <p class="conf-sponsor-level-label reveal" style="--d:140ms">{{ 'conference.sponsors.or' | translate }}</p>
       <div class="conf-sponsors-row conf-sponsors-row--or stagger">
         @for (sp of goldSponsors(); track $index) {
           <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
@@ -396,7 +398,7 @@
     }
     <!-- Argent -->
     @if (silverSponsors().length) {
-      <p class="conf-sponsor-level-label reveal" style="--d:160ms">● ARGENT</p>
+      <p class="conf-sponsor-level-label reveal" style="--d:160ms">{{ 'conference.sponsors.argent' | translate }}</p>
       <div class="conf-sponsors-row conf-sponsors-row--argent stagger">
         @for (sp of silverSponsors(); track $index) {
           <a [href]="sp.websiteUrl" target="_blank" rel="noopener" class="conf-sponsor-logo">
@@ -414,7 +416,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <section id="faq" class="conf-section conf-faq-section section-entrance">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--section" (click)="openEdit('faq')" title="Éditer la FAQ">
+    <button class="conf-pencil conf-pencil--section" (click)="openEdit('faq')" [title]="'conference.faq.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -422,8 +424,8 @@
     </button>
   }
   <div class="conf-section-inner">
-    <span class="conf-eyebrow-dark reveal" style="--d:0ms">FAQ</span>
-    <h2 class="conf-section-title reveal" style="--d:80ms">Questions Fréquentes</h2>
+    <span class="conf-eyebrow-dark reveal" style="--d:0ms">{{ 'conference.faq.eyebrow' | translate }}</span>
+    <h2 class="conf-section-title reveal" style="--d:80ms">{{ 'conference.faq.title' | translate }}</h2>
     <div class="conf-faq-shell reveal" style="--d:160ms">
       @for (item of faq().items; track $index) {
         <details class="conf-faq-item">
@@ -441,13 +443,13 @@
 <section id="rsvp" class="conf-rsvp-section"
   [style.backgroundImage]="bgs().rsvp ? 'url(' + bgs().rsvp + ')' : 'none'">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
+    <button class="conf-pencil conf-pencil--rsvp" (click)="openEdit('rsvp')" [title]="'conference.rsvp.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
       </svg>
     </button>
-    <button class="conf-pencil conf-pencil--rsvp-bg" (click)="openEdit('backgrounds')" title="Modifier le fond">
+    <button class="conf-pencil conf-pencil--rsvp-bg" (click)="openEdit('backgrounds')" [title]="'conference.rsvp.editBg' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -459,7 +461,7 @@
   <div class="conf-band-overlay"></div>
 
   <div class="conf-rsvp-card reveal reveal--scale" style="--d:80ms">
-    <span class="conf-rsvp-eyebrow">REJOIGNEZ-NOUS</span>
+    <span class="conf-rsvp-eyebrow">{{ 'conference.rsvp.eyebrow' | translate }}</span>
     <h2 class="conf-rsvp-title">{{ rsvp().title }}</h2>
     <div class="conf-sep conf-sep--light">
       <span class="conf-sep-line"></span>
@@ -468,8 +470,8 @@
     </div>
     <p class="conf-rsvp-sub">{{ rsvp().subtitle }}</p>
     <div class="conf-rsvp-ctas">
-      <button type="button" class="conf-btn-primary" (click)="scrollTo('agenda')">Voir le programme</button>
-      <button type="button" class="conf-btn-outline conf-btn-outline--light" (click)="scrollTo('speakers')">Les intervenants</button>
+      <button type="button" class="conf-btn-primary" (click)="scrollTo('agenda')">{{ 'conference.rsvp.viewAgenda' | translate }}</button>
+      <button type="button" class="conf-btn-outline conf-btn-outline--light" (click)="scrollTo('speakers')">{{ 'conference.rsvp.speakers' | translate }}</button>
     </div>
   </div>
 </section>
@@ -479,7 +481,7 @@
 ══════════════════════════════════════════════════════════════ -->
 <footer class="conf-footer">
   @if (isLoggedIn()) {
-    <button class="conf-pencil conf-pencil--footer" (click)="openEdit('footer')" title="Éditer le Footer">
+    <button class="conf-pencil conf-pencil--footer" (click)="openEdit('footer')" [title]="'conference.footer.editTitle' | translate">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
@@ -493,7 +495,7 @@
   </div>
   <p class="conf-footer-tagline reveal reveal--fade" style="--d:180ms">{{ footer().tagline }}</p>
   <p class="conf-footer-credit reveal reveal--fade" style="--d:240ms">
-    SITE RÉALISÉ PAR <a href="https://will-portfolio-rosy.vercel.app/" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
+    {{ 'conference.footer.credit' | translate }} <a href="https://will-portfolio-rosy.vercel.app/" target="_blank" rel="noopener">WILLIAM NDONGMO</a>
   </p>
 </footer>
 
@@ -510,7 +512,7 @@
                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
           </svg>
-          Éditer la conférence
+          {{ 'conference.edit.modalTitle' | translate }}
         </h2>
         <button class="edit-modal-close" (click)="closeEdit()">✕</button>
       </div>
@@ -529,56 +531,56 @@
         <!-- ── HERO ── -->
         @if (activeSection() === 'hero') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Hero &amp; Date</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.hero.heading' | translate }}</h3>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Nom de la conférence</label>
+                <label class="edit-label">{{ 'conference.edit.hero.confName' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Édition</label>
+                <label class="edit-label">{{ 'conference.edit.hero.edition' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.edition" (ngModelChange)="updateDraftHero('edition', $event)" />
               </div>
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre</label>
+              <label class="edit-label">{{ 'conference.edit.hero.subtitle' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.subtitle" (ngModelChange)="updateDraftHero('subtitle', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Phrase d'accroche</label>
+              <label class="edit-label">{{ 'conference.edit.hero.catchphrase' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.catchphrase" (ngModelChange)="updateDraftHero('catchphrase', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Date affichée</label>
+              <label class="edit-label">{{ 'conference.edit.hero.dateLabel' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.dateLabel" (ngModelChange)="updateDraftHero('dateLabel', $event)" />
             </div>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Nom du lieu</label>
+                <label class="edit-label">{{ 'conference.edit.hero.venueName' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.venueName" (ngModelChange)="updateDraftHero('venueName', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Ville</label>
+                <label class="edit-label">{{ 'conference.edit.hero.venueCity' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().hero.venueCity" (ngModelChange)="updateDraftHero('venueCity', $event)" />
               </div>
             </div>
             <div class="edit-field">
-              <label class="edit-label">Date countdown <span class="edit-hint">ISO : AAAA-MM-JJTHH:MM:SS</span></label>
+              <label class="edit-label">{{ 'conference.edit.hero.targetDate' | translate }} <span class="edit-hint">{{ 'conference.edit.hero.targetDateHint' | translate }}</span></label>
               <input class="edit-input" type="datetime-local" [ngModel]="draft().hero.targetDate" (ngModelChange)="updateDraftHero('targetDate', $event)" />
             </div>
-            <div class="edit-divider"><span>Capacité</span></div>
+            <div class="edit-divider"><span>{{ 'conference.edit.hero.capacity' | translate }}</span></div>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Participants maximum</label>
+                <label class="edit-label">{{ 'conference.edit.hero.maxAttendees' | translate }}</label>
                 <input class="edit-input" type="number" min="1"
                        [class.edit-input--error]="!draft().hero.maxAttendees || draft().hero.maxAttendees < 1"
                        [ngModel]="draft().hero.maxAttendees" (ngModelChange)="updateDraftMaxAttendees($event)" />
                 @if (!draft().hero.maxAttendees || draft().hero.maxAttendees < 1) {
-                  <p class="edit-field-error">Ce champ est requis pour enregistrer.</p>
+                  <p class="edit-field-error">{{ 'conference.edit.hero.maxAttendeesError' | translate }}</p>
                 }
               </div>
               <div class="edit-field">
-                <label class="edit-label">Montant à payer <span class="edit-hint">calculé auto.</span></label>
+                <label class="edit-label">{{ 'conference.edit.hero.budget' | translate }} <span class="edit-hint">{{ 'conference.edit.hero.budgetHint' | translate }}</span></label>
                 <div class="edit-budget-display">
                   💳 {{ draft().hero.budget || '—' }}
                   @if (draft().hero.maxAttendees > 0) {
@@ -593,81 +595,81 @@
         <!-- ── À PROPOS ── -->
         @if (activeSection() === 'about') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">À Propos</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.about.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'conference.edit.about.title' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().about.headline" (ngModelChange)="updateDraftAbout('headline', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Description</label>
+              <label class="edit-label">{{ 'conference.edit.about.description' | translate }}</label>
               <textarea class="edit-textarea" rows="5" [ngModel]="draft().about.description" (ngModelChange)="updateDraftAbout('description', $event)"></textarea>
             </div>
-            <div class="edit-divider"><span>Statistiques clés</span></div>
+            <div class="edit-divider"><span>{{ 'conference.edit.about.stats' | translate }}</span></div>
             @for (stat of draft().about.stats; track $index) {
               <div class="edit-program-item">
                 <div class="edit-program-item-header">
-                  <span class="edit-program-idx">Stat {{ $index + 1 }}</span>
+                  <span class="edit-program-idx">{{ 'conference.edit.about.stat' | translate }} {{ $index + 1 }}</span>
                   <button class="edit-btn-remove" (click)="removeStat($index)" [disabled]="draft().about.stats.length <= 1">✕</button>
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône</label>
+                    <label class="edit-label">{{ 'conference.edit.about.icon' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="stat.icon" (ngModelChange)="updateDraftStat($index, 'icon', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Valeur <span class="edit-hint">ex : 2 500+</span></label>
+                    <label class="edit-label">{{ 'conference.edit.about.value' | translate }} <span class="edit-hint">{{ 'conference.edit.about.valueHint' | translate }}</span></label>
                     <input class="edit-input" type="text" [ngModel]="stat.value" (ngModelChange)="updateDraftStat($index, 'value', $event)" />
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Libellé</label>
+                  <label class="edit-label">{{ 'conference.edit.about.label' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="stat.label" (ngModelChange)="updateDraftStat($index, 'label', $event)" />
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addStat()">+ Ajouter une statistique</button>
+            <button class="edit-btn-add" (click)="addStat()">{{ 'conference.edit.about.addStat' | translate }}</button>
           </div>
         }
 
         <!-- ── AGENDA ── -->
         @if (activeSection() === 'agenda') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Programme</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.agenda.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Note de bas de page</label>
+              <label class="edit-label">{{ 'conference.edit.agenda.footer' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().agenda.footer" (ngModelChange)="updateDraftAgendaFooter($event)" />
             </div>
             @for (day of draft().agenda.days; track $index) {
               <div class="edit-chapter-block">
                 <div class="edit-chapter-header">
-                  <span class="edit-chapter-num">Jour {{ $index + 1 }}</span>
+                  <span class="edit-chapter-num">{{ 'conference.edit.agenda.day' | translate }} {{ $index + 1 }}</span>
                   <button class="edit-btn-remove" (click)="removeDay($index)" [disabled]="draft().agenda.days.length <= 1">✕</button>
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Date <span class="edit-hint">AAAA-MM-JJ</span></label>
+                    <label class="edit-label">{{ 'conference.edit.agenda.date' | translate }} <span class="edit-hint">{{ 'conference.edit.agenda.dateHint' | translate }}</span></label>
                     <input class="edit-input" type="date" [ngModel]="day.date" (ngModelChange)="updateDraftDay($index, 'date', $event)" />
                   </div>
                   <div class="edit-field edit-field--icon">
-                    <label class="edit-label">Icône</label>
+                    <label class="edit-label">{{ 'conference.edit.agenda.tabIcon' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="day.tabIcon" (ngModelChange)="updateDraftDay($index, 'tabIcon', $event)" />
                   </div>
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Date onglet <span class="edit-hint">ex : 15 SEPT</span></label>
+                    <label class="edit-label">{{ 'conference.edit.agenda.tabDate' | translate }} <span class="edit-hint">{{ 'conference.edit.agenda.tabDateHint' | translate }}</span></label>
                     <input class="edit-input" type="text" [ngModel]="day.tabDate" (ngModelChange)="updateDraftDay($index, 'tabDate', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Libellé onglet <span class="edit-hint">ex : Jour 1</span></label>
+                    <label class="edit-label">{{ 'conference.edit.agenda.tabLabel' | translate }} <span class="edit-hint">{{ 'conference.edit.agenda.tabLabelHint' | translate }}</span></label>
                     <input class="edit-input" type="text" [ngModel]="day.tabLabel" (ngModelChange)="updateDraftDay($index, 'tabLabel', $event)" />
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Libellé complet</label>
+                  <label class="edit-label">{{ 'conference.edit.agenda.fullLabel' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="day.label" (ngModelChange)="updateDraftDay($index, 'label', $event)" />
                 </div>
-                <div class="edit-divider"><span>Sessions</span></div>
+                <div class="edit-divider"><span>{{ 'conference.edit.agenda.sessions' | translate }}</span></div>
                 @for (s of day.sessions; track $index; let sIdx = $index) {
                   <div class="edit-program-item">
                     <div class="edit-program-item-header">
@@ -676,41 +678,41 @@
                     </div>
                     <div class="edit-field-row">
                       <div class="edit-field edit-field--icon">
-                        <label class="edit-label">Icône</label>
+                        <label class="edit-label">{{ 'conference.edit.agenda.icon' | translate }}</label>
                         <input class="edit-input" type="text" [ngModel]="s.icon" (ngModelChange)="updateDraftSession($index, sIdx, 'icon', $event)" />
                       </div>
                       <div class="edit-field">
-                        <label class="edit-label">Horaire</label>
+                        <label class="edit-label">{{ 'conference.edit.agenda.time' | translate }}</label>
                         <input class="edit-input" type="text" [ngModel]="s.time" (ngModelChange)="updateDraftSession($index, sIdx, 'time', $event)" />
                       </div>
                     </div>
                     <div class="edit-field">
-                      <label class="edit-label">Titre</label>
+                      <label class="edit-label">{{ 'conference.edit.agenda.sessionTitle' | translate }}</label>
                       <input class="edit-input" type="text" [ngModel]="s.title" (ngModelChange)="updateDraftSession($index, sIdx, 'title', $event)" />
                     </div>
                     <div class="edit-field-row">
                       <div class="edit-field">
-                        <label class="edit-label">Intervenant(s)</label>
+                        <label class="edit-label">{{ 'conference.edit.agenda.speaker' | translate }}</label>
                         <input class="edit-input" type="text" [ngModel]="s.speaker" (ngModelChange)="updateDraftSession($index, sIdx, 'speaker', $event)" />
                       </div>
                       <div class="edit-field">
-                        <label class="edit-label">Salle</label>
+                        <label class="edit-label">{{ 'conference.edit.agenda.room' | translate }}</label>
                         <input class="edit-input" type="text" [ngModel]="s.room" (ngModelChange)="updateDraftSession($index, sIdx, 'room', $event)" />
                       </div>
                     </div>
                     <div class="edit-field">
-                      <label class="edit-label">Type</label>
+                      <label class="edit-label">{{ 'conference.edit.agenda.type' | translate }}</label>
                       <select class="edit-input" [ngModel]="s.type" (ngModelChange)="updateDraftSession($index, sIdx, 'type', $event)">
-                        <option value="keynote">Keynote</option>
-                        <option value="workshop">Atelier</option>
-                        <option value="panel">Panel</option>
-                        <option value="networking">Networking</option>
-                        <option value="break">Pause</option>
+                        <option value="keynote">{{ 'conference.edit.agenda.keynote' | translate }}</option>
+                        <option value="workshop">{{ 'conference.edit.agenda.workshop' | translate }}</option>
+                        <option value="panel">{{ 'conference.edit.agenda.panel' | translate }}</option>
+                        <option value="networking">{{ 'conference.edit.agenda.networking' | translate }}</option>
+                        <option value="break">{{ 'conference.edit.agenda.break' | translate }}</option>
                       </select>
                     </div>
                   </div>
                 }
-                <button class="edit-btn-add" (click)="addSession($index)">+ Ajouter une session</button>
+                <button class="edit-btn-add" (click)="addSession($index)">{{ 'conference.edit.agenda.addSession' | translate }}</button>
               </div>
             }
             <button class="edit-btn-day-toggle edit-btn-day-toggle--add" (click)="addDay()">
@@ -718,7 +720,7 @@
                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
               </svg>
-              Ajouter une journée
+              {{ 'conference.edit.agenda.addDay' | translate }}
             </button>
           </div>
         }
@@ -726,25 +728,25 @@
         <!-- ── SPEAKERS ── -->
         @if (activeSection() === 'speakers') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Intervenants</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.speakers.heading' | translate }}</h3>
             <div class="edit-field-row">
               <div class="edit-field">
-                <label class="edit-label">Titre de section</label>
+                <label class="edit-label">{{ 'conference.edit.speakers.sectionTitle' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().speakers.headline" (ngModelChange)="updateDraftSpeakersHeadline('headline', $event)" />
               </div>
               <div class="edit-field">
-                <label class="edit-label">Sous-titre</label>
+                <label class="edit-label">{{ 'conference.edit.speakers.subtitle' | translate }}</label>
                 <input class="edit-input" type="text" [ngModel]="draft().speakers.subheadline" (ngModelChange)="updateDraftSpeakersHeadline('subheadline', $event)" />
               </div>
             </div>
             @for (sp of draft().speakers.speakers; track $index) {
               <div class="edit-chapter-block">
                 <div class="edit-chapter-header">
-                  <span class="edit-chapter-num">{{ sp.name || 'Intervenant ' + ($index + 1) }}</span>
+                  <span class="edit-chapter-num">{{ sp.name || (('conference.edit.speakers.heading' | translate) + ' ' + ($index + 1)) }}</span>
                   <button class="edit-btn-remove" (click)="removeSpeaker($index)" [disabled]="draft().speakers.speakers.length <= 1">✕</button>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Portrait</label>
+                  <label class="edit-label">{{ 'conference.edit.speakers.portrait' | translate }}</label>
                   <div class="edit-upload-zone" style="width:100px;height:100px" (click)="spInput.click()">
                     @if (sp.portraitUrl) {
                       <img class="edit-upload-preview" [src]="sp.portraitUrl" [alt]="sp.name" />
@@ -754,7 +756,7 @@
                              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                         </svg>
-                        <span>Photo</span>
+                        <span>{{ 'conference.edit.speakers.photo' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -774,26 +776,26 @@
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Nom complet</label>
+                    <label class="edit-label">{{ 'conference.edit.speakers.fullName' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="sp.name" (ngModelChange)="updateDraftSpeaker($index, 'name', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Titre / Poste</label>
+                    <label class="edit-label">{{ 'conference.edit.speakers.title' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="sp.title" (ngModelChange)="updateDraftSpeaker($index, 'title', $event)" />
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Entreprise / Organisation</label>
+                  <label class="edit-label">{{ 'conference.edit.speakers.company' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="sp.company" (ngModelChange)="updateDraftSpeaker($index, 'company', $event)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Biographie</label>
+                  <label class="edit-label">{{ 'conference.edit.speakers.bio' | translate }}</label>
                   <textarea class="edit-textarea" rows="3" [ngModel]="sp.bio" (ngModelChange)="updateDraftSpeaker($index, 'bio', $event)"></textarea>
                 </div>
                 <div class="edit-toggle-row">
                   <div class="edit-toggle-info">
-                    <span class="edit-toggle-label">Keynote speaker</span>
-                    <span class="edit-toggle-desc">Affiche le badge Keynote sur la carte</span>
+                    <span class="edit-toggle-label">{{ 'conference.edit.speakers.keynote' | translate }}</span>
+                    <span class="edit-toggle-desc">{{ 'conference.edit.speakers.keynoteDesc' | translate }}</span>
                   </div>
                   <label class="edit-toggle-switch" [class.checked]="sp.isKeynote">
                     <input type="checkbox" [ngModel]="sp.isKeynote" (ngModelChange)="updateDraftSpeaker($index, 'isKeynote', $event)" />
@@ -802,45 +804,45 @@
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addSpeaker()">+ Ajouter un intervenant</button>
+            <button class="edit-btn-add" (click)="addSpeaker()">{{ 'conference.edit.speakers.addSpeaker' | translate }}</button>
           </div>
         }
 
         <!-- ── SPONSORS ── -->
         @if (activeSection() === 'sponsors') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Sponsors</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.sponsors.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre de section</label>
+              <label class="edit-label">{{ 'conference.edit.sponsors.sectionTitle' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().sponsors.headline" (ngModelChange)="updateDraftSponsorsHeadline($event)" />
             </div>
             @for (sp of draft().sponsors.sponsors; track $index) {
               <div class="edit-program-item">
                 <div class="edit-program-item-header">
-                  <span class="edit-program-idx">{{ sp.name || 'Sponsor ' + ($index + 1) }}</span>
+                  <span class="edit-program-idx">{{ sp.name || (('conference.edit.sponsors.heading' | translate) + ' ' + ($index + 1)) }}</span>
                   <button class="edit-btn-remove" (click)="removeSponsor($index)">✕</button>
                 </div>
                 <div class="edit-field-row">
                   <div class="edit-field">
-                    <label class="edit-label">Nom</label>
+                    <label class="edit-label">{{ 'conference.edit.sponsors.name' | translate }}</label>
                     <input class="edit-input" type="text" [ngModel]="sp.name" (ngModelChange)="updateDraftSponsor($index, 'name', $event)" />
                   </div>
                   <div class="edit-field">
-                    <label class="edit-label">Niveau</label>
+                    <label class="edit-label">{{ 'conference.edit.sponsors.level' | translate }}</label>
                     <select class="edit-input" [ngModel]="sp.level" (ngModelChange)="updateDraftSponsor($index, 'level', $event)">
-                      <option value="platine">Platine</option>
-                      <option value="or">Or</option>
-                      <option value="argent">Argent</option>
+                      <option value="platine">{{ 'conference.edit.sponsors.platine' | translate }}</option>
+                      <option value="or">{{ 'conference.edit.sponsors.or' | translate }}</option>
+                      <option value="argent">{{ 'conference.edit.sponsors.argent' | translate }}</option>
                     </select>
                   </div>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Logo</label>
+                  <label class="edit-label">{{ 'conference.edit.sponsors.logo' | translate }}</label>
                   <div class="edit-upload-zone" style="width:100%;height:60px" (click)="spLogoInput.click()">
                     @if (sp.logoUrl) {
                       <img class="edit-upload-preview" [src]="sp.logoUrl" [alt]="sp.name" style="object-fit:contain;padding:4px" />
                     } @else {
-                      <div class="edit-upload-placeholder"><span>Importer logo</span></div>
+                      <div class="edit-upload-placeholder"><span>{{ 'conference.edit.sponsors.importLogo' | translate }}</span></div>
                     }
                     <div class="edit-upload-overlay">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -858,19 +860,19 @@
                   <input #spLogoInput type="file" accept="image/*" class="edit-upload-input" (change)="onSponsorLogoChange($event, $index)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Site web</label>
+                  <label class="edit-label">{{ 'conference.edit.sponsors.website' | translate }}</label>
                   <input class="edit-input" type="url" [ngModel]="sp.websiteUrl" (ngModelChange)="updateDraftSponsor($index, 'websiteUrl', $event)" />
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addSponsor()">+ Ajouter un sponsor</button>
+            <button class="edit-btn-add" (click)="addSponsor()">{{ 'conference.edit.sponsors.addSponsor' | translate }}</button>
           </div>
         }
 
         <!-- ── FAQ ── -->
         @if (activeSection() === 'faq') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">FAQ</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.faq.heading' | translate }}</h3>
             @for (item of draft().faq.items; track $index) {
               <div class="edit-faq-item">
                 <div class="edit-faq-item-header">
@@ -878,29 +880,29 @@
                   <button class="edit-btn-remove" (click)="removeFaqItem($index)">✕</button>
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Question</label>
+                  <label class="edit-label">{{ 'conference.edit.faq.question' | translate }}</label>
                   <input class="edit-input" type="text" [ngModel]="item.q" (ngModelChange)="updateDraftFaqItem($index, 'q', $event)" />
                 </div>
                 <div class="edit-field">
-                  <label class="edit-label">Réponse</label>
+                  <label class="edit-label">{{ 'conference.edit.faq.answer' | translate }}</label>
                   <textarea class="edit-textarea" rows="3" [ngModel]="item.a" (ngModelChange)="updateDraftFaqItem($index, 'a', $event)"></textarea>
                 </div>
               </div>
             }
-            <button class="edit-btn-add" (click)="addFaqItem()">+ Ajouter une question</button>
+            <button class="edit-btn-add" (click)="addFaqItem()">{{ 'conference.edit.faq.addQuestion' | translate }}</button>
           </div>
         }
 
         <!-- ── RSVP ── -->
         @if (activeSection() === 'rsvp') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Inscription</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.rsvp.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Titre</label>
+              <label class="edit-label">{{ 'conference.edit.rsvp.title' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().rsvp.title" (ngModelChange)="updateDraftRsvp('title', $event)" />
             </div>
             <div class="edit-field">
-              <label class="edit-label">Sous-titre</label>
+              <label class="edit-label">{{ 'conference.edit.rsvp.subtitle' | translate }}</label>
               <textarea class="edit-textarea" rows="4" [ngModel]="draft().rsvp.subtitle" (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
             </div>
           </div>
@@ -909,7 +911,7 @@
         <!-- ── GALERIE ── -->
         @if (activeSection() === 'gallery') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Galerie</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.gallery.heading' | translate }}</h3>
             <div class="edit-gallery-grid">
               @for (item of draft().gallery.items; track $index) {
                 <div class="edit-gallery-item">
@@ -923,7 +925,7 @@
                           <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
-                        <span>Ajouter</span>
+                        <span>{{ 'conference.edit.gallery.add' | translate }}</span>
                       </div>
                     }
                     <div class="edit-upload-overlay">
@@ -940,25 +942,25 @@
                     }
                   </div>
                   <input #galleryInput type="file" accept="image/*" class="edit-upload-input" (change)="onGalleryImageChange($event, $index)" />
-                  <input class="edit-input edit-gallery-caption" type="text" placeholder="Légende…"
+                  <input class="edit-input edit-gallery-caption" type="text" [placeholder]="'conference.edit.gallery.caption' | translate"
                          [ngModel]="item.caption" (ngModelChange)="updateDraftGalleryCaption($index, $event)" />
                   <div class="edit-gallery-item-footer">
                     <button class="edit-gallery-badge" [class.active]="item.large" (click)="toggleDraftGalleryLarge($index)">
-                      {{ item.large ? '★ Grande' : '☆ Grande' }}
+                      {{ item.large ? ('conference.edit.gallery.largeBadgeActive' | translate) : ('conference.edit.gallery.largeBadgeInactive' | translate) }}
                     </button>
                     <button class="edit-btn-remove" (click)="removeGalleryItem($index)" [disabled]="draft().gallery.items.length <= 1">✕</button>
                   </div>
                 </div>
               }
             </div>
-            <button class="edit-btn-add" (click)="addGalleryItem()">+ Ajouter une photo</button>
+            <button class="edit-btn-add" (click)="addGalleryItem()">{{ 'conference.edit.gallery.addPhoto' | translate }}</button>
           </div>
         }
 
         <!-- ── BACKGROUNDS ── -->
         @if (activeSection() === 'backgrounds') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Fonds &amp; Bandeaux</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.backgrounds.heading' | translate }}</h3>
             @for (bg of BG_FIELDS; track bg.key) {
               <div class="edit-bg-card">
                 <div class="edit-bg-preview-wrap" (click)="bgInput.click()">
@@ -971,7 +973,7 @@
                           <circle cx="8.5" cy="8.5" r="1.5"/>
                           <polyline points="21 15 16 10 5 21"/>
                         </svg>
-                        <span>Aucune image</span>
+                        <span>{{ 'conference.edit.backgrounds.noImage' | translate }}</span>
                       </div>
                     }
                   </div>
@@ -981,12 +983,12 @@
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                       <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <span>Changer</span>
+                    <span>{{ 'conference.edit.backgrounds.change' | translate }}</span>
                   </div>
                   @if (uploadingImage() === 'bg_' + bg.key) {
                     <div class="edit-upload-spinner-overlay">
                       <div class="edit-spinner"></div>
-                      <span>Upload...</span>
+                      <span>{{ 'conference.edit.backgrounds.uploading' | translate }}</span>
                     </div>
                   }
                 </div>
@@ -1003,18 +1005,18 @@
         <!-- ── FOOTER ── -->
         @if (activeSection() === 'footer') {
           <div class="edit-form-section">
-            <h3 class="edit-form-heading">Footer</h3>
+            <h3 class="edit-form-heading">{{ 'conference.edit.footer.heading' | translate }}</h3>
             <div class="edit-field">
-              <label class="edit-label">Nom / Logo texte <span class="edit-hint">synchronisé avec le titre du hero</span></label>
+              <label class="edit-label">{{ 'conference.edit.footer.logoText' | translate }} <span class="edit-hint">{{ 'conference.edit.footer.logoHint' | translate }}</span></label>
               <input class="edit-input" type="text" [ngModel]="draft().hero.title" (ngModelChange)="updateDraftHero('title', $event)" />
             </div>
             <div class="edit-field">
               <label class="edit-label">
-                Sous-titre
-                <span class="edit-hint">date · lieu · ville</span>
+                {{ 'conference.edit.footer.subtitle' | translate }}
+                <span class="edit-hint">{{ 'conference.edit.footer.subtitleHint' | translate }}</span>
                 @if (subtitleEdited()) {
-                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" title="Remettre la valeur automatique">
-                    ↺ Sync auto
+                  <button class="edit-hint-btn" (click)="resetSubtitleToAuto()" [title]="'conference.edit.footer.syncAuto' | translate">
+                    {{ 'conference.edit.footer.syncAuto' | translate }}
                   </button>
                 }
               </label>
@@ -1023,11 +1025,11 @@
                      (ngModelChange)="updateDraftFooter('subText', $event)"
                      [placeholder]="autoSubtitle()" />
               @if (!subtitleEdited()) {
-                <p class="edit-field-hint">Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.</p>
+                <p class="edit-field-hint">{{ 'conference.edit.footer.autoGenerated' | translate }}</p>
               }
             </div>
             <div class="edit-field">
-              <label class="edit-label">Tagline</label>
+              <label class="edit-label">{{ 'conference.edit.footer.tagline' | translate }}</label>
               <input class="edit-input" type="text" [ngModel]="draft().footer.tagline" (ngModelChange)="updateDraftFooter('tagline', $event)" />
             </div>
             <div class="edit-footer-preview">
@@ -1041,9 +1043,9 @@
       </div><!-- /edit-modal-body -->
 
       <div class="edit-modal-footer">
-        <button class="edit-btn-reset" (click)="resetToDefault()">Réinitialiser</button>
+        <button class="edit-btn-reset" (click)="resetToDefault()">{{ 'conference.edit.reset' | translate }}</button>
         <div class="edit-modal-footer-right">
-          <button class="edit-btn-cancel" (click)="closeEdit()">Annuler</button>
+          <button class="edit-btn-cancel" (click)="closeEdit()">{{ 'conference.edit.cancel' | translate }}</button>
           <button class="edit-btn-save" (click)="saveEdit()"
                   [disabled]="!draft().hero.maxAttendees || draft().hero.maxAttendees < 1">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -1051,7 +1053,7 @@
               <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
               <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
             </svg>
-            Enregistrer
+            {{ 'conference.edit.save' | translate }}
           </button>
         </div>
       </div>

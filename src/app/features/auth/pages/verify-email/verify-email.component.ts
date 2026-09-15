@@ -3,11 +3,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-verify-email',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: 'verify-email.component.html',
   styleUrl: 'verify-email.component.scss',
 })

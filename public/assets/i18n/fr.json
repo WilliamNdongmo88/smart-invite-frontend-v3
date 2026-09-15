@@ -1,0 +1,1652 @@
+{
+  "nav": {
+    "administration": "Administration",
+    "home": "Accueil",
+    "contact": "Contact",
+    "logout": "Déconnexion",
+    "hello": "Bonjour,"
+  },
+  "sidebar": {
+    "adminPanel": "Admin Panel",
+    "visitors": "Visiteurs",
+    "users": "Utilisateurs",
+    "payments": "Paiements",
+    "finance": "Finances",
+    "profile": "Profil",
+    "dashboard": "Dashboard",
+    "events": "Événements",
+    "agents": "Agents"
+  },
+  "common": {
+    "refresh": "Actualiser",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "loading": "Chargement…",
+    "noData": "Aucune donnée",
+    "search": "Rechercher",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "close": "Fermer",
+    "send": "Envoyer",
+    "see": "Voir",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "actions": "Actions",
+    "total": "Total",
+    "status": "Statut",
+    "date": "Date",
+    "none": "Aucun",
+    "retry": "Réessayer",
+    "back": "Retour",
+    "or": "ou",
+    "required": "requis",
+    "irreversible": "⚠️ Cette action est irréversible."
+  },
+  "auth": {
+    "leftHeadline": "Créez des invitations mémorables",
+    "leftSub": "Gérez vos événements, envoyez vos invitations et suivez vos invités en temps réel.",
+    "login": {
+      "title": "Bon retour",
+      "subtitle": "Entrez vos identifiants pour accéder à votre espace",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
+      "emailError": "E-mail invalide",
+      "password": "Mot de passe",
+      "passwordError": "Mot de passe requis",
+      "forgotPassword": "Mot de passe oublié ?",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte",
+      "errorDefault": "Identifiants incorrects"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Rejoignez SmartInvite et gérez vos événements",
+      "subtitleGoogle": "Complétez votre profil pour finaliser l'inscription",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "fullNameError": "Nom requis (min. 2 caractères)",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
+      "emailError": "E-mail invalide",
+      "phone": "Téléphone WhatsApp",
+      "phoneHint": "Sélectionnez votre pays puis saisissez votre numéro local",
+      "phoneError": "Le numéro WhatsApp est requis",
+      "phonePlaceholder": "6XX XXX XXX",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "Min. 8 caractères",
+      "passwordError": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "submit": "Créer mon compte",
+      "alreadyAccount": "Déjà un compte ?",
+      "signIn": "Se connecter",
+      "errorDefault": "Erreur lors de l'inscription"
+    },
+    "verifyEmail": {
+      "leftHeadline": "Vérifiez votre identité",
+      "leftSub": "Un code à 6 chiffres a été envoyé à votre adresse email.",
+      "title": "Vérification email",
+      "subtitle": "Code envoyé à",
+      "submit": "Vérifier le code",
+      "noCode": "Vous n'avez pas reçu le code ?",
+      "resendIn": "Renvoyer dans",
+      "resend": "Renvoyer le code",
+      "backToLogin": "← Retour à la connexion"
+    },
+    "forgotPassword": {
+      "leftHeadline": "Récupérez votre accès",
+      "leftSub": "Entrez votre email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+      "title": "Mot de passe oublié ?",
+      "subtitle": "Saisissez votre email pour recevoir un lien de réinitialisation",
+      "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
+      "emailError": "E-mail invalide",
+      "submit": "Envoyer le lien",
+      "successTitle": "Email envoyé !",
+      "successSub": "Un lien de réinitialisation a été envoyé à",
+      "successHint": "Vérifiez votre boîte de réception et vos spams. Le lien expire dans 10 minutes.",
+      "backToLogin": "← Retour à la connexion"
+    },
+    "resetPassword": {
+      "leftHeadline": "Nouveau mot de passe",
+      "leftSub": "Choisissez un mot de passe fort d'au moins 8 caractères.",
+      "title": "Réinitialiser",
+      "subtitle": "Définissez votre nouveau mot de passe",
+      "newPassword": "Nouveau mot de passe",
+      "newPasswordPlaceholder": "Min. 8 caractères",
+      "newPasswordError": "Minimum 8 caractères",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "submit": "Enregistrer le mot de passe",
+      "successTitle": "Mot de passe modifié !",
+      "successSub": "Votre mot de passe a été réinitialisé avec succès.",
+      "signIn": "Se connecter",
+      "backToLogin": "← Retour à la connexion"
+    },
+    "errorGoogle": "Erreur Google"
+  },
+  "dashboard": {
+    "title": "Bonjour,",
+    "subtitle": "Voici un aperçu de vos événements",
+    "createEvent": "Créer un événement",
+    "activeEvents": "Événements actifs",
+    "totalGuests": "Total invités",
+    "confirmationRate": "Taux de confirmation",
+    "nextEvent": "Prochain événement",
+    "recentEvents": "Événements récents",
+    "seeAll": "Voir tout →",
+    "noEvents": "Aucun événement pour l'instant",
+    "createFirst": "Créer mon premier événement",
+    "responseRate": "% de réponses"
+  },
+  "events": {
+    "title": "Mes événements",
+    "newEvent": "Nouvel événement",
+    "searchPlaceholder": "Rechercher...",
+    "noResults": "Aucun événement ne correspond à votre recherche",
+    "resetFilters": "Réinitialiser les filtres",
+    "noEvents": "Vous n'avez pas encore d'événement",
+    "createFirst": "Créer mon premier événement",
+    "maxGuests": "invités max",
+    "view": "Voir",
+    "edit": "Éditer",
+    "deleteTitle": "Supprimer l'événement ?",
+    "deleteText": "Cette action est irréversible. Toutes les données associées (invités, invitations, liens) seront supprimées.",
+    "tabs": {
+      "ALL": "Tous",
+      "PLANNED": "Planifiés",
+      "ACTIVE": "Actifs",
+      "COMPLETED": "Terminés",
+      "CANCELLED": "Annulés"
+    },
+    "status": {
+      "PLANNED": "Planifié",
+      "ACTIVE": "Actif",
+      "COMPLETED": "Terminé",
+      "CANCELLED": "Annulé"
+    },
+    "types": {
+      "MARIAGE": "Mariage",
+      "GALA": "Gala",
+      "CONFERENCE": "Conférence",
+      "CEREMONIE": "Cérémonie"
+    },
+    "create": {
+      "title": "Créer un événement",
+      "backToEvents": "Mes événements",
+      "typeQuestion": "Quel type d'événement organisez-vous ?",
+      "typeSubtitle": "Chaque type bénéficie d'un éditeur dédié pour personnaliser votre page.",
+      "typeError": "Veuillez sélectionner un type d'événement.",
+      "dedicatedEditor": "Éditeur dédié",
+      "proceed": {
+        "MARIAGE": "Accéder à l'éditeur Mariage",
+        "GALA": "Accéder à l'éditeur Gala",
+        "CONFERENCE": "Accéder à l'éditeur Conférence",
+        "CEREMONIE": "Accéder à l'éditeur Cérémonie",
+        "default": "Sélectionnez un type"
+      },
+      "banners": {
+        "MARIAGE": "Page personnalisée avec portraits, histoire du couple, programme multi-jours, galerie, dress code et RSVP.",
+        "GALA": "Page soirée avec programme, artistes, dress code, galerie et section réservation.",
+        "CONFERENCE": "Page professionnelle avec agenda multi-jours, intervenants, sponsors, galerie et inscription.",
+        "CEREMONIE": "Page intime avec programme, personnes clés (parents, parrain…), tenue, galerie et invitation."
+      }
+    },
+    "toast": {
+      "deleteSuccess": "Événement supprimé",
+      "deleteError": "Erreur lors de la suppression"
+    },
+    "detail": {
+      "backToEvents": "Mes événements",
+      "guests": "Invités",
+      "card": "Carte",
+      "joinPage": "Page Inscription",
+      "invite": "Inviter",
+      "edit": "Éditer",
+      "hintCard": "Cliquez sur Carte pour prévisualiser la page de détails de l'événement",
+      "hintJoin": "Cliquez sur Page Inscription pour prévisualiser et mettre à jour la photo de la page d'inscription",
+      "responseRate": "Taux de réponse",
+      "information": "Informations",
+      "type": "Type",
+      "status": "Statut",
+      "mainDate": "Date principale",
+      "budget": "Budget",
+      "description": "Description",
+      "program": "Programme",
+      "civilCeremony": "Cérémonie civile",
+      "religiousCeremony": "Cérémonie religieuse",
+      "reception": "Réception / Banquet",
+      "recentGuests": "Invités récents",
+      "seeAll": "Voir tous →",
+      "noGuests": "Aucun invité pour l'instant",
+      "addGuests": "+ Ajouter des invités",
+      "invitationLinks": "Liens d'invitation",
+      "manageInvitations": "Gérer les invitations",
+      "joinPageLink": "Page d'inscription (Join & Photo)"
+    },
+    "edit": {
+      "backToEvent": "Retour à l'événement",
+      "title": "Modifier l'événement",
+      "typeSection": "Type d'événement",
+      "typeSub": "Confirmez ou modifiez le type pour accéder à l'éditeur dédié.",
+      "proceed": {
+        "MARIAGE": "Accéder à l'éditeur Mariage",
+        "GALA": "Accéder à l'éditeur Gala",
+        "CONFERENCE": "Accéder à l'éditeur Conférence",
+        "CEREMONIE": "Accéder à l'éditeur Cérémonie",
+        "default": "Sélectionnez un type"
+      }
+    }
+  },
+  "guests": {
+    "title": "Invités",
+    "totalGuests": "invité(s) au total",
+    "manageInvitations": "Gérer les invitations",
+    "addGuest": "Ajouter un invité",
+    "searchPlaceholder": "Rechercher un invité…",
+    "import": "Importer Excel",
+    "importTitle": "Importer depuis un fichier Excel",
+    "export": "Exporter",
+    "exportLoading": "Export...",
+    "excel": "Excel (.xlsx)",
+    "pdf": "PDF (.pdf)",
+    "selectAll": "Tout sélectionner",
+    "deleteSelected": "Supprimer",
+    "contact": "Contact",
+    "remind": "Envoyer un rappel",
+    "pagination": "Page {{ page }} sur {{ total }} — {{ count }} invité(s)",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "noResults": "Aucun résultat pour ces filtres.",
+    "noGuestsHint": "Commencez par ajouter vos premiers invités.",
+    "tableNumber": "Table {{ n }}",
+    "form": {
+      "titleAdd": "Ajouter un invité",
+      "titleEdit": "Modifier l'invité",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "fullNameError": "Requis, minimum 2 caractères",
+      "email": "Email",
+      "phone": "Téléphone",
+      "whatsappError": "Le numéro WhatsApp est requis",
+      "whatsappHint": "Numéro WhatsApp avec indicatif pays",
+      "notifMode": "Mode de notification",
+      "tableNum": "Numéro de table",
+      "saving": "Enregistrement...",
+      "save": "Enregistrer",
+      "add": "Ajouter"
+    },
+    "bulkDeleteTitle": "Supprimer {{ count }} invité(s) ?",
+    "reminderTitle": "Envoyer un rappel ?",
+    "reminderText": "Un rappel sera envoyé à cet invité selon son mode de notification.",
+    "importModal": {
+      "title": "Importer depuis Excel",
+      "desc": "Le fichier Excel doit contenir les colonnes dans cet ordre :",
+      "colName": "Nom *",
+      "colEmail": "Email",
+      "colPhone": "Téléphone",
+      "colNotif": "Notification",
+      "colTable": "Table",
+      "hint": "* Requis. Notification : EMAIL, WHATSAPP ou BOTH. La 1ère ligne est ignorée (en-têtes).",
+      "loading": "Import en cours...",
+      "dropzone": "Cliquez pour sélectionner un fichier .xlsx",
+      "imported": "importé(s)",
+      "skipped": "ignoré(s)",
+      "errors": "Détails :",
+      "reimport": "Importer un autre fichier"
+    },
+    "tableAlert": {
+      "title": "Numéros de table manquants",
+      "text": "invité(s) confirmé(s) n'ont pas encore de numéro de table assigné. Pensez à les mettre à jour avant l'événement.",
+      "viewConfirmed": "Voir les confirmés",
+      "viewConfirmedMobile": "Voir les invités confirmés"
+    },
+    "tabs": {
+      "ALL": "Tous",
+      "PENDING": "En attente",
+      "CONFIRMED": "Confirmés",
+      "DECLINED": "Déclinés",
+      "PRESENT": "Présents"
+    },
+    "fields": {
+      "name": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "table": "Table",
+      "rsvp": "RSVP",
+      "notification": "Notification"
+    },
+    "noGuests": "Aucun invité trouvé",
+    "deleteTitle": "Supprimer les invités sélectionnés ?",
+    "deleteText": "Cette action est irréversible.",
+    "toast": {
+      "addSuccess": "Invité ajouté",
+      "updateSuccess": "Invité mis à jour",
+      "deleteSuccess": "Invité(s) supprimé(s)",
+      "importSuccess": "Import réussi",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "invitations": {
+    "title": "Invitations",
+    "totalGenerated": "invitation(s) générée(s)",
+    "manageGuests": "Gérer les invités",
+    "generate": "Générer des invitations",
+    "noInvitations": "Aucune invitation",
+    "noInvitationsStatus": "Aucune invitation avec ce statut.",
+    "noInvitationsAll": "Générez des invitations pour vos invités.",
+    "tabs": {
+      "ALL": "Tous",
+      "ACTIVE": "Actives",
+      "REVOKED": "Révoquées",
+      "USED": "Utilisées"
+    },
+    "fields": {
+      "guest": "Invité",
+      "token": "Token",
+      "status": "Statut",
+      "rsvp": "RSVP",
+      "sentAt": "Envoyé le",
+      "actions": "Actions"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "REVOKED": "Révoquée",
+      "USED": "Utilisée"
+    },
+    "rsvp": {
+      "PENDING": "En attente",
+      "CONFIRMED": "Confirmé",
+      "DECLINED": "Décliné",
+      "PRESENT": "Présent"
+    },
+    "toast": {
+      "generateSuccess": "Invitations générées",
+      "revokeSuccess": "Invitation révoquée",
+      "resendSuccess": "Invitation renvoyée",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "links": {
+    "title": "Liens d'invitation",
+    "subtitle": "Gérez les liens de partage pour votre événement",
+    "backToEvent": "Retour à l'événement",
+    "create": "Créer un lien",
+    "noLinks": "Aucun lien créé",
+    "copy": "Copier",
+    "copied": "Copié !",
+    "revoke": "Révoquer",
+    "usages": "Utilisations",
+    "expiresOn": "Expire le",
+    "createModal": {
+      "title": "Nouveau lien d'inscription",
+      "subtitle": "Laissez les champs vides pour un lien sans restriction.",
+      "limitLabel": "Limite d'inscriptions (optionnel)",
+      "expiryLabel": "Date d'expiration (optionnel)",
+      "creating": "Création…",
+      "create": "Créer le lien"
+    },
+    "editModal": {
+      "title": "Modifier le lien",
+      "limitLabel": "Limite d'inscriptions",
+      "expiryLabel": "Date d'expiration",
+      "saving": "Enregistrement…",
+      "save": "Enregistrer"
+    },
+    "shareModal": {
+      "title": "Partager le lien",
+      "subtitle": "Choisissez comment partager ce lien d'inscription.",
+      "whatsapp": "WhatsApp",
+      "copy": "Copier le lien",
+      "open": "Ouvrir",
+      "close": "Fermer"
+    },
+    "deleteModal": {
+      "title": "Supprimer le lien",
+      "text": "Ce lien sera désactivé. Les inscriptions déjà effectuées ne seront pas supprimées.",
+      "deleting": "Suppression…",
+      "delete": "Supprimer"
+    },
+    "status": {
+      "ACTIVE": "Actif",
+      "REVOKED": "Révoqué"
+    },
+    "join": {
+      "title": "Vous êtes invité",
+      "confirm": "Confirmer ma présence",
+      "decline": "Décliner",
+      "expired": "Ce lien n'est plus valide.",
+      "success": "Votre réponse a été enregistrée."
+    },
+    "toast": {
+      "createSuccess": "Lien créé",
+      "revokeSuccess": "Lien révoqué",
+      "copySuccess": "Lien copié",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "checkin": {
+    "agents": {
+      "title": "Agents d'accueil",
+      "subtitle": "Gérez les agents chargés du scan QR à l'entrée",
+      "newAgent": "Nouvel agent",
+      "infoBanner": "Les identifiants de connexion (email + mot de passe) sont envoyés automatiquement par WhatsApp à l'agent lors de sa création.",
+      "loading": "Chargement…",
+      "noAgents": "Aucun agent créé pour le moment.",
+      "createFirst": "Créer le premier agent",
+      "email": "Email",
+      "password": "Mot de passe",
+      "copy": "Copier",
+      "copied": "Copié !",
+      "delete": "Supprimer",
+      "deleteTitle": "Supprimer cet agent ?",
+      "form": {
+        "title": "Créer un agent",
+        "editTitle": "Modifier l'agent",
+        "name": "Nom de l'agent",
+        "namePlaceholder": "Ex : Jean Check-in",
+        "nameError": "Nom requis",
+        "whatsapp": "Numéro WhatsApp",
+        "whatsappPlaceholder": "6XX XXX XXX",
+        "whatsappError": "Numéro requis",
+        "event": "Événement assigné",
+        "eventPlaceholder": "Sélectionnez un événement",
+        "eventError": "Événement requis",
+        "submit": "Créer l'agent",
+        "update": "Mettre à jour"
+      },
+      "toast": {
+        "createSuccess": "Agent créé",
+        "deleteSuccess": "Agent supprimé",
+        "error": "Une erreur est survenue"
+      }
+    },
+    "scan": {
+      "selectEvent": "Sélectionnez un événement",
+      "loadingEvents": "Chargement des événements…",
+      "noEvents": "Aucun événement disponible pour votre compte.",
+      "event": "Événement :",
+      "changeEvent": "Changer",
+      "scanTitle": "Scanner un QR code",
+      "scanSubtitle": "Pointez la caméra sur le QR code de l'invitation",
+      "cameraOff": "Caméra inactive",
+      "startCamera": "Démarrer la caméra",
+      "stopCamera": "Arrêter",
+      "sound": "Son de notification",
+      "manualTitle": "Saisie manuelle du token",
+      "manualPlaceholder": "Collez ou tapez le token ici…",
+      "manualSubmit": "Scanner",
+      "result": {
+        "VALID": "Accès autorisé",
+        "DUPLICATE": "Déjà scanné",
+        "EXPIRED": "Invitation expirée",
+        "INVALID": "QR code invalide"
+      },
+      "guestName": "Invité",
+      "tableNumber": "Table n°",
+      "scanAnother": "Scanner un autre",
+      "retry": "Réessayer"
+    }
+  },
+  "payments_user": {
+    "title": "Paiements",
+    "subtitle": "Gérez vos quotas d'invités et suivez vos paiements",
+    "plan": {
+      "title": "Récapitulatif",
+      "subtitle": "Détail du montant à payer",
+      "quotaLabel": "Quota demandé",
+      "quotaUnit": "invités",
+      "unitPrice": "Prix unitaire",
+      "unitPriceVal": "XAF / invité",
+      "total": "Total à payer",
+      "howToPay": "Comment effectuer le paiement ?",
+      "mobileMoney": "📱 Mobile Money",
+      "card": "💳 Carte bancaire",
+      "accountName": "Nom du compte",
+      "cardNumber": "N° de carte",
+      "holder": "Titulaire",
+      "bank": "Banque",
+      "step1": "Choisissez votre moyen de paiement ci-dessus et effectuez le virement",
+      "step2": "Cliquez sur <strong>Souscrire</strong> pour initier la souscription",
+      "step3": "Uploadez la <strong>preuve de paiement</strong> (capture d'écran ou reçu)",
+      "step4": "Notre équipe validera votre paiement sous <strong>24h</strong>",
+      "copied": "✓ Copié dans le presse-papiers"
+    },
+    "proof": {
+      "step1": "Souscription initiée",
+      "step2": "Preuve de paiement",
+      "step3": "Validation (24h)",
+      "clickChange": "Cliquer pour changer",
+      "clickRetry": "Cliquer pour sélectionner un autre fichier",
+      "clickSelect": "Cliquer pour sélectionner votre preuve",
+      "fileHint": "JPG, PNG, WEBP ou PDF — Max 10 Mo"
+    },
+    "pending": {
+      "singular": "Vous avez un paiement en attente de finalisation",
+      "pluralPrefix": "Vous avez",
+      "pluralSuffix": "paiements en attente de finalisation",
+      "eventFallback": "Événement #",
+      "rejected": "rejeté",
+      "finalize": "Finaliser"
+    },
+    "table": {
+      "proof": "Voir",
+      "submit": "Soumettre",
+      "submitTitle": "Soumettre la preuve de paiement",
+      "resubmit": "Resoumettre",
+      "resubmitTitle": "Resoumettre une nouvelle preuve",
+      "quota": "{{ count }} invités"
+    },
+    "tabs": {
+      "subscribe": "Souscrire un quota",
+      "history": "Historique"
+    },
+    "subscribe": {
+      "title": "Nouveau quota",
+      "subtitle": "Choisissez votre événement et le nombre d'invités",
+      "event": "Événement",
+      "eventPlaceholder": "Sélectionnez un événement",
+      "eventError": "Veuillez sélectionner un événement",
+      "quota": "Nombre d'invités",
+      "quotaHint": "Pré-rempli avec le maximum d'invités défini sur l'événement",
+      "quotaError": "Minimum 1 invité",
+      "quotaPlaceholder": "Sélectionnez d'abord un événement",
+      "submit": "Souscrire",
+      "pending": "Paiement en attente",
+      "pendingQuota": "Quota de",
+      "pendingFor": "pour",
+      "pendingText": "Votre demande a été envoyée. Effectuez le virement et uploadez la preuve.",
+      "uploadProof": "Uploader la preuve de paiement",
+      "amount": "Montant à payer",
+      "instructions": "Instructions de paiement"
+    },
+    "history": {
+      "noPayments": "Aucun paiement trouvé.",
+      "event": "Événement",
+      "quota": "Quota",
+      "amount": "Montant",
+      "status": "Statut",
+      "date": "Date",
+      "proof": "Preuve",
+      "reason": "Motif de rejet"
+    },
+    "status": {
+      "PENDING": "En attente",
+      "UNDER_REVIEW": "En vérification",
+      "APPROVED": "Approuvé",
+      "REJECTED": "Rejeté"
+    },
+    "toast": {
+      "subscribeSuccess": "Demande envoyée",
+      "uploadSuccess": "Preuve uploadée",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "profile": {
+    "memberSince": "Membre depuis",
+    "tabs": {
+      "info": "Informations",
+      "notifications": "Notifications",
+      "security": "Sécurité"
+    },
+    "info": {
+      "title": "Informations personnelles",
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Votre nom",
+      "phone": "Téléphone / WhatsApp",
+      "notificationMode": "Mode de notification préféré",
+      "save": "Enregistrer les modifications",
+      "modes": {
+        "EMAIL": "Email uniquement",
+        "WHATSAPP": "WhatsApp uniquement",
+        "BOTH": "Email + WhatsApp"
+      }
+    },
+    "notifications": {
+      "title": "Préférences de notifications",
+      "attendance": "Notifications de présence",
+      "attendanceDesc": "Recevez une alerte quand un invité est scanné à l'entrée",
+      "thanks": "Messages de remerciement",
+      "thanksDesc": "Recevez une copie des messages de remerciement envoyés",
+      "reminders": "Rappels d'événements",
+      "remindersDesc": "Recevez des rappels avant vos événements",
+      "marketing": "Emails marketing",
+      "marketingDesc": "Recevez nos actualités et offres spéciales",
+      "save": "Enregistrer les préférences"
+    },
+    "security": {
+      "title": "Sécurité du compte",
+      "changePassword": "Changer le mot de passe",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "submit": "Mettre à jour le mot de passe"
+    },
+    "toast": {
+      "updateSuccess": "Profil mis à jour",
+      "avatarSuccess": "Avatar mis à jour",
+      "passwordSuccess": "Mot de passe modifié",
+      "error": "Une erreur est survenue"
+    }
+  },
+  "stats": {
+    "title": "Statistiques",
+    "subtitle": "Vue d'ensemble de vos paiements et quotas d'invitations",
+    "managePayments": "Gérer les paiements",
+    "totalRevenue": "Revenus totaux",
+    "approvedPayments": "paiement(s) approuvé(s)",
+    "totalQuota": "Quota total accordé",
+    "invitationsAvailable": "invitations disponibles",
+    "invitationsSent": "Invitations envoyées",
+    "confirmationRate": "Taux de confirmation",
+    "noData": "Aucune donnée disponible"
+  },
+  "admin": {
+    "refresh": "Actualiser",
+    "loading": "Chargement…",
+    "retry": "Réessayer",
+    "noData": "Aucune donnée",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  "analytics": {
+    "title": "Analytiques",
+    "subtitle": "Suivi des visiteurs de l'application",
+    "loading": "Chargement des statistiques…",
+    "uniqueVisitors": "Visiteurs uniques",
+    "totalSessions": "Sessions totales",
+    "pageViews": "Pages vues",
+    "bounceRate": "Taux de rebond",
+    "chartTitle": "Visiteurs uniques",
+    "day": "Jour",
+    "week": "Semaine",
+    "month": "Mois",
+    "noData": "Aucune donnée disponible",
+    "topPages": "Top 10 pages",
+    "byDevice": "Répartition par device",
+    "topCountries": "Top pays",
+    "noGeoip": "Aucune donnée (GeoIP non configuré)",
+    "avgDurationBrowser": "Durée moy. par navigateur",
+    "avgDurationOs": "Durée moyenne des sessions par OS"
+  },
+  "visitors": {
+    "title": "Visiteurs du Site",
+    "uniqueVisitors": "Visiteurs uniques",
+    "returningVisitors": "Visiteurs récurrents",
+    "pageViews": "Pages vues",
+    "avgDuration": "Durée moyenne",
+    "topCountries": "TOP PAYS",
+    "browsers": "NAVIGATEURS",
+    "os": "SYSTÈMES D'EXPLOITATION",
+    "devices": "APPAREILS",
+    "topPages": "PAGES POPULAIRES",
+    "visitsByDay": "VISITES / JOUR (30J)",
+    "searchPlaceholder": "Rechercher par IP, pays, ville, navigateur…",
+    "allCountries": "Tous les pays",
+    "allCities": "Toutes les villes",
+    "allDevices": "Tous les appareils",
+    "allBrowsers": "Tous les navigateurs",
+    "filter": "Filtrer",
+    "reset": "Réinitialiser",
+    "firstVisit": "Première visite",
+    "country": "Pays / Ville",
+    "device": "Appareil / OS",
+    "browser": "Navigateur",
+    "sessions": "Sessions",
+    "lastDuration": "Durée (dernière)",
+    "type": "Type",
+    "actions": "Actions",
+    "noVisitors": "Aucun visiteur trouvé.",
+    "loading": "Chargement…",
+    "new": "Nouveau",
+    "returning": "Récurrent",
+    "noData": "Aucune donnée",
+    "viewDetails": "Voir détails"
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Gestion des organisateurs & messages de contact",
+    "organizers": "Organisateurs",
+    "messages": "Messages",
+    "active": "Actifs",
+    "blocked": "Bloqués",
+    "inactive": "Inactifs",
+    "searchPlaceholder": "Rechercher par nom ou email…",
+    "searchMsgPlaceholder": "Rechercher par nom, contact ou message…",
+    "name": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "events": "Événements",
+    "registeredOn": "Inscrit le",
+    "noUsers": "Aucun utilisateur trouvé.",
+    "noMessages": "Aucun message de contact reçu.",
+    "activate": "Activer",
+    "block": "Bloquer",
+    "unblock": "Débloquer",
+    "delete": "Supprimer",
+    "confirmAction": "Confirmer l'action",
+    "irreversible": "⚠️ Cette action est irréversible.",
+    "replyViaWhatsapp": "Répondre via WhatsApp",
+    "replyViaEmail": "Répondre par Email",
+    "yourReply": "Votre réponse",
+    "replyPlaceholder": "Saisissez votre réponse ici…",
+    "sendViaWhatsapp": "Envoyer via WhatsApp",
+    "sendViaEmail": "Envoyer par Email"
+  },
+  "payments": {
+    "title": "Paiements",
+    "subtitle": "Gestion et validation des preuves de paiement",
+    "underReview": "En vérification",
+    "approved": "Approuvés",
+    "rejected": "Rejetés",
+    "all": "Tous",
+    "pending": "En attente",
+    "organizer": "Organisateur",
+    "event": "Événement",
+    "quota": "Quota",
+    "amount": "Montant",
+    "proof": "Preuve",
+    "approve": "✓ Approuver",
+    "reject": "✕ Rejeter",
+    "noPayments": "Aucun paiement dans cette catégorie.",
+    "rejectTitle": "Rejeter le paiement",
+    "rejectSubtitle": "Veuillez indiquer le motif de rejet (obligatoire).",
+    "rejectPlaceholder": "Ex : Preuve illisible, montant incorrect…",
+    "confirmReject": "Confirmer le rejet",
+    "reason": "Motif :"
+  },
+  "finance": {
+    "title": "Finances",
+    "subtitle": "Revenus générés par l'application",
+    "totalRevenue": "Revenu total",
+    "thisMonth": "Ce mois",
+    "lastMonth": "Mois précédent",
+    "avgOrder": "Panier moyen",
+    "pending": "En attente",
+    "pendingAmount": "Montant en attente",
+    "monthlyGrowth": "Croissance mensuelle",
+    "revenueChart": "Revenus approuvés",
+    "byMonth": "Par mois",
+    "byYear": "Par année",
+    "detailByMonth": "Détail par mois",
+    "detailByYear": "Détail par année",
+    "approvedCount": "paiements approuvés",
+    "perApprovedPayment": "Par paiement approuvé",
+    "comparisonRef": "Référence de comparaison",
+    "toValidate": "à valider",
+    "vsPrevMonth": "vs mois précédent",
+    "noData": "Aucune donnée disponible",
+    "month": "Mois",
+    "year": "Année",
+    "revenue": "Revenu",
+    "paymentsCount": "Paiements"
+  },
+  "layout": {
+    "user": {
+      "dashboard": "Dashboard",
+      "events": "Événements",
+      "payments": "Paiements",
+      "agents": "Agents",
+      "profile": "Profil",
+      "footer": "© 2026 smart-invite — Tous droits réservés"
+    },
+    "agent": {
+      "title": "Smart Invite — Check-in",
+      "logout": "Déconnexion"
+    }
+  },
+  "wedding": {
+    "nav": {
+      "couple": "LE COUPLE",
+      "histoire": "NOTRE HISTOIRE",
+      "evenements": "ÉVÉNEMENTS",
+      "photos": "PHOTOS",
+      "infos": "INFOS",
+      "rsvp": "RSVP",
+      "closePreview": "Fermer l'aperçu",
+      "backToEvent": "Retour à l'événement",
+      "backToEventMobile": "Retour",
+      "cancel": "Annuler",
+      "saving": "Sauvegarde...",
+      "save": "Enregistrer",
+      "create": "Créer l'événement",
+      "createMobile": "Créer",
+      "edit": "Éditer",
+      "editTitle": "Éditer la page",
+      "editHero": "Éditer le héro",
+      "langToggle": "FR / EN"
+    },
+    "hero": {
+      "discover": "DÉCOUVRIR LE PROGRAMME",
+      "practical": "INFOS PRATIQUES",
+      "days": "JOURS",
+      "hours": "HEURES",
+      "minutes": "MINUTES",
+      "seconds": "SECONDES"
+    },
+    "couple": {
+      "eyebrow": "LES FUTURS MARIÉS",
+      "title": "Le Couple",
+      "bride": "La Mariée",
+      "groom": "Le Marié"
+    },
+    "band": {
+      "venue": "LE LIEU",
+      "quote": "« Il n'y a qu'un bonheur dans la vie, aimer et être aimé. »"
+    },
+    "story": {
+      "eyebrow": "NOTRE HISTOIRE",
+      "prevPage": "← PAGE PRÉCÉDENTE",
+      "nextPage": "PAGE SUIVANTE →",
+      "page": "Page {{ current }} / {{ total }}"
+    },
+    "gallery": {
+      "eyebrow": "NOS PHOTOS",
+      "title": "Nos Plus Beaux Moments",
+      "quote": "Puissiez-vous vivre aussi longtemps que vous aimez.",
+      "bandEyebrow": "ET CE N'EST PAS TOUT",
+      "bandTitle": "Notre histoire continue — Le temps de la célébrer ensemble",
+      "bandCta": "Voir le programme"
+    },
+    "programme": {
+      "eyebrow": "PROGRAMME"
+    },
+    "infos": {
+      "eyebrow": "BON À SAVOIR",
+      "title": "Infos Pratiques",
+      "lieuTitle": "Lieu",
+      "lieuDetail": "Accueil invités dès 12h00 · Parking sur place",
+      "rsvpTitle": "RSVP",
+      "rsvpSub": "Lien personnel WhatsApp",
+      "rsvpDetail": "Confirmez via votre lien unique · Places, régime, table"
+    },
+    "dressCode": {
+      "eyebrow": "✦ Thème de la soirée",
+      "themeLabel": "Ambiance visuelle :",
+      "reduce": "Réduire",
+      "morePalettes": "Voir plus de palettes"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions Fréquentes"
+    },
+    "rsvp": {
+      "eyebrow": "VENEZ CÉLÉBRER AVEC NOUS",
+      "viewProgram": "Voir le programme",
+      "ourStory": "Notre histoire"
+    },
+    "footer": {
+      "madeBy": "SITE RÉALISÉ PAR"
+    },
+    "music": {
+      "play": "Jouer la musique",
+      "stop": "Couper la musique"
+    },
+    "edit": {
+      "title": "Éditer la page",
+      "close": "Fermer",
+      "reset": "Réinitialiser",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "hero": {
+        "heading": "Hero & Save the Date",
+        "brideFirstName": "Prénom de la mariée",
+        "groomFirstName": "Prénom du marié",
+        "dateLabel": "Date affichée",
+        "dateLabelHint": "ex : Les 07 & 08 Août 2026",
+        "venueName": "Nom du lieu",
+        "venueCity": "Ville",
+        "catchphrase": "Phrase d'accroche",
+        "targetDate": "Date cible du countdown",
+        "targetDateHint": "ISO : AAAA-MM-JJTHH:MM:SS",
+        "capacity": "Capacité",
+        "maxGuests": "Invités maximum",
+        "maxGuestsError": "Ce champ est requis pour enregistrer.",
+        "budget": "Montant à payer",
+        "budgetHint": "calculé auto."
+      },
+      "couple": {
+        "heading": "Le Couple",
+        "tagline": "Tagline du couple",
+        "bride": "Mariée",
+        "groom": "Marié",
+        "bridePortrait": "Portrait mariée",
+        "groomPortrait": "Portrait marié",
+        "brideBio": "Biographie mariée",
+        "groomBio": "Biographie marié",
+        "choosePhoto": "Choisir une photo",
+        "changePhoto": "Changer la photo",
+        "uploading": "Upload en cours..."
+      },
+      "story": {
+        "heading": "Notre Histoire",
+        "sectionTitle": "Titre de la section",
+        "subtitle": "Sous-titre / citation",
+        "footer": "Texte de pied de section",
+        "chapters": "Chapitres",
+        "tabLabel": "Label onglet",
+        "subLabel": "Sous-label",
+        "year": "Année / période",
+        "photoCaption": "Légende photo",
+        "chapterTitle": "Titre du chapitre",
+        "chapterImage": "Image du chapitre",
+        "chooseImage": "Choisir une image",
+        "changeImage": "Changer l'image",
+        "paragraphs": "Paragraphes",
+        "paragraphsHint": "séparez chaque paragraphe par une ligne vide",
+        "addChapter": "+ Ajouter un chapitre",
+        "removeChapter": "Supprimer ce chapitre",
+        "uploading": "Upload en cours..."
+      },
+      "program": {
+        "heading": "Programme",
+        "footer": "Texte de pied de section",
+        "day": "Jour",
+        "date": "Date",
+        "dateHint": "AAAA-MM-JJ — sert au tri",
+        "tabIcon": "Icône onglet",
+        "tabDate": "Date onglet",
+        "tabDateHint": "ex : 07 AOÛT",
+        "tabLabel": "Libellé onglet",
+        "tabLabelHint": "ex : La Veille",
+        "timelineLabel": "Libellé timeline",
+        "timelineLabelHint": "ex : Vendredi 7 Août 2026 · La Veille",
+        "slots": "Créneaux",
+        "icon": "Icône",
+        "time": "Horaire",
+        "title": "Titre",
+        "description": "Description",
+        "addSlot": "+ Ajouter un créneau",
+        "addDay": "Ajouter une journée au programme",
+        "removeDay": "Supprimer ce jour",
+        "removeSlot": "Supprimer",
+        "uploading": "Upload en cours..."
+      },
+      "dressCode": {
+        "heading": "Dress Code",
+        "sectionTitle": "Titre de la section",
+        "description": "Description",
+        "advice": "Conseil",
+        "paletteTerracotta": "Palette Terracotta",
+        "colorName": "Nom de la couleur"
+      },
+      "faq": {
+        "heading": "Questions Fréquentes",
+        "question": "Question",
+        "answer": "Réponse",
+        "addQuestion": "+ Ajouter une question",
+        "remove": "Supprimer"
+      },
+      "rsvp": {
+        "heading": "Section RSVP",
+        "title": "Titre",
+        "subtitle": "Sous-titre"
+      },
+      "gallery": {
+        "heading": "Galerie Photos",
+        "note": "La première photo marquée <strong>Grande</strong> occupera 2 rangées dans la mosaïque.",
+        "caption": "Légende…",
+        "large": "Grande",
+        "add": "Ajouter",
+        "addPhoto": "+ Ajouter une photo",
+        "remove": "Supprimer",
+        "uploading": "Upload...",
+        "largeBadgeActive": "★ Grande",
+        "largeBadgeInactive": "☆ Grande"
+      },
+      "backgrounds": {
+        "heading": "Fonds & Bandeaux",
+        "noImage": "Aucune image",
+        "change": "Changer",
+        "uploading": "Upload..."
+      },
+      "footer": {
+        "heading": "Footer",
+        "logoText": "Logo / Noms",
+        "logoHint": "affiché en script cursive",
+        "subtitle": "Sous-titre",
+        "subtitleHint": "date · lieu · ville",
+        "syncAuto": "↺ Sync auto",
+        "autoGenerated": "Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.",
+        "loveText": "Message d'amour"
+      },
+      "theme": {
+        "heading": "🎨 Thème visuel du mariage",
+        "hint": "Choisissez une palette prédéfinie ou ajustez les couleurs manuellement. L'aperçu s'applique <strong>en temps réel</strong> en survolant une palette.",
+        "advanced": "Personnalisation avancée",
+        "reduce": "▲ Réduire",
+        "morePalettes": "▼ Voir les {{ count }} autres palettes",
+        "colorBackground": "Fond de page",
+        "colorAccent": "Accent principal",
+        "colorAccentHint": "(or, titres)",
+        "colorAccentSecondary": "Accent secondaire",
+        "colorAccentSecondaryHint": "(boutons)",
+        "colorAccentDeep": "Accent profond",
+        "colorAccentDeepHint": "(hover)",
+        "colorText": "Texte principal",
+        "colorTextSecondary": "Texte secondaire",
+        "colorCardBg": "Fond des cartes"
+      }
+    }
+  },
+  "gala": {
+    "nav": {
+      "about": "LA SOIRÉE",
+      "program": "PROGRAMME",
+      "performers": "ARTISTES",
+      "dresscode": "DRESS CODE",
+      "faq": "FAQ",
+      "rsvp": "RÉSERVATION",
+      "closePreview": "Fermer l'aperçu",
+      "backToEvent": "Retour à l'événement",
+      "backToEventMobile": "Retour",
+      "cancel": "Annuler",
+      "saving": "Sauvegarde...",
+      "save": "Enregistrer",
+      "create": "Créer l'événement",
+      "createMobile": "Créer",
+      "edit": "Éditer",
+      "editTitle": "Éditer la page"
+    },
+    "hero": {
+      "reserveBtn": "RÉSERVER MA PLACE",
+      "programBtn": "VOIR LE PROGRAMME",
+      "days": "JOURS",
+      "hours": "HEURES",
+      "minutes": "MIN",
+      "seconds": "SEC"
+    },
+    "about": {
+      "eyebrow": "LA SOIRÉE"
+    },
+    "program": {
+      "eyebrow": "DÉROULÉ"
+    },
+    "band": {
+      "quote": "« Une soirée qui allie le plaisir des sens et la générosité du cœur. »"
+    },
+    "performers": {
+      "eyebrow": "SUR SCÈNE"
+    },
+    "gallery": {
+      "eyebrow": "ÉDITIONS PRÉCÉDENTES",
+      "title": "Revivez la Magie"
+    },
+    "dresscode": {
+      "eyebrow": "TENUE"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions Fréquentes"
+    },
+    "rsvp": {
+      "eyebrow": "RÉSERVATION",
+      "programBtn": "Voir le programme",
+      "performersBtn": "Les artistes"
+    },
+    "footer": {
+      "madeBy": "SITE RÉALISÉ PAR"
+    },
+    "edit": {
+      "title": "Éditer le gala",
+      "close": "✕",
+      "reset": "Réinitialiser",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "hero": {
+        "heading": "Hero & Date",
+        "galaName": "Nom du gala",
+        "edition": "Édition",
+        "subtitle": "Sous-titre",
+        "catchphrase": "Phrase d'accroche",
+        "dateLabel": "Date affichée",
+        "dressCode": "Dress code",
+        "venueName": "Nom du lieu",
+        "venueCity": "Ville",
+        "targetDate": "Date countdown",
+        "targetDateHint": "ISO",
+        "capacity": "Capacité",
+        "maxGuests": "Invités maximum",
+        "maxGuestsError": "Ce champ est requis pour enregistrer.",
+        "budget": "Montant",
+        "budgetHint": "calculé auto.",
+        "budgetDetail": "× 52 XAF"
+      },
+      "about": {
+        "heading": "À Propos",
+        "title": "Titre",
+        "description": "Description",
+        "causeIcon": "Icône cause",
+        "cause": "Message cause caritative"
+      },
+      "program": {
+        "heading": "Programme",
+        "sectionTitle": "Titre de section",
+        "footer": "Note de bas de page",
+        "icon": "Icône",
+        "time": "Horaire",
+        "title": "Titre",
+        "description": "Description",
+        "addItem": "+ Ajouter un moment"
+      },
+      "performers": {
+        "heading": "Artistes",
+        "sectionTitle": "Titre de section",
+        "subtitle": "Sous-titre",
+        "photo": "Photo",
+        "name": "Nom",
+        "role": "Rôle",
+        "bio": "Biographie",
+        "addPerformer": "+ Ajouter un artiste"
+      },
+      "dressCode": {
+        "heading": "Dress Code",
+        "title": "Titre",
+        "description": "Description",
+        "advice": "Conseil",
+        "colors": "Couleurs",
+        "colorName": "Nom",
+        "addColor": "+ Ajouter une couleur"
+      },
+      "faq": {
+        "heading": "FAQ",
+        "question": "Question",
+        "answer": "Réponse",
+        "addQuestion": "+ Ajouter une question"
+      },
+      "rsvp": {
+        "heading": "Réservation",
+        "title": "Titre",
+        "subtitle": "Sous-titre"
+      },
+      "gallery": {
+        "heading": "Galerie",
+        "caption": "Légende…",
+        "addPhoto": "+ Ajouter une photo",
+        "largeBadgeActive": "★ Grande",
+        "largeBadgeInactive": "☆ Grande",
+        "addImage": "Ajouter"
+      },
+      "backgrounds": {
+        "heading": "Fonds & Bandeaux",
+        "noImage": "Aucune image",
+        "change": "Changer",
+        "uploading": "Upload..."
+      },
+      "footer": {
+        "heading": "Footer",
+        "name": "Nom",
+        "subtitle": "Sous-titre",
+        "subtitleHint": "date · lieu · ville",
+        "syncAuto": "↺ Sync auto",
+        "autoGenerated": "Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.",
+        "tagline": "Tagline"
+      }
+    }
+  },
+  "conference": {
+    "nav": {
+      "about": "À PROPOS",
+      "agenda": "PROGRAMME",
+      "speakers": "INTERVENANTS",
+      "sponsors": "SPONSORS",
+      "faq": "FAQ",
+      "rsvp": "INSCRIPTION",
+      "closePreview": "Fermer l'aperçu",
+      "backToEvent": "Retour à l'événement",
+      "backToEventMobile": "Retour",
+      "cancel": "Annuler",
+      "saving": "Sauvegarde...",
+      "save": "Enregistrer",
+      "create": "Créer l'événement",
+      "createMobile": "Créer",
+      "edit": "Éditer",
+      "editTitle": "Éditer la page"
+    },
+    "hero": {
+      "register": "S'INSCRIRE",
+      "viewAgenda": "VOIR LE PROGRAMME",
+      "days": "JOURS",
+      "hours": "HEURES",
+      "min": "MIN",
+      "sec": "SEC",
+      "editHero": "Éditer le Hero",
+      "editBg": "Modifier le fond"
+    },
+    "about": {
+      "eyebrow": "L'ÉVÉNEMENT",
+      "editTitle": "Éditer À Propos"
+    },
+    "agenda": {
+      "eyebrow": "AGENDA",
+      "title": "Programme Détaillé",
+      "subtitle": "Deux jours d'immersion, d'échanges et d'inspiration.",
+      "editTitle": "Éditer le Programme"
+    },
+    "band": {
+      "quote": "« L'intelligence, c'est la capacité de s'adapter au changement. »"
+    },
+    "speakers": {
+      "eyebrow": "LES EXPERTS",
+      "editTitle": "Éditer les Intervenants"
+    },
+    "gallery": {
+      "eyebrow": "ÉDITIONS PRÉCÉDENTES",
+      "title": "Revivez l'Expérience",
+      "editTitle": "Éditer la Galerie"
+    },
+    "sponsors": {
+      "eyebrow": "ILS NOUS FONT CONFIANCE",
+      "platine": "✦ PLATINE",
+      "or": "◆ OR",
+      "argent": "● ARGENT",
+      "editTitle": "Éditer les Sponsors"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions Fréquentes",
+      "editTitle": "Éditer la FAQ"
+    },
+    "rsvp": {
+      "eyebrow": "REJOIGNEZ-NOUS",
+      "viewAgenda": "Voir le programme",
+      "speakers": "Les intervenants",
+      "editTitle": "Éditer le RSVP",
+      "editBg": "Modifier le fond"
+    },
+    "footer": {
+      "credit": "SITE RÉALISÉ PAR",
+      "editTitle": "Éditer le Footer"
+    },
+    "edit": {
+      "modalTitle": "Éditer la conférence",
+      "hero": {
+        "heading": "Hero & Date",
+        "confName": "Nom de la conférence",
+        "edition": "Édition",
+        "subtitle": "Sous-titre",
+        "catchphrase": "Phrase d'accroche",
+        "dateLabel": "Date affichée",
+        "venueName": "Nom du lieu",
+        "venueCity": "Ville",
+        "targetDate": "Date countdown",
+        "targetDateHint": "ISO : AAAA-MM-JJTHH:MM:SS",
+        "capacity": "Capacité",
+        "maxAttendees": "Participants maximum",
+        "maxAttendeesError": "Ce champ est requis pour enregistrer.",
+        "budget": "Montant à payer",
+        "budgetHint": "calculé auto."
+      },
+      "about": {
+        "heading": "À Propos",
+        "title": "Titre",
+        "description": "Description",
+        "stats": "Statistiques clés",
+        "stat": "Stat",
+        "icon": "Icône",
+        "value": "Valeur",
+        "valueHint": "ex : 2 500+",
+        "label": "Libellé",
+        "addStat": "+ Ajouter une statistique"
+      },
+      "agenda": {
+        "heading": "Programme",
+        "footer": "Note de bas de page",
+        "day": "Jour",
+        "date": "Date",
+        "dateHint": "AAAA-MM-JJ",
+        "tabIcon": "Icône",
+        "tabDate": "Date onglet",
+        "tabDateHint": "ex : 15 SEPT",
+        "tabLabel": "Libellé onglet",
+        "tabLabelHint": "ex : Jour 1",
+        "fullLabel": "Libellé complet",
+        "sessions": "Sessions",
+        "icon": "Icône",
+        "time": "Horaire",
+        "sessionTitle": "Titre",
+        "speaker": "Intervenant(s)",
+        "room": "Salle",
+        "type": "Type",
+        "keynote": "Keynote",
+        "workshop": "Atelier",
+        "panel": "Panel",
+        "networking": "Networking",
+        "break": "Pause",
+        "addSession": "+ Ajouter une session",
+        "addDay": "Ajouter une journée"
+      },
+      "speakers": {
+        "heading": "Intervenants",
+        "sectionTitle": "Titre de section",
+        "subtitle": "Sous-titre",
+        "portrait": "Portrait",
+        "photo": "Photo",
+        "fullName": "Nom complet",
+        "title": "Titre / Poste",
+        "company": "Entreprise / Organisation",
+        "bio": "Biographie",
+        "keynote": "Keynote speaker",
+        "keynoteDesc": "Affiche le badge Keynote sur la carte",
+        "addSpeaker": "+ Ajouter un intervenant"
+      },
+      "sponsors": {
+        "heading": "Sponsors",
+        "sectionTitle": "Titre de section",
+        "name": "Nom",
+        "level": "Niveau",
+        "platine": "Platine",
+        "or": "Or",
+        "argent": "Argent",
+        "logo": "Logo",
+        "importLogo": "Importer logo",
+        "website": "Site web",
+        "addSponsor": "+ Ajouter un sponsor"
+      },
+      "faq": {
+        "heading": "FAQ",
+        "question": "Question",
+        "answer": "Réponse",
+        "addQuestion": "+ Ajouter une question"
+      },
+      "rsvp": {
+        "heading": "Inscription",
+        "title": "Titre",
+        "subtitle": "Sous-titre"
+      },
+      "gallery": {
+        "heading": "Galerie",
+        "add": "Ajouter",
+        "caption": "Légende…",
+        "largeBadgeActive": "★ Grande",
+        "largeBadgeInactive": "☆ Grande",
+        "addPhoto": "+ Ajouter une photo"
+      },
+      "backgrounds": {
+        "heading": "Fonds & Bandeaux",
+        "noImage": "Aucune image",
+        "change": "Changer",
+        "uploading": "Upload..."
+      },
+      "footer": {
+        "heading": "Footer",
+        "logoText": "Nom / Logo texte",
+        "logoHint": "synchronisé avec le titre du hero",
+        "subtitle": "Sous-titre",
+        "subtitleHint": "date · lieu · ville",
+        "syncAuto": "↺ Sync auto",
+        "autoGenerated": "Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.",
+        "tagline": "Tagline"
+      },
+      "reset": "Réinitialiser",
+      "cancel": "Annuler",
+      "save": "Enregistrer"
+    }
+  },
+  "ceremonie": {
+    "nav": {
+      "ceremony": "LA CÉRÉMONIE",
+      "program": "PROGRAMME",
+      "keyguests": "PERSONNES CLÉS",
+      "dresscode": "TENUE",
+      "faq": "FAQ",
+      "rsvp": "INVITATION",
+      "closePreview": "Fermer l'aperçu",
+      "backToEvent": "Retour à l'événement",
+      "backToEventMobile": "Retour",
+      "cancel": "Annuler",
+      "saving": "Sauvegarde...",
+      "save": "Enregistrer",
+      "create": "Créer l'événement",
+      "createMobile": "Créer",
+      "edit": "Éditer",
+      "editTitle": "Éditer la page"
+    },
+    "hero": {
+      "confirmPresence": "CONFIRMER MA PRÉSENCE",
+      "viewProgram": "VOIR LE PROGRAMME",
+      "days": "JOURS",
+      "hours": "HEURES",
+      "minutes": "MIN",
+      "seconds": "SEC"
+    },
+    "about": {
+      "eyebrow": "LA CÉRÉMONIE"
+    },
+    "program": {
+      "eyebrow": "DÉROULÉ"
+    },
+    "band": {
+      "quote": "« Chaque instant partagé avec ceux qu'on aime est un cadeau précieux. »"
+    },
+    "keyguests": {
+      "eyebrow": "LES PROTAGONISTES"
+    },
+    "gallery": {
+      "eyebrow": "SOUVENIRS",
+      "title": "Les Moments Précieux"
+    },
+    "dresscode": {
+      "eyebrow": "TENUE"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions Fréquentes"
+    },
+    "rsvp": {
+      "eyebrow": "INVITATION",
+      "viewProgram": "Voir le programme",
+      "keyguests": "Les personnes clés"
+    },
+    "footer": {
+      "madeBy": "SITE RÉALISÉ PAR"
+    },
+    "edit": {
+      "title": "Éditer la cérémonie",
+      "reset": "Réinitialiser",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "hero": {
+        "heading": "Hero & Date",
+        "type": "Type de cérémonie",
+        "typeHint": "ex : BAPTÊME",
+        "title": "Titre",
+        "subtitle": "Sous-titre",
+        "catchphrase": "Phrase d'accroche",
+        "dateLabel": "Date affichée",
+        "targetDate": "Date countdown",
+        "venueName": "Nom du lieu",
+        "venueCity": "Ville",
+        "capacity": "Capacité",
+        "maxGuests": "Invités maximum",
+        "maxGuestsError": "Ce champ est requis pour enregistrer.",
+        "budget": "Montant",
+        "budgetHint": "calculé auto."
+      },
+      "about": {
+        "heading": "À Propos",
+        "title": "Titre",
+        "description": "Description",
+        "icon": "Icône",
+        "message": "Citation / Message"
+      },
+      "program": {
+        "heading": "Programme",
+        "sectionTitle": "Titre de section",
+        "footer": "Note de bas de page",
+        "icon": "Icône",
+        "time": "Horaire",
+        "title": "Titre",
+        "description": "Description",
+        "addMoment": "+ Ajouter un moment"
+      },
+      "keyguests": {
+        "heading": "Personnes Clés",
+        "sectionTitle": "Titre de section",
+        "subtitle": "Sous-titre",
+        "photo": "Photo",
+        "name": "Nom",
+        "role": "Rôle",
+        "bio": "Biographie / Description",
+        "addGuest": "+ Ajouter une personne"
+      },
+      "dressCode": {
+        "heading": "Tenue",
+        "title": "Titre",
+        "description": "Description",
+        "advice": "Conseil",
+        "colors": "Couleurs",
+        "colorName": "Nom",
+        "addColor": "+ Ajouter une couleur"
+      },
+      "faq": {
+        "heading": "FAQ",
+        "question": "Question",
+        "answer": "Réponse",
+        "addQuestion": "+ Ajouter une question"
+      },
+      "rsvp": {
+        "heading": "Invitation",
+        "title": "Titre",
+        "subtitle": "Sous-titre"
+      },
+      "gallery": {
+        "heading": "Galerie",
+        "add": "Ajouter",
+        "addPhoto": "+ Ajouter une photo",
+        "large": "Grande",
+        "largeBadgeActive": "★ Grande",
+        "largeBadgeInactive": "☆ Grande"
+      },
+      "backgrounds": {
+        "heading": "Fonds & Bandeaux",
+        "noImage": "Aucune image",
+        "change": "Changer",
+        "uploading": "Upload..."
+      },
+      "footer": {
+        "heading": "Footer",
+        "name": "Nom",
+        "subtitle": "Sous-titre",
+        "subtitleHint": "date · lieu · ville",
+        "syncAuto": "↺ Sync auto",
+        "autoGenerated": "Généré automatiquement depuis les champs du hero. Modifiez-le pour personnaliser.",
+        "tagline": "Tagline"
+      }
+    }
+  },
+  "home": {
+    "nav": {
+      "features": "FONCTIONNALITÉS",
+      "how": "COMMENT ÇA MARCHE",
+      "programme": "PROGRAMME",
+      "testimonials": "TÉMOIGNAGES",
+      "contact": "CONTACT",
+      "login": "Se connecter",
+      "register": "Commencer"
+    },
+    "hero": {
+      "eyebrow": "GESTION D'INVITATIONS",
+      "sub": "La plateforme élégante pour gérer vos événements et vos invités.",
+      "eventTypes": "Mariages · Galas · Conférences",
+      "tagline": "INVITATIONS · CHECK-IN · STATISTIQUES",
+      "cta": "CRÉER MON ÉVÉNEMENT",
+      "howBtn": "COMMENT ÇA MARCHE"
+    },
+    "features": {
+      "eyebrow": "NOS FONCTIONNALITÉS",
+      "title": "Tout ce dont vous avez besoin",
+      "quote": "« Un outil puissant, une expérience élégante. »",
+      "events": {
+        "title": "Gestion des événements",
+        "desc": "Créez et gérez plusieurs événements simultanément. Configurez chaque détail : date, lieu, programme, photo de couverture."
+      },
+      "guests": {
+        "title": "Import des invités",
+        "desc": "Importez vos listes via Excel ou ajoutez-les manuellement. Organisez facilement vos tables."
+      },
+      "invitations": {
+        "title": "Invitations personnalisées",
+        "desc": "Générez des invitations élégantes avec QR code unique par invité. Envoi par email et/ou WhatsApp en un clic."
+      },
+      "stats": {
+        "title": "Suivi en temps réel",
+        "desc": "Tableau de bord live : confirmations, refus, en attente. Taux de réponse, statistiques et export des données."
+      },
+      "checkin": {
+        "title": "Check-in intelligent",
+        "desc": "Application de scan QR code pour vos agents à l'entrée. Détection des doublons, validation instantanée."
+      },
+      "links": {
+        "title": "Liens d'inscription",
+        "desc": "Créez des liens publics d'inscription pour que vos invités s'enregistrent eux-mêmes sur votre page d'événement."
+      }
+    },
+    "band1": {
+      "eyebrow": "LA PLATEFORME",
+      "title": "Conçu pour l'élégance",
+      "sub": "MARIAGES · GALAS · CONFÉRENCES · CÉRÉMONIES",
+      "desc": "Chaque fonctionnalité a été pensée pour offrir une expérience irréprochable à l'organisateur comme à l'invité."
+    },
+    "story": {
+      "eyebrow": "NOTRE HISTOIRE",
+      "title": "Une solution construite avec soin",
+      "quote": "« Une idée. Une conviction. Et une plateforme qui change tout. »",
+      "footer": "Merci de faire confiance à Smart Invite pour vos événements les plus précieux.",
+      "prevPage": "← PAGE PRÉCÉDENTE",
+      "nextPage": "PAGE SUIVANTE →",
+      "page": "Page {{ current }} / {{ total }}"
+    },
+    "band2": {
+      "quote": "« Chaque événement mérite d'être vécu pleinement — pas géré dans le stress. »"
+    },
+    "programme": {
+      "eyebrow": "PROGRAMME",
+      "title": "Le cycle de vie d'un événement",
+      "quote": "« De la création à la clôture, Smart Invite vous accompagne. »",
+      "before": "☾ AVANT L'ÉVÉNEMENT",
+      "day": "☼ LE JOUR J",
+      "footer": "Chaque étape a été pensée pour vous faire gagner du temps et de la sérénité."
+    },
+    "band3": {
+      "eyebrow": "ET CE N'EST PAS TOUT",
+      "title": "Votre événement mérite le meilleur",
+      "cta": "Créer mon compte gratuitement"
+    },
+    "faq": {
+      "eyebrow": "FAQ",
+      "title": "Questions Fréquentes"
+    },
+    "rsvp": {
+      "eyebrow": "REJOIGNEZ-NOUS",
+      "title": "Prêt à créer votre premier événement ?",
+      "sub": "Créez votre compte gratuitement et découvrez comment Smart Invite transforme l'organisation de vos événements.",
+      "cta": "Créer mon compte",
+      "login": "Se connecter"
+    },
+    "contact": {
+      "title": "Une question ?",
+      "sub": "Choisissez comment vous souhaitez être contacté(e) en retour",
+      "namePlaceholder": "Votre nom",
+      "whatsapp": "WhatsApp",
+      "email": "Email",
+      "phonePlaceholder": "XXXXXXXXX",
+      "emailPlaceholder": "Votre adresse email",
+      "msgPlaceholder": "Écrivez votre question ici…",
+      "sendWhatsapp": "Envoyer & répondre via WhatsApp",
+      "sendEmail": "Envoyer & répondre par Email",
+      "successMsg": "Merci",
+      "successWhatsapp": "Votre message a bien été reçu. Nous vous répondrons sur WhatsApp au",
+      "successEmail": "Votre message a bien été reçu. Nous vous répondrons par email à",
+      "newQuestion": "Nouvelle question"
+    },
+    "footer": {
+      "sub": "La plateforme élégante de gestion d'invitations",
+      "love": "AVEC TOUT NOTRE SOIN ✦",
+      "rights": "© 2026 Smart Invite — Tous droits réservés"
+    }
+  }
+}

@@ -6,10 +6,12 @@ import { LinkService, LinkPreviewData } from '../../../../core/services/link.ser
 import { AuthService } from '../../../../core/services/auth.service';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
+import { LanguageService } from '../../../../core/services/language.service';
 import { Invitation } from '../../../../core/models/invitation.model';
 import { NotificationMode } from '../../../../core/models/enums.model';
 import { DIAL_CODES } from '../../../../core/data/dial-codes';
 import { DialCodeSelectComponent } from '../../../../shared/components/dial-code-select/dial-code-select.component';
+import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import {
   WeddingDetailsTheme,
   DEFAULT_WEDDING_THEME,
@@ -38,7 +40,7 @@ type InvitationViewData = Invitation & {
 @Component({
   selector: 'app-join',
   standalone: true,
-  imports: [ReactiveFormsModule, DialCodeSelectComponent],
+  imports: [ReactiveFormsModule, DialCodeSelectComponent, TranslatePipe],
   templateUrl: './join.component.html',
   styleUrls: ['./join.component.scss'],
 })
@@ -51,6 +53,7 @@ export class JoinComponent implements OnInit {
   private readonly authSvc    = inject(AuthService);
   private readonly eventSvc   = inject(EventService);
   private readonly toast      = inject(ToastService);
+  readonly lang               = inject(LanguageService);
   private readonly el         = inject(ElementRef);
 
   state          = signal<PageState>('loading');
@@ -59,8 +62,17 @@ export class JoinComponent implements OnInit {
   result         = signal<Invitation | null>(null);
   previewData    = signal<LinkPreview | null>(null);
   customPhotoUrl = signal<string | null>(null);
-  errorMsg       = signal('Ce lien est invalide ou a expiré.');
   submitError    = signal<string | null>(null);
+
+  /** Clé i18n ou message brut d'erreur venant du backend */
+  private errorMsgKey = signal<string>('links.join.fallback.errorMsg');
+  errorMsg = computed(() => {
+    this.lang.translationsVersion();
+    const key = this.errorMsgKey();
+    // Si la valeur n'est pas une clé i18n (message direct du backend), on la retourne telle quelle
+    if (!key.startsWith('links.join')) return key;
+    return this.lang.t(key);
+  });
 
   isLoggedIn = computed(() => this.authSvc.isLoggedIn());
 
@@ -140,30 +152,27 @@ export class JoinComponent implements OnInit {
 
   // ── Textes dynamiques ────────────────────────────────────────────
   eyebrowText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE')    return 'CÉLÉBRATION DE MARIAGE';
-    if (t === 'CONFERENCE') return 'SOMMET & CONFÉRENCE OFFICIELLE';
-    if (t === 'GALA')       return 'SOIRÉE DE GALA & PRESTIGE';
-    if (t === 'CEREMONIE')  return 'CÉRÉMONIE OFFICIELLE';
-    return this.eventTitle();
+    const key = `links.join.eyebrow.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.eventTitle();
   });
 
   mainTitleText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE')    return 'Invitation';
-    if (t === 'CONFERENCE') return 'Accréditation';
-    if (t === 'GALA')       return 'Invitation VIP';
-    if (t === 'CEREMONIE')  return 'Célébration';
-    return 'Invitation';
+    const key = `links.join.mainTitle.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('links.join.title');
   });
 
   introText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE')    return 'Nous avons le privilège et la joie de vous convier à célébrer notre union';
-    if (t === 'CONFERENCE') return 'Inscrivez-vous pour obtenir votre pass de conférence et badge d\u2019accès officiel';
-    if (t === 'GALA')       return 'Le comité d\u2019honneur a le privilège de vous convier à cette prestigieuse réception';
-    if (t === 'CEREMONIE')  return 'Nous sommes honorés de vous compter parmi nos invités d\u2019exception';
-    return 'Inscrivez-vous pour recevoir votre invitation personnalisée';
+    const key = `links.join.intro.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('links.join.title');
   });
 
   ornamentGlyph = computed(() => {
@@ -176,12 +185,23 @@ export class JoinComponent implements OnInit {
   });
 
   submitBtnText = computed(() => {
+    this.lang.translationsVersion();
     const t = this.eventType();
-    if (t === 'MARIAGE')    return 'Confirmer mon invitation';
-    if (t === 'CONFERENCE') return 'Obtenir mon badge d\u2019accès';
-    if (t === 'GALA')       return 'Réserver mon invitation VIP';
-    if (t === 'CEREMONIE')  return 'Valider mon inscription';
-    return 'Confirmer mon inscription';
+    const key = `links.join.submitBtn.${t}`;
+    const val = this.lang.t(key);
+    return val !== key ? val : this.lang.t('links.join.submitBtn.default');
+  });
+
+  headerBadgeText = computed(() => {
+    this.lang.translationsVersion();
+    const t = this.eventType();
+    return this.lang.t(`links.join.headerBadge.${t}`);
+  });
+
+  frameTagText = computed(() => {
+    this.lang.translationsVersion();
+    const t = this.eventType();
+    return this.lang.t(`links.join.frameTag.${t}`);
   });
 
   defaultPhotoForType = computed(() => {
@@ -192,11 +212,14 @@ export class JoinComponent implements OnInit {
     return this.simulatedCouplePhoto;
   });
 
-  readonly notifOptions: { key: NotificationMode; label: string; icon: string }[] = [
-    { key: 'WHATSAPP', label: 'WhatsApp',        icon: '◌' },
-    { key: 'EMAIL',    label: 'Email',           icon: '✉' },
-    { key: 'BOTH',     label: 'Email & WhatsApp', icon: '✦' },
-  ];
+  readonly notifOptions = computed<{ key: NotificationMode; label: string; icon: string }[]>(() => {
+    this.lang.translationsVersion();
+    return [
+      { key: 'WHATSAPP', label: this.lang.t('links.join.notifOptions.WHATSAPP'), icon: '◌' },
+      { key: 'EMAIL',    label: this.lang.t('links.join.notifOptions.EMAIL'),    icon: '✉' },
+      { key: 'BOTH',     label: this.lang.t('links.join.notifOptions.BOTH'),     icon: '✦' },
+    ];
+  });
 
   readonly dialCodes = DIAL_CODES;
 
@@ -286,31 +309,31 @@ export class JoinComponent implements OnInit {
     const data = this.data();
     if (data?.coupleNames) return data.coupleNames;
     if (data?.brideName && data?.groomName) return `${data.groomName} & ${data.brideName}`;
-    return 'Votre événement';
+    return this.lang.t('links.join.fallback.coupleNames');
   }
 
   eventTitle(): string {
     const p = this.previewData();
     if (p?.eventTitle) return p.eventTitle;
     const data = this.data();
-    return data?.eventTitle || data?.eventName || "Invitation à l'événement";
+    return data?.eventTitle || data?.eventName || this.lang.t('links.join.fallback.eventTitle');
   }
 
   eventDate(): string {
     const p = this.previewData();
     if (p?.eventDate) return p.eventDate;
-    return this.data()?.eventDate || "Date de l'événement";
+    return this.data()?.eventDate || this.lang.t('links.join.fallback.eventDate');
   }
 
   eventMessage(): string {
-    return this.data()?.eventMessage || 'Nous avons le plaisir de vous compter parmi nos invités.';
+    return this.data()?.eventMessage || this.lang.t('links.join.fallback.eventMessage');
   }
 
   eventLocation(): string {
     const p = this.previewData();
     if (p?.banquetLocation) return p.banquetLocation;
     const data = this.data();
-    return data?.venue || data?.eventLocation || "Lieu de l'événement";
+    return data?.venue || data?.eventLocation || this.lang.t('links.join.fallback.eventLocation');
   }
 
   couplePhoto(): string {
@@ -441,10 +464,10 @@ export class JoinComponent implements OnInit {
         const normalized = message?.toLowerCase() || '';
 
         if (normalized.includes('expiré') || normalized.includes('invalide') || normalized.includes('introuvable')) {
-          this.errorMsg.set(message);
+          this.errorMsgKey.set(message || 'links.join.fallback.errorMsg');
           this.state.set('error');
         } else {
-          this.submitError.set(message || 'Une erreur est survenue. Veuillez réessayer.');
+          this.submitError.set(message || this.lang.t('links.join.fallback.submitError'));
         }
         this.submitting.set(false);
       },

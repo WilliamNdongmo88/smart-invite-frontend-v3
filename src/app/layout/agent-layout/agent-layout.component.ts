@@ -1,16 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-agent-layout',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, TranslatePipe],
   template: `
     <div class="agent-layout">
       <header class="agent-header">
-        <span class="logo">✉️ Smart Invite — Check-in</span>
-        <button class="logout-btn" (click)="logout()">Déconnexion</button>
+        <span class="logo">✉️ {{ 'layout.agent.title' | translate }}</span>
+        <button class="logout-btn" (click)="logout()">{{ 'layout.agent.logout' | translate }}</button>
       </header>
       <main class="agent-content">
         <router-outlet />
