@@ -500,6 +500,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   autoSubtitle   = signal<string>('');
   /** true = l'utilisateur a saisi manuellement un sous-titre footer → on n'écrase plus. */
   subtitleEdited = signal<boolean>(false);
+  /** true = l'utilisateur a saisi manuellement le logoText footer → on n'écrase plus. */
+  logoEdited     = signal<boolean>(false);
 
   // ── Countdown ─────────────────────────────────────────────────────
   countdown = signal<CountdownValue>({ days: '000', hours: '00', minutes: '00', seconds: '00' });
@@ -832,6 +834,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const auto = this.buildAutoSubtitle(c.hero.dateLabel, c.hero.venueName, c.hero.venueCity);
     this.autoSubtitle.set(auto);
     this.subtitleEdited.set(c.footer.subText !== '' && c.footer.subText !== auto);
+    this.logoEdited.set(c.footer.logoText !== '' && c.footer.logoText !== this.buildAutoLogoText(c.hero.brideFirstName, c.hero.groomFirstName));
     this.activeSection.set(section);
     this.editOpen.set(true);
     if (isPlatformBrowser(this.platformId)) document.body.style.overflow = 'hidden';
@@ -1119,10 +1122,20 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   updateDraftHero(key: keyof WeddingDetailsContent['hero'], value: string): void {
     const d = deepClone(this.draft());
     (d.hero as unknown as Record<string, string>)[key] = value;
-    this.draft.set(d);
+
+    // Auto-sync footer.subText (dateLabel · venueName · venueCity)
     if (!this.subtitleEdited()) {
-      this.autoSubtitle.set(this.buildAutoSubtitle(d.hero.dateLabel, d.hero.venueName, d.hero.venueCity));
+      const auto = this.buildAutoSubtitle(d.hero.dateLabel, d.hero.venueName, d.hero.venueCity);
+      this.autoSubtitle.set(auto);
+      d.footer.subText = auto;
     }
+
+    // Auto-sync footer.logoText (Prénom Mariée & Prénom Marié)
+    if (!this.logoEdited()) {
+      d.footer.logoText = this.buildAutoLogoText(d.hero.brideFirstName, d.hero.groomFirstName);
+    }
+
+    this.draft.set(d);
   }
 
   /** Met à jour maxGuests et recalcule budget automatiquement */
@@ -1315,7 +1328,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     const d = deepClone(this.draft());
     d.footer[key] = value;
     this.draft.set(d);
-    if (key === 'subText') { this.subtitleEdited.set(true); }
+    if (key === 'subText')   { this.subtitleEdited.set(true); }
+    if (key === 'logoText')  { this.logoEdited.set(true); }
   }
 
   /** Construit le sous-titre automatique footer depuis les champs hero. */
@@ -1325,12 +1339,27 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     return parts.join(' · ');
   }
 
+  /** Construit le logoText automatique footer depuis les prénoms du couple. */
+  private buildAutoLogoText(brideFirstName?: string, groomFirstName?: string): string {
+    const bride = (brideFirstName ?? '').trim();
+    const groom = (groomFirstName ?? '').trim();
+    if (bride && groom) return `${bride} & ${groom}`;
+    return bride || groom;
+  }
+
   /** Remet le sous-titre footer sur la valeur auto. */
   resetSubtitleToAuto(): void {
     const auto = this.buildAutoSubtitle(this.draft().hero.dateLabel, this.draft().hero.venueName, this.draft().hero.venueCity);
     this.autoSubtitle.set(auto);
     this.subtitleEdited.set(false);
     const d = deepClone(this.draft()); d.footer.subText = auto; this.draft.set(d);
+  }
+
+  /** Remet le logoText footer sur la valeur auto. */
+  resetLogoToAuto(): void {
+    const auto = this.buildAutoLogoText(this.draft().hero.brideFirstName, this.draft().hero.groomFirstName);
+    this.logoEdited.set(false);
+    const d = deepClone(this.draft()); d.footer.logoText = auto; this.draft.set(d);
   }
 
   // ── Draft — Backgrounds ──────────────────────────────────────────
