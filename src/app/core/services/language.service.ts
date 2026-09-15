@@ -59,6 +59,19 @@ export class LanguageService {
     return typeof current === 'string' ? current : key;
   }
 
+  /** Retourne un tableau depuis le dictionnaire (ex : 'home.chapters') */
+  tArray<T = Record<string, unknown>>(key: string): T[] {
+    const parts = key.split('.');
+    let current: unknown = this.translations;
+
+    for (const part of parts) {
+      if (current == null || typeof current !== 'object') return [];
+      current = (current as Record<string, unknown>)[part];
+    }
+
+    return Array.isArray(current) ? (current as T[]) : [];
+  }
+
   // ── Chargement ──────────────────────────────────────────────────────────────
 
   private loadTranslations(lang: Lang): void {

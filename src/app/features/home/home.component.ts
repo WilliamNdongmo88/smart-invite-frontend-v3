@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component, OnInit, OnDestroy, signal, computed, PLATFORM_ID, inject, AfterViewInit
 } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { ContactService } from '../../core/services/contact.service';
+import { LanguageService } from '../../core/services/language.service';
 import { DialCodeSelectComponent } from '../../shared/components/dial-code-select/dial-code-select.component';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
@@ -20,61 +21,36 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly platformId   = inject(PLATFORM_ID);
   private readonly authService  = inject(AuthService);
   private readonly contactSvc   = inject(ContactService);
+  readonly lang                 = inject(LanguageService);
 
   // ── Story book ─────────────────────────────────────────────────────
   activeChapter = signal(0);
-  chapters = [
-    {
-      label: 'CHAPITRE I', sublabel: 'Le problème',
-      year: '2024', title: 'Des invitations perdues dans les emails',
-      caption: 'Le chaos des invitations',
-      content: 'Chaque organisateur d\'événement a vécu ce cauchemar : des centaines d\'emails envoyés, des réponses éparpillées, des invités qui n\'ont jamais reçu leur invitation. La gestion manuelle des invitations est chronophage, source d\'erreurs et de stress.',
-    },
-    {
-      label: 'CHAPITRE II', sublabel: 'La vision',
-      year: '2024', title: 'Une plateforme pensée pour l\'élégance',
-      caption: 'La solution intelligente',
-      content: 'Smart Invite est né d\'une conviction simple : chaque événement mérite une gestion à la hauteur de son importance. Nous avons conçu une plateforme qui allie puissance technologique et élégance visuelle pour transformer l\'expérience de l\'organisateur comme de l\'invité.',
-    },
-    {
-      label: 'CHAPITRE III', sublabel: 'Les fonctionnalités',
-      year: '2025', title: 'Tout ce dont vous avez besoin',
-      caption: 'Fonctionnalités complètes',
-      content: 'Créez vos événements en quelques minutes, importez vos listes d\'invités, générez des invitations personnalisées avec QR code, suivez les confirmations en temps réel, et gérez le check-in le jour J avec notre application dédiée. Smart Invite couvre tout le cycle de vie de votre événement.',
-    },
-    {
-      label: 'CHAPITRE IV', sublabel: 'Votre événement',
-      year: '2025', title: 'Prêt à créer votre premier événement ?',
-      caption: 'Commencez maintenant',
-      content: 'Rejoignez les organisateurs qui font confiance à Smart Invite pour leurs mariages, galas, conférences et célébrations. Créez votre compte gratuitement et découvrez comment transformer votre prochain événement en une expérience inoubliable.',
-    },
-  ];
+  readonly chapters = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.tArray<{
+      label: string; sublabel: string; year: string;
+      title: string; caption: string; content: string;
+    }>('home.chapters');
+  });
 
   // ── Programme tabs ─────────────────────────────────────────────────
   activeTab = signal<'before' | 'day'>('day');
 
-  programBefore = [
-    { icon: '✦', time: 'J-30', title: 'Création de l\'événement', desc: 'Configurez votre événement, personnalisez votre page d\'invitation et définissez les détails.' },
-    { icon: '♡', time: 'J-21', title: 'Import des invités', desc: 'Importez votre liste d\'invités via Excel ou ajoutez-les manuellement un par un.' },
-    { icon: '◉', time: 'J-14', title: 'Envoi des invitations', desc: 'Envoyez les invitations personnalisées par email et/ou WhatsApp en un clic.' },
-    { icon: '♢', time: 'J-7', title: 'Suivi des confirmations', desc: 'Consultez en temps réel qui a confirmé, qui est en attente, qui a décliné.' },
-  ];
+  readonly programBefore = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.tArray<{ icon: string; time: string; title: string; desc: string }>('home.programBefore');
+  });
 
-  programDay = [
-    { icon: '⌖', time: 'Matin', title: 'Préparation du check-in', desc: 'Activez le mode check-in et assignez vos agents à l\'entrée de l\'événement.' },
-    { icon: '♫', time: 'Accueil', title: 'Scan des QR codes', desc: 'Chaque invité présente son QR code. Validation instantanée, détection des doublons.' },
-    { icon: '●', time: 'En direct', title: 'Tableau de bord live', desc: 'Suivez l\'affluence en temps réel : valides, doublons, invalides, total présents.' },
-    { icon: '✦', time: 'Après', title: 'Rapport complet', desc: 'Exportez le rapport de présence avec toutes les statistiques de votre événement.' },
-  ];
+  readonly programDay = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.tArray<{ icon: string; time: string; title: string; desc: string }>('home.programDay');
+  });
 
   // ── FAQ ────────────────────────────────────────────────────────────
-  faqs = [
-    { q: 'Smart Invite est-il gratuit ?', a: 'Smart Invite est facturé en fonction du nombre d’invités. Le tarif est de 52 XAF par invité.' },
-    { q: 'Combien d\'invités puis-je gérer ?', a: 'Il n\'y a pas de limite stricte. La plateforme est conçue pour gérer des événements de 10 à plusieurs milliers d\'invités.' },
-    { q: 'Les invités ont-ils besoin d\'un compte ?', a: 'Non. Les invités reçoivent un lien unique et peuvent confirmer leur présence sans créer de compte.' },
-    { q: 'Le check-in fonctionne-t-il hors ligne ?', a: 'L\’application de check-in nécessite une connexion Internet. Un agent doit être créé par l\’organisateur afin de permettre la synchronisation des données en temps réel.' },
-  ];
-
+  readonly faqs = computed(() => {
+    this.lang.translationsVersion();
+    return this.lang.tArray<{ q: string; a: string }>('home.faqs');
+  });
   // ── Palette dress code (réutilisé pour "thème design") ─────────────
   activePalette = signal<'dark' | 'light'>('dark');
   palettes = {
@@ -170,10 +146,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   prevChapter(): void {
-    this.activeChapter.update(c => (c - 1 + this.chapters.length) % this.chapters.length);
+    this.activeChapter.update(c => (c - 1 + this.chapters().length) % this.chapters().length);
   }
   nextChapter(): void {
-    this.activeChapter.update(c => (c + 1) % this.chapters.length);
+    this.activeChapter.update(c => (c + 1) % this.chapters().length);
   }
 
   sendContact(): void {

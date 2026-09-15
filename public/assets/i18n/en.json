@@ -143,6 +143,7 @@
   },
   "events": {
     "title": "My events",
+    "subtitle": "event(s)",
     "newEvent": "New event",
     "searchPlaceholder": "Search...",
     "noResults": "No events match your search",
@@ -151,6 +152,7 @@
     "createFirst": "Create my first event",
     "maxGuests": "max guests",
     "view": "View",
+    "editBtn": "Edit",
     "edit": "Edit",
     "deleteTitle": "Delete event?",
     "deleteText": "This action is irreversible. All associated data (guests, invitations, links) will be deleted.",
@@ -1647,6 +1649,58 @@
       "sub": "The elegant invitation management platform",
       "love": "WITH ALL OUR CARE ✦",
       "rights": "© 2026 smart-invite — All rights reserved"
-    }
+    },
+    "chapters": [
+      {
+        "label": "CHAPTER I",
+        "sublabel": "The problem",
+        "year": "2024",
+        "title": "Invitations lost in emails",
+        "caption": "The invitation chaos",
+        "content": "Every event organizer has lived this nightmare: hundreds of emails sent, scattered replies, guests who never received their invitation. Managing invitations manually is time-consuming, error-prone and stressful."
+      },
+      {
+        "label": "CHAPTER II",
+        "sublabel": "The vision",
+        "year": "2024",
+        "title": "A platform designed for elegance",
+        "caption": "The smart solution",
+        "content": "Smart Invite was born from a simple conviction: every event deserves management that matches its importance. We built a platform that combines technological power with visual elegance to transform the experience for both organizer and guest."
+      },
+      {
+        "label": "CHAPTER III",
+        "sublabel": "The features",
+        "year": "2025",
+        "title": "Everything you need",
+        "caption": "Complete feature set",
+        "content": "Create your events in minutes, import your guest lists, generate personalized invitations with QR codes, track confirmations in real time, and manage check-in on the day with our dedicated app. Smart Invite covers the entire event lifecycle."
+      },
+      {
+        "label": "CHAPTER IV",
+        "sublabel": "Your event",
+        "year": "2025",
+        "title": "Ready to create your first event?",
+        "caption": "Get started now",
+        "content": "Join the organizers who trust Smart Invite for their weddings, galas, conferences and celebrations. Create your free account and discover how to turn your next event into an unforgettable experience."
+      }
+    ],
+    "programBefore": [
+      { "icon": "✦", "time": "D-30", "title": "Event creation",       "desc": "Set up your event, customize your invitation page and define the details." },
+      { "icon": "♡", "time": "D-21", "title": "Guest import",          "desc": "Import your guest list via Excel or add them manually one by one." },
+      { "icon": "◉", "time": "D-14", "title": "Sending invitations",   "desc": "Send personalized invitations by email and/or WhatsApp in one click." },
+      { "icon": "♢", "time": "D-7",  "title": "Tracking confirmations","desc": "See in real time who has confirmed, who is pending, who has declined." }
+    ],
+    "programDay": [
+      { "icon": "⌖", "time": "Morning",  "title": "Check-in setup",     "desc": "Activate check-in mode and assign your agents at the event entrance." },
+      { "icon": "♫", "time": "Welcome",  "title": "QR code scanning",   "desc": "Each guest presents their QR code. Instant validation, duplicate detection." },
+      { "icon": "●", "time": "Live",     "title": "Live dashboard",      "desc": "Track attendance in real time: valid, duplicates, invalid, total present." },
+      { "icon": "✦", "time": "After",    "title": "Full report",         "desc": "Export the attendance report with all the statistics of your event." }
+    ],
+    "faqs": [
+      { "q": "Is Smart Invite free?", "a": "Smart Invite is billed based on the number of guests. The rate is 52 XAF per guest." },
+      { "q": "How many guests can I manage?", "a": "There is no strict limit. The platform is designed to handle events from 10 to several thousand guests." },
+      { "q": "Do guests need an account?", "a": "No. Guests receive a unique link and can confirm their attendance without creating an account." },
+      { "q": "Does check-in work offline?", "a": "The check-in app requires an Internet connection. An agent must be created by the organizer to allow real-time data synchronization." }
+    ]
   }
 }

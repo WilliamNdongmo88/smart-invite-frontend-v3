@@ -5,7 +5,7 @@ import { LowerCasePipe } from '@angular/common';
 import { EventService } from '../../../../core/services/event.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { Event } from '../../../../core/models/event.model';
-import { EventStatus, EVENT_TYPE_LABELS, EVENT_STATUS_LABELS } from '../../../../core/models/enums.model';
+import { EventStatus } from '../../../../core/models/enums.model';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { LanguageService } from '../../../../core/services/language.service';
 
@@ -31,28 +31,51 @@ export class EventsListComponent implements OnInit {
   activeTab = signal<FilterTab>('ALL');
   search = signal('');
 
-  readonly typeLabels = EVENT_TYPE_LABELS;
-  readonly statusLabels = EVENT_STATUS_LABELS;
+  readonly typeLabels = computed(() => {
+    this.lang.activeLang();
+    this.lang.translationsVersion();
+    return {
+      MARIAGE:    this.lang.t('events.types.MARIAGE'),
+      GALA:       this.lang.t('events.types.GALA'),
+      CONFERENCE: this.lang.t('events.types.CONFERENCE'),
+      CEREMONIE:  this.lang.t('events.types.CEREMONIE'),
+    };
+  });
 
-  readonly tabs: { key: FilterTab; label: string }[] = [
-    { key: 'ALL',       label: 'Tous' },
-    { key: 'PLANNED',   label: 'Planifiés' },
-    { key: 'ACTIVE',    label: 'Actifs' },
-    { key: 'COMPLETED', label: 'Terminés' },
-    { key: 'CANCELLED', label: 'Annulés' },
-  ];
+  readonly statusLabels = computed(() => {
+    this.lang.activeLang();
+    this.lang.translationsVersion();
+    return {
+      PLANNED:   this.lang.t('events.status.PLANNED'),
+      ACTIVE:    this.lang.t('events.status.ACTIVE'),
+      COMPLETED: this.lang.t('events.status.COMPLETED'),
+      CANCELLED: this.lang.t('events.status.CANCELLED'),
+    };
+  });
+
+  readonly tabs = computed(() => {
+    this.lang.activeLang();
+    this.lang.translationsVersion();
+    return [
+      { key: 'ALL'       as FilterTab, label: this.lang.t('events.tabs.ALL') },
+      { key: 'PLANNED'   as FilterTab, label: this.lang.t('events.tabs.PLANNED') },
+      { key: 'ACTIVE'    as FilterTab, label: this.lang.t('events.tabs.ACTIVE') },
+      { key: 'COMPLETED' as FilterTab, label: this.lang.t('events.tabs.COMPLETED') },
+      { key: 'CANCELLED' as FilterTab, label: this.lang.t('events.tabs.CANCELLED') },
+    ];
+  });
 
   readonly filtered = computed(() => {
     const tab = this.activeTab();
     const q = this.search().toLowerCase().trim();
     return this.allEvents().filter((e) => {
       const matchTab = tab === 'ALL' || e.status === tab;
-      const matchSearch = !q || e.title.toLowerCase().includes(q) || this.typeLabels[e.type].toLowerCase().includes(q);
+      const matchSearch = !q || e.title.toLowerCase().includes(q) || this.typeLabels()[e.type].toLowerCase().includes(q);
       return matchTab && matchSearch;
     });
   });
 
-  readonly counts = computed(() => {
+  readonly counts = computed((): Record<FilterTab, number> => {
     const all = this.allEvents();
     return {
       ALL:       all.length,

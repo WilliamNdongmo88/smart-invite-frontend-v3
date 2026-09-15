@@ -143,6 +143,7 @@
   },
   "events": {
     "title": "Mes événements",
+    "subtitle": "événement(s)",
     "newEvent": "Nouvel événement",
     "searchPlaceholder": "Rechercher...",
     "noResults": "Aucun événement ne correspond à votre recherche",
@@ -151,6 +152,7 @@
     "createFirst": "Créer mon premier événement",
     "maxGuests": "invités max",
     "view": "Voir",
+    "editBtn": "Éditer",
     "edit": "Éditer",
     "deleteTitle": "Supprimer l'événement ?",
     "deleteText": "Cette action est irréversible. Toutes les données associées (invités, invitations, liens) seront supprimées.",
@@ -1647,6 +1649,58 @@
       "sub": "La plateforme élégante de gestion d'invitations",
       "love": "AVEC TOUT NOTRE SOIN ✦",
       "rights": "© 2026 Smart Invite — Tous droits réservés"
-    }
+    },
+    "chapters": [
+      {
+        "label": "CHAPITRE I",
+        "sublabel": "Le problème",
+        "year": "2024",
+        "title": "Des invitations perdues dans les emails",
+        "caption": "Le chaos des invitations",
+        "content": "Chaque organisateur d'événement a vécu ce cauchemar : des centaines d'emails envoyés, des réponses éparpillées, des invités qui n'ont jamais reçu leur invitation. La gestion manuelle des invitations est chronophage, source d'erreurs et de stress."
+      },
+      {
+        "label": "CHAPITRE II",
+        "sublabel": "La vision",
+        "year": "2024",
+        "title": "Une plateforme pensée pour l'élégance",
+        "caption": "La solution intelligente",
+        "content": "Smart Invite est né d'une conviction simple : chaque événement mérite une gestion à la hauteur de son importance. Nous avons conçu une plateforme qui allie puissance technologique et élégance visuelle pour transformer l'expérience de l'organisateur comme de l'invité."
+      },
+      {
+        "label": "CHAPITRE III",
+        "sublabel": "Les fonctionnalités",
+        "year": "2025",
+        "title": "Tout ce dont vous avez besoin",
+        "caption": "Fonctionnalités complètes",
+        "content": "Créez vos événements en quelques minutes, importez vos listes d'invités, générez des invitations personnalisées avec QR code, suivez les confirmations en temps réel, et gérez le check-in le jour J avec notre application dédiée. Smart Invite couvre tout le cycle de vie de votre événement."
+      },
+      {
+        "label": "CHAPITRE IV",
+        "sublabel": "Votre événement",
+        "year": "2025",
+        "title": "Prêt à créer votre premier événement ?",
+        "caption": "Commencez maintenant",
+        "content": "Rejoignez les organisateurs qui font confiance à Smart Invite pour leurs mariages, galas, conférences et célébrations. Créez votre compte gratuitement et découvrez comment transformer votre prochain événement en une expérience inoubliable."
+      }
+    ],
+    "programBefore": [
+      { "icon": "✦", "time": "J-30", "title": "Création de l'événement", "desc": "Configurez votre événement, personnalisez votre page d'invitation et définissez les détails." },
+      { "icon": "♡", "time": "J-21", "title": "Import des invités", "desc": "Importez votre liste d'invités via Excel ou ajoutez-les manuellement un par un." },
+      { "icon": "◉", "time": "J-14", "title": "Envoi des invitations", "desc": "Envoyez les invitations personnalisées par email et/ou WhatsApp en un clic." },
+      { "icon": "♢", "time": "J-7",  "title": "Suivi des confirmations", "desc": "Consultez en temps réel qui a confirmé, qui est en attente, qui a décliné." }
+    ],
+    "programDay": [
+      { "icon": "⌖", "time": "Matin",    "title": "Préparation du check-in",  "desc": "Activez le mode check-in et assignez vos agents à l'entrée de l'événement." },
+      { "icon": "♫", "time": "Accueil",  "title": "Scan des QR codes",         "desc": "Chaque invité présente son QR code. Validation instantanée, détection des doublons." },
+      { "icon": "●", "time": "En direct","title": "Tableau de bord live",       "desc": "Suivez l'affluence en temps réel : valides, doublons, invalides, total présents." },
+      { "icon": "✦", "time": "Après",    "title": "Rapport complet",            "desc": "Exportez le rapport de présence avec toutes les statistiques de votre événement." }
+    ],
+    "faqs": [
+      { "q": "Smart Invite est-il gratuit ?", "a": "Smart Invite est facturé en fonction du nombre d'invités. Le tarif est de 52 XAF par invité." },
+      { "q": "Combien d'invités puis-je gérer ?", "a": "Il n'y a pas de limite stricte. La plateforme est conçue pour gérer des événements de 10 à plusieurs milliers d'invités." },
+      { "q": "Les invités ont-ils besoin d'un compte ?", "a": "Non. Les invités reçoivent un lien unique et peuvent confirmer leur présence sans créer de compte." },
+      { "q": "Le check-in fonctionne-t-il hors ligne ?", "a": "L'application de check-in nécessite une connexion Internet. Un agent doit être créé par l'organisateur afin de permettre la synchronisation des données en temps réel." }
+    ]
   }
 }

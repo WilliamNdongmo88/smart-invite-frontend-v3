@@ -4,7 +4,7 @@
   <div class="page-header">
     <div>
       <h1 class="page-title">{{ 'events.title' | translate }}</h1>
-      <p class="page-sub">{{ counts().ALL }} {{ 'events.title' | translate | lowercase }}{{ counts().ALL > 1 ? 's' : '' }}</p>
+      <p class="page-sub">{{ counts().ALL }} {{ 'events.subtitle' | translate }}</p>
     </div>
     <a routerLink="/events/new" class="btn-gold">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -17,7 +17,7 @@
   <!-- Toolbar : tabs + search -->
   <div class="toolbar">
     <div class="tabs">
-      @for (tab of tabs; track tab.key) {
+      @for (tab of tabs(); track tab.key) {
         <button class="tab" [class.active]="activeTab() === tab.key" (click)="setTab(tab.key)">
           {{ tab.label }}
           @if (counts()[tab.key] > 0) {
@@ -63,8 +63,8 @@
 
           <!-- Card header -->
           <div class="card-header">
-            <span class="badge {{ statusClass(event.status) }}">{{ statusLabels[event.status] }}</span>
-            <span class="event-type">{{ typeLabels[event.type] }}</span>
+            <span class="badge {{ statusClass(event.status) }}">{{ statusLabels()[event.status] }}</span>
+            <span class="event-type">{{ typeLabels()[event.type] }}</span>
           </div>
 
           <!-- Card body -->
@@ -111,12 +111,12 @@
               </svg>
               {{ 'events.view' | translate }}
             </a>
-            <a [routerLink]="['/events', event.id, 'edit']" class="action-btn action-edit" [title]="'events.edit' | translate">
+            <a [routerLink]="['/events', event.id, 'edit']" class="action-btn action-edit" [title]="'events.editBtn' | translate">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
               </svg>
-              {{ 'events.edit' | translate }}
+              {{ 'events.editBtn' | translate }}
             </a>
             <button class="action-btn action-delete" (click)="askDelete(event.id)" [title]="'common.delete' | translate">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
