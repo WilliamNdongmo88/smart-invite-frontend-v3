@@ -403,6 +403,8 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   /** ID de l'événement existant (null = mode création) */
   readonly eventId    = signal<number | null>(null);
   readonly isEditMode = computed(() => this.eventId() !== null);
+  /** true = bouton Éditer scintille (mode /new, première visite uniquement) */
+  editButtonPulse = signal(false);
   /** Nombre max d'invités transmis depuis le wizard event-create/edit */
   readonly maxGuests  = signal<number>(300);
   /** Sauvegarde en cours vers le backend */
@@ -581,6 +583,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         });
       }
     }
+    // ── Pulse bouton Éditer en mode /new (première visite) ──────────
+    if (!idParam && !localStorage.getItem('si_edit_hint_seen')) {
+      this.editButtonPulse.set(true);
+    }
+
     if (idParam) {
       const id = Number(idParam);
       this.eventId.set(id);
@@ -829,6 +836,11 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
 
   // ── Edit modal ────────────────────────────────────────────────────
   openEdit(section: WeddingDetailsEditSection = 'hero'): void {
+    // Arrête le scintillement du bouton Éditer + mémorise la visite
+    if (this.editButtonPulse()) {
+      this.editButtonPulse.set(false);
+      localStorage.setItem('si_edit_hint_seen', '1');
+    }
     const c = deepClone(this.content());
     this.draft.set(c);
     const auto = this.buildAutoSubtitle(c.hero.dateLabel, c.hero.venueName, c.hero.venueCity);

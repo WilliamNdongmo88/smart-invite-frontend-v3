@@ -3189,3 +3189,20 @@ section { position: relative; }
   }
 }
 
+
+/* ── Pulse bouton Éditer (première visite /new) ── */
+@keyframes edit-btn-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(var(--gold-rgb), 0.6);
+    border-color: rgba(var(--gold-rgb), .5);
+  }
+  50% {
+    box-shadow: 0 0 0 7px rgba(var(--gold-rgb), 0);
+    border-color: var(--gold);
+    background: rgba(var(--gold-rgb), .28);
+  }
+}
+
+.btn-edit-pulse {
+  animation: edit-btn-pulse 1.4s ease-in-out 4;
+}
