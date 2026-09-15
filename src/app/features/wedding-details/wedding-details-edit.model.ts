@@ -483,6 +483,14 @@ export interface WeddingDetailsRsvpContent {
   subtitle: string;
 }
 
+export interface WeddingDetailsInfosContent {
+  lieuTitle:  string;
+  lieuDetail: string;
+  rsvpTitle:  string;
+  rsvpSub:    string;
+  rsvpDetail: string;
+}
+
 export interface WeddingDetailsGalleryItem {
   url: string;
   caption: string;
@@ -516,6 +524,7 @@ export interface WeddingDetailsContent {
   dressCode:   WeddingDetailsDressCodeContent;
   faq:         WeddingDetailsFaqContent;
   rsvp:        WeddingDetailsRsvpContent;
+  infos:       WeddingDetailsInfosContent;
   gallery:     WeddingDetailsGalleryContent;
   backgrounds: WeddingDetailsBackgroundsContent;
   footer:      WeddingDetailsFooterContent;
@@ -531,6 +540,7 @@ export type WeddingDetailsEditSection =
   | 'dressCode'
   | 'faq'
   | 'rsvp'
+  | 'infos'
   | 'gallery'
   | 'backgrounds'
   | 'footer'
@@ -544,6 +554,7 @@ export const WEDDING_DETAILS_SECTION_LABELS: Record<WeddingDetailsEditSection, s
   dressCode:   'Dress Code',
   faq:         'FAQ',
   rsvp:        'RSVP',
+  infos:       'Infos Pratiques',
   gallery:     'Galerie Photos',
   backgrounds: 'Fonds & Bandeaux',
   footer:      'Footer',

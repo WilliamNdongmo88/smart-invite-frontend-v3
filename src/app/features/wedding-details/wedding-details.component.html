@@ -459,6 +459,15 @@
      INFOS PRATIQUES
 ══════════════════════════════════════════════════════════════ -->
 <section id="infos" class="infos-section section-entrance">
+  <!-- Crayon section Infos Pratiques -->
+  @if (isLoggedIn()) {
+    <button class="edit-pencil edit-pencil--section" (click)="openEdit('infos')" title="Éditer les infos pratiques">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+      </svg>
+    </button>
+  }
   <div class="section-inner">
     <span class="eyebrow-gold reveal" style="--d:0ms">{{ 'wedding.infos.eyebrow' | translate }}</span>
     <h2 class="section-title reveal" style="--d:80ms">{{ 'wedding.infos.title' | translate }}</h2>
@@ -466,15 +475,15 @@
     <div class="infos-grid stagger reveal" style="--d:160ms">
       <div class="info-card">
         <div class="info-icon">📍</div>
-        <h3 class="info-title">{{ 'wedding.infos.lieuTitle' | translate }}</h3>
+        <h3 class="info-title">{{ infos().lieuTitle }}</h3>
         <p class="info-subtitle">{{ hero().venueName }}</p>
-        <p class="info-detail">{{ 'wedding.infos.lieuDetail' | translate }}</p>
+        <p class="info-detail">{{ infos().lieuDetail }}</p>
       </div>
       <div class="info-card">
         <div class="info-icon">💬</div>
-        <h3 class="info-title">{{ 'wedding.infos.rsvpTitle' | translate }}</h3>
-        <p class="info-subtitle">{{ 'wedding.infos.rsvpSub' | translate }}</p>
-        <p class="info-detail">{{ 'wedding.infos.rsvpDetail' | translate }}</p>
+        <h3 class="info-title">{{ infos().rsvpTitle }}</h3>
+        <p class="info-subtitle">{{ infos().rsvpSub }}</p>
+        <p class="info-detail">{{ infos().rsvpDetail }}</p>
       </div>
     </div>
   </div>
@@ -1249,6 +1258,51 @@
                         [ngModel]="draft().rsvp.subtitle"
                         (ngModelChange)="updateDraftRsvp('subtitle', $event)"></textarea>
             </div>
+          </div>
+        }
+
+        <!-- ── INFOS PRATIQUES ── -->
+        @if (activeSection() === 'infos') {
+          <div class="edit-form-section">
+            <h3 class="edit-form-heading">{{ 'wedding.edit.infos.heading' | translate }}</h3>
+
+            <fieldset class="edit-fieldset">
+              <legend class="edit-legend">📍 {{ 'wedding.edit.infos.lieuGroup' | translate }}</legend>
+              <div class="edit-field">
+                <label class="edit-label">{{ 'wedding.edit.infos.lieuTitle' | translate }}</label>
+                <input class="edit-input" type="text"
+                       [ngModel]="draft().infos.lieuTitle"
+                       (ngModelChange)="updateDraftInfos('lieuTitle', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">{{ 'wedding.edit.infos.lieuDetail' | translate }}</label>
+                <input class="edit-input" type="text"
+                       [ngModel]="draft().infos.lieuDetail"
+                       (ngModelChange)="updateDraftInfos('lieuDetail', $event)" />
+              </div>
+            </fieldset>
+
+            <fieldset class="edit-fieldset">
+              <legend class="edit-legend">💬 {{ 'wedding.edit.infos.rsvpGroup' | translate }}</legend>
+              <div class="edit-field">
+                <label class="edit-label">{{ 'wedding.edit.infos.rsvpTitle' | translate }}</label>
+                <input class="edit-input" type="text"
+                       [ngModel]="draft().infos.rsvpTitle"
+                       (ngModelChange)="updateDraftInfos('rsvpTitle', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">{{ 'wedding.edit.infos.rsvpSub' | translate }}</label>
+                <input class="edit-input" type="text"
+                       [ngModel]="draft().infos.rsvpSub"
+                       (ngModelChange)="updateDraftInfos('rsvpSub', $event)" />
+              </div>
+              <div class="edit-field">
+                <label class="edit-label">{{ 'wedding.edit.infos.rsvpDetail' | translate }}</label>
+                <textarea class="edit-textarea" rows="3"
+                          [ngModel]="draft().infos.rsvpDetail"
+                          (ngModelChange)="updateDraftInfos('rsvpDetail', $event)"></textarea>
+              </div>
+            </fieldset>
           </div>
         }
 

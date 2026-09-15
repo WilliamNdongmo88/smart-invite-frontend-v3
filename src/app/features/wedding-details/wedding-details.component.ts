@@ -1,4 +1,4 @@
-import {
+﻿import {
   Component, OnInit, OnDestroy, AfterViewInit,
   signal, computed, inject, effect, PLATFORM_ID, ElementRef, HostBinding
 } from '@angular/core';
@@ -177,6 +177,13 @@ const INITIAL_CONTENT: WeddingDetailsContent = {
     title:    'Nous avons hâte de vous retrouver !',
     subtitle: 'N’oubliez surtout pas votre QR code ! Il constitue votre clé d’accès personnelle au banquet et sera indispensable lors de votre arrivée.',
   },
+  infos: {
+    lieuTitle:  'Lieu',
+    lieuDetail: 'Accueil invites des 12h00 - Parking sur place',
+    rsvpTitle:  'RSVP',
+    rsvpSub:    'Lien personnel WhatsApp',
+    rsvpDetail: 'Confirmez via votre lien unique - Places, regime, table',
+  },
   gallery: {
     items: [
       { url: '/images/galerie-photo-1.webp',         caption: 'En amoureux',             large: false },
@@ -334,6 +341,13 @@ const INITIAL_CONTENT_EN: WeddingDetailsContent = {
     title:    'We can\'t wait to see you!',
     subtitle: 'Don\'t forget your QR code! It is your personal access key to the banquet and will be required upon arrival.',
   },
+  infos: {
+    lieuTitle:  'Venue',
+    lieuDetail: 'Guests welcome from 12:00 - On-site parking',
+    rsvpTitle:  'RSVP',
+    rsvpSub:    'Personal WhatsApp link',
+    rsvpDetail: 'Confirm via your unique link - Seats, diet, table',
+  },
   gallery: {
     items: [
       { url: '/images/galerie-photo-1.webp',         caption: 'In love',              large: false },
@@ -418,6 +432,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   readonly faq       = computed(() => this.content().faq);
   readonly rsvp      = computed(() => this.content().rsvp);
   readonly gallery   = computed(() => this.content().gallery);
+  readonly infos     = computed(() => this.content().infos);
   readonly bgs       = computed(() => this.content().backgrounds);
   readonly footer    = computed(() => this.content().footer);
 
@@ -438,7 +453,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
     { key: 'galleryBand', label: 'Bandeau Galerie', hint: 'Bandeau de clôture de la galerie photos' },
     { key: 'rsvp',        label: 'Fond RSVP',       hint: 'Image de fond de la section RSVP finale' },
   ];
-  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'theme', 'faq', 'rsvp', 'gallery', 'backgrounds', 'footer'];
+  readonly SECTIONS: WeddingDetailsEditSection[] = ['hero', 'couple', 'story', 'program', 'dressCode', 'theme', 'faq', 'rsvp', 'infos', 'gallery', 'backgrounds', 'footer'];
   readonly THEME_PRESETS = WEDDING_THEME_PRESETS;
 
   /** Signal pour la prévisualisation au survol d'un preset */
@@ -580,6 +595,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
             if (!loaded.gallery)     loaded.gallery     = deepClone(INITIAL_CONTENT.gallery);
             if (!loaded.backgrounds) loaded.backgrounds = deepClone(INITIAL_CONTENT.backgrounds);
             if (!loaded.footer)      loaded.footer      = deepClone(INITIAL_CONTENT.footer);
+            if (!loaded.infos)       loaded.infos       = deepClone(INITIAL_CONTENT.infos);
             this.content.set(loaded);
           } else {
             this.content.update(c => {
@@ -655,6 +671,9 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
         }
         if (!(parsed as WeddingDetailsContent).theme) {
           (parsed as WeddingDetailsContent).theme = deepClone(INITIAL_CONTENT.theme);
+        }
+        if (!(parsed as WeddingDetailsContent).infos) {
+          (parsed as WeddingDetailsContent).infos = deepClone(INITIAL_CONTENT.infos);
         }
 
         this.content.set(parsed as WeddingDetailsContent);
@@ -966,6 +985,7 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
       dressCode:   c.dressCode,
       faq:         c.faq,
       rsvp:        c.rsvp,
+      infos:       c.infos,
       gallery:     c.gallery,
       backgrounds: c.backgrounds,
       footer:      c.footer,
@@ -1239,6 +1259,12 @@ export class WeddingDetailsComponent implements OnInit, OnDestroy, AfterViewInit
   }
 
   // ── Draft — RSVP ──────────────────────────────────────────────────
+  updateDraftInfos(key: keyof WeddingDetailsContent['infos'], value: string): void {
+    const d = deepClone(this.draft());
+    (d.infos as unknown as Record<string, string>)[key] = value;
+    this.draft.set(d);
+  }
+
   updateDraftRsvp(key: keyof WeddingDetailsContent['rsvp'], value: string): void {
     const d = deepClone(this.draft());
     d.rsvp[key] = value;

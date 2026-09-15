@@ -987,6 +987,16 @@
         "title": "Titre",
         "subtitle": "Sous-titre"
       },
+      "infos": {
+        "heading": "Infos Pratiques",
+        "lieuGroup": "Lieu",
+        "lieuTitle": "Titre de la carte Lieu",
+        "lieuDetail": "Détail du lieu",
+        "rsvpGroup": "RSVP",
+        "rsvpTitle": "Titre de la carte RSVP",
+        "rsvpSub": "Sous-titre RSVP",
+        "rsvpDetail": "Détail RSVP"
+      },
       "gallery": {
         "heading": "Galerie Photos",
         "note": "La première photo marquée <strong>Grande</strong> occupera 2 rangées dans la mosaïque.",

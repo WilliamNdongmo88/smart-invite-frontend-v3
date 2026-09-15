@@ -987,6 +987,16 @@
         "title": "Title",
         "subtitle": "Subtitle"
       },
+      "infos": {
+        "heading": "Practical Info",
+        "lieuGroup": "Venue",
+        "lieuTitle": "Venue card title",
+        "lieuDetail": "Venue detail",
+        "rsvpGroup": "RSVP",
+        "rsvpTitle": "RSVP card title",
+        "rsvpSub": "RSVP subtitle",
+        "rsvpDetail": "RSVP detail"
+      },
       "gallery": {
         "heading": "Photo Gallery",
         "note": "The first photo marked <strong>Large</strong> will occupy 2 rows in the mosaic.",
