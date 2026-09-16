@@ -146,9 +146,6 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
       min-width: 0;
       padding: 1.5rem;
       overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     /* ── Footer ── */
