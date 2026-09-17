@@ -143,6 +143,11 @@ table {
 .event-tag {
   font-size: 0.68rem; padding: 0.15rem 0.5rem; border-radius: 4px;
   background: #2a2a2a; color: #aaa; white-space: nowrap;
+  &.clickable {
+    border: none; cursor: pointer; line-height: 1.4;
+    transition: filter 0.15s, transform 0.15s;
+    &:hover { filter: brightness(1.25); transform: translateY(-1px); }
+  }
   &.pay-APPROVED     { background: rgba(74,222,128,0.1);  color: #4ade80; }
   &.pay-PENDING      { background: rgba(250,204,21,0.1);  color: #facc15; }
   &.pay-REJECTED     { background: rgba(248,113,113,0.1); color: #f87171; }
@@ -391,6 +396,153 @@ table {
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
+}
+
+// ─── Event detail modal ────────────────────────────────────────────
+.detail-modal {
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.ed-loading, .ed-error {
+  padding: 2.5rem;
+  text-align: center;
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.ed-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+
+  .modal-title { margin: 0; }
+}
+
+.ed-head-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ed-badges { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.ed-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.18rem 0.55rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &.ed-type   { background: rgba($gold, 0.12); color: $gold; }
+  &.ed-status {
+    background: rgba(150,150,150,0.15); color: #aaa;
+    &.ACTIVE  { background: rgba(74,222,128,0.12);  color: #4ade80; }
+    &.DRAFT   { background: rgba(250,204,21,0.12);  color: #facc15; }
+    &.CANCELLED { background: rgba(248,113,113,0.12); color: #f87171; }
+  }
+}
+
+.ed-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.ed-block-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $gold;
+  margin: 0 0 0.5rem;
+  font-weight: 700;
+}
+
+.ed-line {
+  font-size: 0.84rem;
+  color: #ccc;
+  margin: 0.2rem 0;
+  line-height: 1.5;
+  word-break: break-word;
+
+  &.dim  { color: #888; }
+  &.warn { color: #f87171; }
+}
+
+.ed-label { color: #666; }
+
+.ed-text {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0.4rem 0 0;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.ed-pay-status {
+  font-weight: 600;
+  font-size: 0.75rem;
+  &.pay-APPROVED     { color: #4ade80; }
+  &.pay-PENDING      { color: #facc15; }
+  &.pay-REJECTED     { color: #f87171; }
+  &.pay-UNDER_REVIEW { color: #60a5fa; }
+}
+
+.ed-grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.ed-stat {
+  background: #141414;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 0.7rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+
+  &.ok   .ed-stat-value { color: #4ade80; }
+  &.wait .ed-stat-value { color: #facc15; }
+  &.ko   .ed-stat-value { color: #f87171; }
+}
+
+.ed-stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ed-stat-label {
+  font-size: 0.62rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.btn-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid rgba($gold, 0.45);
+  color: $gold;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s;
+
+  &:hover { background: rgba($gold, 0.12); }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }

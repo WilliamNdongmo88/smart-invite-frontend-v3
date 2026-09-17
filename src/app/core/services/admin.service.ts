@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { OrganizerSummary, UserNewsMessage } from '../models/user.model';
+import { OrganizerSummary, AdminEventDetail, UserNewsMessage } from '../models/user.model';
 import { Payment } from '../models/payment.model';
+import { Referrer, ReferrerRequest } from '../models/referrer.model';
 
 @Injectable({ providedIn: 'root' })
 export class AdminService {
@@ -36,6 +37,10 @@ export class AdminService {
     return this.http.get<ApiResponse<Payment[]>>(`${this.payBase}/all`);
   }
 
+  getEventDetail(eventId: number): Observable<ApiResponse<AdminEventDetail>> {
+    return this.http.get<ApiResponse<AdminEventDetail>>(`${this.base}/events/${eventId}`);
+  }
+
   // ── Messages de contact ──────────────────────────────────────────
 
   getAllContacts(): Observable<ApiResponse<UserNewsMessage[]>> {
@@ -47,5 +52,19 @@ export class AdminService {
       `${this.base}/contacts/${id}/reply`,
       { replyMessage }
     );
+  }
+
+  // ── Recommandateurs ─────────────────────────────────────────────
+
+  getReferrers(): Observable<ApiResponse<Referrer[]>> {
+    return this.http.get<ApiResponse<Referrer[]>>(`${this.base}/referrers`);
+  }
+
+  createReferrer(req: ReferrerRequest): Observable<ApiResponse<Referrer>> {
+    return this.http.post<ApiResponse<Referrer>>(`${this.base}/referrers`, req);
+  }
+
+  toggleReferrer(id: number): Observable<ApiResponse<Referrer>> {
+    return this.http.patch<ApiResponse<Referrer>>(`${this.base}/referrers/${id}/toggle`, {});
   }
 }

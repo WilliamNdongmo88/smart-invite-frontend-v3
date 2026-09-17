@@ -97,15 +97,17 @@
   border-radius: 16px;
   margin: 12px 12px 12px 6px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #333 transparent;
 }
 
 .right-inner {
   width: 100%;
   max-width: 360px;
-  padding: 0 1rem;
+  padding: 1.5rem 1rem;
+  margin: auto;
 }
 
 .right-logo {
@@ -247,6 +249,104 @@ input {
   font-size: 0.75rem;
   color: #e05252;
   margin-top: 0.25rem;
+}
+
+/* ── Code de recommandation ─────────────────────────────── */
+.toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  color: #ccc;
+  cursor: pointer;
+  user-select: none;
+
+  .toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  .toggle {
+    position: relative;
+    flex-shrink: 0;
+    width: 38px;
+    height: 22px;
+    border-radius: 22px;
+    background: #2a2a2a;
+    border: 1.5px solid #444;
+    transition: background-color 0.25s, border-color 0.25s, box-shadow 0.25s;
+
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #999;
+      transition: transform 0.25s, background-color 0.25s;
+    }
+  }
+
+  &:hover .toggle {
+    border-color: #c9a84c;
+  }
+
+  .toggle-input:focus-visible + .toggle {
+    outline: none;
+    border-color: #c9a84c;
+    box-shadow: 0 0 0 3px rgba(201, 168, 76, 0.28);
+  }
+
+  .toggle-input:checked + .toggle {
+    background: linear-gradient(135deg, #f0c040, #c9a84c);
+    border-color: #c9a84c;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+    .toggle-knob {
+      transform: translateX(16px);
+      background: #111;
+    }
+  }
+
+  .toggle-text {
+    line-height: 1.4;
+    transition: color 0.2s;
+  }
+
+  &:hover .toggle-text { color: #fff; }
+}
+
+.referral-box {
+  margin-top: 0.5rem;
+
+  input {
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  input.invalid { border-color: #e05252; }
+  input.referral-ok { border-color: #2e9e5b; }
+}
+
+.referral-hint {
+  display: block;
+  font-size: 0.72rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
+
+.referral-status {
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+
+  &.checking { color: #c9a84c; }
+  &.ok { color: #2e9e5b; }
+  &.error { color: #e05252; }
 }
 
 .btn-submit {

@@ -11,11 +11,44 @@
     "visitors": "Visiteurs",
     "users": "Utilisateurs",
     "payments": "Paiements",
+    "referrers": "Recommandateurs",
     "finance": "Finances",
     "profile": "Profil",
     "dashboard": "Dashboard",
     "events": "Événements",
     "agents": "Agents"
+  },
+  "referrers": {
+    "title": "Recommandateurs",
+    "subtitle": "Gérez les codes de recommandation et suivez leurs statistiques",
+    "create": "Créer un recommandateur",
+    "createTitle": "Nouveau recommandateur",
+    "createSub": "Un code (REF-XXXXXX) sera généré automatiquement et copié dans votre presse-papiers. Partagez-le : chaque inscription l'utilisant sera tracée avec les événements et paiements associés.",
+    "name": "Nom",
+    "namePlaceholder": "Nom complet du recommandateur",
+    "email": "E-mail",
+    "emailPlaceholder": "recommandateur@exemple.com",
+    "phone": "Téléphone",
+    "phonePlaceholder": "+237 6XX XXX XXX",
+    "notificationMode": "Canal de notification",
+    "modeEmail": "Envoyer par email",
+    "modeWhatsapp": "Envoyer par WhatsApp",
+    "modeBoth": "Email & WhatsApp",
+    "searchPlaceholder": "Rechercher par nom, code ou email…",
+    "noReferrers": "Aucun recommandateur pour le moment",
+    "code": "Code",
+    "contact": "Contact",
+    "mode": "Canal",
+    "registrations": "Inscriptions",
+    "events": "Événements",
+    "approvedAmount": "Montant validé",
+    "createdOn": "Créé le",
+    "stats": {
+      "total": "Recommandateurs",
+      "active": "Actifs",
+      "inactive": "Inactifs",
+      "approved": "Montant total validé"
+    }
   },
   "common": {
     "refresh": "Actualiser",
@@ -82,7 +115,13 @@
       "submit": "Créer mon compte",
       "alreadyAccount": "Déjà un compte ?",
       "signIn": "Se connecter",
-      "errorDefault": "Erreur lors de l'inscription"
+      "errorDefault": "Erreur lors de l'inscription",
+      "referralCheckbox": "J'ai un code de recommandation",
+      "referralPlaceholder": "REF-XXXXXX",
+      "referralHint": "Ex : REF-AB23CD — le code vous a été communiqué par un recommandateur",
+      "referralChecking": "Vérification du code…",
+      "referralValid": "Code valide ✓",
+      "referralError": "Ce code de recommandation est invalide ou inactif"
     },
     "verifyEmail": {
       "leftHeadline": "Vérifiez votre identité",
@@ -736,7 +775,29 @@
     "yourReply": "Votre réponse",
     "replyPlaceholder": "Saisissez votre réponse ici…",
     "sendViaWhatsapp": "Envoyer via WhatsApp",
-    "sendViaEmail": "Envoyer par Email"
+    "sendViaEmail": "Envoyer par Email",
+    "detail": {
+      "organizer": "Organisateur",
+      "dateVenue": "Date & Lieu",
+      "info": "Informations",
+      "payment": "Paiement",
+      "guestsStats": "Statistiques invités",
+      "budget": "Budget",
+      "maxGuests": "Quota d'invitations",
+      "names": "Concernés",
+      "noPayment": "Aucun paiement enregistré.",
+      "quota": "Quota",
+      "paidQuota": "Quota payé",
+      "amount": "Montant",
+      "rejection": "Motif du rejet",
+      "referralCode": "Code de recommandation",
+      "guestsTotal": "Inscrits",
+      "guestsConfirmed": "Confirmés",
+      "guestsPending": "En attente",
+      "guestsDeclined": "Déclinés",
+      "occupancy": "Taux d'occupation",
+      "openEvent": "Voir l'événement"
+    }
   },
   "payments": {
     "title": "Paiements",
@@ -1658,7 +1719,7 @@
     "footer": {
       "sub": "La plateforme élégante de gestion d'invitations",
       "love": "AVEC TOUT NOTRE SOIN ✦",
-      "rights": "© 2026 Smart Invite — Tous droits réservés"
+      "rights": "© 2026 smart-invite — Tous droits réservés"
     },
     "chapters": [
       {

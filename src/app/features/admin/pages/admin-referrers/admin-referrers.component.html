@@ -1,0 +1,192 @@
+<div class="au-page">
+
+  <!-- Header -->
+  <div class="au-header">
+    <div>
+      <h1 class="au-title">{{ 'referrers.title' | translate }}</h1>
+      <p class="au-sub">{{ 'referrers.subtitle' | translate }}</p>
+    </div>
+    <div class="au-header-actions">
+      <button class="btn-refresh" (click)="load()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        {{ 'admin.refresh' | translate }}
+      </button>
+      <button class="btn-create" (click)="openCreate()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        {{ 'referrers.create' | translate }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="au-stats">
+    <div class="stat-card">
+      <span class="stat-label">{{ 'referrers.stats.total' | translate }}</span>
+      <span class="stat-value">{{ stats().total }}</span>
+    </div>
+    <div class="stat-card active">
+      <span class="stat-label">{{ 'referrers.stats.active' | translate }}</span>
+      <span class="stat-value">{{ stats().active }}</span>
+    </div>
+    <div class="stat-card inactive">
+      <span class="stat-label">{{ 'referrers.stats.inactive' | translate }}</span>
+      <span class="stat-value">{{ stats().inactive }}</span>
+    </div>
+    <div class="stat-card gold">
+      <span class="stat-label">{{ 'referrers.stats.approved' | translate }}</span>
+      <span class="stat-value stat-value-sm">{{ formatAmount(stats().approvedAmount) }}</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="au-search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input class="au-search" type="text" [placeholder]="'referrers.searchPlaceholder' | translate"
+           [value]="search()" (input)="updateSearch($any($event.target).value)" />
+  </div>
+
+  <!-- Table -->
+  <div class="au-card">
+    @if (loading()) {
+      <div class="au-loading">{{ 'admin.loading' | translate }}</div>
+    } @else if (filtered().length === 0) {
+      <div class="au-empty">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5" style="margin-bottom:.75rem">
+          <path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="10"/>
+        </svg>
+        <p>{{ 'referrers.noReferrers' | translate }}</p>
+      </div>
+    } @else {
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>{{ 'referrers.name' | translate }}</th>
+              <th>{{ 'referrers.code' | translate }}</th>
+              <th>{{ 'referrers.contact' | translate }}</th>
+              <th>{{ 'referrers.mode' | translate }}</th>
+              <th class="num-th">{{ 'referrers.registrations' | translate }}</th>
+              <th class="num-th">{{ 'referrers.events' | translate }}</th>
+              <th class="num-th">{{ 'referrers.approvedAmount' | translate }}</th>
+              <th>{{ 'common.status' | translate }}</th>
+              <th>{{ 'referrers.createdOn' | translate }}</th>
+              <th>{{ 'common.actions' | translate }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of filtered(); track r.id) {
+              <tr>
+                <td class="name-cell">{{ r.name }}</td>
+                <td>
+                  <div class="code-cell">
+                    <span class="code-text" [class.code-inactive]="!r.active">{{ r.code }}</span>
+                    <button class="btn-copy" (click)="copyCode(r.code)" title="Copier le code">
+                      @if (copiedCode() === r.code) {
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      } @else {
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                      }
+                    </button>
+                  </div>
+                </td>
+                <td class="contact-cell">
+                  @if (r.email) { <span class="contact-line">{{ r.email }}</span> }
+                  @if (r.phone) { <span class="contact-line dim">{{ r.phone }}</span> }
+                  @if (!r.email && !r.phone) { <span class="no-events">—</span> }
+                </td>
+                <td>
+                  <span class="msg-channel" [class]="modeClass(r.notificationMode)">
+                    {{ modeIcon(r.notificationMode) }} {{ modeLabel(r.notificationMode) }}
+                  </span>
+                </td>
+                <td class="num-cell">{{ r.registrations }}</td>
+                <td class="num-cell">{{ r.events }}</td>
+                <td class="num-cell gold-cell">{{ formatAmount(r.approvedAmount) }}</td>
+                <td>
+                  <span class="badge" [class.badge-active]="r.active" [class.badge-inactive]="!r.active">
+                    {{ r.active ? 'Actif' : 'Inactif' }}
+                  </span>
+                </td>
+                <td class="date-cell">{{ formatDate(r.createdAt) }}</td>
+                <td class="actions-cell">
+                  @if (processing() === r.id) {
+                    <span class="processing">…</span>
+                  } @else {
+                    <button class="btn-action" [class.activate]="!r.active" [class.disable]="r.active"
+                            (click)="toggleActive(r)">
+                      {{ r.active ? 'Désactiver' : 'Activer' }}
+                    </button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+</div>
+
+<!-- CREATE MODAL -->
+@if (showCreate()) {
+  <div class="modal-backdrop" (click)="closeCreate()">
+    <div class="modal create-modal" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 class="modal-title">{{ 'referrers.createTitle' | translate }}</h3>
+        <button class="btn-close-modal" (click)="closeCreate()">✕</button>
+      </div>
+      <p class="modal-sub">{{ 'referrers.createSub' | translate }}</p>
+
+      <label class="field-label">{{ 'referrers.name' | translate }} *</label>
+      <input class="field-input" type="text" [value]="newName()" (input)="updateNewName($any($event.target).value)"
+             [placeholder]="'referrers.namePlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.email' | translate }}</label>
+      <input class="field-input" type="email" [value]="newEmail()" (input)="updateNewEmail($any($event.target).value)"
+             [placeholder]="'referrers.emailPlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.phone' | translate }}</label>
+      <input class="field-input" type="tel" [value]="newPhone()" (input)="updateNewPhone($any($event.target).value)"
+             [placeholder]="'referrers.phonePlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.notificationMode' | translate }}</label>
+      <div class="mode-select">
+        <label class="mode-option">
+          <input type="radio" name="rMode" value="EMAIL" [checked]="newMode() === 'EMAIL'"
+                 (change)="updateNewMode($any($event.target).value)"/>
+          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="rMode" value="WHATSAPP" [checked]="newMode() === 'WHATSAPP'"
+                 (change)="updateNewMode($any($event.target).value)"/>
+          <span>📱 {{ 'referrers.modeWhatsapp' | translate }}</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="rMode" value="BOTH" [checked]="newMode() === 'BOTH'"
+                 (change)="updateNewMode($any($event.target).value)"/>
+          <span>📱✉️ {{ 'referrers.modeBoth' | translate }}</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeCreate()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-confirm" [disabled]="creating() || !canCreate()" (click)="create()">
+          @if (creating()) { <span class="spinner-sm"></span> }
+          {{ 'referrers.create' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

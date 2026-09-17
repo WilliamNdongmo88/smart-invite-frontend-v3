@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
+import { ReferralCheck } from '../models/referrer.model';
 import {
   ForgotPasswordRequest,
   GoogleLoginRequest,
@@ -29,6 +30,12 @@ export class AuthService {
 
   register(req: RegisterRequest): Observable<ApiResponse<RegisterResponse>> {
     return this.http.post<ApiResponse<RegisterResponse>>(`${this.base}/register`, req);
+  }
+
+  validateReferralCode(code: string): Observable<ApiResponse<ReferralCheck>> {
+    return this.http.get<ApiResponse<ReferralCheck>>(
+      `${environment.apiUrl}/api/referrers/validate?code=${encodeURIComponent(code)}`
+    );
   }
 
   verifyEmail(req: VerifyEmailRequest): Observable<ApiResponse<void>> {

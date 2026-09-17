@@ -99,9 +99,11 @@
                     } @else {
                       <div class="events-list">
                         @for (ev of o.events; track ev.id) {
-                          <span class="event-tag" [class]="'pay-' + (ev.paymentStatus ?? 'none')">
+                          <button type="button" class="event-tag clickable"
+                                  [class]="'pay-' + (ev.paymentStatus ?? 'none')"
+                                  (click)="openDetail(ev)">
                             {{ ev.title }}
-                          </span>
+                          </button>
                         }
                       </div>
                     }
@@ -254,6 +256,116 @@
           @else { {{ 'users.sendViaEmail' | translate }} }
         </button>
       </div>
+    </div>
+  </div>
+}
+
+<!-- EVENT DETAIL MODAL -->
+@if (detailLoading() || detail() || detailError()) {
+  <div class="modal-backdrop" (click)="closeDetail()">
+    <div class="modal detail-modal" (click)="$event.stopPropagation()">
+      @if (detailLoading()) {
+        <div class="ed-loading">{{ 'admin.loading' | translate }}</div>
+      } @else if (detailError()) {
+        <div class="ed-error">{{ detailError() }}</div>
+      } @else if (detail()) {
+        <div class="ed-head">
+          <div class="ed-head-left">
+            <h3 class="modal-title">{{ detail()!.title }}</h3>
+            <div class="ed-badges">
+              <span class="ed-badge ed-type">{{ typeLabel(detail()!.type) }}</span>
+              <span class="ed-badge ed-status">{{ detail()!.status }}</span>
+            </div>
+          </div>
+          <button class="btn-close-modal" (click)="closeDetail()">✕</button>
+        </div>
+
+        <div class="ed-body">
+          <!-- Organisateur -->
+          <div class="ed-block">
+            <h4 class="ed-block-title">{{ 'users.detail.organizer' | translate }}</h4>
+            <p class="ed-line">{{ detail()!.organizerName }}</p>
+            @if (detail()!.organizerEmail) {
+              <p class="ed-line dim">{{ detail()!.organizerEmail }}</p>
+            }
+            @if (detail()!.organizerPhone) {
+              <p class="ed-line dim">{{ detail()!.organizerPhone }}</p>
+            }
+          </div>
+
+          <!-- Date & lieu -->
+          <div class="ed-block">
+            <h4 class="ed-block-title">{{ 'users.detail.dateVenue' | translate }}</h4>
+            <p class="ed-line">{{ detail()!.eventDate ? formatDateTime(detail()!.eventDate) : '—' }}</p>
+            @if (detail()!.dateLabel) {
+              <p class="ed-line dim">{{ detail()!.dateLabel }}</p>
+            }
+            @if (detail()!.venueName || detail()!.venueCity) {
+              <p class="ed-line dim">
+                {{ detail()!.venueName || '' }}{{ detail()!.venueName && detail()!.venueCity ? ' — ' : '' }}{{ detail()!.venueCity || '' }}
+              </p>
+            }
+          </div>
+
+          <!-- Informations -->
+          <div class="ed-block">
+            <h4 class="ed-block-title">{{ 'users.detail.info' | translate }}</h4>
+            <p class="ed-line"><span class="ed-label">{{ 'users.detail.budget' | translate }} :</span> {{ detail()!.budget || '—' }}</p>
+            <p class="ed-line"><span class="ed-label">{{ 'users.detail.maxGuests' | translate }} :</span> {{ detail()!.maxGuests ?? 0 }}</p>
+            @if (detail()!.concernedNames) {
+              <p class="ed-line"><span class="ed-label">{{ 'users.detail.names' | translate }} :</span> {{ detail()!.concernedNames }}</p>
+            }
+            @if (detail()!.description) {
+              <p class="ed-text">{{ detail()!.description }}</p>
+            }
+          </div>
+
+          <!-- Paiement -->
+          <div class="ed-block">
+            <h4 class="ed-block-title">{{ 'users.detail.payment' | translate }}</h4>
+            @if (!detail()!.payment) {
+              <p class="ed-line dim">{{ 'users.detail.noPayment' | translate }}</p>
+            } @else {
+              <p class="ed-line">
+                <span class="ed-label">{{ 'common.status' | translate }} :</span>
+                <span class="ed-pay-status" [class]="'pay-' + (detail()!.payment!.status ?? 'none')">{{ detail()!.payment!.status }}</span>
+              </p>
+              <p class="ed-line"><span class="ed-label">{{ 'users.detail.quota' | translate }} :</span> {{ detail()!.payment!.quota ?? 0 }}</p>
+              <p class="ed-line"><span class="ed-label">{{ 'users.detail.paidQuota' | translate }} :</span> {{ detail()!.payment!.paidQuota ?? 0 }}</p>
+              <p class="ed-line"><span class="ed-label">{{ 'users.detail.amount' | translate }} :</span> {{ formatAmount(detail()!.payment!.amount) }}</p>
+              @if (detail()!.payment!.rejectionReason) {
+                <p class="ed-line warn"><span class="ed-label">{{ 'users.detail.rejection' | translate }} :</span> {{ detail()!.payment!.rejectionReason }}</p>
+              }
+              @if (detail()!.referralCode) {
+                <p class="ed-line"><span class="ed-label">{{ 'users.detail.referralCode' | translate }} :</span> {{ detail()!.referralCode }}</p>
+              }
+            }
+          </div>
+
+          <!-- Stats invités -->
+          <div class="ed-block">
+            <h4 class="ed-block-title">{{ 'users.detail.guestsStats' | translate }}</h4>
+            <div class="ed-grid4">
+              <div class="ed-stat"><span class="ed-stat-value">{{ detail()!.stats?.totalGuests ?? 0 }}</span><span class="ed-stat-label">{{ 'users.detail.guestsTotal' | translate }}</span></div>
+              <div class="ed-stat ok"><span class="ed-stat-value">{{ detail()!.stats?.confirmedGuests ?? 0 }}</span><span class="ed-stat-label">{{ 'users.detail.guestsConfirmed' | translate }}</span></div>
+              <div class="ed-stat wait"><span class="ed-stat-value">{{ detail()!.stats?.pendingGuests ?? 0 }}</span><span class="ed-stat-label">{{ 'users.detail.guestsPending' | translate }}</span></div>
+              <div class="ed-stat ko"><span class="ed-stat-value">{{ detail()!.stats?.declinedGuests ?? 0 }}</span><span class="ed-stat-label">{{ 'users.detail.guestsDeclined' | translate }}</span></div>
+            </div>
+            <p class="ed-line"><span class="ed-label">{{ 'users.detail.occupancy' | translate }} :</span> {{ detail()!.stats?.occupancyRate ?? 0 }}%</p>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <a class="btn-link" [href]="eventDetailLink(detail()!)" target="_blank">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            {{ 'users.detail.openEvent' | translate }}
+          </a>
+          <button class="btn-confirm" (click)="closeDetail()">{{ 'common.close' | translate }}</button>
+        </div>
+      }
     </div>
   </div>
 }

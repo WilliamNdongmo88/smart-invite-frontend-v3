@@ -1,4 +1,4 @@
-import { NotificationMode, UserRole } from './enums.model';
+import { EventStatus, EventType, NotificationMode, PaymentStatus, UserRole } from './enums.model';
 
 export interface User {
   id: number;
@@ -42,6 +42,46 @@ export interface EventSummary {
   title: string;
   eventDate?: string;
   paymentStatus?: string;
+}
+
+/** Détail complet d'un événement (vue admin, sans restriction propriétaire) */
+export interface AdminEventDetail {
+  eventId: number;
+  title: string;
+  description?: string;
+  type: EventType;
+  status: EventStatus;
+  budget?: string;
+  maxGuests?: number;
+  concernedNames?: string;
+  eventDate?: string;
+  dateLabel?: string;
+  venueName?: string;
+  venueCity?: string;
+  couplePhotoUrl?: string;
+  referralCode?: string;
+  createdAt: string;
+  organizerId: number;
+  organizerName: string;
+  organizerEmail?: string;
+  organizerPhone?: string;
+  payment?: {
+    status?: PaymentStatus;
+    quota?: number;
+    paidQuota?: number;
+    amount?: number;
+    rejectionReason?: string;
+    proofUrl?: string;
+    referralCode?: string;
+    createdAt?: string;
+  } | null;
+  stats?: {
+    totalGuests: number;
+    confirmedGuests: number;
+    pendingGuests: number;
+    declinedGuests: number;
+    occupancyRate: number;
+  } | null;
 }
 
 export interface OrganizerSummary {

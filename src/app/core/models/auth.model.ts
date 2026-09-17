@@ -6,6 +6,7 @@ export interface RegisterRequest {
   phone?: string;
   password: string;
   notificationMode: NotificationMode;
+  referralCode?: string;
 }
 
 export interface RegisterResponse {

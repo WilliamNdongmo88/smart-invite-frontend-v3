@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { NotificationMode } from '../../../../core/models/enums.model';
@@ -41,6 +42,10 @@ export class RegisterComponent implements OnInit {
   showPw = signal(false);
   showConfirm = signal(false);
   fromGoogle = signal(false);
+  hasReferral = signal(false);
+  referralError = signal('');
+  referralValid = signal(false);
+  referralChecking = signal(false);
 
   readonly dialCodes = DIAL_CODES;
 
@@ -52,6 +57,7 @@ export class RegisterComponent implements OnInit {
       phone: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
+      referralCode: [''],
     },
     { validators: passwordMatchValidator }
   );
@@ -62,6 +68,52 @@ export class RegisterComponent implements OnInit {
     if (params['email']) this.form.patchValue({ email: params['email'] });
     if (params['name']) this.form.patchValue({ name: params['name'] });
     if (params['google']) this.fromGoogle.set(true);
+    else this.initReferralWatcher();
+  }
+
+  private initReferralWatcher(): void {
+    this.form
+      .get('referralCode')!
+      .valueChanges.pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        tap(() => {
+          this.referralValid.set(false);
+          this.referralError.set('');
+        }),
+        switchMap((raw) => {
+          const code = raw?.trim().toUpperCase() ?? '';
+          if (this.hasReferral() && code.length >= 5) {
+            this.referralChecking.set(true);
+            return this.auth.validateReferralCode(code).pipe(
+              tap(() => this.referralChecking.set(false))
+            );
+          }
+          return [];
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (!this.hasReferral()) return;
+          if (res.data?.valid) this.referralValid.set(true);
+          else this.referralError.set(this.lang.t('auth.register.referralError'));
+        },
+        error: () => {
+          this.referralChecking.set(false);
+          this.referralError.set(this.lang.t('auth.register.referralError'));
+        },
+      });
+  }
+
+  onToggleReferral(checked: boolean): void {
+    this.hasReferral.set(checked);
+    this.referralValid.set(false);
+    this.referralError.set('');
+    this.referralChecking.set(false);
+    if (checked) {
+      const raw = this.form.get('referralCode')?.value ?? '';
+      if ((raw ?? '').trim().length >= 5) this.form.get('referralCode')!.updateValueAndValidity();
+    }
   }
 
   isInvalid(field: string): boolean {
@@ -77,25 +129,37 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid) {
+    if (this.form.invalid || (this.hasReferral() && !this.referralValid())) {
       this.form.markAllAsTouched();
       return;
     }
     this.loading.set(true);
-    const { name, email, phoneDialCode, phone, password } = this.form.value;
+    const { name, email, phoneDialCode, phone, password, referralCode } = this.form.value;
 
     // Compose le numéro complet : indicatif + numéro local (sans zéros en tête)
     const local = phone!.trim().replace(/^0+/, '');
     const fullPhone = `${phoneDialCode}${local}`;
 
+    const payload: {
+      name: string;
+      email: string;
+      phone: string;
+      password: string;
+      notificationMode: NotificationMode;
+      referralCode?: string;
+    } = {
+      name: name!,
+      email: email!,
+      phone: fullPhone,
+      password: password!,
+      notificationMode: 'EMAIL' as NotificationMode,
+    };
+    if (this.hasReferral() && referralCode) {
+      payload.referralCode = referralCode.trim().toUpperCase();
+    }
+
     this.auth
-      .register({
-        name: name!,
-        email: email!,
-        phone: fullPhone,
-        password: password!,
-        notificationMode: 'EMAIL' as NotificationMode,
-      })
+      .register(payload)
       .subscribe({
         next: () => {
           this.router.navigate(['/verify-email'], {

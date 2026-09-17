@@ -1,7 +1,8 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ToastService } from '../../../../core/services/toast.service';
-import { OrganizerSummary, UserNewsMessage } from '../../../../core/models/user.model';
+import { AdminEventDetail, EventSummary, OrganizerSummary, UserNewsMessage } from '../../../../core/models/user.model';
+import { EventType } from '../../../../core/models/enums.model';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 
@@ -69,6 +70,11 @@ export class AdminUsersComponent implements OnInit {
   replyText    = signal('');
   replySending = signal(false);
 
+  // ── Détail d'un événement ────────────────────────────────────────
+  detail = signal<AdminEventDetail | null>(null);
+  detailLoading = signal(false);
+  detailError = signal('');
+
   ngOnInit(): void { this.loadUsers(); }
 
   // ── Chargement ───────────────────────────────────────────────────
@@ -99,6 +105,50 @@ export class AdminUsersComponent implements OnInit {
   load(): void {
     this.loadUsers();
     if (this.activeTab() === 'messages') this.loadMessages();
+  }
+
+  // ── Détail d'un événement ─────────────────────────────────────────
+
+  openDetail(ev: EventSummary): void {
+    this.detail.set(null);
+    this.detailError.set('');
+    this.detailLoading.set(true);
+    this.adminSvc.getEventDetail(ev.id).subscribe({
+      next: (res) => { this.detail.set(res.data ?? null); this.detailLoading.set(false); },
+      error: ()    => { this.detailLoading.set(false); this.detailError.set('Erreur lors du chargement'); },
+    });
+  }
+
+  closeDetail(): void {
+    this.detail.set(null);
+    this.detailLoading.set(false);
+    this.detailError.set('');
+  }
+
+  /** Lien vers la page immersive de l'événement en mode preview */
+  eventDetailLink(d: AdminEventDetail): string {
+    const slug = this.typeSlug(d.type);
+    return `/events/${d.eventId}/${slug}?preview=true`;
+  }
+
+  typeSlug(type: EventType): string {
+    switch (type) {
+      case 'MARIAGE':    return 'wedding';
+      case 'CONFERENCE': return 'conference';
+      case 'GALA':       return 'gala';
+      case 'CEREMONIE':  return 'ceremonie';
+      default:           return 'wedding';
+    }
+  }
+
+  typeLabel(type: EventType): string {
+    switch (type) {
+      case 'MARIAGE':    return 'Mariage';
+      case 'CONFERENCE': return 'Conférence';
+      case 'GALA':       return 'Gala';
+      case 'CEREMONIE':  return 'Cérémonie';
+      default:           return type;
+    }
   }
 
   // ── Gestion utilisateurs ─────────────────────────────────────────
@@ -201,11 +251,17 @@ export class AdminUsersComponent implements OnInit {
     return new Date(dt).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
   }
 
-  formatDateTime(dt: string): string {
+  formatDateTime(dt?: string): string {
+    if (!dt) return '—';
     return new Date(dt).toLocaleString('fr-FR', {
       day: '2-digit', month: 'short', year: 'numeric',
       hour: '2-digit', minute: '2-digit',
     });
+  }
+
+  formatAmount(amount?: number): string {
+    if (amount == null) return '—';
+    return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(amount) + ' XAF';
   }
 
   actionLabel(action: ActionType): string {

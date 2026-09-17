@@ -149,6 +149,39 @@
           }
         </div>
 
+        <!-- Code de recommandation -->
+        <div class="field referral-field">
+          <label class="toggle-label">
+            <input type="checkbox" class="toggle-input"
+                   [checked]="hasReferral()"
+                   (change)="onToggleReferral($any($event.target).checked)"/>
+            <span class="toggle" aria-hidden="true">
+              <span class="toggle-knob"></span>
+            </span>
+            <span class="toggle-text">{{ 'auth.register.referralCheckbox' | translate }}</span>
+          </label>
+
+          @if (hasReferral()) {
+            <div class="referral-box">
+              <input type="text" formControlName="referralCode"
+                     [placeholder]="'auth.register.referralPlaceholder' | translate"
+                     [class.invalid]="referralError()"
+                     [class.referral-ok]="referralValid()"
+                     autocomplete="off"/>
+              <span class="referral-hint">{{ 'auth.register.referralHint' | translate }}</span>
+              @if (referralChecking()) {
+                <span class="referral-status checking">{{ 'auth.register.referralChecking' | translate }}</span>
+              }
+              @if (referralValid()) {
+                <span class="referral-status ok">{{ 'auth.register.referralValid' | translate }}</span>
+              }
+              @if (referralError()) {
+                <span class="referral-status error">{{ referralError() }}</span>
+              }
+            </div>
+          }
+        </div>
+
         <button type="submit" class="btn-submit" [disabled]="loading()">
           @if (loading()) { <span class="spinner"></span> }
           {{ 'auth.register.submit' | translate }}
