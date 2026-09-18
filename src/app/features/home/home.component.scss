@@ -416,8 +416,7 @@ $border:  #2a2a2a;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background:$dark;
-  //background: radial-gradient(ellipse at 20% 30%, #1e1a0e 0%, #181410 40%, #111 100%);
+  background: #1a1a1a; /* fallback ; le SVG couvre tout */
   padding-top: 80px;
 }
 
@@ -477,14 +476,24 @@ $border:  #2a2a2a;
   pointer-events: none;
 }
 
-.hw { animation: wave-drift 18s ease-in-out infinite; }
-.hw1 { animation-duration: 18s; }
-.hw2 { animation-duration: 23s; animation-direction: reverse; }
-.hw3 { animation-duration: 14s; animation-delay: 3s; }
+.hw { transform-origin: center; }
+.hw1 { animation: drift1  8s ease-in-out infinite alternate; }
+.hw2 { animation: drift2 10s ease-in-out infinite alternate; }
+.hw3 { animation: drift3 12s ease-in-out infinite alternate; }
+.hw4 { animation: drift1  9s ease-in-out infinite alternate-reverse; }
+.hw5 { animation: drift2 11s ease-in-out infinite alternate-reverse; }
 
-@keyframes wave-drift {
-  0%, 100% { stroke-dashoffset: 0; transform: translateX(0); }
-  50% { transform: translateX(-30px); }
+@keyframes drift1 {
+  from { transform: translateY(0px) scaleX(1); }
+  to   { transform: translateY(-40px) scaleX(1.04); }
+}
+@keyframes drift2 {
+  from { transform: translateY(0px) scaleX(1); }
+  to   { transform: translateY(35px) scaleX(0.97); }
+}
+@keyframes drift3 {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-28px); }
 }
 
 /* Hero content */
