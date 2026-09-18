@@ -7,6 +7,8 @@
   padding: 0 .5rem;
   box-sizing: border-box;
   color: #e0e0e0;
+  /* Empêche tout scroll horizontal */
+  overflow-x: hidden;
 }
 
 /* ── Sélecteur d'événement ── */
@@ -196,15 +198,25 @@
 
 /* ── Stats ── */
 .scan-stats {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .4rem;
+  /* Chaque colonne fait au moins 0px et au max 1fr — empêche le débordement */
+  min-width: 0;
 }
 .stat {
   background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 10px;
-  padding: .75rem .5rem; text-align: center;
+  padding: .65rem .25rem; text-align: center;
   display: flex; flex-direction: column; align-items: center; gap: .15rem;
+  min-width: 0; overflow: hidden;
 }
-.stat-n { font-size: 1.75rem; font-weight: 700; line-height: 1; }
-.stat-l { font-size: .68rem; color: #888; white-space: nowrap; }
+.stat-n { font-size: 1.6rem; font-weight: 700; line-height: 1; }
+.stat-l {
+  font-size: .62rem; color: #888;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  width: 100%;
+  text-align: center;
+}
 .valid { color: #22c55e; }
 .dup   { color: #f59e0b; }
 .inv   { color: #ef4444; }
