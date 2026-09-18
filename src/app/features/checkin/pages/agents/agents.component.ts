@@ -5,11 +5,12 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { AgentResponse } from '../../../../core/models/checkin.model';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { LanguageService } from '../../../../core/services/language.service';
+import { DialCodeSelectComponent } from '../../../../shared/components/dial-code-select/dial-code-select.component';
 
 @Component({
   selector: 'app-agents',
   standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe],
+  imports: [ReactiveFormsModule, TranslatePipe, DialCodeSelectComponent],
   templateUrl: 'agents.component.html',
   styleUrl: 'agents.component.scss',
 })
@@ -28,7 +29,8 @@ export class AgentsComponent implements OnInit {
 
   form = this.fb.group({
     userName: ['', [Validators.required, Validators.minLength(3)]],
-    whatsapp: ['', [Validators.required, Validators.pattern(/^\+?[0-9]{8,15}$/)]],
+    dialCode: ['+237'],
+    whatsapp: ['', [Validators.required, Validators.pattern(/^[0-9]{6,14}$/)]],
   });
 
   ngOnInit(): void { this.load(); }
@@ -48,7 +50,8 @@ export class AgentsComponent implements OnInit {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
     const v = this.form.value;
-    this.svc.createAgent({ userName: v.userName!, whatsapp: v.whatsapp! }).subscribe({
+    const fullWhatsapp = (v.dialCode ?? '+237') + (v.whatsapp ?? '');
+    this.svc.createAgent({ userName: v.userName!, whatsapp: fullWhatsapp }).subscribe({
       next: () => {
         this.toast.success('Agent créé ! Les identifiants ont été envoyés par WhatsApp.');
         this.closeForm();
@@ -94,7 +97,8 @@ export class AgentsComponent implements OnInit {
 
   /** Email de connexion de l'agent (format identique au backend). */
   agentEmail(userName: string): string {
-    return userName.toLowerCase() + '@agent.smartinvite.local';
+    const normalized = userName.trim().toLowerCase().replace(/\s+/g, '.');
+    return normalized + '@agent.smartinvite.local';
   }
 
   /** Mot de passe de l'agent = numéro WhatsApp sans le '+'. */

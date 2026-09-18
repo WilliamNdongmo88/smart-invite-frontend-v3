@@ -50,7 +50,7 @@
 .agent-list { display: flex; flex-direction: column; }
 
 .agent-row {
-  display: flex; align-items: center; gap: 1rem;
+  display: flex; align-items: center; flex-wrap: wrap; gap: .75rem 1rem;
   padding: .875rem 1.25rem; border-bottom: 1px solid #1e1e1e;
   transition: background .1s;
   &:last-child { border-bottom: none; }
@@ -82,6 +82,9 @@
   background: #141414;
   border: 1px solid #252525;
   border-radius: 8px;
+  // Toujours sur sa propre ligne (flex-wrap sur agent-row)
+  flex-basis: 100%;
+  width: 100%;
 }
 
 .cred-row {
@@ -154,6 +157,52 @@
   &:hover { background: rgba(239,68,68,.2); }
 }
 
+// ── Responsive mobile ──
+@media (max-width: 520px) {
+
+  .agent-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: 1rem;
+  }
+
+  // Avatar + nom/téléphone sur la même ligne, delete poussé à droite
+  .agent-avatar { align-self: flex-start; }
+
+  .agent-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .agent-actions {
+    // Sort du flux normal pour se placer en haut à droite
+    margin-left: auto;
+    align-self: flex-start;
+  }
+
+  // Le bloc credentials prend toute la largeur sous l'avatar + infos
+  .agent-credentials {
+    width: 100%;
+    flex-basis: 100%;
+    // Retire la marge du dessus (déjà géré par le gap)
+    margin-top: 0;
+  }
+
+  // Les valeurs peuvent passer sur 2 lignes si vraiment trop longues
+  .cred-value {
+    white-space: normal;
+    word-break: break-all;
+    font-size: .72rem;
+  }
+
+  // Label plus compact
+  .cred-label {
+    min-width: 76px;
+    font-size: .65rem;
+  }
+}
+
 // ── Modal ──
 .modal-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,.7);
@@ -183,6 +232,37 @@
   display: flex; flex-direction: column; gap: .4rem;
   label { font-size: .8rem; color: #aaa; font-weight: 500; }
 }
+
+// Champ téléphone : dial-code-select + input côte à côte
+.phone-wrap {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+
+  app-dial-code-select {
+    flex-shrink: 0;
+
+    // Raccord visuel avec l'input qui suit
+    ::ng-deep .dial-wrapper .dial-trigger {
+      border-radius: 8px 0 0 8px;
+      border-right: none;
+      height: 100%;
+    }
+  }
+
+  input {
+    flex: 1;
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+
+    &:focus {
+      border-color: #c9a84c;
+      // Rétablit la bordure gauche lors du focus pour ne pas perdre le visuel
+      border-left: 1px solid #c9a84c;
+    }
+  }
+}
+
 input {
   background: #111; border: 1px solid #2a2a2a; border-radius: 8px;
   color: #e0e0e0; padding: .65rem .875rem; font-size: .875rem;
