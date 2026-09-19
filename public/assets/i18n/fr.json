@@ -121,7 +121,8 @@
       "referralHint": "Ex : REF-AB23CD — le code vous a été communiqué par un recommandateur",
       "referralChecking": "Vérification du code…",
       "referralValid": "Code valide ✓",
-      "referralError": "Ce code de recommandation est invalide ou inactif"
+      "referralError": "Ce code de recommandation est invalide ou inactif",
+      "referralRequired": "Veuillez saisir votre code de recommandation"
     },
     "verifyEmail": {
       "leftHeadline": "Vérifiez votre identité",

@@ -121,7 +121,8 @@
       "referralHint": "e.g. REF-AB23CD — the code was given to you by a referrer",
       "referralChecking": "Checking code…",
       "referralValid": "Valid code ✓",
-      "referralError": "This referral code is invalid or inactive"
+      "referralError": "This referral code is invalid or inactive",
+      "referralRequired": "Please enter your referral code"
     },
     "verifyEmail": {
       "leftHeadline": "Verify your identity",

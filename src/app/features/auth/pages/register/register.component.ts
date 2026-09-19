@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
   showPw = signal(false);
   showConfirm = signal(false);
   fromGoogle = signal(false);
-  hasReferral = signal(false);
+  hasReferral = signal(true);
   referralError = signal('');
   referralValid = signal(false);
   referralChecking = signal(false);
@@ -129,10 +129,26 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || (this.hasReferral() && !this.referralValid())) {
+    // Si le code de recommandation est activé mais vide → bloquer et afficher l'erreur
+    if (this.hasReferral()) {
+      const code = this.form.get('referralCode')?.value?.trim() ?? '';
+      if (!code) {
+        this.referralError.set(this.lang.t('auth.register.referralRequired'));
+        this.form.get('referralCode')!.markAsTouched();
+        return;
+      }
+      // Code saisi mais non validé
+      if (!this.referralValid()) {
+        this.form.markAllAsTouched();
+        return;
+      }
+    }
+
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
     this.loading.set(true);
     const { name, email, phoneDialCode, phone, password, referralCode } = this.form.value;
 
