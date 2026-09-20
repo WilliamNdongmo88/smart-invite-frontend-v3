@@ -80,8 +80,9 @@ export class GuestsComponent implements OnInit {
   );
 
   readonly tabs = computed<{ key: RsvpTab; label: string }[]>(() => {
-    // On lit translationsVersion pour que computed se réévalue après chaque chargement i18n
+    // On lit translationsVersion et activeLang pour que computed se réévalue après chaque chargement i18n
     this.lang.translationsVersion();
+    this.lang.activeLang();
     return [
       { key: 'ALL',       label: this.lang.t('guests.tabs.ALL') },
       { key: 'PENDING',   label: this.lang.t('guests.tabs.PENDING') },
@@ -93,10 +94,14 @@ export class GuestsComponent implements OnInit {
 
   readonly notifOptions = computed<{ key: NotificationMode; label: string }[]>(() => {
     this.lang.translationsVersion();
+    this.lang.activeLang();
+    const tEmail = this.lang.t('guests.notifOptions.EMAIL');
+    const tWa    = this.lang.t('guests.notifOptions.WHATSAPP');
+    const tBoth  = this.lang.t('guests.notifOptions.BOTH');
     return [
-      { key: 'EMAIL',    label: this.lang.t('guests.notifOptions.EMAIL') },
-      { key: 'WHATSAPP', label: this.lang.t('guests.notifOptions.WHATSAPP') },
-      { key: 'BOTH',     label: this.lang.t('guests.notifOptions.BOTH') },
+      { key: 'EMAIL',    label: tEmail !== 'guests.notifOptions.EMAIL' ? tEmail : this.notifLabels.EMAIL },
+      { key: 'WHATSAPP', label: tWa    !== 'guests.notifOptions.WHATSAPP' ? tWa : this.notifLabels.WHATSAPP },
+      { key: 'BOTH',     label: tBoth  !== 'guests.notifOptions.BOTH' ? tBoth : this.notifLabels.BOTH },
     ];
   });
 

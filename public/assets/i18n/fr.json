@@ -352,6 +352,11 @@
       "DECLINED": "Déclinés",
       "PRESENT": "Présents"
     },
+    "notifOptions": {
+      "EMAIL": "Email",
+      "WHATSAPP": "WhatsApp",
+      "BOTH": "Email & WhatsApp"
+    },
     "fields": {
       "name": "Nom",
       "email": "Email",
