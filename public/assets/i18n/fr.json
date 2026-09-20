@@ -409,6 +409,78 @@
       "revokeSuccess": "Invitation révoquée",
       "resendSuccess": "Invitation renvoyée",
       "error": "Une erreur est survenue"
+    },
+    "public": {
+      "back": "Retour",
+      "loading": "Chargement de votre invitation…",
+      "invalidTitle": "Invitation introuvable",
+      "errorMsg": "Cette invitation est invalide ou a expiré.",
+      "greeting": "Bonjour",
+      "rsvpQuestion": "Serez-vous présent(e) ?",
+      "confirming": "Confirmation…",
+      "declining": "Traitement…",
+      "declineBtn": "Je ne pourrai pas venir",
+      "confirmedTitle": "Présence confirmée !",
+      "confirmedMsg": "Merci",
+      "confirmedSub": "Votre QR code d'accès est disponible ci-dessous. Présentez-le à l'entrée.",
+      "declinedTitle": "Absence enregistrée",
+      "declinedMsg": "Nous avons bien noté l'absence de",
+      "declinedSub": "Merci de nous avoir informés.",
+      "changeResponse": "Modifier ma réponse",
+      "changePhoto": "Changer la photo",
+      "qrCodeLabel": "Votre QR Code d'accès",
+      "qrCodeHint": "Présentez ce QR code à l'entrée de l'événement",
+      "downloadPass": "Télécharger mon invitation",
+      "footer": "smart-invite.com",
+      "eyebrow": {
+        "MARIAGE": "Invitation au mariage",
+        "CONFERENCE": "Invitation à la conférence",
+        "GALA": "Invitation au gala",
+        "CEREMONIE": "Invitation à la cérémonie"
+      },
+      "mainTitle": {
+        "MARIAGE": "Une journée inoubliable vous attend",
+        "CONFERENCE": "Un événement professionnel d'exception",
+        "GALA": "Une soirée de prestige",
+        "CEREMONIE": "Une cérémonie mémorable"
+      },
+      "intro": {
+        "MARIAGE": "Nous serions honorés de votre présence en ce jour si spécial.",
+        "CONFERENCE": "Votre participation sera un atout précieux.",
+        "GALA": "Votre présence rehaussera l'éclat de cette soirée.",
+        "CEREMONIE": "Votre présence nous toucherait profondément."
+      },
+      "salutation": {
+        "MARIAGE": "Nous avons l'immense joie de vous convier à la célébration de notre union.",
+        "CONFERENCE": "Nous avons le plaisir de vous inviter à cet événement professionnel.",
+        "GALA": "Nous vous invitons à partager avec nous cette soirée exceptionnelle.",
+        "CEREMONIE": "Nous vous invitons à partager ce moment solennel avec nous.",
+        "default": "Nous serions honorés de votre présence."
+      },
+      "confirmBtn": {
+        "MARIAGE": "Confirmer ma présence au mariage",
+        "CONFERENCE": "Confirmer ma participation",
+        "GALA": "Confirmer ma présence au gala",
+        "CEREMONIE": "Confirmer ma présence",
+        "default": "Confirmer ma présence"
+      },
+      "headerBadge": {
+        "MARIAGE": "💍 Mariage",
+        "CONFERENCE": "🎤 Conférence",
+        "GALA": "✨ Gala",
+        "CEREMONIE": "⚜ Cérémonie"
+      },
+      "frameTag": {
+        "MARIAGE": "Photo des mariés",
+        "CONFERENCE": "Événement",
+        "GALA": "Soirée de prestige",
+        "CEREMONIE": "Cérémonie"
+      },
+      "fallback": {
+        "coupleNames": "Les hôtes",
+        "eventTitle": "Événement",
+        "eventDate": "Date à confirmer"
+      }
     }
   },
   "links": {
@@ -457,10 +529,80 @@
     },
     "join": {
       "title": "Vous êtes invité",
+      "back": "Retour",
+      "invalidLink": "Lien invalide",
       "confirm": "Confirmer ma présence",
       "decline": "Décliner",
       "expired": "Ce lien n'est plus valide.",
-      "success": "Votre réponse a été enregistrée."
+      "success": "Votre réponse a été enregistrée.",
+      "successTitle": "Inscription confirmée !",
+      "successWelcome": "Bienvenue,",
+      "qrCodeLabel": "Votre QR Code d'accès",
+      "downloadPass": "Télécharger mon invitation",
+      "footer": "smart-invite.com",
+      "eyebrow": {
+        "MARIAGE": "Vous êtes invité au mariage",
+        "CONFERENCE": "Vous êtes invité à la conférence",
+        "GALA": "Vous êtes invité au gala",
+        "CEREMONIE": "Vous êtes invité à la cérémonie"
+      },
+      "mainTitle": {
+        "MARIAGE": "Rejoignez la célébration",
+        "CONFERENCE": "Participez à l'événement",
+        "GALA": "Rejoignez le gala",
+        "CEREMONIE": "Rejoignez la cérémonie"
+      },
+      "intro": {
+        "MARIAGE": "Votre présence illuminera cette journée exceptionnelle.",
+        "CONFERENCE": "Votre participation enrichira cet événement professionnel.",
+        "GALA": "Votre présence honorera cette soirée de prestige.",
+        "CEREMONIE": "Votre présence rendra cette cérémonie encore plus mémorable."
+      },
+      "headerBadge": {
+        "MARIAGE": "💍 Mariage",
+        "CONFERENCE": "🎤 Conférence",
+        "GALA": "✨ Gala",
+        "CEREMONIE": "⚜ Cérémonie"
+      },
+      "frameTag": {
+        "MARIAGE": "Photo des mariés",
+        "CONFERENCE": "Événement",
+        "GALA": "Soirée de prestige",
+        "CEREMONIE": "Cérémonie"
+      },
+      "submitBtn": {
+        "MARIAGE": "Confirmer ma présence au mariage",
+        "CONFERENCE": "Confirmer ma participation",
+        "GALA": "Confirmer ma présence au gala",
+        "CEREMONIE": "Confirmer ma présence",
+        "default": "Confirmer ma présence"
+      },
+      "notifOptions": {
+        "WHATSAPP": "WhatsApp",
+        "EMAIL": "Email",
+        "BOTH": "WhatsApp & Email"
+      },
+      "form": {
+        "changePhoto": "Changer la photo",
+        "fullName": "Nom complet",
+        "fullNamePlaceholder": "Jean Dupont",
+        "fullNameError": "Nom requis (2 caractères minimum)",
+        "phone": "Numéro WhatsApp",
+        "phoneError": "Numéro requis",
+        "email": "Adresse email",
+        "emailError": "Email requis",
+        "notifMode": "Comment souhaitez-vous recevoir vos documents ?",
+        "submitting": "Inscription en cours…"
+      },
+      "fallback": {
+        "coupleNames": "Les hôtes",
+        "eventTitle": "Événement",
+        "eventDate": "Date à confirmer",
+        "eventMessage": "Nous vous souhaitons la bienvenue.",
+        "eventLocation": "",
+        "errorMsg": "Ce lien d'inscription est invalide ou a expiré.",
+        "submitError": "Une erreur est survenue. Veuillez réessayer."
+      }
     },
     "toast": {
       "createSuccess": "Lien créé",

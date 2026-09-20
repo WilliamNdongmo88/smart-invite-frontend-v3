@@ -409,6 +409,78 @@
       "revokeSuccess": "Invitation revoked",
       "resendSuccess": "Invitation resent",
       "error": "An error occurred"
+    },
+    "public": {
+      "back": "Back",
+      "loading": "Loading your invitation…",
+      "invalidTitle": "Invitation not found",
+      "errorMsg": "This invitation is invalid or has expired.",
+      "greeting": "Hello",
+      "rsvpQuestion": "Will you attend?",
+      "confirming": "Confirming…",
+      "declining": "Processing…",
+      "declineBtn": "I cannot attend",
+      "confirmedTitle": "Attendance confirmed!",
+      "confirmedMsg": "Thank you",
+      "confirmedSub": "Your access QR code is available below. Present it at the entrance.",
+      "declinedTitle": "Absence recorded",
+      "declinedMsg": "We have noted the absence of",
+      "declinedSub": "Thank you for letting us know.",
+      "changeResponse": "Change my response",
+      "changePhoto": "Change photo",
+      "qrCodeLabel": "Your access QR code",
+      "qrCodeHint": "Present this QR code at the event entrance",
+      "downloadPass": "Download my invitation",
+      "footer": "smart-invite.com",
+      "eyebrow": {
+        "MARIAGE": "Wedding invitation",
+        "CONFERENCE": "Conference invitation",
+        "GALA": "Gala invitation",
+        "CEREMONIE": "Ceremony invitation"
+      },
+      "mainTitle": {
+        "MARIAGE": "An unforgettable day awaits you",
+        "CONFERENCE": "An exceptional professional event",
+        "GALA": "A prestigious evening",
+        "CEREMONIE": "A memorable ceremony"
+      },
+      "intro": {
+        "MARIAGE": "We would be honoured by your presence on this very special day.",
+        "CONFERENCE": "Your participation will be a valuable asset.",
+        "GALA": "Your presence will add to the splendour of this evening.",
+        "CEREMONIE": "Your presence would mean a great deal to us."
+      },
+      "salutation": {
+        "MARIAGE": "We have the immense joy of inviting you to celebrate our union.",
+        "CONFERENCE": "We are pleased to invite you to this professional event.",
+        "GALA": "We invite you to share this exceptional evening with us.",
+        "CEREMONIE": "We invite you to share this solemn moment with us.",
+        "default": "We would be honoured by your presence."
+      },
+      "confirmBtn": {
+        "MARIAGE": "Confirm my attendance at the wedding",
+        "CONFERENCE": "Confirm my participation",
+        "GALA": "Confirm my attendance at the gala",
+        "CEREMONIE": "Confirm my attendance",
+        "default": "Confirm my attendance"
+      },
+      "headerBadge": {
+        "MARIAGE": "💍 Wedding",
+        "CONFERENCE": "🎤 Conference",
+        "GALA": "✨ Gala",
+        "CEREMONIE": "⚜ Ceremony"
+      },
+      "frameTag": {
+        "MARIAGE": "Couple photo",
+        "CONFERENCE": "Event",
+        "GALA": "Prestigious evening",
+        "CEREMONIE": "Ceremony"
+      },
+      "fallback": {
+        "coupleNames": "The hosts",
+        "eventTitle": "Event",
+        "eventDate": "Date to be confirmed"
+      }
     }
   },
   "links": {
@@ -457,10 +529,80 @@
     },
     "join": {
       "title": "You are invited",
+      "back": "Back",
+      "invalidLink": "Invalid link",
       "confirm": "Confirm my attendance",
       "decline": "Decline",
       "expired": "This link is no longer valid.",
-      "success": "Your response has been recorded."
+      "success": "Your response has been recorded.",
+      "successTitle": "Registration confirmed!",
+      "successWelcome": "Welcome,",
+      "qrCodeLabel": "Your access QR code",
+      "downloadPass": "Download my invitation",
+      "footer": "smart-invite.com",
+      "eyebrow": {
+        "MARIAGE": "You are invited to the wedding",
+        "CONFERENCE": "You are invited to the conference",
+        "GALA": "You are invited to the gala",
+        "CEREMONIE": "You are invited to the ceremony"
+      },
+      "mainTitle": {
+        "MARIAGE": "Join the celebration",
+        "CONFERENCE": "Join the event",
+        "GALA": "Join the gala",
+        "CEREMONIE": "Join the ceremony"
+      },
+      "intro": {
+        "MARIAGE": "Your presence will brighten this exceptional day.",
+        "CONFERENCE": "Your participation will enrich this professional event.",
+        "GALA": "Your presence will honour this prestigious evening.",
+        "CEREMONIE": "Your presence will make this ceremony even more memorable."
+      },
+      "headerBadge": {
+        "MARIAGE": "💍 Wedding",
+        "CONFERENCE": "🎤 Conference",
+        "GALA": "✨ Gala",
+        "CEREMONIE": "⚜ Ceremony"
+      },
+      "frameTag": {
+        "MARIAGE": "Couple photo",
+        "CONFERENCE": "Event",
+        "GALA": "Prestigious evening",
+        "CEREMONIE": "Ceremony"
+      },
+      "submitBtn": {
+        "MARIAGE": "Confirm my attendance at the wedding",
+        "CONFERENCE": "Confirm my participation",
+        "GALA": "Confirm my attendance at the gala",
+        "CEREMONIE": "Confirm my attendance",
+        "default": "Confirm my attendance"
+      },
+      "notifOptions": {
+        "WHATSAPP": "WhatsApp",
+        "EMAIL": "Email",
+        "BOTH": "WhatsApp & Email"
+      },
+      "form": {
+        "changePhoto": "Change photo",
+        "fullName": "Full name",
+        "fullNamePlaceholder": "John Doe",
+        "fullNameError": "Name required (min. 2 characters)",
+        "phone": "WhatsApp number",
+        "phoneError": "Number required",
+        "email": "Email address",
+        "emailError": "Email required",
+        "notifMode": "How would you like to receive your documents?",
+        "submitting": "Registering…"
+      },
+      "fallback": {
+        "coupleNames": "The hosts",
+        "eventTitle": "Event",
+        "eventDate": "Date to be confirmed",
+        "eventMessage": "We welcome you.",
+        "eventLocation": "",
+        "errorMsg": "This registration link is invalid or has expired.",
+        "submitError": "An error occurred. Please try again."
+      }
     },
     "toast": {
       "createSuccess": "Link created",
