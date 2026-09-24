@@ -46,7 +46,6 @@ export class AuthService {
     return this.http.post<ApiResponse<LoginResponse>>(`${this.base}/login`, req).pipe(
       tap((res) => {
         if (res.data) {
-          console.log("### data: ", res.data);
           this.setTokens(res.data.accessToken, res.data.refreshToken);
         }
       })
@@ -78,7 +77,6 @@ export class AuthService {
     return this.http.post<ApiResponse<GoogleLoginResponse>>(`${this.base}/google`, { idToken } as GoogleLoginRequest).pipe(
       tap((res) => {
         if (res.data && !res.data.needsRegistration && res.data.accessToken && res.data.refreshToken) {
-          console.log("### data: ", res.data);
           this.setTokens(res.data.accessToken, res.data.refreshToken);
         }
       })
