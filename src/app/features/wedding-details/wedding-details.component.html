@@ -238,7 +238,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX — MA CABANE AU CAMEROUN
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-venue">
+<div class="parallax-band band-venue" [style.backgroundImage]="'url(' + bgs().venue + ')'">
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -328,7 +328,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      BANDEAU PARALLAX — CITATION
 ══════════════════════════════════════════════════════════════ -->
-<div class="parallax-band band-quote">
+<div class="parallax-band band-quote" [style.backgroundImage]="'url(' + bgs().quote + ')'">
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -379,7 +379,7 @@
   </div>
 
   <!-- Bandeau de clôture -->
-  <div class="gallery-close-band">
+  <div class="gallery-close-band" [style.backgroundImage]="'url(' + bgs().galleryBand + ')'">
     @if (isLoggedIn()) {
       <button class="edit-pencil edit-pencil--band" (click)="openEdit('backgrounds')" title="Modifier le fond">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
@@ -620,7 +620,7 @@
 <!-- ══════════════════════════════════════════════════════════════
      RSVP FINAL
 ══════════════════════════════════════════════════════════════ -->
-<section id="rsvp" class="rsvp-section section-entrance">
+<section id="rsvp" class="rsvp-section section-entrance" [style.backgroundImage]="'url(' + bgs().rsvp + ')'">
   <!-- Crayon section RSVP -->
   @if (isLoggedIn()) {
     <button class="edit-pencil edit-pencil--rsvp" (click)="openEdit('rsvp')" title="Éditer le RSVP">
@@ -639,7 +639,7 @@
     </button>
   }
   <!-- fond dynamique RSVP -->
-  <div class="band-bg" [style.backgroundImage]="'url(' + bgs().rsvp + ')'"></div>
+  <!-- <div class="band-bg" [style.backgroundImage]="'url(' + bgs().rsvp + ')'"></div> -->
   <div class="band-overlay"></div>
 
   <div class="rsvp-card reveal reveal--scale" style="--d:100ms">
