@@ -1069,13 +1069,13 @@
                      (ngModelChange)="updateDraftProgramFooter($event)" />
             </div>
 
-            @for (day of draft().program.days; track $index) {
+            @for (day of draft().program.days; track $index; let dayIdx = $index) {
               <div class="edit-chapter-block">
 
                 <div class="edit-chapter-header">
-                  <span class="edit-chapter-num">{{ 'wedding.edit.program.day' | translate }} {{ $index + 1 }}</span>
+                  <span class="edit-chapter-num">{{ 'wedding.edit.program.day' | translate }} {{ dayIdx + 1 }}</span>
                   <button class="edit-btn-remove"
-                          (click)="removeDay($index)"
+                          (click)="removeDay(dayIdx)"
                           [disabled]="draft().program.days.length <= 1"
                           [title]="'wedding.edit.program.removeDay' | translate">✕</button>
                 </div>
@@ -1086,13 +1086,13 @@
                     <label class="edit-label">{{ 'wedding.edit.program.date' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.dateHint' | translate }}</span></label>
                     <input class="edit-input" type="date"
                            [ngModel]="day.date"
-                           (ngModelChange)="updateDraftDay($index, 'date', $event)" />
+                           (ngModelChange)="updateDraftDay(dayIdx, 'date', $event)" />
                   </div>
                   <div class="edit-field edit-field--icon">
                     <label class="edit-label">{{ 'wedding.edit.program.tabIcon' | translate }}</label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabIcon"
-                           (ngModelChange)="updateDraftDay($index, 'tabIcon', $event)" />
+                           (ngModelChange)="updateDraftDay(dayIdx, 'tabIcon', $event)" />
                   </div>
                 </div>
 
@@ -1102,13 +1102,13 @@
                     <label class="edit-label">{{ 'wedding.edit.program.tabDate' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.tabDateHint' | translate }}</span></label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabDate"
-                           (ngModelChange)="updateDraftDay($index, 'tabDate', $event)" />
+                           (ngModelChange)="updateDraftDay(dayIdx, 'tabDate', $event)" />
                   </div>
                   <div class="edit-field">
                     <label class="edit-label">{{ 'wedding.edit.program.tabLabel' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.tabLabelHint' | translate }}</span></label>
                     <input class="edit-input" type="text"
                            [ngModel]="day.tabLabel"
-                           (ngModelChange)="updateDraftDay($index, 'tabLabel', $event)" />
+                           (ngModelChange)="updateDraftDay(dayIdx, 'tabLabel', $event)" />
                   </div>
                 </div>
 
@@ -1117,7 +1117,7 @@
                   <label class="edit-label">{{ 'wedding.edit.program.timelineLabel' | translate }} <span class="edit-hint">{{ 'wedding.edit.program.timelineLabelHint' | translate }}</span></label>
                   <input class="edit-input" type="text"
                          [ngModel]="day.label"
-                         (ngModelChange)="updateDraftDay($index, 'label', $event)" />
+                         (ngModelChange)="updateDraftDay(dayIdx, 'label', $event)" />
                 </div>
 
                 <!-- Créneaux -->
@@ -1127,38 +1127,38 @@
                   <div class="edit-program-item">
                     <div class="edit-program-item-header">
                       <span class="edit-program-idx">{{ itemIdx + 1 }}</span>
-                      <button class="edit-btn-remove" (click)="removeDayItem($index, itemIdx)" [title]="'wedding.edit.program.removeSlot' | translate">✕</button>
+                      <button class="edit-btn-remove" (click)="removeDayItem(dayIdx, itemIdx)" [title]="'wedding.edit.program.removeSlot' | translate">✕</button>
                     </div>
                     <div class="edit-field-row">
                       <div class="edit-field edit-field--icon">
                         <label class="edit-label">{{ 'wedding.edit.program.icon' | translate }}</label>
                         <input class="edit-input" type="text"
                                [ngModel]="item.icon"
-                               (ngModelChange)="updateDraftDayItem($index, itemIdx, 'icon', $event)" />
+                               (ngModelChange)="updateDraftDayItem(dayIdx, itemIdx, 'icon', $event)" />
                       </div>
                       <div class="edit-field">
                         <label class="edit-label">{{ 'wedding.edit.program.time' | translate }}</label>
                         <input class="edit-input" type="text"
                                [ngModel]="item.time"
-                               (ngModelChange)="updateDraftDayItem($index, itemIdx, 'time', $event)" />
+                               (ngModelChange)="updateDraftDayItem(dayIdx, itemIdx, 'time', $event)" />
                       </div>
                     </div>
                     <div class="edit-field">
                       <label class="edit-label">{{ 'wedding.edit.program.title' | translate }}</label>
                       <input class="edit-input" type="text"
                              [ngModel]="item.title"
-                             (ngModelChange)="updateDraftDayItem($index, itemIdx, 'title', $event)" />
+                             (ngModelChange)="updateDraftDayItem(dayIdx, itemIdx, 'title', $event)" />
                     </div>
                     <div class="edit-field">
                       <label class="edit-label">{{ 'wedding.edit.program.description' | translate }}</label>
                       <textarea class="edit-textarea" rows="2"
                                 [ngModel]="item.desc"
-                                (ngModelChange)="updateDraftDayItem($index, itemIdx, 'desc', $event)"></textarea>
+                                (ngModelChange)="updateDraftDayItem(dayIdx, itemIdx, 'desc', $event)"></textarea>
                     </div>
                   </div>
                 }
 
-                <button class="edit-btn-add" (click)="addDayItem($index)">{{ 'wedding.edit.program.addSlot' | translate }}</button>
+                <button class="edit-btn-add" (click)="addDayItem(dayIdx)">{{ 'wedding.edit.program.addSlot' | translate }}</button>
               </div>
             }
 
