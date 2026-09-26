@@ -72,7 +72,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (inv of filtered(); track inv.id) {
+          @for (inv of paginatedList(); track inv.id) {
             <tr [class.row-deleting]="deletingId() === inv.id">
               <td>
                 <div class="guest-cell">
@@ -133,6 +133,31 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <span class="pagination-info">
+          {{ (page() - 1) * pageSize() + 1 }}–{{ page() * pageSize() > filtered().length ? filtered().length : page() * pageSize() }}
+          sur {{ filtered().length }}
+        </span>
+        <div class="pagination-controls">
+          <button class="page-btn page-nav" (click)="prevPage()" [disabled]="page() === 1" aria-label="Page précédente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          @for (p of pageNumbers(); track $index) {
+            @if (p === '…') {
+              <span class="page-ellipsis">…</span>
+            } @else {
+              <button class="page-btn" [class.active]="page() === p" (click)="goToPage(p)">{{ p }}</button>
+            }
+          }
+          <button class="page-btn page-nav" (click)="nextPage()" [disabled]="page() === totalPages()" aria-label="Page suivante">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    }
   }
 
 </div>

@@ -50,6 +50,34 @@ export class InvitationsComponent implements OnInit {
     return tab === 'ALL' ? list : list.filter(i => i.status === tab);
   });
 
+  // ── Pagination ──
+  page     = signal(1);
+  pageSize = signal(20);
+
+  totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.filtered().length / this.pageSize()))
+  );
+
+  paginatedList = computed(() => {
+    const p    = this.page();
+    const size = this.pageSize();
+    const list = this.filtered();
+    return list.slice((p - 1) * size, p * size);
+  });
+
+  pageNumbers = computed(() => {
+    const total = this.totalPages();
+    const cur   = this.page();
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    // Affiche : 1 … cur-1 cur cur+1 … total
+    const pages: (number | '…')[] = [1];
+    if (cur > 3)              pages.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(total - 1, cur + 1); i++) pages.push(i);
+    if (cur < total - 2)      pages.push('…');
+    pages.push(total);
+    return pages;
+  });
+
   counts = computed(() => {
     const list = this.invitations();
     return {
@@ -113,7 +141,15 @@ export class InvitationsComponent implements OnInit {
   }
 
   // ── Tabs ──
-  setTab(tab: FilterTab): void { this.activeTab.set(tab); }
+  setTab(tab: FilterTab): void { this.activeTab.set(tab); this.page.set(1); }
+
+  // ── Pagination ──
+  goToPage(p: number | '…'): void {
+    if (p === '…') return;
+    this.page.set(Math.max(1, Math.min(p, this.totalPages())));
+  }
+  prevPage(): void { if (this.page() > 1) this.page.update(p => p - 1); }
+  nextPage(): void { if (this.page() < this.totalPages()) this.page.update(p => p + 1); }
 
   // ── Bulk panel ──
   openBulkPanel(): void {
