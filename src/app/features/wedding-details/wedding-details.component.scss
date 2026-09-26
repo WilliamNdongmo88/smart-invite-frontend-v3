@@ -372,7 +372,11 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: url('/images/background-section-hero.webp') center/cover no-repeat;
+  /* background-image géré dynamiquement via [style.backgroundImage] dans le template */
+  background-color: var(--ivory);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 .hero-overlay {
   position: absolute;
@@ -669,20 +673,38 @@
   background-position: center;
 }
 .band-venue {
-  background-image: url('/images/venue/domaine-vue-aerienne.webp');
+  /* background-image géré dynamiquement via div.band-bg [style.backgroundImage] */
   min-height: 55vh;
 }
 .band-quote {
-  background-image: url('/images/couple-fond-hero.webp');
+  /* background-image géré dynamiquement via div.band-bg [style.backgroundImage] */
   min-height: 40vh;
 }
 .band-hotel {
   background-image: url('/images/chambre-hotel-bb.webp');
   min-height: 52vh;
 }
+.band-bg {
+  position: absolute;
+  inset: -12% 0;           /* dépasse légèrement pour l'effet parallax au scroll */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0 0 -12%;         /* dépasse vers le bas pour le parallax */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
 .band-overlay {
   position: absolute;
-  inset: 0;
+  inset: -40;
   background: linear-gradient(180deg, rgba(var(--overlay-color), .45), rgba(var(--overlay-color), .50));
 }
 .band-content {
@@ -919,8 +941,7 @@
 .gallery-close-band {
   position: relative;
   min-height: 38vh;
-  background: url('/images/paralax_ce_nest_pas_tout.webp') center/cover no-repeat;
-  background-attachment: fixed;
+  /* background géré dynamiquement via div.band-bg [style.backgroundImage] à l'intérieur */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1342,13 +1363,13 @@
 ═══════════════════════════════════════════════════════════════ */
 .rsvp-section {
   position: relative;
-  background: url('/images/venue/parc-etang.webp') center/cover no-repeat;
-  background-attachment: fixed;
+  /* background géré dynamiquement via div.band-bg [style.backgroundImage] à l'intérieur */
   padding: 6rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3rem;
+  overflow: hidden;
 }
 .rsvp-card {
   position: relative;
