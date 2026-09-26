@@ -71,4 +71,8 @@ export class AdminService {
   updateReferrer(id: number, req: ReferrerRequest): Observable<ApiResponse<Referrer>> {
     return this.http.put<ApiResponse<Referrer>>(`${this.base}/referrers/${id}`, req);
   }
+
+  deleteReferrer(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.base}/referrers/${id}`);
+  }
 }

@@ -124,11 +124,22 @@
                     <span class="processing">…</span>
                   } @else {
                     <button class="btn-action btn-edit" (click)="openEdit(r)" title="Modifier">
-                      ✏️
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
                     </button>
                     <button class="btn-action" [class.activate]="!r.active" [class.disable]="r.active"
                             (click)="toggleActive(r)">
                       {{ r.active ? 'Désactiver' : 'Activer' }}
+                    </button>
+                    <button class="btn-action btn-delete" (click)="confirmDelete(r.id)" title="Supprimer">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6"/><path d="M14 11v6"/>
+                        <path d="M9 6V4h6v2"/>
+                      </svg>
                     </button>
                   }
                 </td>
@@ -142,7 +153,9 @@
 
 </div>
 
-<!-- CREATE MODAL -->
+<!-- ══════════════════════════════════════════════════════════════
+     MODALE CRÉATION
+═══════════════════════════════════════════════════════════════ -->
 @if (showCreate()) {
   <div class="modal-backdrop" (click)="closeCreate()">
     <div class="modal create-modal" (click)="$event.stopPropagation()">
@@ -152,36 +165,50 @@
       </div>
       <p class="modal-sub">{{ 'referrers.createSub' | translate }}</p>
 
+      <!-- Nom -->
       <label class="field-label">{{ 'referrers.name' | translate }} *</label>
-      <input class="field-input" type="text" [value]="newName()" (input)="updateNewName($any($event.target).value)"
+      <input class="field-input" type="text" [value]="newName()"
+             (input)="newName.set($any($event.target).value)"
              [placeholder]="'referrers.namePlaceholder' | translate" />
 
-      <label class="field-label">{{ 'referrers.email' | translate }}</label>
-      <input class="field-input" type="email" [value]="newEmail()" (input)="updateNewEmail($any($event.target).value)"
-             [placeholder]="'referrers.emailPlaceholder' | translate" />
-
-      <label class="field-label">{{ 'referrers.phone' | translate }}</label>
-      <input class="field-input" type="tel" [value]="newPhone()" (input)="updateNewPhone($any($event.target).value)"
-             [placeholder]="'referrers.phonePlaceholder' | translate" />
-
+      <!-- Canal de notification -->
       <label class="field-label">{{ 'referrers.notificationMode' | translate }}</label>
       <div class="mode-select">
         <label class="mode-option">
-          <input type="radio" name="rMode" value="EMAIL" [checked]="newMode() === 'EMAIL'"
-                 (change)="updateNewMode($any($event.target).value)"/>
-          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
-        </label>
-        <label class="mode-option">
-          <input type="radio" name="rMode" value="WHATSAPP" [checked]="newMode() === 'WHATSAPP'"
-                 (change)="updateNewMode($any($event.target).value)"/>
+          <input type="radio" name="nMode" value="WHATSAPP" [checked]="newMode() === 'WHATSAPP'"
+                 (change)="newMode.set('WHATSAPP')"/>
           <span>📱 {{ 'referrers.modeWhatsapp' | translate }}</span>
         </label>
         <label class="mode-option">
-          <input type="radio" name="rMode" value="BOTH" [checked]="newMode() === 'BOTH'"
-                 (change)="updateNewMode($any($event.target).value)"/>
+          <input type="radio" name="nMode" value="EMAIL" [checked]="newMode() === 'EMAIL'"
+                 (change)="newMode.set('EMAIL')"/>
+          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="nMode" value="BOTH" [checked]="newMode() === 'BOTH'"
+                 (change)="newMode.set('BOTH')"/>
           <span>📱✉️ {{ 'referrers.modeBoth' | translate }}</span>
         </label>
       </div>
+
+      <!-- Téléphone (visible si WHATSAPP ou BOTH) -->
+      @if (newMode() === 'WHATSAPP' || newMode() === 'BOTH') {
+        <label class="field-label">{{ 'referrers.phone' | translate }} *</label>
+        <div class="phone-wrap">
+          <app-dial-code-select [(ngModel)]="newDialCode" name="newDial" />
+          <input class="field-input phone-input" type="tel" [value]="newPhone()"
+                 (input)="newPhone.set($any($event.target).value)"
+                 [placeholder]="'referrers.phonePlaceholder' | translate" />
+        </div>
+      }
+
+      <!-- Email (visible si EMAIL ou BOTH) -->
+      @if (showEmailField(newMode())) {
+        <label class="field-label">{{ 'referrers.email' | translate }} *</label>
+        <input class="field-input" type="email" [value]="newEmail()"
+               (input)="newEmail.set($any($event.target).value)"
+               [placeholder]="'referrers.emailPlaceholder' | translate" />
+      }
 
       <div class="modal-actions">
         <button class="btn-cancel" (click)="closeCreate()">{{ 'common.cancel' | translate }}</button>
@@ -194,7 +221,9 @@
   </div>
 }
 
-<!-- EDIT MODAL -->
+<!-- ══════════════════════════════════════════════════════════════
+     MODALE ÉDITION
+═══════════════════════════════════════════════════════════════ -->
 @if (showEdit()) {
   <div class="modal-backdrop" (click)="closeEdit()">
     <div class="modal create-modal" (click)="$event.stopPropagation()">
@@ -202,44 +231,82 @@
         <h3 class="modal-title">✏️ Modifier le recommandateur</h3>
         <button class="btn-close-modal" (click)="closeEdit()">✕</button>
       </div>
-      <p class="modal-sub">Modifiez les informations du recommandateur. Le code de recommandation ne change pas.</p>
+      <p class="modal-sub">Modifiez les informations. Le code de recommandation ne change pas.</p>
 
+      <!-- Nom -->
       <label class="field-label">{{ 'referrers.name' | translate }} *</label>
-      <input class="field-input" type="text" [value]="editName()" (input)="updateEditName($any($event.target).value)"
+      <input class="field-input" type="text" [value]="editName()"
+             (input)="editName.set($any($event.target).value)"
              [placeholder]="'referrers.namePlaceholder' | translate" />
 
-      <label class="field-label">{{ 'referrers.email' | translate }}</label>
-      <input class="field-input" type="email" [value]="editEmail()" (input)="updateEditEmail($any($event.target).value)"
-             [placeholder]="'referrers.emailPlaceholder' | translate" />
-
-      <label class="field-label">{{ 'referrers.phone' | translate }}</label>
-      <input class="field-input" type="tel" [value]="editPhone()" (input)="updateEditPhone($any($event.target).value)"
-             [placeholder]="'referrers.phonePlaceholder' | translate" />
-
+      <!-- Canal de notification -->
       <label class="field-label">{{ 'referrers.notificationMode' | translate }}</label>
       <div class="mode-select">
         <label class="mode-option">
-          <input type="radio" name="eMode" value="EMAIL" [checked]="editMode() === 'EMAIL'"
-                 (change)="updateEditMode($any($event.target).value)"/>
-          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
-        </label>
-        <label class="mode-option">
           <input type="radio" name="eMode" value="WHATSAPP" [checked]="editMode() === 'WHATSAPP'"
-                 (change)="updateEditMode($any($event.target).value)"/>
+                 (change)="editMode.set('WHATSAPP')"/>
           <span>📱 {{ 'referrers.modeWhatsapp' | translate }}</span>
         </label>
         <label class="mode-option">
+          <input type="radio" name="eMode" value="EMAIL" [checked]="editMode() === 'EMAIL'"
+                 (change)="editMode.set('EMAIL')"/>
+          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
+        </label>
+        <label class="mode-option">
           <input type="radio" name="eMode" value="BOTH" [checked]="editMode() === 'BOTH'"
-                 (change)="updateEditMode($any($event.target).value)"/>
+                 (change)="editMode.set('BOTH')"/>
           <span>📱✉️ {{ 'referrers.modeBoth' | translate }}</span>
         </label>
       </div>
+
+      <!-- Téléphone (visible si WHATSAPP ou BOTH) -->
+      @if (editMode() === 'WHATSAPP' || editMode() === 'BOTH') {
+        <label class="field-label">{{ 'referrers.phone' | translate }} *</label>
+        <div class="phone-wrap">
+          <app-dial-code-select [(ngModel)]="editDialCode" name="editDial" />
+          <input class="field-input phone-input" type="tel" [value]="editPhone()"
+                 (input)="editPhone.set($any($event.target).value)"
+                 [placeholder]="'referrers.phonePlaceholder' | translate" />
+        </div>
+      }
+
+      <!-- Email (visible si EMAIL ou BOTH) -->
+      @if (showEmailField(editMode())) {
+        <label class="field-label">{{ 'referrers.email' | translate }} *</label>
+        <input class="field-input" type="email" [value]="editEmail()"
+               (input)="editEmail.set($any($event.target).value)"
+               [placeholder]="'referrers.emailPlaceholder' | translate" />
+      }
 
       <div class="modal-actions">
         <button class="btn-cancel" (click)="closeEdit()">{{ 'common.cancel' | translate }}</button>
         <button class="btn-confirm" [disabled]="editing() || !canEdit()" (click)="saveEdit()">
           @if (editing()) { <span class="spinner-sm"></span> }
           Enregistrer
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- ══════════════════════════════════════════════════════════════
+     MODALE SUPPRESSION
+═══════════════════════════════════════════════════════════════ -->
+@if (deleteId()) {
+  <div class="modal-backdrop" (click)="cancelDelete()">
+    <div class="modal modal-sm" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 class="modal-title">🗑️ Supprimer le recommandateur</h3>
+      </div>
+      <p class="modal-sub">
+        Cette action est <strong>irréversible</strong>. Le recommandateur et son code seront définitivement supprimés.
+        Les utilisateurs déjà inscrits via ce code ne seront pas affectés.
+      </p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-confirm-delete" [disabled]="deleting()" (click)="doDelete()">
+          @if (deleting()) { <span class="spinner-sm"></span> }
+          Supprimer définitivement
         </button>
       </div>
     </div>
