@@ -147,6 +147,7 @@ table {
   &:hover { opacity: 0.8; }
   &.activate { background: rgba(74,222,128,0.12);  color: #4ade80; border-color: rgba(74,222,128,0.3); }
   &.disable  { background: rgba(250,204,21,0.1);   color: #facc15; border-color: rgba(250,204,21,0.25); }
+  &.btn-edit { background: rgba(201,168,76,0.1); color: $gold; border-color: rgba(201,168,76,0.25); font-size: 0.85rem; padding: 0.25rem 0.5rem; }
 }
 
 // ─── Modal ─────────────────────────────────────────────────────────

@@ -30,6 +30,15 @@ export class AdminReferrersComponent implements OnInit {
   newMode     = signal<NotificationMode>('EMAIL');
   copiedCode  = signal<string | null>(null);
 
+  // ── Modale d'édition ──────────────────────────────────────────────
+  showEdit    = signal(false);
+  editing     = signal(false);
+  editId      = signal<number | null>(null);
+  editName    = signal('');
+  editPhone   = signal('');
+  editEmail   = signal('');
+  editMode    = signal<NotificationMode>('EMAIL');
+
   filtered = computed(() => {
     const q = this.search().toLowerCase();
     return q
@@ -111,6 +120,61 @@ export class AdminReferrersComponent implements OnInit {
       error: (err) => {
         this.creating.set(false);
         this.toast.error(err?.error?.message || 'Erreur lors de la création');
+      },
+    });
+  }
+
+  // ── Édition ──────────────────────────────────────────────────────
+
+  openEdit(ref: Referrer): void {
+    this.editId.set(ref.id);
+    this.editName.set(ref.name);
+    this.editPhone.set(ref.phone ?? '');
+    this.editEmail.set(ref.email ?? '');
+    this.editMode.set(ref.notificationMode);
+    this.showEdit.set(true);
+  }
+
+  closeEdit(): void { this.showEdit.set(false); }
+
+  updateEditName(v: string)  { this.editName.set(v); }
+  updateEditPhone(v: string) { this.editPhone.set(v); }
+  updateEditEmail(v: string) { this.editEmail.set(v); }
+  updateEditMode(v: string)  { this.editMode.set(v as NotificationMode); }
+
+  canEdit(): boolean {
+    const name = this.editName().trim();
+    const email = this.editEmail().trim();
+    const phone = this.editPhone().trim();
+    if (name.length < 2) return false;
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return false;
+    return !(!email && !phone);
+  }
+
+  saveEdit(): void {
+    const id = this.editId();
+    if (!id || !this.canEdit()) return;
+    this.editing.set(true);
+
+    const req: ReferrerRequest = {
+      name: this.editName().trim(),
+      notificationMode: this.editMode(),
+    };
+    const email = this.editEmail().trim();
+    const phone = this.editPhone().trim();
+    if (email) req.email = email;
+    if (phone) req.phone = phone;
+
+    this.adminSvc.updateReferrer(id, req).subscribe({
+      next: () => {
+        this.editing.set(false);
+        this.closeEdit();
+        this.toast.success('Recommandateur mis à jour avec succès');
+        this.load();
+      },
+      error: (err) => {
+        this.editing.set(false);
+        this.toast.error(err?.error?.message || 'Erreur lors de la modification');
       },
     });
   }

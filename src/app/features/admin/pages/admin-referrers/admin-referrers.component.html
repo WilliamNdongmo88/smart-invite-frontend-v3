@@ -123,6 +123,9 @@
                   @if (processing() === r.id) {
                     <span class="processing">…</span>
                   } @else {
+                    <button class="btn-action btn-edit" (click)="openEdit(r)" title="Modifier">
+                      ✏️
+                    </button>
                     <button class="btn-action" [class.activate]="!r.active" [class.disable]="r.active"
                             (click)="toggleActive(r)">
                       {{ r.active ? 'Désactiver' : 'Activer' }}
@@ -185,6 +188,58 @@
         <button class="btn-confirm" [disabled]="creating() || !canCreate()" (click)="create()">
           @if (creating()) { <span class="spinner-sm"></span> }
           {{ 'referrers.create' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- EDIT MODAL -->
+@if (showEdit()) {
+  <div class="modal-backdrop" (click)="closeEdit()">
+    <div class="modal create-modal" (click)="$event.stopPropagation()">
+      <div class="modal-head">
+        <h3 class="modal-title">✏️ Modifier le recommandateur</h3>
+        <button class="btn-close-modal" (click)="closeEdit()">✕</button>
+      </div>
+      <p class="modal-sub">Modifiez les informations du recommandateur. Le code de recommandation ne change pas.</p>
+
+      <label class="field-label">{{ 'referrers.name' | translate }} *</label>
+      <input class="field-input" type="text" [value]="editName()" (input)="updateEditName($any($event.target).value)"
+             [placeholder]="'referrers.namePlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.email' | translate }}</label>
+      <input class="field-input" type="email" [value]="editEmail()" (input)="updateEditEmail($any($event.target).value)"
+             [placeholder]="'referrers.emailPlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.phone' | translate }}</label>
+      <input class="field-input" type="tel" [value]="editPhone()" (input)="updateEditPhone($any($event.target).value)"
+             [placeholder]="'referrers.phonePlaceholder' | translate" />
+
+      <label class="field-label">{{ 'referrers.notificationMode' | translate }}</label>
+      <div class="mode-select">
+        <label class="mode-option">
+          <input type="radio" name="eMode" value="EMAIL" [checked]="editMode() === 'EMAIL'"
+                 (change)="updateEditMode($any($event.target).value)"/>
+          <span>✉️ {{ 'referrers.modeEmail' | translate }}</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="eMode" value="WHATSAPP" [checked]="editMode() === 'WHATSAPP'"
+                 (change)="updateEditMode($any($event.target).value)"/>
+          <span>📱 {{ 'referrers.modeWhatsapp' | translate }}</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="eMode" value="BOTH" [checked]="editMode() === 'BOTH'"
+                 (change)="updateEditMode($any($event.target).value)"/>
+          <span>📱✉️ {{ 'referrers.modeBoth' | translate }}</span>
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="closeEdit()">{{ 'common.cancel' | translate }}</button>
+        <button class="btn-confirm" [disabled]="editing() || !canEdit()" (click)="saveEdit()">
+          @if (editing()) { <span class="spinner-sm"></span> }
+          Enregistrer
         </button>
       </div>
     </div>

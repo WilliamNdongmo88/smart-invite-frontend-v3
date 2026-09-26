@@ -67,4 +67,8 @@ export class AdminService {
   toggleReferrer(id: number): Observable<ApiResponse<Referrer>> {
     return this.http.patch<ApiResponse<Referrer>>(`${this.base}/referrers/${id}/toggle`, {});
   }
+
+  updateReferrer(id: number, req: ReferrerRequest): Observable<ApiResponse<Referrer>> {
+    return this.http.put<ApiResponse<Referrer>>(`${this.base}/referrers/${id}`, req);
+  }
 }
