@@ -54,6 +54,9 @@ export class AdminUsersComponent implements OnInit {
   messages        = signal<UserNewsMessage[]>([]);
   messagesLoading = signal(false);
   msgSearch       = signal('');
+  msgProcessing   = signal<number | null>(null);
+  deleteMsgId     = signal<number | null>(null);
+  deletingMsg     = signal(false);
 
   filteredMessages = computed(() => {
     const q = this.msgSearch().toLowerCase();
@@ -64,6 +67,8 @@ export class AdminUsersComponent implements OnInit {
           (m.replyContact ?? '').toLowerCase().includes(q))
       : this.messages();
   });
+
+  unreadCount = computed(() => this.messages().filter(m => !m.isRead).length);
 
   // ── Modale de réponse ─────────────────────────────────────────────
   replyTarget  = signal<UserNewsMessage | null>(null);
@@ -220,6 +225,48 @@ export class AdminUsersComponent implements OnInit {
   }
 
   updateReplyText(value: string): void { this.replyText.set(value); }
+
+  // ── Marquer comme lu ─────────────────────────────────────────────
+
+  markRead(msg: UserNewsMessage): void {
+    if (msg.isRead) return;
+    this.msgProcessing.set(msg.id);
+    this.adminSvc.markContactRead(msg.id).subscribe({
+      next: (res) => {
+        this.messages.update(list =>
+          list.map(m => m.id === msg.id ? { ...m, isRead: true } : m)
+        );
+        this.msgProcessing.set(null);
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur');
+        this.msgProcessing.set(null);
+      },
+    });
+  }
+
+  // ── Suppression message ───────────────────────────────────────────
+
+  confirmDeleteMsg(id: number): void { this.deleteMsgId.set(id); }
+  cancelDeleteMsg(): void            { this.deleteMsgId.set(null); }
+
+  doDeleteMsg(): void {
+    const id = this.deleteMsgId();
+    if (!id) return;
+    this.deletingMsg.set(true);
+    this.adminSvc.deleteContact(id).subscribe({
+      next: () => {
+        this.messages.update(list => list.filter(m => m.id !== id));
+        this.toast.success('Message supprimé');
+        this.deleteMsgId.set(null);
+        this.deletingMsg.set(false);
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de la suppression');
+        this.deletingMsg.set(false);
+      },
+    });
+  }
 
   // ── Helpers ──────────────────────────────────────────────────────
 

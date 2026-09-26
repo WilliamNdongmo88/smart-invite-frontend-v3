@@ -177,7 +177,84 @@ table {
   &.delete   { background: rgba(248,113,113,0.08); color: #f87171; border-color: rgba(248,113,113,0.2); }
 }
 
-// ─── Messages (usernews) ───────────────────────────────────────────
+// ─── Messages (usernews) — tableau ────────────────────────────────
+.msg-row-unread td {
+  background: rgba($gold, 0.03);
+}
+
+.unread-dot {
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: $gold;
+  margin-right: 0.4rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.msg-contact-cell { font-family: monospace; font-size: 0.78rem; color: $gold; }
+.msg-contact-val  { white-space: nowrap; }
+
+.msg-channel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 20px;
+
+  &.ch-wa    { background: rgba(37,211,102,0.12); color: #25d366; }
+  &.ch-email { background: rgba(96,165,250,0.12); color: #60a5fa; }
+}
+
+.msg-th-message { min-width: 220px; }
+
+.msg-body-cell { max-width: 280px; }
+.msg-body-preview {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+// ─── Boutons actions messages ──────────────────────────────────────
+.btn-msg-reply {
+  background: rgba($gold, 0.1); color: $gold; border-color: rgba($gold, 0.25);
+  padding: 0.3rem 0.5rem;
+}
+.btn-mark-read {
+  background: rgba(74,222,128,0.1); color: #4ade80; border-color: rgba(74,222,128,0.3);
+  padding: 0.3rem 0.5rem;
+}
+.btn-delete-msg {
+  background: rgba(239,68,68,0.08); color: #ef4444; border-color: rgba(239,68,68,0.25);
+  padding: 0.3rem 0.5rem;
+}
+
+// ─── Badge unread sur l'onglet ─────────────────────────────────────
+.tab-badge-unread {
+  background: rgba($gold, 0.2) !important;
+  color: $gold !important;
+}
+
+// ─── Modal sm + confirm delete ─────────────────────────────────────
+.modal-sm        { max-width: 380px; }
+.modal-head-simple { margin-bottom: 0.5rem; }
+
+.btn-confirm-delete {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1.25rem; background: #ef4444; border: none;
+  color: #fff; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover    { opacity: 0.85; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+// ─── Messages (usernews) — anciens styles conservés pour reply modal ──
 .msg-list {
   display: flex;
   flex-direction: column;

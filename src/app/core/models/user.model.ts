@@ -105,5 +105,6 @@ export interface UserNewsMessage {
   replyChannel: 'WHATSAPP' | 'EMAIL';
   replyContact: string;
   userId?:      number;
+  isRead:       boolean;
   createdAt:    string;
 }

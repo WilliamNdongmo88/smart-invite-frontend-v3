@@ -54,6 +54,14 @@ export class AdminService {
     );
   }
 
+  markContactRead(id: number): Observable<ApiResponse<UserNewsMessage>> {
+    return this.http.patch<ApiResponse<UserNewsMessage>>(`${this.base}/contacts/${id}/read`, {});
+  }
+
+  deleteContact(id: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.base}/contacts/${id}`);
+  }
+
   // ── Recommandateurs ─────────────────────────────────────────────
 
   getReferrers(): Observable<ApiResponse<Referrer[]>> {
