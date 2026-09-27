@@ -6,6 +6,8 @@ import { ToastService } from '../../../../core/services/toast.service';
 import { Link, CreateLinkRequest, UpdateLinkRequest } from '../../../../core/models/checkin.model';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
 import { LanguageService } from '../../../../core/services/language.service';
+import { EventService } from '../../../../core/services/event.service';
+import { Event } from '../../../../core/models/event.model';
 
 @Component({
   selector: 'app-links',
@@ -15,13 +17,15 @@ import { LanguageService } from '../../../../core/services/language.service';
   styleUrl: 'link.component.scss',
 })
 export class LinksComponent implements OnInit {
-  private readonly route    = inject(ActivatedRoute);
-  private readonly linkSvc  = inject(LinkService);
-  private readonly toast    = inject(ToastService);
-  private readonly lang     = inject(LanguageService);
+  private readonly route      = inject(ActivatedRoute);
+  private readonly linkSvc    = inject(LinkService);
+  private readonly toast      = inject(ToastService);
+  private readonly lang       = inject(LanguageService);
+  private readonly eventSvc   = inject(EventService);
 
   eventId  = 0;
   links    = signal<Link[]>([]);
+  event    = signal<Event | null>(null);
   loading  = signal(true);
   deleting = signal<number | null>(null);
   saving   = signal(false);
@@ -45,6 +49,14 @@ export class LinksComponent implements OnInit {
   ngOnInit(): void {
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));
     this.load();
+    this.loadEvent();
+  }
+
+  loadEvent(): void {
+    this.eventSvc.findById(this.eventId).subscribe({
+      next: (res) => this.event.set(res.data ?? null),
+      error: () => { /* non bloquant */ },
+    });
   }
 
   load(): void {
@@ -109,8 +121,47 @@ export class LinksComponent implements OnInit {
   }
 
   shareWhatsApp(link: Link): void {
-    const url = encodeURIComponent(this.joinUrl(link));
-    const msg = encodeURIComponent(`Inscrivez-vous à l'événement : ${this.joinUrl(link)}`);
+    const url = this.joinUrl(link);
+    const ev  = this.event();
+
+    const lines: string[] = [
+      '╔═════════════════════╗',
+      '      ✉️ *SMART INVITE*',
+      '╚═════════════════════╝',
+      '',
+      '🎉 *Vous êtes invité(e) !*',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━━━',
+    ];
+
+    if (ev?.title) {
+      lines.push(`📌 Événement : *${ev.title}*`);
+    }
+
+    const dateStr = ev?.dateLabel || (ev?.eventDate
+      ? new Date(ev.eventDate).toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })
+      : null);
+    if (dateStr) {
+      lines.push(`📅 Date      : *${dateStr}*`);
+    }
+
+    const lieu = [ev?.venueName, ev?.venueCity].filter(Boolean).join(' – ');
+    if (lieu) {
+      lines.push(`📍 Lieu      : *${lieu}*`);
+    }
+
+    lines.push(
+      '━━━━━━━━━━━━━━━━━━━━━━',
+      '',
+      '👉 Confirmez votre présence via le lien :',
+      url,
+      '',
+      '_Cet accès est unique et nominatif._',
+      '',
+      '🌐 smart-invite.com',
+    );
+
+    const msg = encodeURIComponent(lines.join('\n'));
     window.open(`https://wa.me/?text=${msg}`, '_blank');
   }
 
