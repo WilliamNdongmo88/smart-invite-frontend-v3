@@ -67,11 +67,20 @@ export class RegisterComponent implements OnInit {
     const params = this.route.snapshot.queryParams;
     if (params['email']) this.form.patchValue({ email: params['email'] });
     if (params['name']) this.form.patchValue({ name: params['name'] });
-    if (params['google']) this.fromGoogle.set(true);
-    else this.initReferralWatcher();
+    if (params['google']) {
+      this.fromGoogle.set(true);
+      // En flux Google : pas de code de recommandation requis par défaut
+      this.hasReferral.set(false);
+      // Note : l'utilisateur doit quand même choisir un mot de passe (requis côté backend)
+    } else {
+      this.initReferralWatcher();
+    }
   }
 
+  private referralWatcherInitialized = false;
+
   private initReferralWatcher(): void {
+    this.referralWatcherInitialized = true;
     this.form
       .get('referralCode')!
       .valueChanges.pipe(
@@ -111,6 +120,11 @@ export class RegisterComponent implements OnInit {
     this.referralError.set('');
     this.referralChecking.set(false);
     if (checked) {
+      // Si on est en flux Google, le watcher n'a pas encore été initialisé
+      if (!this.referralWatcherInitialized) {
+        this.initReferralWatcher();
+        this.referralWatcherInitialized = true;
+      }
       const raw = this.form.get('referralCode')?.value ?? '';
       if ((raw ?? '').trim().length >= 5) this.form.get('referralCode')!.updateValueAndValidity();
     }
