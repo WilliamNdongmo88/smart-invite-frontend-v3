@@ -68,9 +68,12 @@ export class AuthService {
 
   logout(): Observable<ApiResponse<void>> {
     const refreshToken = this.getRefreshToken();
+    // Vider les tokens immédiatement, avant même la réponse du serveur.
+    // Ainsi, même si le backend est indisponible ou renvoie une erreur,
+    // l'utilisateur est déconnecté localement.
+    this.clearTokens();
     return this.http
-      .post<ApiResponse<void>>(`${this.base}/logout`, { refreshToken } as LogoutRequest)
-      .pipe(tap(() => this.clearTokens()));
+      .post<ApiResponse<void>>(`${this.base}/logout`, { refreshToken } as LogoutRequest);
   }
 
   googleLogin(idToken: string): Observable<ApiResponse<GoogleLoginResponse>> {

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-agent-layout',
@@ -66,6 +67,10 @@ export class AgentLayoutComponent {
   private readonly router = inject(Router);
 
   logout(): void {
-    this.auth.logout().subscribe({ complete: () => this.router.navigate(['/login']) });
+    // Les tokens sont vidés immédiatement dans AuthService.logout().
+    // On navigue vers /login dans tous les cas (succès ou erreur réseau).
+    this.auth.logout().pipe(
+      finalize(() => this.router.navigate(['/login']))
+    ).subscribe({ error: () => { /* erreur ignorée, finalize s'en charge */ } });
   }
 }
