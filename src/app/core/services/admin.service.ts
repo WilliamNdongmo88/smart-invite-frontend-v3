@@ -33,6 +33,13 @@ export class AdminService {
     return this.http.delete<ApiResponse<void>>(`${this.base}/users/${userId}`);
   }
 
+  assignReferralCode(userId: number, referralCode: string): Observable<ApiResponse<void>> {
+    return this.http.patch<ApiResponse<void>>(
+      `${this.base}/users/${userId}/referral-code`,
+      { referralCode }
+    );
+  }
+
   getAllPayments(): Observable<ApiResponse<Payment[]>> {
     return this.http.get<ApiResponse<Payment[]>>(`${this.payBase}/all`);
   }

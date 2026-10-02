@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { AdminEventDetail, EventSummary, OrganizerSummary, UserNewsMessage } from '../../../../core/models/user.model';
+import { Referrer } from '../../../../core/models/referrer.model';
 import { EventType } from '../../../../core/models/enums.model';
 import { DatePipe } from '@angular/common';
 import { TranslatePipe } from '../../../../shared/pipes/translate.pipe';
@@ -74,6 +75,13 @@ export class AdminUsersComponent implements OnInit {
   replyTarget  = signal<UserNewsMessage | null>(null);
   replyText    = signal('');
   replySending = signal(false);
+
+  // ── Code de recommandation / Parrain ──────────────────────────────
+  referrers           = signal<Referrer[]>([]);
+  referralModalUser   = signal<OrganizerSummary | null>(null);
+  referralCodeInput   = signal('');
+  referralSelectedRef = signal('');
+  referralSaving      = signal(false);
 
   // ── Détail d'un événement ────────────────────────────────────────
   detail = signal<AdminEventDetail | null>(null);
@@ -190,6 +198,87 @@ export class AdminUsersComponent implements OnInit {
     req$.subscribe({
       next:  () => { this.toast.success(msgs[action]); this.loadUsers(); this.processing.set(null); },
       error: (err) => { this.toast.error(err?.error?.message || 'Erreur'); this.processing.set(null); },
+    });
+  }
+
+  // ── Attribution de code de recommandation ─────────────────────────
+
+  loadReferrers(): void {
+    this.adminSvc.getReferrers().subscribe({
+      next: (res) => this.referrers.set((res.data ?? []).filter(r => r.active)),
+      error: () => {},
+    });
+  }
+
+  openReferralModal(user: OrganizerSummary): void {
+    this.referralModalUser.set(user);
+    const existing = user.referralCode || '';
+    this.referralCodeInput.set(existing);
+    this.referralSelectedRef.set(existing);
+    this.loadReferrers();
+  }
+
+  closeReferralModal(): void {
+    this.referralModalUser.set(null);
+    this.referralCodeInput.set('');
+    this.referralSelectedRef.set('');
+    this.referralSaving.set(false);
+  }
+
+  onReferrerSelectChange(code: string): void {
+    this.referralSelectedRef.set(code);
+    if (code) {
+      this.referralCodeInput.set(code);
+    }
+  }
+
+  updateReferralInput(code: string): void {
+    this.referralCodeInput.set(code);
+    this.referralSelectedRef.set(code);
+  }
+
+  saveReferralCode(): void {
+    const user = this.referralModalUser();
+    if (!user) return;
+    const code = this.referralCodeInput().trim().toUpperCase();
+    if (!code) {
+      this.toast.error('Veuillez sélectionner ou saisir un code de recommandation');
+      return;
+    }
+
+    this.referralSaving.set(true);
+    this.adminSvc.assignReferralCode(user.id, code).subscribe({
+      next: (res) => {
+        this.toast.success(res.message || 'Code de recommandation attribué avec succès');
+        this.organizers.update(list =>
+          list.map(o => o.id === user.id ? { ...o, referralCode: code } : o)
+        );
+        this.closeReferralModal();
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors de l\'attribution du code');
+        this.referralSaving.set(false);
+      }
+    });
+  }
+
+  removeReferralCode(): void {
+    const user = this.referralModalUser();
+    if (!user) return;
+
+    this.referralSaving.set(true);
+    this.adminSvc.assignReferralCode(user.id, '').subscribe({
+      next: (res) => {
+        this.toast.success(res.message || 'Code de recommandation retiré avec succès');
+        this.organizers.update(list =>
+          list.map(o => o.id === user.id ? { ...o, referralCode: undefined } : o)
+        );
+        this.closeReferralModal();
+      },
+      error: (err) => {
+        this.toast.error(err?.error?.message || 'Erreur lors du retrait du code');
+        this.referralSaving.set(false);
+      }
     });
   }
 

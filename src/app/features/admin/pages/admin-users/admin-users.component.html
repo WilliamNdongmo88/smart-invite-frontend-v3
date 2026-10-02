@@ -83,6 +83,7 @@
                 <th>{{ 'users.name' | translate }}</th>
                 <th>{{ 'users.email' | translate }}</th>
                 <th>{{ 'users.phone' | translate }}</th>
+                <th>{{ 'users.referralCode' | translate }}</th>
                 <th>{{ 'users.events' | translate }}</th>
                 <th>{{ 'common.status' | translate }}</th>
                 <th>{{ 'users.registeredOn' | translate }}</th>
@@ -95,6 +96,20 @@
                   <td class="name-cell">{{ o.name }}</td>
                   <td class="email-cell">{{ o.email }}</td>
                   <td>{{ o.phone || '—' }}</td>
+                  <td class="referral-cell">
+                    @if (o.referralCode) {
+                      <div class="ref-badge-wrap">
+                        <span class="ref-badge">{{ o.referralCode }}</span>
+                        <button type="button" class="btn-ref-edit" (click)="openReferralModal(o)" [title]="'users.editReferral' | translate">
+                          ✏️
+                        </button>
+                      </div>
+                    } @else {
+                      <button type="button" class="btn-assign-ref" (click)="openReferralModal(o)">
+                        + {{ 'users.assignReferral' | translate }}
+                      </button>
+                    }
+                  </td>
                   <td class="events-cell">
                     @if (o.events.length === 0) {
                       <span class="no-events">{{ 'common.none' | translate }}</span>
@@ -431,6 +446,69 @@
           <button class="btn-confirm" (click)="closeDetail()">{{ 'common.close' | translate }}</button>
         </div>
       }
+    </div>
+  </div>
+}
+
+<!-- REFERRAL CODE MODAL -->
+@if (referralModalUser()) {
+  <div class="modal-backdrop" (click)="closeReferralModal()">
+    <div class="modal referral-modal" (click)="$event.stopPropagation()">
+      <div class="reply-modal-head">
+        <h3 class="modal-title">{{ 'users.assignReferralTitle' | translate }}</h3>
+        <button class="btn-close-modal" (click)="closeReferralModal()">✕</button>
+      </div>
+
+      <p class="modal-sub">
+        {{ 'users.assignReferralSub' | translate }}
+      </p>
+
+      <div class="user-info-box">
+        <span class="user-info-name">👤 {{ referralModalUser()!.name }}</span>
+        <span class="user-info-email">{{ referralModalUser()!.email }}</span>
+      </div>
+
+      @if (referrers().length > 0) {
+        <div class="form-group">
+          <label class="field-label">{{ 'users.selectReferrer' | translate }}</label>
+          <select class="field-select" [value]="referralSelectedRef()" (change)="onReferrerSelectChange($any($event.target).value)">
+            <option value="">-- {{ 'users.selectReferrer' | translate }} --</option>
+            @for (ref of referrers(); track ref.id) {
+              <option [value]="ref.code">{{ ref.name }} ({{ ref.code }})</option>
+            }
+          </select>
+        </div>
+      }
+
+      <div class="form-group">
+        <label class="field-label">{{ 'users.orEnterCode' | translate }}</label>
+        <input
+          type="text"
+          class="field-input uppercase-input"
+          [placeholder]="'users.codePlaceholder' | translate"
+          [value]="referralCodeInput()"
+          (input)="updateReferralInput($any($event.target).value)"
+        />
+      </div>
+
+      <div class="modal-actions modal-actions-between">
+        @if (referralModalUser()!.referralCode) {
+          <button type="button" class="btn-cancel btn-danger-outline" [disabled]="referralSaving()" (click)="removeReferralCode()">
+            {{ 'users.removeReferral' | translate }}
+          </button>
+        } @else {
+          <div></div>
+        }
+        <div class="actions-right">
+          <button type="button" class="btn-cancel" [disabled]="referralSaving()" (click)="closeReferralModal()">
+            {{ 'common.cancel' | translate }}
+          </button>
+          <button type="button" class="btn-confirm" [disabled]="referralSaving() || !referralCodeInput().trim()" (click)="saveReferralCode()">
+            @if (referralSaving()) { <span class="spinner-sm"></span> }
+            {{ 'users.save' | translate }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 }

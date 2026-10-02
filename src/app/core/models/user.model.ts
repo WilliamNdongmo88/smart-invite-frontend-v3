@@ -91,6 +91,7 @@ export interface OrganizerSummary {
   phone?: string;
   isActive: boolean;
   isBlocked: boolean;
+  referralCode?: string;
   createdAt: string;
   events: EventSummary[];
 }
